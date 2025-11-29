@@ -1,0 +1,162 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "PDFSign",
+  "@appTitle": {
+    "description": "Application title"
+  },
+
+  "welcomeTitle": "Welcome to PDFSign",
+  "@welcomeTitle": {
+    "description": "Welcome screen title"
+  },
+
+  "openPdf": "Open PDF",
+  "@openPdf": {
+    "description": "Button to open a PDF file"
+  },
+
+  "recentFiles": "Recent Files",
+  "@recentFiles": {
+    "description": "Recent files section title"
+  },
+
+  "noRecentFiles": "No recent files",
+  "@noRecentFiles": {
+    "description": "Message when there are no recent files"
+  },
+
+  "selectPdf": "Select PDF",
+  "@selectPdf": {
+    "description": "Button to select PDF on mobile"
+  },
+
+  "file": "File",
+  "edit": "Edit",
+  "view": "View",
+  "help": "Help",
+
+  "save": "Save",
+  "saveAs": "Save As...",
+  "close": "Close",
+  "quit": "Quit",
+
+  "undo": "Undo",
+  "redo": "Redo",
+  "delete": "Delete",
+  "deleteSelected": "Delete Selected",
+
+  "zoomIn": "Zoom In",
+  "zoomOut": "Zoom Out",
+  "actualSize": "Actual Size",
+  "fitToScreen": "Fit to Screen",
+  "fullScreen": "Full Screen",
+
+  "signatures": "Signatures",
+  "stamps": "Stamps",
+
+  "addSignature": "Add Signature",
+  "addStamp": "Add Stamp",
+  "add": "Add",
+
+  "editLabel": "Edit Label",
+  "deleteItem": "Delete Item",
+
+  "rotate5Left": "Rotate 5° Left",
+  "rotate5Right": "Rotate 5° Right",
+  "rotate90": "Rotate 90°",
+  "scaleUp": "Scale +5%",
+  "scaleDown": "Scale -5%",
+
+  "bringToFront": "Bring to Front",
+  "bringForward": "Bring Forward",
+  "sendBackward": "Send Backward",
+  "sendToBack": "Send to Back",
+
+  "pageIndicator": "Page {current} of {total}",
+  "@pageIndicator": {
+    "description": "Page indicator showing current and total pages",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+
+  "passwordRequired": "Password Required",
+  "enterPassword": "Enter password to open this PDF",
+  "password": "Password",
+  "cancel": "Cancel",
+  "ok": "OK",
+  "retry": "Retry",
+
+  "attemptsRemaining": "{count, plural, =1{1 attempt remaining} other{{count} attempts remaining}}",
+  "@attemptsRemaining": {
+    "description": "Number of password attempts remaining",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "errorFileNotFound": "The selected file could not be found.",
+  "errorAccessDenied": "Permission denied. Please check file permissions.",
+  "errorInvalidFormat": "This file is not a valid PDF document.",
+  "errorFileTooLarge": "Image size exceeds 100MB limit.",
+  "errorResolutionTooHigh": "Image resolution exceeds 4096x4096 pixels.",
+  "errorCorruptedPdf": "This PDF appears to be corrupted.",
+  "errorIncorrectPassword": "Incorrect password.",
+  "errorWriteProtected": "This PDF is protected and cannot be modified.",
+  "errorSaveFailed": "Failed to save PDF.",
+  "errorInsufficientSpace": "Not enough disk space to save file.",
+  "errorReadOnlyLocation": "Cannot save to a read-only location.",
+  "errorOutOfMemory": "Insufficient memory. Try closing other apps.",
+  "errorDatabaseError": "Failed to access signature library.",
+  "errorUnknown": "An unknown error occurred.",
+
+  "confirmDelete": "Are you sure you want to delete this item?",
+  "confirmDeleteTitle": "Confirm Delete",
+
+  "unsavedChanges": "You have unsaved changes. Do you want to save before closing?",
+  "unsavedChangesTitle": "Unsaved Changes",
+  "dontSave": "Don't Save",
+
+  "loading": "Loading...",
+  "saving": "Saving...",
+  "processing": "Processing...",
+
+  "openedAgo": "Opened {time} ago",
+  "@openedAgo": {
+    "description": "Time since file was last opened",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+
+  "aboutApp": "About PDFSign",
+  "version": "Version {version}",
+  "@version": {
+    "description": "App version",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+
+  "poweredBy": "Powered by Syncfusion Community License",
+  "settings": "Settings",
+  "language": "Language",
+  "theme": "Theme",
+
+  "signatureAdded": "Signature added to library",
+  "stampAdded": "Stamp added to library",
+  "itemDeleted": "Item deleted from library",
+  "pdfSaved": "PDF saved successfully"
+}

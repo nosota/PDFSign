@@ -1,0 +1,109 @@
+{
+  "@@locale": "ru",
+
+  "appTitle": "PDFSign",
+
+  "welcomeTitle": "Добро пожаловать в PDFSign",
+
+  "openPdf": "Открыть PDF",
+
+  "recentFiles": "Недавние файлы",
+
+  "noRecentFiles": "Нет недавних файлов",
+
+  "selectPdf": "Выбрать PDF",
+
+  "file": "Файл",
+  "edit": "Правка",
+  "view": "Вид",
+  "help": "Справка",
+
+  "save": "Сохранить",
+  "saveAs": "Сохранить как...",
+  "close": "Закрыть",
+  "quit": "Выход",
+
+  "undo": "Отменить",
+  "redo": "Повторить",
+  "delete": "Удалить",
+  "deleteSelected": "Удалить выделенное",
+
+  "zoomIn": "Увеличить",
+  "zoomOut": "Уменьшить",
+  "actualSize": "Реальный размер",
+  "fitToScreen": "По размеру экрана",
+  "fullScreen": "Полный экран",
+
+  "signatures": "Подписи",
+  "stamps": "Печати",
+
+  "addSignature": "Добавить подпись",
+  "addStamp": "Добавить печать",
+  "add": "Добавить",
+
+  "editLabel": "Редактировать название",
+  "deleteItem": "Удалить элемент",
+
+  "rotate5Left": "Повернуть на 5° влево",
+  "rotate5Right": "Повернуть на 5° вправо",
+  "rotate90": "Повернуть на 90°",
+  "scaleUp": "Увеличить на 5%",
+  "scaleDown": "Уменьшить на 5%",
+
+  "bringToFront": "На передний план",
+  "bringForward": "Переместить вперед",
+  "sendBackward": "Переместить назад",
+  "sendToBack": "На задний план",
+
+  "pageIndicator": "Страница {current} из {total}",
+
+  "passwordRequired": "Требуется пароль",
+  "enterPassword": "Введите пароль для открытия PDF",
+  "password": "Пароль",
+  "cancel": "Отмена",
+  "ok": "ОК",
+  "retry": "Повторить",
+
+  "attemptsRemaining": "{count, plural, =1{Осталась 1 попытка} few{Осталось {count} попытки} other{Осталось {count} попыток}}",
+
+  "errorFileNotFound": "Выбранный файл не найден.",
+  "errorAccessDenied": "Доступ запрещен. Проверьте права доступа к файлу.",
+  "errorInvalidFormat": "Это не является корректным PDF документом.",
+  "errorFileTooLarge": "Размер изображения превышает лимит в 100МБ.",
+  "errorResolutionTooHigh": "Разрешение изображения превышает 4096x4096 пикселей.",
+  "errorCorruptedPdf": "Этот PDF поврежден.",
+  "errorIncorrectPassword": "Неверный пароль.",
+  "errorWriteProtected": "Этот PDF защищен от изменений.",
+  "errorSaveFailed": "Не удалось сохранить PDF.",
+  "errorInsufficientSpace": "Недостаточно места на диске для сохранения файла.",
+  "errorReadOnlyLocation": "Невозможно сохранить в локацию только для чтения.",
+  "errorOutOfMemory": "Недостаточно памяти. Попробуйте закрыть другие приложения.",
+  "errorDatabaseError": "Не удалось получить доступ к библиотеке подписей.",
+  "errorUnknown": "Произошла неизвестная ошибка.",
+
+  "confirmDelete": "Вы уверены, что хотите удалить этот элемент?",
+  "confirmDeleteTitle": "Подтверждение удаления",
+
+  "unsavedChanges": "У вас есть несохраненные изменения. Сохранить перед закрытием?",
+  "unsavedChangesTitle": "Несохраненные изменения",
+  "dontSave": "Не сохранять",
+
+  "loading": "Загрузка...",
+  "saving": "Сохранение...",
+  "processing": "Обработка...",
+
+  "openedAgo": "Открыт {time} назад",
+
+  "aboutApp": "О приложении PDFSign",
+  "version": "Версия {version}",
+
+  "poweredBy": "Использует Syncfusion Community License",
+  "settings": "Настройки",
+  "language": "Язык",
+  "theme": "Тема",
+
+  "signatureAdded": "Подпись добавлена в библиотеку",
+  "stampAdded": "Печать добавлена в библиотеку",
+  "itemDeleted": "Элемент удален из библиотеки",
+  "pdfSaved": "PDF успешно сохранен"
+}
