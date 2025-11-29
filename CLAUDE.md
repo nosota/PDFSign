@@ -75,25 +75,64 @@ lib/
 
 ### Presentation Layer Rules
 
-- **BLoC pattern** for state management (flutter_bloc: ^8.1.0+)
-- One BLoC per feature/screen
-- BLoCs communicate via repositories only
-- Widgets must be stateless when possible
-- Separate presentation logic from UI
+- **Riverpod** for state management (flutter_riverpod: ^2.5.1+)
+- Providers for dependency injection and state management
+- One provider per logical state unit
+- Widgets consume providers via `ref.watch()` or `ref.read()`
+- Widgets should be `ConsumerWidget` or use `Consumer`
+- Separate business logic from UI
 - Form validation in dedicated classes
 - Navigation via **go_router** with type-safe routes
 
-## State Management Rules — BLoC Pattern
+## State Management Rules — Riverpod Pattern
 
-- Events: immutable, past-tense naming (`SignatureAdded`, `PdfLoaded`)
-- States: immutable, present-tense naming (`Loading`, `Loaded`, `Error`)
-- Use `Equatable` for all events and states
-- Use `freezed` for complex state classes
-- BLoCs must NOT contain UI logic
-- BLoCs must NOT directly access other BLoCs
-- Use repository pattern for BLoC communication
-- Emit new state instances (no state mutation)
-- Handle all error cases explicitly
+**Provider Types:**
+- `@riverpod` annotation for code generation (preferred)
+- `StateNotifierProvider` for complex mutable state
+- `AsyncNotifierProvider` for async data loading
+- `StateProvider` for simple UI state (zoom level, selected tab)
+- `Provider` for immutable computed values
+- `FutureProvider` for one-time async operations
+- `StreamProvider` for reactive data streams
+
+**Naming Conventions:**
+- Providers: camelCase with `Provider` suffix (e.g., `signaturesProvider`)
+- State classes: PascalCase (e.g., `EditorState`, `PdfDocumentState`)
+- Methods: Verb-based (e.g., `addSignature()`, `moveObject()`)
+
+**Rules:**
+- Use `@riverpod` annotation for automatic provider generation
+- States must be immutable (use `copyWith` for updates)
+- Use `Equatable` or `freezed` for value equality
+- Providers must NOT contain UI logic
+- Providers must NOT directly modify other providers (use `ref.read()`)
+- Handle all error cases explicitly (use `AsyncValue` for async state)
+- Always dispose resources in provider lifecycle
+- Use `ref.watch()` for reactive dependencies
+- Use `ref.read()` for one-time reads (e.g., in callbacks)
+- Use `ref.listen()` for side effects (navigation, snackbars)
+
+**Example:**
+```dart
+@riverpod
+class Signatures extends _$Signatures {
+  @override
+  Future<List<SignatureItem>> build() async {
+    final repository = ref.watch(signatureRepositoryProvider);
+    final result = await repository.getSignatures();
+    return result.fold(
+      (failure) => throw Exception(failure.message),
+      (signatures) => signatures,
+    );
+  }
+
+  Future<void> addSignature(SignatureItem item) async {
+    final repository = ref.read(signatureRepositoryProvider);
+    // ... add logic
+    state = AsyncData([...?state.value, item]);
+  }
+}
+```
 
 ## Widget Development Rules
 
@@ -163,9 +202,29 @@ lib/
 - One test file per source file
 - Test naming: `test('should ... when ...')`
 - Arrange-Act-Assert pattern
-- Mock external dependencies with **mockito**
-- Use **bloc_test** for BLoC testing
+- Mock external dependencies with **mockito** or **mocktail**
+- Use **ProviderContainer** for provider testing
+- Override providers in tests with `.overrideWith()`
 - Test error cases first, happy path last
+- Test provider state changes and rebuilds
+
+**Provider Testing Example:**
+```dart
+test('should add signature when addSignature called', () async {
+  final container = ProviderContainer(
+    overrides: [
+      signatureRepositoryProvider.overrideWithValue(mockRepository),
+    ],
+  );
+
+  when(mockRepository.addSignature(...)).thenAnswer((_) async => Right(signature));
+
+  await container.read(signaturesProvider.notifier).addSignature(...);
+
+  final state = container.read(signaturesProvider);
+  expect(state.value, contains(signature));
+});
+```
 
 ## Dependency Management
 
@@ -174,40 +233,41 @@ lib/
 ```yaml
 dependencies:
   # State Management
-  flutter_bloc: ^8.1.0
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
   equatable: ^2.0.0
-  
-  # Navigation  
+
+  # Navigation
   go_router: ^14.0.0
-  
-  # DI
-  get_it: ^7.6.0
-  injectable: ^2.3.0
-  
+
   # PDF
-  pdf: ^3.10.0
-  printing: ^5.11.0
-  pdfx: ^2.6.0  # or syncfusion_flutter_pdfviewer
-  
+  syncfusion_flutter_pdf: ^27.1.48
+  syncfusion_flutter_pdfviewer: ^27.1.48
+
   # Storage
-  hive_flutter: ^1.1.0
+  isar: ^3.1.0
+  isar_flutter_libs: ^3.1.0
   path_provider: ^2.1.0
-  
-  # Network
-  dio: ^5.4.0
-  
+
+  # File Handling
+  file_picker: ^8.0.0
+  mime: ^1.0.0
+
   # Utilities
-  dartz: ^0.10.1  # or fpdart
+  dartz: ^0.10.1
+  uuid: ^4.0.0
   freezed_annotation: ^2.4.0
-  json_annotation: ^4.8.0
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_lints: ^3.0.0
   build_runner: ^2.4.0
   freezed: ^2.4.0
   json_serializable: ^6.7.0
+  riverpod_generator: ^2.4.3
+  isar_generator: ^3.1.0
   mockito: ^5.4.0
-  bloc_test: ^9.1.0
+  mocktail: ^1.0.4
 ```
 
 ### Dependency Rules

@@ -282,6 +282,83 @@ Floating toolbar appears above selected object:
   - Disabled when no operations to undo/redo
   - Show tooltip with operation name on hover
 
+### 4.8 Clipboard Operations (NEW)
+
+#### FR-8.1: Copy to Clipboard (Ctrl+C)
+- **Action:** Copy selected object's image to system clipboard
+- **Format:** PNG with transparency
+- **Desktop:** Ctrl/Cmd+C keyboard shortcut
+- **Mobile:** Context menu or floating toolbar option
+- **Behavior:**
+  - Only works when an object is selected
+  - Copies the signature/stamp image (not the placed instance)
+  - Maintains original resolution
+  - Shows toast notification "Copied to clipboard"
+
+#### FR-8.2: Paste from Clipboard (Ctrl+V)
+- **Action:** Paste image from clipboard to PDF and optionally add to library
+- **Desktop:** Ctrl/Cmd+V keyboard shortcut
+- **Mobile:** Long press → Paste option (if clipboard contains image)
+- **Behavior:**
+  1. Check if clipboard contains image data
+  2. If yes, show "Paste Image" dialog:
+     - Preview of the image
+     - Text input for name/label
+     - Radio buttons: "Add to Signatures" / "Add to Stamps" / "Don't add to library"
+     - Checkbox: "Don't ask again, always add to [selected option]"
+  3. Place image at center of visible viewport
+  4. If "add to library" selected, add to appropriate tab
+  5. If "Don't ask again" checked:
+     - Save preference to SharedPreferences
+     - Future pastes automatically use saved preference
+     - No dialog shown (silent paste)
+- **Supported formats:** PNG, JPG, WEBP (clipboard formats)
+- **Error handling:**
+  - If clipboard empty: Show toast "Clipboard is empty"
+  - If format unsupported: Show toast "Unsupported image format"
+  - If size exceeds limit: Show error dialog
+
+#### FR-8.3: Paste Preferences Management
+- **Settings location:** Settings screen → "Clipboard Behavior"
+- **Options:**
+  - Reset "Don't ask again" preference
+  - Change default paste target (Signatures/Stamps)
+- **Preference keys:**
+  - `dont_ask_paste_again` (boolean)
+  - `paste_default_tab` (0 = signatures, 1 = stamps, null = always ask)
+
+### 4.9 Object Duplication (NEW)
+
+#### FR-9.1: Duplicate Object (Ctrl+D)
+- **Action:** Create a copy of the selected object
+- **Keyboard shortcut:** Ctrl/Cmd+D
+- **Behavior:**
+  - Only works when an object is selected
+  - Creates exact copy with same:
+    - Size
+    - Rotation
+    - Signature/stamp reference
+  - Offset position:
+    - X: +20 logical pixels
+    - Y: +20 logical pixels
+  - Z-index: max(all) + 1 (on top)
+  - Automatically select the duplicate
+  - Add to undo stack
+- **Mobile:** Available via floating toolbar or context menu
+- **Visual feedback:** Duplicate appears with selection handles
+
+#### FR-9.2: Context Menu Updates
+Add new menu items:
+- **Copy Image (Ctrl+C)**
+- **Duplicate (Ctrl+D)**
+- Separator
+- *(existing rotate/scale options)*
+
+#### FR-9.3: Toolbar Updates (Desktop)
+Add new buttons:
+- **[📋 Copy]** - Copy to clipboard
+- **[📄 Duplicate]** - Duplicate object
+
 ---
 
 ## 5. Technical Requirements
@@ -314,17 +391,39 @@ lib/
 ```
 
 #### TR-1.2: State Management
-- **Pattern:** BLoC (flutter_bloc ^8.1.0+)
+- **Pattern:** Riverpod (flutter_riverpod ^2.5.1+)
 - **Rules:**
-  - One BLoC per feature
-  - Events: immutable, past tense
-  - States: immutable, present tense
-  - Use Equatable for all events/states
-  - Use freezed for complex states
+  - Use `@riverpod` annotation for code generation
+  - StateNotifier for complex state with multiple mutations
+  - AsyncNotifier for async state loading
+  - Simple StateProvider for UI state (zoom, selected tab, etc.)
+  - Use Equatable for value equality
+  - Use freezed for complex state classes
+  - Provider scope: Application-wide via ProviderScope in main
+- **Key Providers:**
+  - `signaturesProvider` - Signature library management
+  - `stampsProvider` - Stamp library management
+  - `editorProvider` - Placed objects and transformations
+  - `undoRedoProvider` - Command pattern for undo/redo
+  - `pdfDocumentProvider` - PDF viewer state
+  - `zoomLevelProvider` - Current zoom level
+  - `settingsProvider` - App settings and preferences
 
 #### TR-1.3: Dependency Injection
-- **Package:** get_it ^7.6.0 + injectable ^2.3.0
-- **Scope:** Singleton for repositories, Factory for use cases
+- **Built-in:** Riverpod providers handle DI automatically
+- **Pattern:** Define dependencies as providers with `@riverpod` annotation
+- **Scope:**
+  - Repositories: Singleton via provider caching
+  - Use cases: Accessed through repositories (no explicit DI needed)
+  - Data sources: Singleton providers
+- **Example:**
+  ```dart
+  @riverpod
+  SignatureRepository signatureRepository(SignatureRepositoryRef ref) {
+    final dataSource = ref.watch(signatureDataSourceProvider);
+    return SignatureRepositoryImpl(dataSource);
+  }
+  ```
 
 #### TR-1.4: Routing
 - **Package:** go_router ^14.0.0
@@ -341,17 +440,14 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # State Management
-  flutter_bloc: ^8.1.0
+  # State Management (Riverpod)
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
   equatable: ^2.0.0
   freezed_annotation: ^2.4.0
 
   # Navigation
   go_router: ^14.0.0
-
-  # Dependency Injection
-  get_it: ^7.6.0
-  injectable: ^2.3.0
 
   # PDF Processing
   syncfusion_flutter_pdf: ^27.1.48
@@ -383,14 +479,14 @@ dev_dependencies:
   build_runner: ^2.4.0
   freezed: ^2.4.0
   json_serializable: ^6.7.0
-  injectable_generator: ^2.4.0
+  riverpod_generator: ^2.4.3
   isar_generator: ^3.1.0
 
   # Testing
   flutter_test:
     sdk: flutter
   mockito: ^5.4.0
-  bloc_test: ^9.1.0
+  mocktail: ^1.0.4
 ```
 
 ### 5.3 Platform Requirements
@@ -820,6 +916,9 @@ When object is selected, show floating toolbar above it:
 **Edit:**
 - Ctrl/Cmd+Z: Undo
 - Ctrl/Cmd+Shift+Z: Redo
+- Ctrl/Cmd+C: Copy selected object to clipboard as image
+- Ctrl/Cmd+V: Paste image from clipboard (shows dialog for adding to library)
+- Ctrl/Cmd+D: Duplicate selected object
 - Del/Backspace: Delete selected object
 
 **View:**

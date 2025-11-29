@@ -105,5 +105,25 @@
   "signatureAdded": "Подпись добавлена в библиотеку",
   "stampAdded": "Печать добавлена в библиотеку",
   "itemDeleted": "Элемент удален из библиотеки",
-  "pdfSaved": "PDF успешно сохранен"
+  "pdfSaved": "PDF успешно сохранен",
+
+  "copyToClipboard": "Копировать в буфер обмена",
+  "duplicate": "Дублировать",
+  "copiedToClipboard": "Скопировано в буфер обмена",
+  "clipboardEmpty": "Буфер обмена пуст",
+  "unsupportedImageFormat": "Неподдерживаемый формат изображения",
+
+  "pasteImageTitle": "Вставить изображение",
+  "pasteImagePreview": "Предпросмотр",
+  "pasteImageName": "Название",
+  "pasteImageNameHint": "Введите название для изображения",
+  "addToSignatures": "Добавить в подписи",
+  "addToStamps": "Добавить в печати",
+  "dontAddToLibrary": "Не добавлять в библиотеку",
+  "dontAskAgain": "Больше не спрашивать",
+  "paste": "Вставить",
+
+  "clipboardBehavior": "Поведение буфера обмена",
+  "resetPastePreference": "Сбросить настройку \"Больше не спрашивать\"",
+  "defaultPasteTarget": "Место вставки по умолчанию"
 }

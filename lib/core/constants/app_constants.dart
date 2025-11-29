@@ -129,10 +129,15 @@ class AppConstants {
   // Keyboard Nudge
   static const double nudgeDistance = 1.0; // pixels
   static const double shiftNudgeDistance = 10.0; // pixels
+  static const double arrowKeyNudgeDistance = 1.0; // pixels for arrow keys
 
   // PDF Rendering
   static const double pdfPageSpacing = 16.0; // spacing between pages
   static const int pdfRenderDpi = 150; // DPI for rendering
+
+  // Clipboard & Duplication
+  static const String prefKeyDontAskPasteAgain = 'dont_ask_paste_again';
+  static const String prefKeyPasteDefaultTab = 'paste_default_tab'; // 0 = signatures, 1 = stamps
 
   // Syncfusion License (placeholder - should be set in main)
   static const String syncfusionLicenseKey = '';

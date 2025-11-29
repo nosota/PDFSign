@@ -1,19 +1,22 @@
-import 'package:get_it/get_it.dart';
-import 'package:injectable/injectable.dart';
-import 'package:pdfsign/injection/injection_container.config.dart';
-
-final getIt = GetIt.instance;
-
-@InjectableInit(
-  initializerName: 'init',
-  preferRelativeImports: true,
-  asExtension: true,
-)
-
-/// Initialize dependency injection
-Future<void> configureDependencies() async => getIt.init();
-
-/// Reset all dependencies (mainly for testing)
-Future<void> resetDependencies() async {
-  await getIt.reset();
-}
+/// Dependency Injection Container
+///
+/// NOTE: This project uses Riverpod for dependency injection.
+/// Riverpod providers handle DI automatically via @riverpod annotation.
+///
+/// This file is kept for backwards compatibility and potential
+/// future needs for non-Riverpod dependencies.
+///
+/// To add a new dependency:
+/// 1. Create a provider with @riverpod annotation
+/// 2. Define the dependency creation logic in the provider
+/// 3. Use ref.watch() or ref.read() to access dependencies
+///
+/// Example:
+/// ```dart
+/// @riverpod
+/// MyRepository myRepository(MyRepositoryRef ref) {
+///   final dataSource = ref.watch(myDataSourceProvider);
+///   return MyRepositoryImpl(dataSource);
+/// }
+/// ```
+library injection_container;

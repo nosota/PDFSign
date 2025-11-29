@@ -158,5 +158,25 @@
   "signatureAdded": "Signature added to library",
   "stampAdded": "Stamp added to library",
   "itemDeleted": "Item deleted from library",
-  "pdfSaved": "PDF saved successfully"
+  "pdfSaved": "PDF saved successfully",
+
+  "copyToClipboard": "Copy to Clipboard",
+  "duplicate": "Duplicate",
+  "copiedToClipboard": "Copied to clipboard",
+  "clipboardEmpty": "Clipboard is empty",
+  "unsupportedImageFormat": "Unsupported image format",
+
+  "pasteImageTitle": "Paste Image",
+  "pasteImagePreview": "Preview",
+  "pasteImageName": "Name",
+  "pasteImageNameHint": "Enter name for this image",
+  "addToSignatures": "Add to Signatures",
+  "addToStamps": "Add to Stamps",
+  "dontAddToLibrary": "Don't add to library",
+  "dontAskAgain": "Don't ask again",
+  "paste": "Paste",
+
+  "clipboardBehavior": "Clipboard Behavior",
+  "resetPastePreference": "Reset \"Don't ask again\" preference",
+  "defaultPasteTarget": "Default paste target"
 }

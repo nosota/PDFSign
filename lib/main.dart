@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pdfsign/core/constants/app_constants.dart';
 import 'package:pdfsign/core/theme/app_theme.dart';
-import 'package:pdfsign/injection/injection_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
@@ -11,10 +11,12 @@ void main() async {
   // TODO: Set Syncfusion license key
   // SyncfusionLicense.registerLicense(AppConstants.syncfusionLicenseKey);
 
-  // Initialize dependency injection
-  await configureDependencies();
-
-  runApp(const PDFSignApp());
+  runApp(
+    // Wrap the entire app with ProviderScope for Riverpod
+    const ProviderScope(
+      child: PDFSignApp(),
+    ),
+  );
 }
 
 /// Root application widget
