@@ -73,7 +73,7 @@ class AppTheme {
       ),
 
       // Card
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: AppColors.cardColor,
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -219,7 +219,7 @@ class AppTheme {
       ),
 
       // Dialog
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: AppColors.backgroundColor,
         elevation: 8,
         shape: RoundedRectangleBorder(
@@ -380,7 +380,7 @@ class AppTheme {
       ),
 
       // TabBar
-      tabBarTheme: const TabBarTheme(
+      tabBarTheme: const TabBarThemeData(
         labelColor: AppColors.primaryColor,
         unselectedLabelColor: AppColors.textSecondary,
         indicatorSize: TabBarIndicatorSize.tab,
