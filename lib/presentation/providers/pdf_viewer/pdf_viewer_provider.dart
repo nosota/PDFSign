@@ -2,15 +2,9 @@ import 'dart:typed_data';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:pdfsign/domain/entities/placed_object.dart';
-import 'package:pdfsign/domain/repositories/pdf_repository.dart';
+import 'package:pdfsign/presentation/providers/infrastructure/repository_providers.dart';
 
 part 'pdf_viewer_provider.g.dart';
-
-/// Provider for PDF repository
-@riverpod
-PdfRepository pdfRepository(PdfRepositoryRef ref) {
-  throw UnimplementedError('PdfRepository implementation not provided');
-}
 
 /// PDF document state
 class PdfDocumentState {

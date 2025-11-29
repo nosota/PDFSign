@@ -23,8 +23,8 @@ dependencies:
   go_router: ^14.2.7
 
   # PDF Processing
-  syncfusion_flutter_pdf: ^27.1.48
-  syncfusion_flutter_pdfviewer: ^27.1.48
+  syncfusion_flutter_pdf: any
+  syncfusion_flutter_pdfviewer: any
 
   # Storage
   isar: ^3.1.0+1
@@ -35,10 +35,12 @@ dependencies:
   file_picker: ^8.1.2
   mime: ^1.0.6
 
+  # Clipboard (for images)
+  super_clipboard: ^0.9.1
+
   # Utilities
   dartz: ^0.10.1
   uuid: ^4.5.1
-  intl: ^0.19.0
 
   # Logging
   logger: ^2.4.0
@@ -55,9 +57,9 @@ dev_dependencies:
 
   # Code Generation
   build_runner: ^2.4.13
-  freezed: ^2.5.7
+  freezed: ^2.4.6
   json_serializable: ^6.8.0
-  riverpod_generator: ^2.4.3
+  riverpod_generator: ^2.4.0
   isar_generator: ^3.1.0+1
 
   # Testing

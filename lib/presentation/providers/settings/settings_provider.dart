@@ -1,15 +1,11 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:pdfsign/core/constants/app_constants.dart';
 import 'package:pdfsign/domain/entities/recent_file.dart';
 import 'package:pdfsign/domain/entities/signature_item.dart';
-import 'package:pdfsign/domain/repositories/settings_repository.dart';
+import 'package:pdfsign/presentation/providers/infrastructure/repository_providers.dart';
+import 'package:pdfsign/presentation/providers/infrastructure/shared_preferences_provider.dart';
 
 part 'settings_provider.g.dart';
-
-/// Provider for settings repository
-@riverpod
-SettingsRepository settingsRepository(SettingsRepositoryRef ref) {
-  throw UnimplementedError('SettingsRepository implementation not provided');
-}
 
 /// Recent files provider
 @riverpod
@@ -165,22 +161,42 @@ class ClipboardPastePreferences {
 class ClipboardPreferences extends _$ClipboardPreferences {
   @override
   ClipboardPastePreferences build() {
-    // TODO: Load from SharedPreferences
-    return const ClipboardPastePreferences();
+    final prefs = ref.watch(sharedPreferencesProvider).requireValue;
+    final dontAsk = prefs.getBool(AppConstants.prefKeyDontAskPasteAgain) ?? false;
+    final tabIndex = prefs.getInt(AppConstants.prefKeyPasteDefaultTab);
+
+    SignatureType? defaultType;
+    if (tabIndex != null) {
+      defaultType = tabIndex == 0 ? SignatureType.signature : SignatureType.stamp;
+    }
+
+    return ClipboardPastePreferences(
+      dontAskAgain: dontAsk,
+      defaultType: defaultType,
+    );
   }
 
-  void setDontAskAgain(bool value) {
+  Future<void> setDontAskAgain(bool value) async {
+    final prefs = ref.read(sharedPreferencesProvider).requireValue;
+    await prefs.setBool(AppConstants.prefKeyDontAskPasteAgain, value);
     state = state.copyWith(dontAskAgain: value);
-    // TODO: Save to SharedPreferences
   }
 
-  void setDefaultType(SignatureType? type) {
+  Future<void> setDefaultType(SignatureType? type) async {
+    final prefs = ref.read(sharedPreferencesProvider).requireValue;
+    if (type == null) {
+      await prefs.remove(AppConstants.prefKeyPasteDefaultTab);
+    } else {
+      final tabIndex = type == SignatureType.signature ? 0 : 1;
+      await prefs.setInt(AppConstants.prefKeyPasteDefaultTab, tabIndex);
+    }
     state = state.copyWith(defaultType: type);
-    // TODO: Save to SharedPreferences
   }
 
-  void reset() {
+  Future<void> reset() async {
+    final prefs = ref.read(sharedPreferencesProvider).requireValue;
+    await prefs.remove(AppConstants.prefKeyDontAskPasteAgain);
+    await prefs.remove(AppConstants.prefKeyPasteDefaultTab);
     state = const ClipboardPastePreferences();
-    // TODO: Clear from SharedPreferences
   }
 }

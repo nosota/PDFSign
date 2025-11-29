@@ -2,15 +2,9 @@ import 'dart:typed_data';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:pdfsign/domain/entities/signature_item.dart';
-import 'package:pdfsign/domain/repositories/signature_repository.dart';
+import 'package:pdfsign/presentation/providers/infrastructure/repository_providers.dart';
 
 part 'signature_library_provider.g.dart';
-
-/// Provider for signature repository
-@riverpod
-SignatureRepository signatureRepository(SignatureRepositoryRef ref) {
-  throw UnimplementedError('SignatureRepository implementation not provided');
-}
 
 /// State notifier for managing signatures
 @riverpod
