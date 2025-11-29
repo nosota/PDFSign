@@ -30,7 +30,7 @@ This file defines **enforceable rules and invariants** for the Flutter PDF signa
 - Cyclomatic complexity ≤ **10** per method
 - Widget build methods ≤ **50 LOC**
 - Extract complex widgets into separate files
-- Prefer composition over inheritance
+- Prefer composition to inheritance
 - Apply **SOLID**, **DRY**, **KISS** principles rigorously
 
 ## Architecture Rules — MANDATORY

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:pdfsign/core/errors/exceptions.dart';
 import 'package:pdfsign/domain/entities/placed_object.dart';
@@ -68,13 +69,17 @@ class PdfDataSourceImpl implements PdfDataSource {
       // Try to load document
       try {
         _document = PdfDocument(inputBytes: bytes, password: password);
-      } on PdfPasswordException {
-        throw PasswordRequiredException('PDF requires password');
-      } on PdfException catch (e) {
-        if (e.message?.contains('password') ?? false) {
-          throw PasswordIncorrectException(message: 'Incorrect password');
+      } catch (e) {
+        // Check if it's a password-related error
+        final errorMsg = e.toString().toLowerCase();
+        if (errorMsg.contains('password')) {
+          if (password == null) {
+            throw const PasswordRequiredException('PDF requires password');
+          } else {
+            throw const PasswordIncorrectException(message: 'Incorrect password');
+          }
         }
-        throw CorruptedPdfException('Failed to load PDF: ${e.message}');
+        throw CorruptedPdfException('Failed to load PDF: $e');
       }
 
       _currentPath = path;
@@ -82,7 +87,7 @@ class PdfDataSourceImpl implements PdfDataSource {
       return _document!.pages.count;
     } catch (e) {
       if (e is AppException) rethrow;
-      throw UnknownFailure(e.toString()) as Never;
+      throw AppException('Unknown error: ${e.toString()}', e);
     }
   }
 
@@ -122,14 +127,16 @@ class PdfDataSourceImpl implements PdfDataSource {
         final testDoc = PdfDocument(inputBytes: bytes);
         testDoc.dispose();
         return false;
-      } on PdfPasswordException {
-        return true;
-      } catch (_) {
+      } catch (e) {
+        // If we get an error, check if it's password-related
+        if (e.toString().toLowerCase().contains('password')) {
+          return true;
+        }
         return false;
       }
     } catch (e) {
       if (e is AppException) rethrow;
-      throw UnknownFailure(e.toString()) as Never;
+      throw AppException('Unknown error: ${e.toString()}', e);
     }
   }
 
@@ -150,12 +157,13 @@ class PdfDataSourceImpl implements PdfDataSource {
         final testDoc = PdfDocument(inputBytes: bytes, password: password);
         testDoc.dispose();
         return true;
-      } on PdfException {
+      } catch (e) {
+        // Password verification failed
         return false;
       }
     } catch (e) {
       if (e is AppException) rethrow;
-      throw UnknownFailure(e.toString()) as Never;
+      throw AppException('Unknown error: ${e.toString()}', e);
     }
   }
 
@@ -166,10 +174,10 @@ class PdfDataSourceImpl implements PdfDataSource {
         throw const StorageException('No PDF document is open');
       }
 
-      final page = _document!.pages[pageNumber];
-      final image = await page.toImage(dpi: dpi);
-
-      return image;
+      // TODO: Implement page rendering using syncfusion_flutter_pdfviewer
+      // The Syncfusion PDF library doesn't have direct page-to-image conversion
+      // We would need to use the PDF viewer widget to render pages
+      throw const StorageException('Page rendering not yet implemented');
     } catch (e) {
       if (e is AppException) rethrow;
       throw StorageException('Failed to render page: ${e.toString()}');
@@ -255,7 +263,7 @@ class PdfDataSourceImpl implements PdfDataSource {
           // Draw image
           graphics.drawImage(
             bitmap,
-            Rect.fromLTWH(0, 0, obj.size.width, obj.size.height),
+            ui.Rect.fromLTWH(0, 0, obj.size.width, obj.size.height),
           );
 
           // Restore graphics state
@@ -288,9 +296,11 @@ class PdfDataSourceImpl implements PdfDataSource {
 
       // Check if document has security settings that prevent modifications
       final security = _document!.security;
-      if (security.userPassword.isNotEmpty) {
-        // Has password protection
-        return !security.permissions.contains(PdfPermissionsFlags.editContent);
+      if (security.userPassword.isNotEmpty || security.ownerPassword.isNotEmpty) {
+        // Has password protection - assume it might be write protected
+        // The Syncfusion API doesn't expose a simple way to check edit permissions
+        // In a real implementation, we would try to make a test modification
+        return true;
       }
 
       return false;

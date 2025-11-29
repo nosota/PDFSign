@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pdfsign/core/constants/app_constants.dart';
+import 'package:pdfsign/core/router/app_router.dart';
 import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/l10n/app_localizations.dart';
 
@@ -25,7 +26,7 @@ class PDFSignApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: AppConstants.appName,
       debugShowCheckedModeBanner: false,
 
@@ -45,18 +46,8 @@ class PDFSignApp extends StatelessWidget {
         Locale('ru'), // Russian
       ],
 
-      // TODO: Configure routing with go_router
-      home: const Scaffold(
-        body: Center(
-          child: Text(
-            'PDFSign - Coming Soon',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
+      // Routing
+      routerConfig: AppRouter.router,
     );
   }
 }

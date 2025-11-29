@@ -5,6 +5,7 @@ import 'package:pdfsign/core/errors/exceptions.dart';
 import 'package:pdfsign/core/errors/failures.dart';
 import 'package:pdfsign/core/utils/typedef.dart';
 import 'package:pdfsign/data/datasources/local/signature_local_datasource.dart';
+import 'package:pdfsign/data/models/signature_item_model.dart';
 import 'package:pdfsign/domain/entities/signature_item.dart';
 import 'package:pdfsign/domain/repositories/signature_repository.dart';
 
@@ -144,7 +145,7 @@ class SignatureRepositoryImpl implements SignatureRepository {
       }).toList();
 
       final resolvedModels = await Future.wait(models);
-      final nonNullModels = resolvedModels.whereType().toList();
+      final nonNullModels = resolvedModels.whereType<SignatureItemModel>().toList();
 
       // Update order
       for (var i = 0; i < nonNullModels.length; i++) {
