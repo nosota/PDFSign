@@ -817,6 +817,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This item will be removed from your library. Placed instances in documents will not be affected.'**
   String get deleteConfirmMessage;
+
+  /// Message shown when dragging a file over drop zone
+  ///
+  /// In en, this message translates to:
+  /// **'Drop file here'**
+  String get dropFileHere;
+
+  /// Instructions for drag and drop on desktop
+  ///
+  /// In en, this message translates to:
+  /// **'Drag and drop PDF file here or click to browse'**
+  String get dragDropOrClick;
+
+  /// Instructions for file selection on mobile
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to select PDF file'**
+  String get tapToSelect;
+
+  /// Information about supported file format
+  ///
+  /// In en, this message translates to:
+  /// **'Supported format: PDF'**
+  String get supportedFormat;
+
+  /// Search placeholder text
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// Message when search returns no results
+  ///
+  /// In en, this message translates to:
+  /// **'No files match your search'**
+  String get noMatchingFiles;
+
+  /// Description shown when there are no recent files
+  ///
+  /// In en, this message translates to:
+  /// **'Open a PDF to see it here'**
+  String get noRecentFilesDescription;
+
+  /// Open file action
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get open;
+
+  /// Show file in file explorer
+  ///
+  /// In en, this message translates to:
+  /// **'Show in Folder'**
+  String get showInFolder;
 }
 
 class _AppLocalizationsDelegate

@@ -125,5 +125,24 @@
 
   "clipboardBehavior": "Поведение буфера обмена",
   "resetPastePreference": "Сбросить настройку \"Больше не спрашивать\"",
-  "defaultPasteTarget": "Место вставки по умолчанию"
+  "defaultPasteTarget": "Место вставки по умолчанию",
+
+  "page": "страница",
+  "pages": "страниц",
+  "removeFromRecent": "Удалить из недавних",
+  "removeFromRecentConfirm": "Вы уверены, что хотите удалить этот файл из недавних?",
+  "remove": "Удалить",
+  "noPdfOpen": "Нет открытого PDF документа",
+  "openPdfToStart": "Откройте PDF чтобы начать",
+  "deleteConfirmMessage": "Этот элемент будет удален из вашей библиотеки. Размещенные экземпляры в документах не будут затронуты.",
+
+  "dropFileHere": "Отпустите файл здесь",
+  "dragDropOrClick": "Перетащите PDF файл сюда или нажмите для выбора",
+  "tapToSelect": "Нажмите для выбора PDF файла",
+  "supportedFormat": "Поддерживаемый формат: PDF",
+  "search": "Поиск",
+  "noMatchingFiles": "Нет файлов, соответствующих запросу",
+  "noRecentFilesDescription": "Откройте PDF чтобы увидеть его здесь",
+  "open": "Открыть",
+  "showInFolder": "Показать в папке"
 }

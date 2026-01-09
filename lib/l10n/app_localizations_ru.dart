@@ -368,28 +368,56 @@ class AppLocalizationsRu extends AppLocalizations {
   String get error => 'Error';
 
   @override
-  String get page => 'page';
+  String get page => 'страница';
 
   @override
-  String get pages => 'pages';
+  String get pages => 'страниц';
 
   @override
-  String get removeFromRecent => 'Remove from Recent';
+  String get removeFromRecent => 'Удалить из недавних';
 
   @override
   String get removeFromRecentConfirm =>
-      'Are you sure you want to remove this file from recent files?';
+      'Вы уверены, что хотите удалить этот файл из недавних?';
 
   @override
-  String get remove => 'Remove';
+  String get remove => 'Удалить';
 
   @override
-  String get noPdfOpen => 'No PDF document open';
+  String get noPdfOpen => 'Нет открытого PDF документа';
 
   @override
-  String get openPdfToStart => 'Open a PDF to get started';
+  String get openPdfToStart => 'Откройте PDF чтобы начать';
 
   @override
   String get deleteConfirmMessage =>
-      'This item will be removed from your library. Placed instances in documents will not be affected.';
+      'Этот элемент будет удален из вашей библиотеки. Размещенные экземпляры в документах не будут затронуты.';
+
+  @override
+  String get dropFileHere => 'Отпустите файл здесь';
+
+  @override
+  String get dragDropOrClick =>
+      'Перетащите PDF файл сюда или нажмите для выбора';
+
+  @override
+  String get tapToSelect => 'Нажмите для выбора PDF файла';
+
+  @override
+  String get supportedFormat => 'Поддерживаемый формат: PDF';
+
+  @override
+  String get search => 'Поиск';
+
+  @override
+  String get noMatchingFiles => 'Нет файлов, соответствующих запросу';
+
+  @override
+  String get noRecentFilesDescription => 'Откройте PDF чтобы увидеть его здесь';
+
+  @override
+  String get open => 'Открыть';
+
+  @override
+  String get showInFolder => 'Показать в папке';
 }

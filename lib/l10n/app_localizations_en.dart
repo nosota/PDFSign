@@ -387,4 +387,32 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get deleteConfirmMessage =>
       'This item will be removed from your library. Placed instances in documents will not be affected.';
+
+  @override
+  String get dropFileHere => 'Drop file here';
+
+  @override
+  String get dragDropOrClick =>
+      'Drag and drop PDF file here or click to browse';
+
+  @override
+  String get tapToSelect => 'Tap to select PDF file';
+
+  @override
+  String get supportedFormat => 'Supported format: PDF';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get noMatchingFiles => 'No files match your search';
+
+  @override
+  String get noRecentFilesDescription => 'Open a PDF to see it here';
+
+  @override
+  String get open => 'Open';
+
+  @override
+  String get showInFolder => 'Show in Folder';
 }

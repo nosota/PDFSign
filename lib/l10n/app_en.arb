@@ -202,5 +202,50 @@
   "remove": "Remove",
   "noPdfOpen": "No PDF document open",
   "openPdfToStart": "Open a PDF to get started",
-  "deleteConfirmMessage": "This item will be removed from your library. Placed instances in documents will not be affected."
+  "deleteConfirmMessage": "This item will be removed from your library. Placed instances in documents will not be affected.",
+
+  "dropFileHere": "Drop file here",
+  "@dropFileHere": {
+    "description": "Message shown when dragging a file over drop zone"
+  },
+
+  "dragDropOrClick": "Drag and drop PDF file here or click to browse",
+  "@dragDropOrClick": {
+    "description": "Instructions for drag and drop on desktop"
+  },
+
+  "tapToSelect": "Tap to select PDF file",
+  "@tapToSelect": {
+    "description": "Instructions for file selection on mobile"
+  },
+
+  "supportedFormat": "Supported format: PDF",
+  "@supportedFormat": {
+    "description": "Information about supported file format"
+  },
+
+  "search": "Search",
+  "@search": {
+    "description": "Search placeholder text"
+  },
+
+  "noMatchingFiles": "No files match your search",
+  "@noMatchingFiles": {
+    "description": "Message when search returns no results"
+  },
+
+  "noRecentFilesDescription": "Open a PDF to see it here",
+  "@noRecentFilesDescription": {
+    "description": "Description shown when there are no recent files"
+  },
+
+  "open": "Open",
+  "@open": {
+    "description": "Open file action"
+  },
+
+  "showInFolder": "Show in Folder",
+  "@showInFolder": {
+    "description": "Show file in file explorer"
+  }
 }
