@@ -33,7 +33,6 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
   PdfDocument? _document;
   final TransformationController _transformationController =
       TransformationController();
-  final ScrollController _scrollController = ScrollController();
 
   double _scale = 1;
   double _viewportWidth = 0;
@@ -64,7 +63,6 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
   void dispose() {
     _document?.close();
     _transformationController.dispose();
-    _scrollController.dispose();
     for (final page in _renderedPages) {
       page.bytes.clear();
     }
@@ -333,10 +331,7 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
             transformationController: _transformationController,
             minScale: 0.01,
             maxScale: _maxZoom,
-            boundaryMargin: const EdgeInsets.all(double.infinity),
-            clipBehavior: Clip.none,
-            panEnabled: true,
-            scaleEnabled: true,
+            boundaryMargin: EdgeInsets.all(_pagePadding),
             onInteractionUpdate: (details) {
               setState(() {
                 _scale = _transformationController.value.getMaxScaleOnAxis();
@@ -354,54 +349,15 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
       return const SizedBox.shrink();
     }
 
-    // Calculate total content height
-    double totalHeight = _pagePadding * 2; // Top and bottom padding
-    for (int i = 0; i < _renderedPages.length; i++) {
-      final pageHeight = (_renderedPages[i].height ?? 0) / 2;
-      totalHeight += pageHeight;
-      if (i < _renderedPages.length - 1) {
-        totalHeight += _pageSpacing;
-      }
-    }
-
-    // Calculate content width (max page width + padding)
-    double contentWidth = 0;
-    for (final page in _renderedPages) {
-      final pageWidth = (page.width ?? 0) / 2;
-      if (pageWidth > contentWidth) {
-        contentWidth = pageWidth;
-      }
-    }
-    contentWidth += _pagePadding * 2;
-
-    return SizedBox(
-      width: constraints.maxWidth,
-      height: constraints.maxHeight,
-      child: SingleChildScrollView(
-        controller: _scrollController,
-        physics: const BouncingScrollPhysics(),
-        child: SizedBox(
-          width: constraints.maxWidth,
-          height: totalHeight > constraints.maxHeight
-              ? totalHeight
-              : constraints.maxHeight,
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: _pagePadding),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  for (int i = 0; i < _renderedPages.length; i++) ...[
-                    _buildPageWidget(_renderedPages[i]),
-                    if (i < _renderedPages.length - 1)
-                      const SizedBox(height: _pageSpacing),
-                  ],
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        for (int i = 0; i < _renderedPages.length; i++) ...[
+          _buildPageWidget(_renderedPages[i]),
+          if (i < _renderedPages.length - 1)
+            const SizedBox(height: _pageSpacing),
+        ],
+      ],
     );
   }
 
