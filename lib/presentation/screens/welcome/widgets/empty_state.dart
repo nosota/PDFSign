@@ -23,7 +23,7 @@ class EmptyState extends StatelessWidget {
               return Transform.scale(
                 scale: value,
                 child: Opacity(
-                  opacity: value,
+                  opacity: value.clamp(0.0, 1.0),
                   child: child,
                 ),
               );
