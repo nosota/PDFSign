@@ -34,11 +34,16 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
   double _zoomLevel = 1;
   bool _isLoading = true;
   String? _errorMessage;
+  bool _isDocumentLoaded = false;
+  double _viewportWidth = 0;
 
-  // Zoom constants
-  static const double _minZoom = 0.5;
-  static const double _maxZoom = 4;
+  // Zoom constants (10% to 500% range, like Preview)
+  static const double _minZoom = 0.1;
+  static const double _maxZoom = 5;
   static const double _zoomStep = 0.1;
+
+  // Standard A4 page width in points (8.27 inches at 72 DPI)
+  static const double _standardPageWidth = 595;
 
   @override
   void initState() {
@@ -87,6 +92,24 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
     setState(() {
       _zoomLevel = (_zoomLevel - _zoomStep).clamp(_minZoom, _maxZoom);
       _pdfController.zoomLevel = _zoomLevel;
+    });
+  }
+
+  void _calculateFitToWidth() {
+    if (_viewportWidth <= 0) return;
+
+    // Account for scrollbar and padding (approximate)
+    const padding = 40.0;
+    final availableWidth = _viewportWidth - padding;
+
+    // Calculate zoom to fit page width to viewport
+    final fitZoom = availableWidth / _standardPageWidth;
+
+    setState(() {
+      _zoomLevel = fitZoom.clamp(_minZoom, _maxZoom);
+      if (_isDocumentLoaded) {
+        _pdfController.zoomLevel = _zoomLevel;
+      }
     });
   }
 
@@ -211,6 +234,19 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
   Widget _buildPdfViewer() {
     return LayoutBuilder(
       builder: (context, constraints) {
+        // Save viewport width but don't recalculate zoom on resize
+        if (_viewportWidth != constraints.maxWidth) {
+          _viewportWidth = constraints.maxWidth;
+          // Only calculate fit-to-width on initial load
+          if (!_isDocumentLoaded) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!_isDocumentLoaded) {
+                _calculateFitToWidth();
+              }
+            });
+          }
+        }
+
         return Listener(
           onPointerSignal: (event) {
             if (event is PointerScrollEvent) {
@@ -241,8 +277,11 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
             canShowScrollHead: true,
             canShowScrollStatus: true,
             onDocumentLoaded: (details) {
-              // Set initial zoom to fit width
-              _pdfController.zoomLevel = _zoomLevel;
+              // Mark document as loaded and apply fit-to-width zoom
+              setState(() {
+                _isDocumentLoaded = true;
+              });
+              _calculateFitToWidth();
             },
             onDocumentLoadFailed: (details) {
               setState(() {
