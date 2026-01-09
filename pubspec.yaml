@@ -23,8 +23,7 @@ dependencies:
   go_router: ^14.2.7
 
   # PDF Processing
-  syncfusion_flutter_pdf: any
-  syncfusion_flutter_pdfviewer: any
+  pdfx: ^2.6.0
 
   # Storage
   isar: ^3.1.0+1
@@ -82,7 +81,3 @@ flutter:
   #       - asset: assets/fonts/CustomFont-Regular.ttf
   #       - asset: assets/fonts/CustomFont-Bold.ttf
   #         weight: 700
-
-# Syncfusion Community License
-# This application is using Syncfusion Community License
-# which is free for companies with less than $1 million USD in annual revenue
