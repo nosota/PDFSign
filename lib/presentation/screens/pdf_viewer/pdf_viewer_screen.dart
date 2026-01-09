@@ -48,7 +48,7 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
 
   // Page spacing and padding
   static const double _pageSpacing = 16;
-  static const double _pagePadding = 40;
+  static const double _pagePadding = 20;
 
   // Background colors (light gray like Preview)
   static const Color _backgroundColor = Color(0xFFE8E8E8);
@@ -331,7 +331,7 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
           },
           child: InteractiveViewer(
             transformationController: _transformationController,
-            minScale: _minZoom,
+            minScale: 0.01, // Allow pinch zoom to go very small
             maxScale: _maxZoom,
             constrained: false,
             onInteractionUpdate: (details) {
@@ -353,17 +353,25 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
 
     return SingleChildScrollView(
       controller: _scrollController,
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: _pagePadding),
-          child: Column(
-            children: [
-              for (int i = 0; i < _renderedPages.length; i++) ...[
-                _buildPageWidget(_renderedPages[i]),
-                if (i < _renderedPages.length - 1)
-                  const SizedBox(height: _pageSpacing),
+      physics: const BouncingScrollPhysics(),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: constraints.maxHeight,
+          minWidth: constraints.maxWidth,
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: _pagePadding),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (int i = 0; i < _renderedPages.length; i++) ...[
+                  _buildPageWidget(_renderedPages[i]),
+                  if (i < _renderedPages.length - 1)
+                    const SizedBox(height: _pageSpacing),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
