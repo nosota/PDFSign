@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pdfsign/core/router/app_router.dart';
 import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/l10n/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/settings/settings_provider.dart';
@@ -170,35 +172,16 @@ class WelcomeScreen extends ConsumerWidget {
     WidgetRef ref,
     String path,
   ) async {
-    // TODO: Implement PDF opening logic
-    // For now, show a temporary message
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'PDF Editor coming soon! Selected: ${path.split('/').last}',
-          ),
-          duration: const Duration(seconds: 3),
-          action: SnackBarAction(
-            label: 'OK',
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-          ),
-        ),
+      context.push(
+        '${AppRouter.pdfViewerPath}?path=${Uri.encodeComponent(path)}',
       );
     }
   }
 
   void _openRecentFile(BuildContext context, String path) {
-    // TODO: Implement PDF opening logic
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'PDF Editor coming soon! File: ${path.split('/').last}',
-        ),
-        duration: const Duration(seconds: 3),
-      ),
+    context.push(
+      '${AppRouter.pdfViewerPath}?path=${Uri.encodeComponent(path)}',
     );
   }
 
