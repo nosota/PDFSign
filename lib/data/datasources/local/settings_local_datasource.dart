@@ -69,14 +69,14 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
       final jsonString = _prefs.getString(AppConstants.prefKeyRecentFiles);
       if (jsonString == null) return [];
 
-      final List<dynamic> jsonList = json.decode(jsonString);
+      final jsonList = json.decode(jsonString) as List<dynamic>;
       return jsonList
           .map((json) => RecentFileModel()
-            ..path = json['path']
-            ..fileName = json['fileName']
-            ..lastOpened = DateTime.parse(json['lastOpened'])
-            ..pageCount = json['pageCount']
-            ..isPasswordProtected = json['isPasswordProtected'])
+            ..path = json['path'] as String
+            ..fileName = json['fileName'] as String
+            ..lastOpened = DateTime.parse(json['lastOpened'] as String)
+            ..pageCount = json['pageCount'] as int
+            ..isPasswordProtected = json['isPasswordProtected'] as bool)
           .toList();
     } catch (e) {
       throw CacheException('Failed to get recent files: ${e.toString()}');

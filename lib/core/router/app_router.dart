@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pdfsign/presentation/screens/editor/editor_screen.dart';
 import 'package:pdfsign/presentation/screens/welcome/welcome_screen.dart';
 
 /// Application router configuration using go_router
@@ -9,7 +8,6 @@ class AppRouter {
 
   /// Route paths
   static const String welcomePath = '/';
-  static const String editorPath = '/editor';
 
   /// Router instance
   static final GoRouter router = GoRouter(
@@ -23,17 +21,6 @@ class AppRouter {
           key: state.pageKey,
           child: const WelcomeScreen(),
         ),
-      ),
-      GoRoute(
-        path: editorPath,
-        name: 'editor',
-        pageBuilder: (context, state) {
-          final pdfPath = state.uri.queryParameters['path'];
-          return MaterialPage(
-            key: state.pageKey,
-            child: EditorScreen(pdfPath: pdfPath),
-          );
-        },
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

@@ -1,7 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdfsign/data/models/recent_file_model.dart';
-import 'package:pdfsign/data/models/signature_item_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'isar_provider.g.dart';
@@ -18,7 +17,6 @@ Future<Isar> isar(IsarRef ref) async {
   // Open Isar database with schemas
   final isar = await Isar.open(
     [
-      SignatureItemModelSchema,
       RecentFileModelSchema,
     ],
     directory: dir.path,

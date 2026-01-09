@@ -1,8 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:pdfsign/core/router/app_router.dart';
 import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/l10n/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/settings/settings_provider.dart';
@@ -136,13 +134,23 @@ class WelcomeScreen extends ConsumerWidget {
     if (result != null && result.files.single.path != null) {
       final path = result.files.single.path!;
       if (context.mounted) {
-        context.push('${AppRouter.editorPath}?path=${Uri.encodeComponent(path)}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('PDF Editor coming soon! Selected: ${path.split('/').last}'),
+            duration: const Duration(seconds: 3),
+          ),
+        );
       }
     }
   }
 
   void _openRecentFile(BuildContext context, String path) {
-    context.push('${AppRouter.editorPath}?path=${Uri.encodeComponent(path)}');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('PDF Editor coming soon! File: ${path.split('/').last}'),
+        duration: const Duration(seconds: 3),
+      ),
+    );
   }
 
   Future<void> _removeRecentFile(
