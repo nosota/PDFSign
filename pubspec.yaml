@@ -50,6 +50,13 @@ dependencies:
   # Shared Preferences for settings
   shared_preferences: ^2.3.2
 
+  # Desktop Multi-Window Support
+  desktop_multi_window: ^0.3.0
+  window_manager: ^0.4.2
+
+  # Sharing
+  share_plus: ^10.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pdfsign/l10n/generated/app_localizations.dart';
-import 'package:go_router/go_router.dart';
+
 import 'package:pdfsign/core/constants/spacing.dart';
+import 'package:pdfsign/core/window/window_manager_service.dart';
 import 'package:pdfsign/domain/entities/recent_file.dart';
+import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/file_picker_provider.dart';
 import 'package:pdfsign/presentation/providers/recent_files_provider.dart';
 import 'package:pdfsign/presentation/screens/welcome/widgets/app_logo.dart';
@@ -89,9 +90,8 @@ class _DesktopWelcomeViewState extends ConsumerState<DesktopWelcomeView> {
               ),
             );
 
-        if (mounted) {
-          context.goNamed('editor', extra: path);
-        }
+        // Open in new window
+        await WindowManagerService.instance.createPdfWindow(path);
       }
     } catch (e) {
       if (mounted) {
@@ -128,9 +128,8 @@ class _DesktopWelcomeViewState extends ConsumerState<DesktopWelcomeView> {
           file.copyWith(lastOpened: DateTime.now()),
         );
 
-    if (mounted) {
-      context.goNamed('editor', extra: file.path);
-    }
+    // Open in new window
+    await WindowManagerService.instance.createPdfWindow(file.path);
   }
 
   Future<void> _handleRemoveRecentFile(RecentFile file) async {
