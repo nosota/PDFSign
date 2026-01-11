@@ -1,0 +1,82 @@
+{
+  "@@locale": "en",
+  "openPdf": "Open PDF",
+  "@openPdf": {
+    "description": "Button label for opening a PDF file on desktop"
+  },
+  "selectPdf": "Select PDF",
+  "@selectPdf": {
+    "description": "Button label for selecting a PDF file on mobile"
+  },
+  "recentFiles": "Recent Files",
+  "@recentFiles": {
+    "description": "Section header for recent files list"
+  },
+  "removeFromList": "Remove from list",
+  "@removeFromList": {
+    "description": "Tooltip for remove button in recent files"
+  },
+  "openedNow": "Opened just now",
+  "@openedNow": {
+    "description": "Time indicator for files opened less than a minute ago"
+  },
+  "openedMinutesAgo": "Opened {count} {count, plural, one{minute} other{minutes}} ago",
+  "@openedMinutesAgo": {
+    "description": "Time indicator for files opened minutes ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "openedHoursAgo": "Opened {count} {count, plural, one{hour} other{hours}} ago",
+  "@openedHoursAgo": {
+    "description": "Time indicator for files opened hours ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "openedYesterday": "Opened yesterday",
+  "@openedYesterday": {
+    "description": "Time indicator for files opened yesterday"
+  },
+  "openedDaysAgo": "Opened {count} {count, plural, one{day} other{days}} ago",
+  "@openedDaysAgo": {
+    "description": "Time indicator for files opened days ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fileNotFound": "File not found",
+  "@fileNotFound": {
+    "description": "Error message when file doesn't exist"
+  },
+  "fileAccessDenied": "Access denied",
+  "@fileAccessDenied": {
+    "description": "Error message when file access is denied"
+  },
+  "clearRecentFiles": "Clear recent files",
+  "@clearRecentFiles": {
+    "description": "Button to clear all recent files"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button label"
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Confirm button label"
+  },
+  "error": "Error",
+  "@error": {
+    "description": "Generic error title"
+  },
+  "ok": "OK",
+  "@ok": {
+    "description": "OK button label"
+  }
+}

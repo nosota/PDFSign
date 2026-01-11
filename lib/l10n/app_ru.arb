@@ -1,0 +1,19 @@
+{
+  "@@locale": "ru",
+  "openPdf": "Открыть PDF",
+  "selectPdf": "Выбрать PDF",
+  "recentFiles": "Недавние файлы",
+  "removeFromList": "Удалить из списка",
+  "openedNow": "Открыт только что",
+  "openedMinutesAgo": "Открыт {count} {count, plural, one{минуту} few{минуты} many{минут} other{минут}} назад",
+  "openedHoursAgo": "Открыт {count} {count, plural, one{час} few{часа} many{часов} other{часа}} назад",
+  "openedYesterday": "Открыт вчера",
+  "openedDaysAgo": "Открыт {count} {count, plural, one{день} few{дня} many{дней} other{дней}} назад",
+  "fileNotFound": "Файл не найден",
+  "fileAccessDenied": "Доступ запрещён",
+  "clearRecentFiles": "Очистить недавние файлы",
+  "cancel": "Отмена",
+  "confirm": "Подтвердить",
+  "error": "Ошибка",
+  "ok": "OK"
+}
