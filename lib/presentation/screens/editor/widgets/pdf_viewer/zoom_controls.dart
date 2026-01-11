@@ -76,6 +76,7 @@ class ZoomControls extends StatelessWidget {
           ),
           _ZoomDropdown(
             label: _zoomLabel,
+            currentScale: currentScale,
             isFitWidth: isFitWidth,
             onFitWidth: onFitWidth,
             onPresetSelected: onPresetSelected,
@@ -132,12 +133,14 @@ class _ZoomButton extends StatelessWidget {
 class _ZoomDropdown extends StatelessWidget {
   const _ZoomDropdown({
     required this.label,
+    required this.currentScale,
     required this.isFitWidth,
     required this.onFitWidth,
     required this.onPresetSelected,
   });
 
   final String label;
+  final double currentScale;
   final bool isFitWidth;
   final VoidCallback onFitWidth;
   final void Function(double scale) onPresetSelected;
@@ -180,8 +183,9 @@ class _ZoomDropdown extends StatelessWidget {
         return presets.map((preset) {
           final isSelected = preset == ZoomPreset.fitWidth
               ? isFitWidth
-              : preset.scale != null &&
-                  (preset.scale! - (isFitWidth ? 0 : 1.0)).abs() < 0.01;
+              : !isFitWidth &&
+                  preset.scale != null &&
+                  (preset.scale! - currentScale).abs() < 0.01;
           return PopupMenuItem<ZoomPreset>(
             value: preset,
             child: Row(
