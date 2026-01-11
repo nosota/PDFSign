@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -37,12 +39,14 @@ class PdfPageList extends ConsumerStatefulWidget {
 }
 
 class PdfPageListState extends ConsumerState<PdfPageList> {
-  late ScrollController _scrollController;
-  bool _ownsScrollController = false;
+  late ScrollController _verticalController;
+  ScrollController _horizontalController = ScrollController();
+  bool _ownsVerticalController = false;
   int _currentPage = 1;
   double _previousScale = 1.0;
+  double _viewportWidth = 0;
 
-  ScrollController get scrollController => _scrollController;
+  ScrollController get scrollController => _verticalController;
 
   @override
   void initState() {
@@ -53,21 +57,22 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
 
   void _initScrollController() {
     if (widget.scrollController != null) {
-      _scrollController = widget.scrollController!;
-      _ownsScrollController = false;
+      _verticalController = widget.scrollController!;
+      _ownsVerticalController = false;
     } else {
-      _scrollController = ScrollController();
-      _ownsScrollController = true;
+      _verticalController = ScrollController();
+      _ownsVerticalController = true;
     }
-    _scrollController.addListener(_onScroll);
+    _verticalController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_onScroll);
-    if (_ownsScrollController) {
-      _scrollController.dispose();
+    _verticalController.removeListener(_onScroll);
+    if (_ownsVerticalController) {
+      _verticalController.dispose();
     }
+    _horizontalController.dispose();
     super.dispose();
   }
 
@@ -77,15 +82,15 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
 
     // Handle scroll controller change
     if (widget.scrollController != oldWidget.scrollController) {
-      _scrollController.removeListener(_onScroll);
-      if (_ownsScrollController) {
-        _scrollController.dispose();
+      _verticalController.removeListener(_onScroll);
+      if (_ownsVerticalController) {
+        _verticalController.dispose();
       }
       _initScrollController();
     }
 
     // Handle scale change - maintain center focus
-    if (oldWidget.scale != widget.scale && _scrollController.hasClients) {
+    if (oldWidget.scale != widget.scale && _verticalController.hasClients) {
       _adjustScrollForScaleChange(oldWidget.scale, widget.scale);
     }
 
@@ -93,10 +98,10 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
   }
 
   void _adjustScrollForScaleChange(double oldScale, double newScale) {
-    if (!_scrollController.hasClients) return;
+    if (!_verticalController.hasClients) return;
 
-    final viewportHeight = _scrollController.position.viewportDimension;
-    final currentOffset = _scrollController.offset;
+    final viewportHeight = _verticalController.position.viewportDimension;
+    final currentOffset = _verticalController.offset;
 
     // Calculate the center point in document coordinates
     final centerOffset = currentOffset + viewportHeight / 2;
@@ -112,12 +117,12 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
 
     // Apply new offset
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
+      if (_verticalController.hasClients) {
         final clampedOffset = newOffset.clamp(
           0.0,
-          _scrollController.position.maxScrollExtent,
+          _verticalController.position.maxScrollExtent,
         );
-        _scrollController.jumpTo(clampedOffset);
+        _verticalController.jumpTo(clampedOffset);
       }
     });
   }
@@ -129,10 +134,10 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
   }
 
   void _updateVisiblePages() {
-    if (!_scrollController.hasClients) return;
+    if (!_verticalController.hasClients) return;
 
-    final viewportHeight = _scrollController.position.viewportDimension;
-    final scrollOffset = _scrollController.offset;
+    final viewportHeight = _verticalController.position.viewportDimension;
+    final scrollOffset = _verticalController.offset;
 
     // Calculate which pages are visible
     double cumulativeHeight = PdfViewerConstants.verticalPadding;
@@ -163,10 +168,10 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
   }
 
   void _updateCurrentPage() {
-    if (!_scrollController.hasClients) return;
+    if (!_verticalController.hasClients) return;
 
-    final scrollOffset = _scrollController.offset;
-    final viewportCenter = scrollOffset + _scrollController.position.viewportDimension / 2;
+    final scrollOffset = _verticalController.offset;
+    final viewportCenter = scrollOffset + _verticalController.position.viewportDimension / 2;
 
     double cumulativeHeight = PdfViewerConstants.verticalPadding;
     int centerPage = 1;
@@ -201,9 +206,22 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
     return totalHeight;
   }
 
+  /// Calculates the width of the widest page at current scale.
+  double _calculateContentWidth([double? scale]) {
+    final s = scale ?? widget.scale;
+    double maxWidth = 0;
+    for (final page in widget.document.pages) {
+      final scaledWidth = page.width * s;
+      if (scaledWidth > maxWidth) {
+        maxWidth = scaledWidth;
+      }
+    }
+    return maxWidth;
+  }
+
   /// Scrolls to show the specified page.
   void scrollToPage(int pageNumber, {bool animate = true}) {
-    if (!_scrollController.hasClients) return;
+    if (!_verticalController.hasClients) return;
 
     final targetPage = pageNumber.clamp(1, widget.document.pageCount);
     double targetOffset = PdfViewerConstants.verticalPadding;
@@ -214,52 +232,117 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
     }
 
     // Center the page in viewport if possible
-    final viewportHeight = _scrollController.position.viewportDimension;
+    final viewportHeight = _verticalController.position.viewportDimension;
     final pageHeight = widget.document.pages[targetPage - 1].height * widget.scale;
 
     if (pageHeight < viewportHeight) {
       targetOffset -= (viewportHeight - pageHeight) / 2;
     }
 
-    targetOffset = targetOffset.clamp(0.0, _scrollController.position.maxScrollExtent);
+    targetOffset = targetOffset.clamp(0.0, _verticalController.position.maxScrollExtent);
 
     if (animate) {
-      _scrollController.animateTo(
+      _verticalController.animateTo(
         targetOffset,
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     } else {
-      _scrollController.jumpTo(targetOffset);
+      _verticalController.jumpTo(targetOffset);
     }
   }
 
-  /// Scrolls by a delta amount.
+  /// Scrolls by a delta amount in both directions.
   void scrollBy(double deltaX, double deltaY, {bool animate = true}) {
-    if (!_scrollController.hasClients) return;
-
-    final newOffset = (_scrollController.offset + deltaY).clamp(
-      0.0,
-      _scrollController.position.maxScrollExtent,
-    );
-
-    if (animate) {
-      _scrollController.animateTo(
-        newOffset,
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.easeOut,
+    // Vertical scroll
+    if (_verticalController.hasClients && deltaY != 0) {
+      final newVerticalOffset = (_verticalController.offset + deltaY).clamp(
+        0.0,
+        _verticalController.position.maxScrollExtent,
       );
-    } else {
-      _scrollController.jumpTo(newOffset);
+
+      if (animate) {
+        _verticalController.animateTo(
+          newVerticalOffset,
+          duration: const Duration(milliseconds: 100),
+          curve: Curves.easeOut,
+        );
+      } else {
+        _verticalController.jumpTo(newVerticalOffset);
+      }
     }
+
+    // Horizontal scroll
+    if (_horizontalController.hasClients && deltaX != 0) {
+      final newHorizontalOffset = (_horizontalController.offset + deltaX).clamp(
+        0.0,
+        _horizontalController.position.maxScrollExtent,
+      );
+
+      if (animate) {
+        _horizontalController.animateTo(
+          newHorizontalOffset,
+          duration: const Duration(milliseconds: 100),
+          curve: Curves.easeOut,
+        );
+      } else {
+        _horizontalController.jumpTo(newHorizontalOffset);
+      }
+    }
+  }
+
+  /// Adjusts scroll position after a focal-point zoom.
+  /// Keeps the document point at [focalPoint] at the same screen position.
+  void adjustScrollForFocalZoom({
+    required double oldScale,
+    required double newScale,
+    required Offset focalPoint,
+  }) {
+    final scaleRatio = newScale / oldScale;
+
+    // Vertical adjustment
+    double? newVerticalOffset;
+    if (_verticalController.hasClients) {
+      final oldVerticalOffset = _verticalController.offset;
+      final focalY = focalPoint.dy;
+      newVerticalOffset = oldVerticalOffset * scaleRatio + focalY * (scaleRatio - 1);
+    }
+
+    // Horizontal adjustment
+    double? newHorizontalOffset;
+    if (_horizontalController.hasClients) {
+      final oldHorizontalOffset = _horizontalController.offset;
+      final focalX = focalPoint.dx;
+      newHorizontalOffset = oldHorizontalOffset * scaleRatio + focalX * (scaleRatio - 1);
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Apply vertical scroll
+      if (_verticalController.hasClients && newVerticalOffset != null) {
+        final clampedVertical = newVerticalOffset.clamp(
+          0.0,
+          _verticalController.position.maxScrollExtent,
+        );
+        _verticalController.jumpTo(clampedVertical);
+      }
+
+      // Apply horizontal scroll
+      if (_horizontalController.hasClients && newHorizontalOffset != null) {
+        final clampedHorizontal = newHorizontalOffset.clamp(
+          0.0,
+          _horizontalController.position.maxScrollExtent,
+        );
+        _horizontalController.jumpTo(clampedHorizontal);
+      }
+    });
   }
 
   /// Returns scroll offset for center-focused zoom calculations.
-  double get scrollOffset => _scrollController.hasClients ? _scrollController.offset : 0;
+  double get scrollOffset => _verticalController.hasClients ? _verticalController.offset : 0;
 
   /// Returns viewport dimensions.
   double get viewportHeight =>
-      _scrollController.hasClients ? _scrollController.position.viewportDimension : 0;
+      _verticalController.hasClients ? _verticalController.position.viewportDimension : 0;
 
   @override
   Widget build(BuildContext context) {
@@ -267,41 +350,71 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
+        // Store viewport width for centering calculations
+        _viewportWidth = constraints.maxWidth;
+
         // Initialize visible pages on first build
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (_scrollController.hasClients) {
+          if (_verticalController.hasClients) {
             _updateVisiblePages();
           }
         });
 
-        return SingleChildScrollView(
-          controller: _scrollController,
-          physics: const ClampingScrollPhysics(),
-          child: Container(
-            width: constraints.maxWidth,
-            height: _calculateTotalHeight(),
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: PdfViewerConstants.verticalPadding,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  for (int i = 0; i < widget.document.pages.length; i++) ...[
-                    PdfPageItem(
-                      pageInfo: widget.document.pages[i],
-                      scale: widget.scale,
-                      isVisible: visiblePages.contains(i + 1),
-                    ),
-                    if (i < widget.document.pages.length - 1)
-                      const SizedBox(height: PdfViewerConstants.pageGap),
-                  ],
+        final contentWidth = _calculateContentWidth();
+        final contentHeight = _calculateTotalHeight();
+
+        // Content can be wider than viewport when zoomed in
+        final effectiveWidth = math.max(contentWidth, constraints.maxWidth);
+
+        // Check if horizontal scroll is needed
+        final needsHorizontalScroll = contentWidth > constraints.maxWidth;
+
+        Widget content = SizedBox(
+          width: effectiveWidth,
+          height: contentHeight,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: PdfViewerConstants.verticalPadding,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (int i = 0; i < widget.document.pages.length; i++) ...[
+                  PdfPageItem(
+                    pageInfo: widget.document.pages[i],
+                    scale: widget.scale,
+                    isVisible: visiblePages.contains(i + 1),
+                  ),
+                  if (i < widget.document.pages.length - 1)
+                    const SizedBox(height: PdfViewerConstants.pageGap),
                 ],
-              ),
+              ],
             ),
           ),
         );
+
+        // Vertical scroll
+        Widget verticalScroll = SingleChildScrollView(
+          controller: _verticalController,
+          physics: const ClampingScrollPhysics(),
+          child: content,
+        );
+
+        // Wrap in horizontal scroll if needed
+        if (needsHorizontalScroll) {
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            controller: _horizontalController,
+            physics: const ClampingScrollPhysics(),
+            child: SizedBox(
+              width: effectiveWidth,
+              height: constraints.maxHeight,
+              child: verticalScroll,
+            ),
+          );
+        }
+
+        return verticalScroll;
       },
     );
   }

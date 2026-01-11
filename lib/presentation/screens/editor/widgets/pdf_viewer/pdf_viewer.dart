@@ -39,6 +39,7 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
   double _baseScale = 1.0;           // Scale at the start of gesture
   double _gestureScaleFactor = 1.0;  // Visual scale factor during gesture (1.0 = no change)
   bool _isPinching = false;
+  Offset? _focalPointLocal;          // Focal point for focal-point-centered zoom
 
   // Scroll amount for arrow keys
   static const double _arrowScrollAmount = 50.0;
@@ -108,6 +109,7 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
         loaded: (loaded) {
           _baseScale = loaded.scale;
           _gestureScaleFactor = 1.0;
+          _focalPointLocal = details.localFocalPoint;
         },
         orElse: () {},
       );
@@ -119,6 +121,7 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
       // Only update visual scale factor - no re-rendering!
       setState(() {
         _gestureScaleFactor = details.scale;
+        _focalPointLocal = details.localFocalPoint;
       });
     }
   }
@@ -127,16 +130,31 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
     if (_isPinching) {
       _isPinching = false;
 
-      // Now apply the final scale and trigger re-render
+      // Capture values before reset
       final finalScale = _baseScale * _gestureScaleFactor;
+      final oldScale = _baseScale;
+      final focalPoint = _focalPointLocal;
 
-      // Reset gesture scale factor
+      // Reset gesture state
       setState(() {
         _gestureScaleFactor = 1.0;
       });
 
       // Apply the new scale (this triggers re-rendering at new resolution)
-      ref.read(pdfDocumentProvider.notifier).setScale(finalScale);
+      // setScale returns false if scale didn't change (at limit)
+      final scaleChanged = ref.read(pdfDocumentProvider.notifier).setScale(finalScale);
+
+      // Adjust scroll only if scale actually changed
+      if (scaleChanged && focalPoint != null) {
+        _pageListKey.currentState?.adjustScrollForFocalZoom(
+          oldScale: oldScale,
+          newScale: finalScale,
+          focalPoint: focalPoint,
+        );
+      }
+
+      // Clear focal point
+      _focalPointLocal = null;
     }
   }
 
@@ -377,6 +395,8 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
                     child: ZoomControls(
                       currentScale: displayScale,
                       isFitWidth: state.isFitWidth && !_isPinching,
+                      canZoomIn: state.scale < ZoomConstraints.maxScale - 0.001,
+                      canZoomOut: state.scale > ZoomConstraints.minScale + 0.001,
                       onZoomIn: () {
                         ref.read(pdfDocumentProvider.notifier).zoomInStep();
                       },

@@ -94,20 +94,28 @@ class PdfDocument extends _$PdfDocument {
   }
 
   /// Sets the scale to a specific value (continuous zoom).
-  void setScale(double newScale) {
+  /// Returns true if scale was changed, false if already at limit.
+  bool setScale(double newScale) {
+    var changed = false;
     state.maybeMap(
       loaded: (current) {
         final clampedScale = newScale.clamp(
           ZoomConstraints.minScale,
           ZoomConstraints.maxScale,
         );
+        // Skip if scale didn't change (already at limit)
+        if ((clampedScale - current.scale).abs() < 0.001) {
+          return;
+        }
         state = current.copyWith(
           scale: clampedScale,
           isFitWidth: false,
         );
+        changed = true;
       },
       orElse: () {},
     );
+    return changed;
   }
 
   /// Multiplies the current scale by a factor (for pinch-to-zoom).
@@ -142,9 +150,14 @@ class PdfDocument extends _$PdfDocument {
   }
 
   /// Zooms in to the next preset level (for Cmd+).
+  /// Does nothing if already at max scale.
   void zoomInStep() {
     state.maybeMap(
       loaded: (current) {
+        // Skip if already at max scale
+        if (current.scale >= ZoomConstraints.maxScale - 0.001) {
+          return;
+        }
         final nextPreset = ZoomPreset.nextPresetAbove(current.scale);
         if (nextPreset != null && nextPreset.scale != null) {
           state = current.copyWith(
@@ -166,9 +179,14 @@ class PdfDocument extends _$PdfDocument {
   }
 
   /// Zooms out to the previous preset level (for Cmd-).
+  /// Does nothing if already at min scale.
   void zoomOutStep() {
     state.maybeMap(
       loaded: (current) {
+        // Skip if already at min scale
+        if (current.scale <= ZoomConstraints.minScale + 0.001) {
+          return;
+        }
         final prevPreset = ZoomPreset.nextPresetBelow(current.scale);
         if (prevPreset != null && prevPreset.scale != null) {
           state = current.copyWith(

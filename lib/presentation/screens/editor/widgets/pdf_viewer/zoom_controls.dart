@@ -12,6 +12,8 @@ class ZoomControls extends StatelessWidget {
     required this.onZoomOut,
     required this.onFitWidth,
     required this.onPresetSelected,
+    this.canZoomIn = true,
+    this.canZoomOut = true,
     super.key,
   });
 
@@ -32,6 +34,12 @@ class ZoomControls extends StatelessWidget {
 
   /// Called when a preset is selected from dropdown.
   final void Function(double scale) onPresetSelected;
+
+  /// Whether zoom in is allowed (not at max scale).
+  final bool canZoomIn;
+
+  /// Whether zoom out is allowed (not at min scale).
+  final bool canZoomOut;
 
   String get _zoomLabel {
     if (isFitWidth) return 'Fit Width';
@@ -58,7 +66,7 @@ class ZoomControls extends StatelessWidget {
         children: [
           _ZoomButton(
             icon: Icons.remove,
-            onPressed: onZoomOut,
+            onPressed: canZoomOut ? onZoomOut : null,
             tooltip: 'Zoom Out (⌘-)',
           ),
           Container(
@@ -79,7 +87,7 @@ class ZoomControls extends StatelessWidget {
           ),
           _ZoomButton(
             icon: Icons.add,
-            onPressed: onZoomIn,
+            onPressed: canZoomIn ? onZoomIn : null,
             tooltip: 'Zoom In (⌘+)',
           ),
         ],
@@ -96,8 +104,10 @@ class _ZoomButton extends StatelessWidget {
   });
 
   final IconData icon;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String tooltip;
+
+  bool get _isEnabled => onPressed != null;
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +121,7 @@ class _ZoomButton extends StatelessWidget {
           child: Icon(
             icon,
             size: 20,
-            color: AppColors.textPrimary,
+            color: _isEnabled ? AppColors.textPrimary : AppColors.textDisabled,
           ),
         ),
       ),

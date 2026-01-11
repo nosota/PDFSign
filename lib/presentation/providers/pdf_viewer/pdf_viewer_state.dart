@@ -15,6 +15,7 @@ enum ZoomPreset {
   percent200('200%'),
   percent300('300%'),
   percent400('400%'),
+  percent500('500%'),
   custom('Custom');
 
   const ZoomPreset(this.label);
@@ -32,6 +33,7 @@ enum ZoomPreset {
         ZoomPreset.percent200 => 2.0,
         ZoomPreset.percent300 => 3.0,
         ZoomPreset.percent400 => 4.0,
+        ZoomPreset.percent500 => 5.0,
         ZoomPreset.custom => null,
       };
 
