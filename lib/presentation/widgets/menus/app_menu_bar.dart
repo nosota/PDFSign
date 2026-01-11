@@ -17,6 +17,7 @@ class AppMenuBar extends ConsumerWidget {
     required this.child,
     this.includeShare = false,
     this.onShare,
+    this.onFileOpened,
     super.key,
   });
 
@@ -29,12 +30,32 @@ class AppMenuBar extends ConsumerWidget {
   /// Callback when Share is selected.
   final VoidCallback? onShare;
 
+  /// Callback when a file is successfully opened.
+  final VoidCallback? onFileOpened;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final recentFilesAsync = ref.watch(recentFilesProvider);
 
     return PlatformMenuBar(
       menus: [
+        // macOS App menu (first menu is always the app menu)
+        const PlatformMenu(
+          label: 'PDFSign',
+          menus: [
+            PlatformProvidedMenuItem(
+              type: PlatformProvidedMenuItemType.about,
+            ),
+            PlatformMenuItemGroup(
+              members: [
+                PlatformProvidedMenuItem(
+                  type: PlatformProvidedMenuItemType.quit,
+                ),
+              ],
+            ),
+          ],
+        ),
+        // File menu
         PlatformMenu(
           label: 'File',
           menus: _buildFileMenuItems(context, ref, recentFilesAsync),
@@ -59,14 +80,14 @@ class AppMenuBar extends ConsumerWidget {
               LogicalKeyboardKey.keyO,
               meta: true,
             ),
-            onSelected: () => _handleOpen(ref),
+            onSelected: () => _handleOpen(ref, onFileOpened),
           ),
         ],
       ),
       // Group 2: Open Recent submenu
       PlatformMenuItemGroup(
         members: [
-          _buildOpenRecentMenu(ref, recentFilesAsync),
+          _buildOpenRecentMenu(ref, recentFilesAsync, onFileOpened),
         ],
       ),
     ];
@@ -107,6 +128,7 @@ class AppMenuBar extends ConsumerWidget {
   PlatformMenu _buildOpenRecentMenu(
     WidgetRef ref,
     AsyncValue<List<RecentFile>> recentFilesAsync,
+    VoidCallback? onFileOpened,
   ) {
     final recentFiles = recentFilesAsync.valueOrNull ?? [];
 
@@ -119,7 +141,7 @@ class AppMenuBar extends ConsumerWidget {
         recentFileItems.add(
           PlatformMenuItem(
             label: file.fileName,
-            onSelected: () => _handleOpenRecent(ref, file.path),
+            onSelected: () => _handleOpenRecent(ref, file.path, onFileOpened),
           ),
         );
       }
@@ -159,7 +181,7 @@ class AppMenuBar extends ConsumerWidget {
     );
   }
 
-  Future<void> _handleOpen(WidgetRef ref) async {
+  Future<void> _handleOpen(WidgetRef ref, VoidCallback? onFileOpened) async {
     final filePicker = ref.read(pdfFilePickerProvider.notifier);
     final path = await filePicker.pickPdf();
 
@@ -178,11 +200,18 @@ class AppMenuBar extends ConsumerWidget {
           );
 
       // Open in new window
-      await WindowManagerService.instance.createPdfWindow(path);
+      final windowId = await WindowManagerService.instance.createPdfWindow(path);
+      if (windowId != null) {
+        onFileOpened?.call();
+      }
     }
   }
 
-  Future<void> _handleOpenRecent(WidgetRef ref, String path) async {
+  Future<void> _handleOpenRecent(
+    WidgetRef ref,
+    String path,
+    VoidCallback? onFileOpened,
+  ) async {
     // Update last opened time
     final fileName = path.split('/').last;
     await ref.read(recentFilesProvider.notifier).addFile(
@@ -196,7 +225,10 @@ class AppMenuBar extends ConsumerWidget {
         );
 
     // Open in new window
-    await WindowManagerService.instance.createPdfWindow(path);
+    final windowId = await WindowManagerService.instance.createPdfWindow(path);
+    if (windowId != null) {
+      onFileOpened?.call();
+    }
   }
 
   Future<void> _handleCloseWindow() async {

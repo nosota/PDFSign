@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
@@ -30,6 +31,7 @@ class WelcomeApp extends ConsumerWidget {
     return AppMenuBar(
       // Welcome screen doesn't have Share functionality
       includeShare: false,
+      onFileOpened: () => windowManager.hide(),
       child: MaterialApp.router(
         title: 'PDFSign',
         theme: createAppTheme(),
