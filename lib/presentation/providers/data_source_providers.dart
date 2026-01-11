@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:pdfsign/data/datasources/file_picker_data_source.dart';
+import 'package:pdfsign/data/datasources/pdf_data_source.dart';
 import 'package:pdfsign/data/datasources/recent_files_local_data_source.dart';
 import 'package:pdfsign/presentation/providers/shared_preferences_provider.dart';
 
@@ -18,4 +19,17 @@ RecentFilesLocalDataSource recentFilesLocalDataSource(
 @riverpod
 FilePickerDataSource filePickerDataSource(FilePickerDataSourceRef ref) {
   return FilePickerDataSourceImpl();
+}
+
+/// Provider for [PdfDataSource].
+///
+/// This provider maintains state across the app lifecycle to keep
+/// the PDF document loaded while the user is working with it.
+@Riverpod(keepAlive: true)
+PdfDataSource pdfDataSource(PdfDataSourceRef ref) {
+  final dataSource = PdfDataSourceImpl();
+  ref.onDispose(() async {
+    await dataSource.closeDocument();
+  });
+  return dataSource;
 }

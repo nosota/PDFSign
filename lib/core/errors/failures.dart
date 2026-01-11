@@ -70,6 +70,42 @@ class StorageFailure extends Failure {
   });
 }
 
+/// Failure when a PDF render operation is cancelled.
+class RenderCancelledFailure extends Failure {
+  final int pageNumber;
+
+  const RenderCancelledFailure({
+    required this.pageNumber,
+    super.message = 'Render operation cancelled',
+    super.code = 'RENDER_CANCELLED',
+  });
+
+  @override
+  List<Object?> get props => [...super.props, pageNumber];
+}
+
+/// Failure when PDF document loading fails.
+class PdfLoadFailure extends Failure {
+  const PdfLoadFailure({
+    required super.message,
+    super.code = 'PDF_LOAD_ERROR',
+  });
+}
+
+/// Failure when PDF page rendering fails.
+class PdfRenderFailure extends Failure {
+  final int pageNumber;
+
+  const PdfRenderFailure({
+    required this.pageNumber,
+    required super.message,
+    super.code = 'PDF_RENDER_ERROR',
+  });
+
+  @override
+  List<Object?> get props => [...super.props, pageNumber];
+}
+
 /// Catch-all failure for unexpected errors.
 class UnknownFailure extends Failure {
   const UnknownFailure({
