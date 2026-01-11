@@ -11,8 +11,7 @@ part 'pdf_document_provider.g.dart';
 
 /// Provider for managing PDF document loading and state.
 ///
-/// This is the main provider for PDF viewer state management.
-/// It handles document loading, zoom level changes, and page navigation.
+/// Handles document loading, continuous zoom, and page navigation.
 @Riverpod(keepAlive: true)
 class PdfDocument extends _$PdfDocument {
   @override
@@ -41,10 +40,12 @@ class PdfDocument extends _$PdfDocument {
       (document) {
         state = PdfViewerState.loaded(
           document: document,
-          zoomLevel: ZoomLevel.fitWidth,
-          effectiveScale: 1.0,
+          scale: 1.0,
+          isFitWidth: true,
+          fitWidthScale: 1.0,
           currentPage: 1,
           viewportWidth: 0,
+          viewportHeight: 0,
         );
       },
     );
@@ -74,10 +75,12 @@ class PdfDocument extends _$PdfDocument {
       (document) {
         state = PdfViewerState.loaded(
           document: document,
-          zoomLevel: ZoomLevel.fitWidth,
-          effectiveScale: 1.0,
+          scale: 1.0,
+          isFitWidth: true,
+          fitWidthScale: 1.0,
           currentPage: 1,
           viewportWidth: 0,
+          viewportHeight: 0,
         );
       },
     );
@@ -90,44 +93,96 @@ class PdfDocument extends _$PdfDocument {
     state = const PdfViewerState.initial();
   }
 
-  /// Sets the zoom level.
-  void setZoomLevel(ZoomLevel zoomLevel) {
+  /// Sets the scale to a specific value (continuous zoom).
+  void setScale(double newScale) {
     state.maybeMap(
       loaded: (current) {
-        final effectiveScale = _calculateEffectiveScale(
-          zoomLevel,
-          current.viewportWidth,
-          current.document,
+        final clampedScale = newScale.clamp(
+          ZoomConstraints.minScale,
+          ZoomConstraints.maxScale,
         );
         state = current.copyWith(
-          zoomLevel: zoomLevel,
-          effectiveScale: effectiveScale,
+          scale: clampedScale,
+          isFitWidth: false,
         );
       },
       orElse: () {},
     );
   }
 
-  /// Zooms in to the next zoom level.
-  void zoomIn() {
+  /// Multiplies the current scale by a factor (for pinch-to-zoom).
+  void multiplyScale(double factor) {
     state.maybeMap(
       loaded: (current) {
-        final nextLevel = current.zoomLevel.next;
-        if (nextLevel != null) {
-          setZoomLevel(nextLevel);
+        final newScale = current.scale * factor;
+        final clampedScale = newScale.clamp(
+          ZoomConstraints.minScale,
+          ZoomConstraints.maxScale,
+        );
+        state = current.copyWith(
+          scale: clampedScale,
+          isFitWidth: false,
+        );
+      },
+      orElse: () {},
+    );
+  }
+
+  /// Zooms to fit width mode.
+  void fitToWidth() {
+    state.maybeMap(
+      loaded: (current) {
+        state = current.copyWith(
+          scale: current.fitWidthScale,
+          isFitWidth: true,
+        );
+      },
+      orElse: () {},
+    );
+  }
+
+  /// Zooms in to the next preset level (for Cmd+).
+  void zoomInStep() {
+    state.maybeMap(
+      loaded: (current) {
+        final nextPreset = ZoomPreset.nextPresetAbove(current.scale);
+        if (nextPreset != null && nextPreset.scale != null) {
+          state = current.copyWith(
+            scale: nextPreset.scale!,
+            isFitWidth: false,
+          );
+        } else {
+          // At max preset, increase by step
+          final newScale = (current.scale + ZoomConstraints.zoomStep)
+              .clamp(ZoomConstraints.minScale, ZoomConstraints.maxScale);
+          state = current.copyWith(
+            scale: newScale,
+            isFitWidth: false,
+          );
         }
       },
       orElse: () {},
     );
   }
 
-  /// Zooms out to the previous zoom level.
-  void zoomOut() {
+  /// Zooms out to the previous preset level (for Cmd-).
+  void zoomOutStep() {
     state.maybeMap(
       loaded: (current) {
-        final previousLevel = current.zoomLevel.previous;
-        if (previousLevel != null) {
-          setZoomLevel(previousLevel);
+        final prevPreset = ZoomPreset.nextPresetBelow(current.scale);
+        if (prevPreset != null && prevPreset.scale != null) {
+          state = current.copyWith(
+            scale: prevPreset.scale!,
+            isFitWidth: false,
+          );
+        } else {
+          // At min preset, decrease by step
+          final newScale = (current.scale - ZoomConstraints.zoomStep)
+              .clamp(ZoomConstraints.minScale, ZoomConstraints.maxScale);
+          state = current.copyWith(
+            scale: newScale,
+            isFitWidth: false,
+          );
         }
       },
       orElse: () {},
@@ -147,19 +202,44 @@ class PdfDocument extends _$PdfDocument {
     );
   }
 
-  /// Updates the viewport width for fitWidth calculation.
-  void updateViewportWidth(double width) {
+  /// Goes to the next page.
+  void nextPage() {
     state.maybeMap(
       loaded: (current) {
-        if (width != current.viewportWidth && width > 0) {
-          final effectiveScale = _calculateEffectiveScale(
-            current.zoomLevel,
-            width,
-            current.document,
-          );
+        if (current.currentPage < current.document.pageCount) {
+          state = current.copyWith(currentPage: current.currentPage + 1);
+        }
+      },
+      orElse: () {},
+    );
+  }
+
+  /// Goes to the previous page.
+  void previousPage() {
+    state.maybeMap(
+      loaded: (current) {
+        if (current.currentPage > 1) {
+          state = current.copyWith(currentPage: current.currentPage - 1);
+        }
+      },
+      orElse: () {},
+    );
+  }
+
+  /// Updates the viewport dimensions.
+  void updateViewport(double width, double height) {
+    state.maybeMap(
+      loaded: (current) {
+        if (width != current.viewportWidth ||
+            height != current.viewportHeight) {
+          final fitWidthScale = _calculateFitWidthScale(width, current.document);
+          final newScale = current.isFitWidth ? fitWidthScale : current.scale;
+
           state = current.copyWith(
             viewportWidth: width,
-            effectiveScale: effectiveScale,
+            viewportHeight: height,
+            fitWidthScale: fitWidthScale,
+            scale: newScale,
           );
         }
       },
@@ -167,16 +247,7 @@ class PdfDocument extends _$PdfDocument {
     );
   }
 
-  double _calculateEffectiveScale(
-    ZoomLevel zoomLevel,
-    double viewportWidth,
-    PdfDocumentInfo document,
-  ) {
-    if (zoomLevel.scale != null) {
-      return zoomLevel.scale!;
-    }
-
-    // fitWidth: calculate scale based on viewport width
+  double _calculateFitWidthScale(double viewportWidth, PdfDocumentInfo document) {
     if (viewportWidth <= 0 || document.pages.isEmpty) {
       return 1.0;
     }
@@ -193,7 +264,7 @@ class PdfDocument extends _$PdfDocument {
       return 1.0;
     }
 
-    // Account for padding (40px on each side)
+    // Account for horizontal padding (40px on each side)
     const horizontalPadding = 80.0;
     final availableWidth = viewportWidth - horizontalPadding;
 

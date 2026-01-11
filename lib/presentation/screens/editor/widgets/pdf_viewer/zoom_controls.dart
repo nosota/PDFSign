@@ -6,24 +6,38 @@ import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_viewer_state.dart'
 /// Zoom controls widget with dropdown and +/- buttons.
 class ZoomControls extends StatelessWidget {
   const ZoomControls({
-    required this.currentZoom,
-    required this.onZoomChanged,
+    required this.currentScale,
+    required this.isFitWidth,
     required this.onZoomIn,
     required this.onZoomOut,
+    required this.onFitWidth,
+    required this.onPresetSelected,
     super.key,
   });
 
-  /// Currently selected zoom level.
-  final ZoomLevel currentZoom;
+  /// Current scale value.
+  final double currentScale;
 
-  /// Called when zoom level is changed via dropdown.
-  final void Function(ZoomLevel) onZoomChanged;
+  /// Whether currently in fit-width mode.
+  final bool isFitWidth;
 
   /// Called when zoom in button is pressed.
   final VoidCallback onZoomIn;
 
   /// Called when zoom out button is pressed.
   final VoidCallback onZoomOut;
+
+  /// Called when fit to width is selected.
+  final VoidCallback onFitWidth;
+
+  /// Called when a preset is selected from dropdown.
+  final void Function(double scale) onPresetSelected;
+
+  String get _zoomLabel {
+    if (isFitWidth) return 'Fit Width';
+    final percent = (currentScale * 100).round();
+    return '$percent%';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +58,8 @@ class ZoomControls extends StatelessWidget {
         children: [
           _ZoomButton(
             icon: Icons.remove,
-            onPressed: currentZoom.previous != null ? onZoomOut : null,
-            tooltip: 'Zoom Out',
+            onPressed: onZoomOut,
+            tooltip: 'Zoom Out (⌘-)',
           ),
           Container(
             width: 1,
@@ -53,8 +67,10 @@ class ZoomControls extends StatelessWidget {
             color: AppColors.border,
           ),
           _ZoomDropdown(
-            currentZoom: currentZoom,
-            onChanged: onZoomChanged,
+            label: _zoomLabel,
+            isFitWidth: isFitWidth,
+            onFitWidth: onFitWidth,
+            onPresetSelected: onPresetSelected,
           ),
           Container(
             width: 1,
@@ -63,8 +79,8 @@ class ZoomControls extends StatelessWidget {
           ),
           _ZoomButton(
             icon: Icons.add,
-            onPressed: currentZoom.next != null ? onZoomIn : null,
-            tooltip: 'Zoom In',
+            onPressed: onZoomIn,
+            tooltip: 'Zoom In (⌘+)',
           ),
         ],
       ),
@@ -80,7 +96,7 @@ class _ZoomButton extends StatelessWidget {
   });
 
   final IconData icon;
-  final VoidCallback? onPressed;
+  final VoidCallback onPressed;
   final String tooltip;
 
   @override
@@ -95,9 +111,7 @@ class _ZoomButton extends StatelessWidget {
           child: Icon(
             icon,
             size: 20,
-            color: onPressed != null
-                ? AppColors.textPrimary
-                : AppColors.textDisabled,
+            color: AppColors.textPrimary,
           ),
         ),
       ),
@@ -107,18 +121,27 @@ class _ZoomButton extends StatelessWidget {
 
 class _ZoomDropdown extends StatelessWidget {
   const _ZoomDropdown({
-    required this.currentZoom,
-    required this.onChanged,
+    required this.label,
+    required this.isFitWidth,
+    required this.onFitWidth,
+    required this.onPresetSelected,
   });
 
-  final ZoomLevel currentZoom;
-  final void Function(ZoomLevel) onChanged;
+  final String label;
+  final bool isFitWidth;
+  final VoidCallback onFitWidth;
+  final void Function(double scale) onPresetSelected;
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton<ZoomLevel>(
-      initialValue: currentZoom,
-      onSelected: onChanged,
+    return PopupMenuButton<ZoomPreset>(
+      onSelected: (preset) {
+        if (preset == ZoomPreset.fitWidth) {
+          onFitWidth();
+        } else if (preset.scale != null) {
+          onPresetSelected(preset.scale!);
+        }
+      },
       tooltip: 'Select zoom level',
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -126,7 +149,7 @@ class _ZoomDropdown extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              currentZoom.label,
+              label,
               style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
@@ -142,21 +165,35 @@ class _ZoomDropdown extends StatelessWidget {
           ],
         ),
       ),
-      itemBuilder: (context) => ZoomLevel.values
-          .map(
-            (level) => PopupMenuItem<ZoomLevel>(
-              value: level,
-              child: Text(
-                level.label,
-                style: TextStyle(
-                  fontWeight: level == currentZoom
-                      ? FontWeight.w600
-                      : FontWeight.normal,
+      itemBuilder: (context) {
+        final presets = ZoomPreset.values.where((p) => p != ZoomPreset.custom);
+        return presets.map((preset) {
+          final isSelected = preset == ZoomPreset.fitWidth
+              ? isFitWidth
+              : preset.scale != null &&
+                  (preset.scale! - (isFitWidth ? 0 : 1.0)).abs() < 0.01;
+          return PopupMenuItem<ZoomPreset>(
+            value: preset,
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 20,
+                  child: isSelected
+                      ? const Icon(Icons.check, size: 16)
+                      : null,
                 ),
-              ),
+                const SizedBox(width: 8),
+                Text(
+                  preset.label,
+                  style: TextStyle(
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ],
             ),
-          )
-          .toList(),
+          );
+        }).toList();
+      },
     );
   }
 }

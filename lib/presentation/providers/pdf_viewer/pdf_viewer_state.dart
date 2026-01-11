@@ -4,41 +4,110 @@ import 'package:pdfsign/domain/entities/pdf_document_info.dart';
 
 part 'pdf_viewer_state.freezed.dart';
 
-/// Available zoom levels for PDF viewing.
-enum ZoomLevel {
-  fitWidth('Fit Width', null),
-  percent50('50%', 0.5),
-  percent75('75%', 0.75),
-  percent100('100%', 1.0),
-  percent125('125%', 1.25),
-  percent150('150%', 1.5),
-  percent200('200%', 2.0);
+/// Predefined zoom levels for quick selection.
+enum ZoomPreset {
+  fitWidth('Fit Width'),
+  percent50('50%'),
+  percent75('75%'),
+  percent100('100%'),
+  percent125('125%'),
+  percent150('150%'),
+  percent200('200%'),
+  percent300('300%'),
+  percent400('400%'),
+  custom('Custom');
 
-  const ZoomLevel(this.label, this.scale);
+  const ZoomPreset(this.label);
 
-  /// Display label for the zoom level.
   final String label;
 
-  /// Scale factor, or null for fitWidth (calculated dynamically).
-  final double? scale;
+  /// Returns the scale value for this preset, or null for fitWidth/custom.
+  double? get scale => switch (this) {
+        ZoomPreset.fitWidth => null,
+        ZoomPreset.percent50 => 0.5,
+        ZoomPreset.percent75 => 0.75,
+        ZoomPreset.percent100 => 1.0,
+        ZoomPreset.percent125 => 1.25,
+        ZoomPreset.percent150 => 1.5,
+        ZoomPreset.percent200 => 2.0,
+        ZoomPreset.percent300 => 3.0,
+        ZoomPreset.percent400 => 4.0,
+        ZoomPreset.custom => null,
+      };
 
-  /// Returns the next zoom level (for zoom in).
-  ZoomLevel? get next {
-    final index = ZoomLevel.values.indexOf(this);
-    if (index < ZoomLevel.values.length - 1) {
-      return ZoomLevel.values[index + 1];
+  /// Returns the next preset (for Cmd+ zoom).
+  ZoomPreset? get next {
+    final presets = ZoomPreset.values.where((p) => p != ZoomPreset.custom).toList();
+    final index = presets.indexOf(this);
+    if (index >= 0 && index < presets.length - 1) {
+      return presets[index + 1];
     }
     return null;
   }
 
-  /// Returns the previous zoom level (for zoom out).
-  ZoomLevel? get previous {
-    final index = ZoomLevel.values.indexOf(this);
+  /// Returns the previous preset (for Cmd- zoom).
+  ZoomPreset? get previous {
+    final presets = ZoomPreset.values.where((p) => p != ZoomPreset.custom).toList();
+    final index = presets.indexOf(this);
     if (index > 0) {
-      return ZoomLevel.values[index - 1];
+      return presets[index - 1];
     }
     return null;
   }
+
+  /// Finds the nearest preset for a given scale value.
+  static ZoomPreset nearestPreset(double scale) {
+    final presets = ZoomPreset.values.where((p) => p.scale != null).toList();
+    ZoomPreset nearest = ZoomPreset.percent100;
+    double minDiff = double.infinity;
+
+    for (final preset in presets) {
+      final diff = (preset.scale! - scale).abs();
+      if (diff < minDiff) {
+        minDiff = diff;
+        nearest = preset;
+      }
+    }
+
+    return nearest;
+  }
+
+  /// Finds the next higher preset for a given scale value.
+  static ZoomPreset? nextPresetAbove(double scale) {
+    final presets = ZoomPreset.values
+        .where((p) => p.scale != null)
+        .toList()
+      ..sort((a, b) => a.scale!.compareTo(b.scale!));
+
+    for (final preset in presets) {
+      if (preset.scale! > scale + 0.01) {
+        return preset;
+      }
+    }
+    return null;
+  }
+
+  /// Finds the next lower preset for a given scale value.
+  static ZoomPreset? nextPresetBelow(double scale) {
+    final presets = ZoomPreset.values
+        .where((p) => p.scale != null)
+        .toList()
+      ..sort((a, b) => b.scale!.compareTo(a.scale!));
+
+    for (final preset in presets) {
+      if (preset.scale! < scale - 0.01) {
+        return preset;
+      }
+    }
+    return null;
+  }
+}
+
+/// Zoom constraints for the PDF viewer.
+abstract final class ZoomConstraints {
+  static const double minScale = 0.1;
+  static const double maxScale = 5.0;
+  static const double zoomStep = 0.1;
 }
 
 /// State for the PDF viewer.
@@ -52,10 +121,17 @@ class PdfViewerState with _$PdfViewerState {
 
   const factory PdfViewerState.loaded({
     required PdfDocumentInfo document,
-    required ZoomLevel zoomLevel,
-    required double effectiveScale,
+    /// Current scale factor (actual rendered scale).
+    required double scale,
+    /// Whether currently in "fit to width" mode.
+    @Default(true) bool isFitWidth,
+    /// The scale value when in fitWidth mode.
+    required double fitWidthScale,
+    /// Current page number (1-based).
     required int currentPage,
+    /// Viewport dimensions.
     required double viewportWidth,
+    required double viewportHeight,
   }) = PdfViewerLoaded;
 
   const factory PdfViewerState.error({
@@ -76,6 +152,12 @@ extension PdfViewerStateX on PdfViewerState {
         orElse: () => null,
       );
 
+  /// Returns the current scale if loaded.
+  double? get scaleOrNull => maybeMap(
+        loaded: (state) => state.scale,
+        orElse: () => null,
+      );
+
   /// Returns whether a document is loaded.
   bool get isLoaded => this is PdfViewerLoaded;
 
@@ -84,4 +166,23 @@ extension PdfViewerStateX on PdfViewerState {
 
   /// Returns whether there's an error.
   bool get hasError => this is PdfViewerError;
+
+  /// Returns the current zoom preset based on scale.
+  ZoomPreset get currentPreset => maybeMap(
+        loaded: (state) {
+          if (state.isFitWidth) return ZoomPreset.fitWidth;
+          return ZoomPreset.nearestPreset(state.scale);
+        },
+        orElse: () => ZoomPreset.fitWidth,
+      );
+
+  /// Returns display label for current zoom.
+  String get zoomLabel => maybeMap(
+        loaded: (state) {
+          if (state.isFitWidth) return 'Fit Width';
+          final percent = (state.scale * 100).round();
+          return '$percent%';
+        },
+        orElse: () => 'Fit Width',
+      );
 }

@@ -13,6 +13,7 @@ class PdfPageList extends ConsumerStatefulWidget {
     required this.scale,
     required this.onPageChanged,
     required this.onScroll,
+    this.scrollController,
     super.key,
   });
 
@@ -28,36 +29,97 @@ class PdfPageList extends ConsumerStatefulWidget {
   /// Called when scroll occurs (for showing page indicator).
   final VoidCallback onScroll;
 
+  /// Optional external scroll controller.
+  final ScrollController? scrollController;
+
   @override
-  ConsumerState<PdfPageList> createState() => _PdfPageListState();
+  ConsumerState<PdfPageList> createState() => PdfPageListState();
 }
 
-class _PdfPageListState extends ConsumerState<PdfPageList> {
-  final ScrollController _scrollController = ScrollController();
+class PdfPageListState extends ConsumerState<PdfPageList> {
+  late ScrollController _scrollController;
+  bool _ownsScrollController = false;
   int _currentPage = 1;
+  double _previousScale = 1.0;
+
+  ScrollController get scrollController => _scrollController;
 
   @override
   void initState() {
     super.initState();
+    _initScrollController();
+    _previousScale = widget.scale;
+  }
+
+  void _initScrollController() {
+    if (widget.scrollController != null) {
+      _scrollController = widget.scrollController!;
+      _ownsScrollController = false;
+    } else {
+      _scrollController = ScrollController();
+      _ownsScrollController = true;
+    }
     _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
     _scrollController.removeListener(_onScroll);
-    _scrollController.dispose();
+    if (_ownsScrollController) {
+      _scrollController.dispose();
+    }
     super.dispose();
   }
 
   @override
   void didUpdateWidget(PdfPageList oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.scale != widget.scale) {
-      // Scale changed, update visible pages
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _updateVisiblePages();
-      });
+
+    // Handle scroll controller change
+    if (widget.scrollController != oldWidget.scrollController) {
+      _scrollController.removeListener(_onScroll);
+      if (_ownsScrollController) {
+        _scrollController.dispose();
+      }
+      _initScrollController();
     }
+
+    // Handle scale change - maintain center focus
+    if (oldWidget.scale != widget.scale && _scrollController.hasClients) {
+      _adjustScrollForScaleChange(oldWidget.scale, widget.scale);
+    }
+
+    _previousScale = widget.scale;
+  }
+
+  void _adjustScrollForScaleChange(double oldScale, double newScale) {
+    if (!_scrollController.hasClients) return;
+
+    final viewportHeight = _scrollController.position.viewportDimension;
+    final currentOffset = _scrollController.offset;
+
+    // Calculate the center point in document coordinates
+    final centerOffset = currentOffset + viewportHeight / 2;
+
+    // Calculate the position ratio at old scale
+    final oldTotalHeight = _calculateTotalHeight(oldScale);
+    final positionRatio = centerOffset / oldTotalHeight;
+
+    // Calculate new offset to maintain center
+    final newTotalHeight = _calculateTotalHeight(newScale);
+    final newCenterOffset = newTotalHeight * positionRatio;
+    final newOffset = newCenterOffset - viewportHeight / 2;
+
+    // Apply new offset
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        final clampedOffset = newOffset.clamp(
+          0.0,
+          _scrollController.position.maxScrollExtent,
+        );
+        _scrollController.jumpTo(clampedOffset);
+      }
+    });
   }
 
   void _onScroll() {
@@ -129,14 +191,75 @@ class _PdfPageListState extends ConsumerState<PdfPageList> {
     }
   }
 
-  double _calculateTotalHeight() {
+  double _calculateTotalHeight([double? scale]) {
+    final s = scale ?? widget.scale;
     double totalHeight = PdfViewerConstants.verticalPadding * 2;
     for (final page in widget.document.pages) {
-      totalHeight += page.height * widget.scale;
+      totalHeight += page.height * s;
     }
     totalHeight += PdfViewerConstants.pageGap * (widget.document.pageCount - 1);
     return totalHeight;
   }
+
+  /// Scrolls to show the specified page.
+  void scrollToPage(int pageNumber, {bool animate = true}) {
+    if (!_scrollController.hasClients) return;
+
+    final targetPage = pageNumber.clamp(1, widget.document.pageCount);
+    double targetOffset = PdfViewerConstants.verticalPadding;
+
+    for (int i = 0; i < targetPage - 1; i++) {
+      final page = widget.document.pages[i];
+      targetOffset += page.height * widget.scale + PdfViewerConstants.pageGap;
+    }
+
+    // Center the page in viewport if possible
+    final viewportHeight = _scrollController.position.viewportDimension;
+    final pageHeight = widget.document.pages[targetPage - 1].height * widget.scale;
+
+    if (pageHeight < viewportHeight) {
+      targetOffset -= (viewportHeight - pageHeight) / 2;
+    }
+
+    targetOffset = targetOffset.clamp(0.0, _scrollController.position.maxScrollExtent);
+
+    if (animate) {
+      _scrollController.animateTo(
+        targetOffset,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      _scrollController.jumpTo(targetOffset);
+    }
+  }
+
+  /// Scrolls by a delta amount.
+  void scrollBy(double deltaX, double deltaY, {bool animate = true}) {
+    if (!_scrollController.hasClients) return;
+
+    final newOffset = (_scrollController.offset + deltaY).clamp(
+      0.0,
+      _scrollController.position.maxScrollExtent,
+    );
+
+    if (animate) {
+      _scrollController.animateTo(
+        newOffset,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.easeOut,
+      );
+    } else {
+      _scrollController.jumpTo(newOffset);
+    }
+  }
+
+  /// Returns scroll offset for center-focused zoom calculations.
+  double get scrollOffset => _scrollController.hasClients ? _scrollController.offset : 0;
+
+  /// Returns viewport dimensions.
+  double get viewportHeight =>
+      _scrollController.hasClients ? _scrollController.position.viewportDimension : 0;
 
   @override
   Widget build(BuildContext context) {
