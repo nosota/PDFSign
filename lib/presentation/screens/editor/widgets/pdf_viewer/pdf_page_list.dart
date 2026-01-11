@@ -181,7 +181,8 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
       final pageHeight = page.height * widget.scale;
       final pageCenter = cumulativeHeight + pageHeight / 2;
 
-      if (pageCenter <= viewportCenter) {
+      // Use small tolerance for floating point comparison
+      if (pageCenter <= viewportCenter + 1.0) {
         centerPage = i + 1;
       } else {
         break;
