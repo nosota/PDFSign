@@ -17,7 +17,7 @@ import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/zoom_cont
 ///
 /// Displays PDF pages in a macOS Preview-style layout with:
 /// - Continuous vertical scroll
-/// - Pinch-to-zoom (trackpad)
+/// - Pinch-to-zoom (trackpad) with Transform.scale for smooth performance
 /// - Keyboard shortcuts (Cmd+/-/0, PageUp/Down, Arrows, Cmd+G)
 /// - Center-focused zoom
 /// - Auto-hiding page indicator
@@ -35,13 +35,16 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
   bool _isScrolling = false;
   Timer? _scrollEndTimer;
 
-  // For pinch-to-zoom
-  double _baseScale = 1.0;
+  // For pinch-to-zoom with Transform.scale optimization
+  double _baseScale = 1.0;           // Scale at the start of gesture
+  double _gestureScaleFactor = 1.0;  // Visual scale factor during gesture (1.0 = no change)
   bool _isPinching = false;
 
   // Scroll amount for arrow keys
   static const double _arrowScrollAmount = 50.0;
-  static const double _pageScrollAmount = 300.0;
+
+  /// The visual scale during pinch gesture (baseScale * gestureScaleFactor)
+  double get _visualScale => _baseScale * _gestureScaleFactor;
 
   @override
   void initState() {
@@ -96,7 +99,7 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
     }
   }
 
-  // Handle pinch-to-zoom gesture
+  // Handle pinch-to-zoom gesture - optimized with Transform.scale
   void _handleScaleStart(ScaleStartDetails details) {
     if (details.pointerCount >= 2) {
       _isPinching = true;
@@ -104,6 +107,7 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
       state.maybeMap(
         loaded: (loaded) {
           _baseScale = loaded.scale;
+          _gestureScaleFactor = 1.0;
         },
         orElse: () {},
       );
@@ -112,13 +116,28 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
 
   void _handleScaleUpdate(ScaleUpdateDetails details) {
     if (_isPinching && details.pointerCount >= 2) {
-      final newScale = _baseScale * details.scale;
-      ref.read(pdfDocumentProvider.notifier).setScale(newScale);
+      // Only update visual scale factor - no re-rendering!
+      setState(() {
+        _gestureScaleFactor = details.scale;
+      });
     }
   }
 
   void _handleScaleEnd(ScaleEndDetails details) {
-    _isPinching = false;
+    if (_isPinching) {
+      _isPinching = false;
+
+      // Now apply the final scale and trigger re-render
+      final finalScale = _baseScale * _gestureScaleFactor;
+
+      // Reset gesture scale factor
+      setState(() {
+        _gestureScaleFactor = 1.0;
+      });
+
+      // Apply the new scale (this triggers re-rendering at new resolution)
+      ref.read(pdfDocumentProvider.notifier).setScale(finalScale);
+    }
   }
 
   // Handle keyboard shortcuts
@@ -302,6 +321,9 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
   }
 
   Widget _buildLoadedState(PdfViewerLoaded state) {
+    // Calculate the display scale (during pinch, show visual scale)
+    final displayScale = _isPinching ? _visualScale : state.scale;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         // Update viewport dimensions
@@ -322,15 +344,30 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
               color: PdfViewerConstants.backgroundColor,
               child: Stack(
                 children: [
-                  // PDF pages
-                  PdfPageList(
-                    key: _pageListKey,
-                    document: state.document,
-                    scale: state.scale,
-                    onPageChanged: (page) {
-                      ref.read(pdfDocumentProvider.notifier).setCurrentPage(page);
-                    },
-                    onScroll: _handleScroll,
+                  // PDF pages with Transform.scale for smooth pinch-to-zoom
+                  ClipRect(
+                    child: _isPinching
+                        ? Transform.scale(
+                            scale: _gestureScaleFactor,
+                            child: PdfPageList(
+                              key: _pageListKey,
+                              document: state.document,
+                              scale: state.scale, // Use render scale, not visual
+                              onPageChanged: (page) {
+                                ref.read(pdfDocumentProvider.notifier).setCurrentPage(page);
+                              },
+                              onScroll: _handleScroll,
+                            ),
+                          )
+                        : PdfPageList(
+                            key: _pageListKey,
+                            document: state.document,
+                            scale: state.scale,
+                            onPageChanged: (page) {
+                              ref.read(pdfDocumentProvider.notifier).setCurrentPage(page);
+                            },
+                            onScroll: _handleScroll,
+                          ),
                   ),
 
                   // Zoom controls (bottom right)
@@ -338,8 +375,8 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
                     right: 16,
                     bottom: 16,
                     child: ZoomControls(
-                      currentScale: state.scale,
-                      isFitWidth: state.isFitWidth,
+                      currentScale: displayScale,
+                      isFitWidth: state.isFitWidth && !_isPinching,
                       onZoomIn: () {
                         ref.read(pdfDocumentProvider.notifier).zoomInStep();
                       },
@@ -364,7 +401,7 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
                       child: PageIndicator(
                         currentPage: state.currentPage,
                         totalPages: state.document.pageCount,
-                        isScrolling: _isScrolling,
+                        isScrolling: _isScrolling || _isPinching,
                       ),
                     ),
                   ),
