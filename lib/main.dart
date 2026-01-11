@@ -12,20 +12,18 @@ import 'package:pdfsign/presentation/apps/pdf_viewer_app.dart';
 /// Application entry point.
 ///
 /// Handles multi-window support:
-/// - Window ID '0' (main window) → Welcome Screen
-/// - Window ID > '0' (sub windows) → PDF Viewer with file
+/// - Main window (no args) → Welcome Screen
+/// - Sub windows (with args) → PDF Viewer with file
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Get current window controller
-  final controller = await WindowController.fromCurrentEngine();
-  final windowId = controller.windowId;
-
-  if (windowId == '0') {
+  // Main window has no args, sub-windows receive JSON args from desktop_multi_window
+  if (args.isEmpty) {
     // Main window → Welcome Screen
     await _runWelcomeWindow();
   } else {
     // Sub window → PDF Viewer
+    final controller = await WindowController.fromCurrentEngine();
     await _runPdfViewerWindow(controller);
   }
 }
@@ -41,9 +39,7 @@ Future<void> _runWelcomeWindow() async {
   runApp(
     ProviderScope(
       overrides: [
-        sharedPreferencesProvider.overrideWith(
-          (ref) => Future.value(sharedPrefs),
-        ),
+        sharedPreferencesProvider.overrideWithValue(sharedPrefs),
       ],
       child: const WelcomeApp(),
     ),
@@ -66,9 +62,7 @@ Future<void> _runPdfViewerWindow(WindowController controller) async {
   runApp(
     ProviderScope(
       overrides: [
-        sharedPreferencesProvider.overrideWith(
-          (ref) => Future.value(sharedPrefs),
-        ),
+        sharedPreferencesProvider.overrideWithValue(sharedPrefs),
       ],
       child: PdfViewerApp(
         filePath: arguments.filePath ?? '',

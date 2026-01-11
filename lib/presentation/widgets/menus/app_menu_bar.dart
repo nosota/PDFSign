@@ -50,44 +50,56 @@ class AppMenuBar extends ConsumerWidget {
     AsyncValue<List<RecentFile>> recentFilesAsync,
   ) {
     final items = <PlatformMenuItem>[
-      // Open...
-      PlatformMenuItem(
-        label: 'Open...',
-        shortcut: const SingleActivator(
-          LogicalKeyboardKey.keyO,
-          meta: true,
-        ),
-        onSelected: () => _handleOpen(ref),
+      // Group 1: Open
+      PlatformMenuItemGroup(
+        members: [
+          PlatformMenuItem(
+            label: 'Open...',
+            shortcut: const SingleActivator(
+              LogicalKeyboardKey.keyO,
+              meta: true,
+            ),
+            onSelected: () => _handleOpen(ref),
+          ),
+        ],
       ),
-      // Separator
-      const PlatformMenuItemGroup(members: []),
-      // Open Recent submenu
-      _buildOpenRecentMenu(ref, recentFilesAsync),
+      // Group 2: Open Recent submenu
+      PlatformMenuItemGroup(
+        members: [
+          _buildOpenRecentMenu(ref, recentFilesAsync),
+        ],
+      ),
     ];
 
-    // Share (optional)
+    // Group 3: Share (optional)
     if (includeShare) {
-      items.addAll([
-        const PlatformMenuItemGroup(members: []),
-        PlatformMenuItem(
-          label: 'Share...',
-          onSelected: onShare,
+      items.add(
+        PlatformMenuItemGroup(
+          members: [
+            PlatformMenuItem(
+              label: 'Share...',
+              onSelected: onShare,
+            ),
+          ],
         ),
-      ]);
+      );
     }
 
-    // Close Window
-    items.addAll([
-      const PlatformMenuItemGroup(members: []),
-      PlatformMenuItem(
-        label: 'Close Window',
-        shortcut: const SingleActivator(
-          LogicalKeyboardKey.keyW,
-          meta: true,
-        ),
-        onSelected: () => _handleCloseWindow(),
+    // Group 4: Close Window
+    items.add(
+      PlatformMenuItemGroup(
+        members: [
+          PlatformMenuItem(
+            label: 'Close Window',
+            shortcut: const SingleActivator(
+              LogicalKeyboardKey.keyW,
+              meta: true,
+            ),
+            onSelected: () => _handleCloseWindow(),
+          ),
+        ],
       ),
-    ]);
+    );
 
     return items;
   }
@@ -100,31 +112,43 @@ class AppMenuBar extends ConsumerWidget {
 
     final menuItems = <PlatformMenuItem>[];
 
-    // Recent files (up to 10)
-    for (final file in recentFiles.take(10)) {
+    if (recentFiles.isNotEmpty) {
+      // Group 1: Recent files (up to 10)
+      final recentFileItems = <PlatformMenuItem>[];
+      for (final file in recentFiles.take(10)) {
+        recentFileItems.add(
+          PlatformMenuItem(
+            label: file.fileName,
+            onSelected: () => _handleOpenRecent(ref, file.path),
+          ),
+        );
+      }
       menuItems.add(
-        PlatformMenuItem(
-          label: file.fileName,
-          onSelected: () => _handleOpenRecent(ref, file.path),
+        PlatformMenuItemGroup(members: recentFileItems),
+      );
+
+      // Group 2: Clear Menu
+      menuItems.add(
+        PlatformMenuItemGroup(
+          members: [
+            PlatformMenuItem(
+              label: 'Clear Menu',
+              onSelected: () =>
+                  ref.read(recentFilesProvider.notifier).clearAll(),
+            ),
+          ],
         ),
       );
-    }
-
-    // Separator and Clear Menu (if there are recent files)
-    if (recentFiles.isNotEmpty) {
-      menuItems.addAll([
-        const PlatformMenuItemGroup(members: []),
-        PlatformMenuItem(
-          label: 'Clear Menu',
-          onSelected: () => ref.read(recentFilesProvider.notifier).clearAll(),
-        ),
-      ]);
     } else {
-      // Show disabled "No Recent Files" item
+      // No recent files - single disabled item
       menuItems.add(
-        const PlatformMenuItem(
-          label: 'No Recent Files',
-          onSelected: null,
+        PlatformMenuItemGroup(
+          members: [
+            const PlatformMenuItem(
+              label: 'No Recent Files',
+              onSelected: null,
+            ),
+          ],
         ),
       );
     }

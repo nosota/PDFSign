@@ -29,10 +29,11 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
   }
 
   void _loadDocument() {
-    if (widget.filePath != null) {
+    final path = widget.filePath;
+    if (path != null && path.isNotEmpty) {
       // Schedule the document load after the first frame
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(pdfDocumentProvider.notifier).openDocument(widget.filePath!);
+        ref.read(pdfDocumentProvider.notifier).openDocument(path);
       });
     }
   }
@@ -40,8 +41,9 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
   @override
   void didUpdateWidget(EditorScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.filePath != oldWidget.filePath && widget.filePath != null) {
-      ref.read(pdfDocumentProvider.notifier).openDocument(widget.filePath!);
+    final path = widget.filePath;
+    if (path != oldWidget.filePath && path != null && path.isNotEmpty) {
+      ref.read(pdfDocumentProvider.notifier).openDocument(path);
     }
   }
 

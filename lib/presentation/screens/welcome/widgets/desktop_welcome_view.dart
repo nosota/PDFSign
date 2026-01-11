@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'package:pdfsign/core/constants/spacing.dart';
 import 'package:pdfsign/core/window/window_manager_service.dart';
@@ -90,8 +91,11 @@ class _DesktopWelcomeViewState extends ConsumerState<DesktopWelcomeView> {
               ),
             );
 
-        // Open in new window
-        await WindowManagerService.instance.createPdfWindow(path);
+        // Open in new window and hide Welcome screen
+        final windowId = await WindowManagerService.instance.createPdfWindow(path);
+        if (windowId != null) {
+          await windowManager.hide();
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -128,8 +132,11 @@ class _DesktopWelcomeViewState extends ConsumerState<DesktopWelcomeView> {
           file.copyWith(lastOpened: DateTime.now()),
         );
 
-    // Open in new window
-    await WindowManagerService.instance.createPdfWindow(file.path);
+    // Open in new window and hide Welcome screen
+    final windowId = await WindowManagerService.instance.createPdfWindow(file.path);
+    if (windowId != null) {
+      await windowManager.hide();
+    }
   }
 
   Future<void> _handleRemoveRecentFile(RecentFile file) async {

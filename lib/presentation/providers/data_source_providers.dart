@@ -11,7 +11,7 @@ part 'data_source_providers.g.dart';
 RecentFilesLocalDataSource recentFilesLocalDataSource(
   RecentFilesLocalDataSourceRef ref,
 ) {
-  final prefs = ref.watch(sharedPreferencesProvider).requireValue;
+  final prefs = ref.watch(sharedPreferencesProvider);
   return RecentFilesLocalDataSourceImpl(prefs);
 }
 
