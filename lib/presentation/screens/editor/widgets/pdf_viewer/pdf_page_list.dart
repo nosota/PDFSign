@@ -179,12 +179,14 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
     for (int i = 0; i < widget.document.pages.length; i++) {
       final page = widget.document.pages[i];
       final pageHeight = page.height * widget.scale;
-      final pageCenter = cumulativeHeight + pageHeight / 2;
+      final pageTop = cumulativeHeight;
+      final pageBottom = cumulativeHeight + pageHeight;
 
-      // Use small tolerance for floating point comparison
-      if (pageCenter <= viewportCenter + 1.0) {
+      // Current page = page that contains the viewport center point
+      // Include half of the gap after the page for smoother transitions
+      if (viewportCenter >= pageTop &&
+          viewportCenter < pageBottom + PdfViewerConstants.pageGap / 2) {
         centerPage = i + 1;
-      } else {
         break;
       }
 
