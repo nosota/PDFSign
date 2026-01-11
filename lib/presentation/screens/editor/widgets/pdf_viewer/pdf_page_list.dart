@@ -366,18 +366,25 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
         final contentWidth = _calculateContentWidth();
         final contentHeight = _calculateTotalHeight();
 
-        // Content can be wider than viewport when zoomed in
-        final effectiveWidth = math.max(contentWidth, constraints.maxWidth);
-
         // Check if horizontal scroll is needed
         final needsHorizontalScroll = contentWidth > constraints.maxWidth;
+
+        // When horizontal scroll is needed, add padding to create "floating page" effect
+        // Content width includes page + horizontal padding on both sides
+        final effectiveWidth = needsHorizontalScroll
+            ? contentWidth + PdfViewerConstants.horizontalPadding * 2
+            : math.max(contentWidth, constraints.maxWidth);
 
         Widget content = SizedBox(
           width: effectiveWidth,
           height: contentHeight,
           child: Padding(
-            padding: const EdgeInsets.symmetric(
+            padding: EdgeInsets.symmetric(
               vertical: PdfViewerConstants.verticalPadding,
+              // Add horizontal padding when scrolling horizontally
+              horizontal: needsHorizontalScroll
+                  ? PdfViewerConstants.horizontalPadding
+                  : 0,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
