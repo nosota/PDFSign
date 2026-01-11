@@ -74,7 +74,7 @@ class PdfPageItem extends ConsumerWidget {
         bytes,
         width: width,
         height: height,
-        fit: BoxFit.fill,
+        fit: BoxFit.contain,
         gaplessPlayback: true,
         filterQuality: FilterQuality.high,
       ),
