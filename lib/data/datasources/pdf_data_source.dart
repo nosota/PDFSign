@@ -43,8 +43,16 @@ abstract class PdfDataSource {
 class PdfDataSourceImpl implements PdfDataSource {
   PdfDocument? _document;
   PdfDocumentInfo? _documentInfo;
+
+  /// Counter for generating unique render IDs.
+  int _renderIdCounter = 0;
+
+  /// Maps page number to the current active render ID.
+  /// Only the render with this ID should complete successfully.
+  final Map<int, int> _activeRenderIds = {};
+
+  /// Maps render ID to its completer.
   final Map<int, Completer<Uint8List>> _pendingRenders = {};
-  final Set<int> _cancelledRenders = {};
 
   @override
   bool get isDocumentLoaded => _document != null;
@@ -110,20 +118,26 @@ class PdfDataSourceImpl implements PdfDataSource {
       throw StateError('No document loaded');
     }
 
-    if (_cancelledRenders.contains(pageNumber)) {
-      _cancelledRenders.remove(pageNumber);
-      throw RenderCancelledException(pageNumber);
-    }
+    // Generate unique render ID for this request
+    final renderId = ++_renderIdCounter;
+
+    // Cancel any previous render for this page and set new active ID
+    _activeRenderIds[pageNumber] = renderId;
 
     final completer = Completer<Uint8List>();
-    _pendingRenders[pageNumber] = completer;
+    _pendingRenders[renderId] = completer;
 
     try {
+      // Check if this render is still active before expensive operations
+      if (_activeRenderIds[pageNumber] != renderId) {
+        throw RenderCancelledException(pageNumber);
+      }
+
       final page = await _document!.getPage(pageNumber);
 
-      if (_cancelledRenders.contains(pageNumber)) {
+      // Check again after async operation
+      if (_activeRenderIds[pageNumber] != renderId) {
         await page.close();
-        _cancelledRenders.remove(pageNumber);
         throw RenderCancelledException(pageNumber);
       }
 
@@ -136,8 +150,8 @@ class PdfDataSourceImpl implements PdfDataSource {
 
       await page.close();
 
-      if (_cancelledRenders.contains(pageNumber)) {
-        _cancelledRenders.remove(pageNumber);
+      // Final check before completing - only complete if still active
+      if (_activeRenderIds[pageNumber] != renderId) {
         throw RenderCancelledException(pageNumber);
       }
 
@@ -151,19 +165,21 @@ class PdfDataSourceImpl implements PdfDataSource {
       completer.completeError(e);
       rethrow;
     } finally {
-      _pendingRenders.remove(pageNumber);
+      _pendingRenders.remove(renderId);
     }
   }
 
   @override
   void cancelRender(int pageNumber) {
-    _cancelledRenders.add(pageNumber);
-    _pendingRenders.remove(pageNumber);
+    // Remove active render ID - any ongoing render for this page will fail
+    // its check and throw RenderCancelledException
+    _activeRenderIds.remove(pageNumber);
   }
 
   @override
   Future<void> closeDocument() async {
-    _cancelledRenders.addAll(_pendingRenders.keys);
+    // Clear all active renders
+    _activeRenderIds.clear();
     _pendingRenders.clear();
 
     if (_document != null) {

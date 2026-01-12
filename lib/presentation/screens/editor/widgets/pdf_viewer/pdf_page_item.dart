@@ -46,17 +46,22 @@ class PdfPageItem extends ConsumerWidget {
     );
 
     return imageAsync.when(
-      data: (bytes) {
-        if (bytes == null) {
-          return _buildErrorState(scaledWidth, scaledHeight);
-        }
-        return _buildPageImage(bytes, scaledWidth, scaledHeight);
-      },
+      data: (bytes) => _buildPageImage(bytes, scaledWidth, scaledHeight),
       loading: () => PdfPagePlaceholder(
         width: scaledWidth,
         height: scaledHeight,
       ),
-      error: (_, __) => _buildErrorState(scaledWidth, scaledHeight),
+      error: (error, _) {
+        // Render cancellation is not an error - show placeholder (will retry on next build)
+        if (error is PageRenderCancelledException) {
+          return PdfPagePlaceholder(
+            width: scaledWidth,
+            height: scaledHeight,
+          );
+        }
+        // Real errors show error state
+        return _buildErrorState(scaledWidth, scaledHeight);
+      },
     );
   }
 

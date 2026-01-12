@@ -89,9 +89,15 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
       _initScrollController();
     }
 
-    // Handle scale change - maintain center focus
+    // Handle scale change - maintain center focus and update visible pages
     if (oldWidget.scale != widget.scale && _verticalController.hasClients) {
       _adjustScrollForScaleChange(oldWidget.scale, widget.scale);
+      // Update visible pages when scale changes to trigger correct renders
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _verticalController.hasClients) {
+          _updateVisiblePages();
+        }
+      });
     }
 
     _previousScale = widget.scale;
