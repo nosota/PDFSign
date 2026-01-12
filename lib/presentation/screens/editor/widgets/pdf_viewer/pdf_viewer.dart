@@ -167,6 +167,12 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
     final isCmd = HardwareKeyboard.instance.isMetaPressed;
     final logicalKey = event.logicalKey;
 
+    // Cmd+R: Reload document
+    if (isCmd && logicalKey == LogicalKeyboardKey.keyR) {
+      _reloadDocument();
+      return KeyEventResult.handled;
+    }
+
     // Cmd+G: Go to page
     if (isCmd && logicalKey == LogicalKeyboardKey.keyG) {
       _showGoToPageDialog();
@@ -294,6 +300,19 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
       },
       orElse: () async {},
     );
+  }
+
+  Future<void> _reloadDocument() async {
+    final pageToRestore = await ref.read(pdfDocumentProvider.notifier).reloadDocument();
+
+    if (pageToRestore != null && mounted) {
+      // Wait for the widget to rebuild with new document
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _pageListKey.currentState?.scrollToPage(pageToRestore, animate: false);
+        }
+      });
+    }
   }
 
   @override

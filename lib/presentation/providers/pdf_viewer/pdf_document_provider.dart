@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:pdfsign/core/errors/failures.dart';
 import 'package:pdfsign/domain/entities/pdf_document_info.dart';
+import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_page_cache_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_viewer_state.dart';
 import 'package:pdfsign/presentation/providers/repository_providers.dart';
 
@@ -91,6 +92,75 @@ class PdfDocument extends _$PdfDocument {
     final repository = ref.read(pdfDocumentRepositoryProvider);
     await repository.closeDocument();
     state = const PdfViewerState.initial();
+  }
+
+  /// Reloads the current document, preserving the current page.
+  ///
+  /// Returns the page number to restore after reload, or null if reload failed.
+  Future<int?> reloadDocument() async {
+    final currentState = state;
+    String? filePath;
+    int pageToRestore = 1;
+
+    // Extract file path and current page from current state
+    currentState.maybeMap(
+      loaded: (loaded) {
+        filePath = loaded.document.filePath;
+        pageToRestore = loaded.currentPage;
+      },
+      error: (error) {
+        filePath = error.filePath;
+      },
+      passwordRequired: (pwd) {
+        filePath = pwd.filePath;
+      },
+      orElse: () {},
+    );
+
+    if (filePath == null || filePath!.isEmpty) {
+      return null;
+    }
+
+    // Clear page cache before reload
+    ref.read(pdfPageCacheProvider).clear();
+
+    // Close and reopen
+    final repository = ref.read(pdfDocumentRepositoryProvider);
+    await repository.closeDocument();
+
+    state = PdfViewerState.loading(filePath: filePath!);
+
+    final result = await repository.openDocument(filePath!);
+
+    return result.fold(
+      (failure) {
+        if (failure is PasswordRequiredFailure) {
+          state = PdfViewerState.passwordRequired(filePath: filePath!);
+        } else {
+          state = PdfViewerState.error(
+            message: failure.message,
+            filePath: filePath,
+          );
+        }
+        return null;
+      },
+      (document) {
+        // Clamp page to valid range in case document changed
+        final validPage = pageToRestore.clamp(1, document.pageCount);
+
+        state = PdfViewerState.loaded(
+          document: document,
+          scale: 1.0,
+          isFitWidth: true,
+          fitWidthScale: 1.0,
+          currentPage: validPage,
+          viewportWidth: 0,
+          viewportHeight: 0,
+        );
+
+        return validPage;
+      },
+    );
   }
 
   /// Sets the scale to a specific value (continuous zoom).
