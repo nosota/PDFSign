@@ -810,7 +810,7 @@ class _RotateIconPainter extends CustomPainter {
     final diagAngle = math.atan2(rotatedDiag.dy, rotatedDiag.dx);
 
     // Большой радиус — дуга почти прямая
-    const radius = 50.0;
+    const radius = 15.0;
 
     // Центр окружности смещён от виджета по диагонали внутрь (к углу объекта)
     // чтобы дуга проходила через виджет
@@ -818,7 +818,7 @@ class _RotateIconPainter extends CustomPainter {
 
     // Дуга симметрична относительно диагонали
     // sweepAngle / 2 в каждую сторону от diagAngle
-    const sweepAngle = math.pi / 3; // 60° — достаточно для видимого изгиба
+    const sweepAngle = math.pi / 4; // 60° — достаточно для видимого изгиба
     final startAngle = diagAngle - sweepAngle / 2;
     final endAngle = diagAngle + sweepAngle / 2;
 
@@ -842,8 +842,8 @@ class _RotateIconPainter extends CustomPainter {
     final arrow2Dir = endAngle + math.pi / 2 - outwardAngle;
 
     // Размеры стрелки
-    const arrowLength = 5.0;
-    const arrowWidth = 4.0;
+    const arrowLength = 10.0;
+    const arrowWidth = 8.0;
 
     // Tip смещён вперёд от конца дуги
     final arrow1Tip = Offset(
