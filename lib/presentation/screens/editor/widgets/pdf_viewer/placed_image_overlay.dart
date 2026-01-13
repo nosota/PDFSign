@@ -337,6 +337,7 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
                     side: side,
                     cursor: _getSideCursor(side, image.rotation),
                     onDrag: (delta) => _handleSideDrag(side, delta),
+                    rotation: image.rotation,
                     isVertical: side == 'left' || side == 'right',
                   ),
                 ),
@@ -640,12 +641,14 @@ class _SideHandle extends StatelessWidget {
     required this.side,
     required this.cursor,
     required this.onDrag,
+    required this.rotation,
     this.isVertical = false,
   });
 
   final String side;
   final MouseCursor cursor;
   final void Function(Offset delta) onDrag;
+  final double rotation;
   final bool isVertical;
 
   @override
@@ -667,14 +670,17 @@ class _SideHandle extends StatelessWidget {
           width: hitSize,
           height: hitSize,
           child: Center(
-            child: Container(
-              width: visualWidth,
-              height: visualHeight,
-              decoration: BoxDecoration(
-                color: SelectionHandleConstants.handleFillColor,
-                border: Border.all(
-                  color: SelectionHandleConstants.handleBorderColor,
-                  width: SelectionHandleConstants.handleBorderWidth,
+            child: Transform.rotate(
+              angle: rotation,
+              child: Container(
+                width: visualWidth,
+                height: visualHeight,
+                decoration: BoxDecoration(
+                  color: SelectionHandleConstants.handleFillColor,
+                  border: Border.all(
+                    color: SelectionHandleConstants.handleBorderColor,
+                    width: SelectionHandleConstants.handleBorderWidth,
+                  ),
                 ),
               ),
             ),
