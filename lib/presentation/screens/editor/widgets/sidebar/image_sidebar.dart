@@ -2,7 +2,6 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:pdfsign/core/constants/sidebar_constants.dart';
 import 'package:pdfsign/presentation/providers/sidebar/sidebar_images_provider.dart';
 import 'package:pdfsign/presentation/providers/sidebar/sidebar_selection_provider.dart';
 import 'package:pdfsign/presentation/providers/sidebar/sidebar_width_provider.dart';
@@ -39,9 +38,6 @@ class _ImageSidebarState extends ConsumerState<ImageSidebar> {
         color: Theme.of(context).colorScheme.surface,
         child: Column(
           children: [
-            // Header
-            _buildHeader(context),
-
             // Image list with drop target
             Expanded(
               child: DropTarget(
@@ -79,36 +75,6 @@ class _ImageSidebarState extends ConsumerState<ImageSidebar> {
             const AddImageButton(),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context) {
-    return Container(
-      height: SidebarConstants.headerHeight,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Theme.of(context).dividerColor,
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            Icons.image_outlined,
-            size: 18,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            'Images',
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-          ),
-        ],
       ),
     );
   }

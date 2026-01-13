@@ -32,7 +32,8 @@ class _SidebarResizeHandleState extends ConsumerState<SidebarResizeHandle> {
       child: GestureDetector(
         onHorizontalDragStart: (_) => setState(() => _isDragging = true),
         onHorizontalDragUpdate: (details) {
-          ref.read(sidebarWidthProvider.notifier).adjustWidth(details.delta.dx);
+          // Invert delta for right-side sidebar (drag left = increase width)
+          ref.read(sidebarWidthProvider.notifier).adjustWidth(-details.delta.dx);
         },
         onHorizontalDragEnd: (_) => setState(() => _isDragging = false),
         child: Container(

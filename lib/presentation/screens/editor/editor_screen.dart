@@ -53,16 +53,16 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     return Scaffold(
       body: Row(
         children: const [
-          // Left sidebar with images
-          ImageSidebar(),
-
-          // Resize handle
-          SidebarResizeHandle(),
-
           // PDF viewer (expands to fill remaining space)
           Expanded(
             child: PdfViewer(),
           ),
+
+          // Resize handle
+          SidebarResizeHandle(),
+
+          // Right sidebar with images
+          ImageSidebar(),
         ],
       ),
     );
