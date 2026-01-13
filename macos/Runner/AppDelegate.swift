@@ -18,9 +18,10 @@ class AppDelegate: FlutterAppDelegate {
     FlutterMultiWindowPlugin.setOnWindowCreatedCallback { controller in
       RegisterGeneratedPlugins(registry: controller)
 
-      // Add toolbar to PDF viewer windows (sub-windows) after window is ready
+      // Add toolbar and drop target to PDF viewer windows (sub-windows) after window is ready
       DispatchQueue.main.async {
         if let window = controller.view.window {
+          // Setup toolbar
           let toolbarHelper = PDFSignToolbarHelper(
             window: window,
             binaryMessenger: controller.engine.binaryMessenger
@@ -32,6 +33,21 @@ class AppDelegate: FlutterAppDelegate {
             window,
             "toolbarHelper",
             toolbarHelper,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+          )
+
+          // Setup drop target for sub-window (desktop_drop only handles main window)
+          let dropHelper = SubWindowDropTarget(
+            flutterViewController: controller,
+            binaryMessenger: controller.engine.binaryMessenger
+          )
+          dropHelper.setup()
+
+          // Keep reference to prevent deallocation
+          objc_setAssociatedObject(
+            window,
+            "dropHelper",
+            dropHelper,
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
           )
         }
@@ -104,5 +120,124 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate {
 
   @objc func shareButtonClicked() {
     methodChannel?.invokeMethod("onSharePressed", arguments: nil)
+  }
+}
+
+/// Helper class to setup drop target for sub-windows.
+/// desktop_drop only handles the main window, so we need custom handling for sub-windows.
+class SubWindowDropTarget: NSObject {
+  private weak var flutterViewController: FlutterViewController?
+  private var channel: FlutterMethodChannel?
+  private var dropView: DropTargetView?
+
+  init(flutterViewController: FlutterViewController, binaryMessenger: FlutterBinaryMessenger) {
+    self.flutterViewController = flutterViewController
+    self.channel = FlutterMethodChannel(
+      name: "desktop_drop",
+      binaryMessenger: binaryMessenger
+    )
+    super.init()
+  }
+
+  func setup() {
+    guard let vc = flutterViewController, let channel = channel else { return }
+
+    let dropView = DropTargetView(frame: vc.view.bounds, channel: channel)
+    dropView.autoresizingMask = [.width, .height]
+
+    dropView.registerForDraggedTypes(
+      NSFilePromiseReceiver.readableDraggedTypes.map { NSPasteboard.PasteboardType($0) }
+    )
+    dropView.registerForDraggedTypes([NSPasteboard.PasteboardType.fileURL])
+
+    vc.view.addSubview(dropView)
+    self.dropView = dropView
+  }
+}
+
+/// NSView that handles drag-and-drop operations and sends events to Flutter.
+class DropTargetView: NSView {
+  private let channel: FlutterMethodChannel
+
+  init(frame frameRect: NSRect, channel: FlutterMethodChannel) {
+    self.channel = channel
+    super.init(frame: frameRect)
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+    channel.invokeMethod("entered", arguments: convertPoint(sender.draggingLocation))
+    return .copy
+  }
+
+  override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
+    channel.invokeMethod("updated", arguments: convertPoint(sender.draggingLocation))
+    return .copy
+  }
+
+  override func draggingExited(_ sender: NSDraggingInfo?) {
+    channel.invokeMethod("exited", arguments: nil)
+  }
+
+  /// Directory URL used for accepting file promises.
+  private lazy var destinationURL: URL = {
+    let destinationURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("Drops")
+    try? FileManager.default.createDirectory(at: destinationURL, withIntermediateDirectories: true, attributes: nil)
+    return destinationURL
+  }()
+
+  /// Queue used for reading and writing file promises.
+  private lazy var workQueue: OperationQueue = {
+    let providerQueue = OperationQueue()
+    providerQueue.qualityOfService = .userInitiated
+    return providerQueue
+  }()
+
+  override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+    var urls = [String]()
+
+    let searchOptions: [NSPasteboard.ReadingOptionKey: Any] = [
+      .urlReadingFileURLsOnly: true,
+    ]
+
+    let group = DispatchGroup()
+
+    sender.enumerateDraggingItems(
+      options: [],
+      for: nil,
+      classes: [NSFilePromiseReceiver.self, NSURL.self],
+      searchOptions: searchOptions
+    ) { draggingItem, _, _ in
+      switch draggingItem.item {
+      case let filePromiseReceiver as NSFilePromiseReceiver:
+        group.enter()
+        filePromiseReceiver.receivePromisedFiles(
+          atDestination: self.destinationURL,
+          options: [:],
+          operationQueue: self.workQueue
+        ) { fileURL, error in
+          if error == nil {
+            urls.append(fileURL.path)
+          }
+          group.leave()
+        }
+      case let fileURL as URL:
+        urls.append(fileURL.path)
+      default:
+        break
+      }
+    }
+
+    group.notify(queue: .main) {
+      self.channel.invokeMethod("performOperation", arguments: urls)
+    }
+    return true
+  }
+
+  private func convertPoint(_ location: NSPoint) -> [CGFloat] {
+    return [location.x, bounds.height - location.y]
   }
 }
