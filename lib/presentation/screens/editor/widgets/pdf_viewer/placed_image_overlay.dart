@@ -383,6 +383,7 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
       top: zoneCenter.dy - size / 2,
       child: _RotateZone(
         quadrant: quadrant,
+        rotation: rotation,
         onDragStart: _handleRotateDragStart,
         onDrag: _handleRotateDrag,
         onDragEnd: _handleRotateDragEnd,
@@ -695,12 +696,14 @@ class _SideHandle extends StatelessWidget {
 class _RotateZone extends StatefulWidget {
   const _RotateZone({
     required this.quadrant,
+    required this.rotation,
     required this.onDragStart,
     required this.onDrag,
     required this.onDragEnd,
   });
 
   final String quadrant;
+  final double rotation;
   final VoidCallback onDragStart;
   final void Function(Offset globalPosition) onDrag;
   final VoidCallback onDragEnd;
@@ -740,6 +743,7 @@ class _RotateZoneState extends State<_RotateZone> {
           child: CustomPaint(
             painter: _RotateIconPainter(
               quadrant: widget.quadrant,
+              rotation: widget.rotation,
               color: _isHovered || _isDragging
                   ? SelectionHandleConstants.handleBorderColor
                   : SelectionHandleConstants.handleBorderColor.withOpacity(0.5),
@@ -751,75 +755,116 @@ class _RotateZoneState extends State<_RotateZone> {
   }
 }
 
-/// Paints a curved arrow icon for rotation zones.
+/// Paints a 90° arc with filled arrow heads on both ends.
 class _RotateIconPainter extends CustomPainter {
   _RotateIconPainter({
     required this.quadrant,
+    required this.rotation,
     required this.color,
   });
 
   final String quadrant;
+  final double rotation;
   final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
+    final strokePaint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0
       ..strokeCap = StrokeCap.round;
 
+    final fillPaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width * 0.35;
 
-    // Determine start angle and sweep based on quadrant
-    // Arrow indicates counter-clockwise rotation direction
-    double startAngle;
-    const sweepAngle = 2.0; // ~115 degrees arc
-
+    // Base rotation for each quadrant (where the arc "points")
+    // Arc's concave side faces toward the object's corner
+    double baseRotation;
     switch (quadrant) {
       case 'topLeft':
-        startAngle = math.pi; // 180° - arrow points down-right
+        baseRotation = math.pi; // 180° — concave faces bottom-right
       case 'topRight':
-        startAngle = -math.pi / 2; // -90° - arrow points down-left
+        baseRotation = -math.pi / 2; // -90° — concave faces bottom-left
       case 'bottomLeft':
-        startAngle = math.pi / 2; // 90° - arrow points up-right
+        baseRotation = math.pi / 2; // 90° — concave faces top-right
       case 'bottomRight':
-        startAngle = 0; // 0° - arrow points up-left
+        baseRotation = 0; // 0° — concave faces top-left
       default:
-        startAngle = 0;
+        baseRotation = 0;
     }
 
-    // Draw arc
+    // Adjust for object rotation
+    final adjustedRotation = baseRotation + rotation;
+
+    // Draw arc (90 degrees = π/2 radians)
+    const sweepAngle = math.pi / 2;
+    final startAngle = adjustedRotation;
+
     final rect = Rect.fromCircle(center: center, radius: radius);
-    canvas.drawArc(rect, startAngle, sweepAngle, false, paint);
+    canvas.drawArc(rect, startAngle, sweepAngle, false, strokePaint);
 
-    // Draw arrowhead at end of arc
-    final arrowAngle = startAngle + sweepAngle;
-    final arrowTip = Offset(
-      center.dx + radius * math.cos(arrowAngle),
-      center.dy + radius * math.sin(arrowAngle),
+    // Calculate arrow positions at both ends of the arc
+    final arrow1Angle = startAngle;
+    final arrow2Angle = startAngle + sweepAngle;
+
+    final arrow1Pos = Offset(
+      center.dx + radius * math.cos(arrow1Angle),
+      center.dy + radius * math.sin(arrow1Angle),
+    );
+    final arrow2Pos = Offset(
+      center.dx + radius * math.cos(arrow2Angle),
+      center.dy + radius * math.sin(arrow2Angle),
     );
 
-    // Arrow direction (perpendicular to radius + slight backward angle)
-    final arrowDir = arrowAngle + math.pi / 2 + 0.5;
-    const arrowSize = 5.0;
+    // Arrow directions (tangent to arc, pointing in rotation direction)
+    // Arrow 1: points backward along arc (counter-clockwise)
+    // Arrow 2: points forward along arc (clockwise)
+    final arrow1Dir = arrow1Angle - math.pi / 2;
+    final arrow2Dir = arrow2Angle + math.pi / 2;
 
-    final arrow1 = Offset(
-      arrowTip.dx + arrowSize * math.cos(arrowDir + 0.5),
-      arrowTip.dy + arrowSize * math.sin(arrowDir + 0.5),
-    );
-    final arrow2 = Offset(
-      arrowTip.dx + arrowSize * math.cos(arrowDir - 0.5),
-      arrowTip.dy + arrowSize * math.sin(arrowDir - 0.5),
+    // Draw filled triangle arrows
+    _drawArrowHead(canvas, arrow1Pos, arrow1Dir, fillPaint);
+    _drawArrowHead(canvas, arrow2Pos, arrow2Dir, fillPaint);
+  }
+
+  void _drawArrowHead(Canvas canvas, Offset tip, double direction, Paint paint) {
+    const arrowLength = 6.0;
+    const arrowWidth = 4.0;
+
+    // Calculate the three points of the triangle
+    final baseCenter = Offset(
+      tip.dx - arrowLength * math.cos(direction),
+      tip.dy - arrowLength * math.sin(direction),
     );
 
-    canvas.drawLine(arrowTip, arrow1, paint);
-    canvas.drawLine(arrowTip, arrow2, paint);
+    final perpendicular = direction + math.pi / 2;
+    final baseLeft = Offset(
+      baseCenter.dx + arrowWidth / 2 * math.cos(perpendicular),
+      baseCenter.dy + arrowWidth / 2 * math.sin(perpendicular),
+    );
+    final baseRight = Offset(
+      baseCenter.dx - arrowWidth / 2 * math.cos(perpendicular),
+      baseCenter.dy - arrowWidth / 2 * math.sin(perpendicular),
+    );
+
+    final path = Path()
+      ..moveTo(tip.dx, tip.dy)
+      ..lineTo(baseLeft.dx, baseLeft.dy)
+      ..lineTo(baseRight.dx, baseRight.dy)
+      ..close();
+
+    canvas.drawPath(path, paint);
   }
 
   @override
   bool shouldRepaint(_RotateIconPainter oldDelegate) {
-    return oldDelegate.quadrant != quadrant || oldDelegate.color != color;
+    return oldDelegate.quadrant != quadrant ||
+        oldDelegate.rotation != rotation ||
+        oldDelegate.color != color;
   }
 }
