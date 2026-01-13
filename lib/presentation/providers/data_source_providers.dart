@@ -1,10 +1,24 @@
+import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:pdfsign/data/datasources/file_picker_data_source.dart';
 import 'package:pdfsign/data/datasources/pdf_data_source.dart';
 import 'package:pdfsign/data/datasources/recent_files_local_data_source.dart';
+import 'package:pdfsign/data/datasources/sidebar_image_local_data_source.dart';
 import 'package:pdfsign/presentation/providers/shared_preferences_provider.dart';
 
 part 'data_source_providers.g.dart';
+
+/// Provider for [Isar] database instance.
+///
+/// Must be overridden in main.dart with a pre-initialized Isar instance.
+/// Throws if accessed without override.
+@Riverpod(keepAlive: true)
+Isar isar(IsarRef ref) {
+  throw UnimplementedError(
+    'isarProvider must be overridden with a pre-initialized Isar instance',
+  );
+}
 
 /// Provider for [RecentFilesLocalDataSource].
 @riverpod
@@ -32,4 +46,15 @@ PdfDataSource pdfDataSource(PdfDataSourceRef ref) {
     await dataSource.closeDocument();
   });
   return dataSource;
+}
+
+/// Provider for [SidebarImageLocalDataSource].
+///
+/// Uses Isar for persistent storage with real-time multi-window sync.
+@Riverpod(keepAlive: true)
+SidebarImageLocalDataSource sidebarImageLocalDataSource(
+  SidebarImageLocalDataSourceRef ref,
+) {
+  final db = ref.watch(isarProvider);
+  return SidebarImageLocalDataSourceImpl(db);
 }
