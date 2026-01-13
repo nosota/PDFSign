@@ -15,6 +15,9 @@ abstract class SidebarImageLocalDataSource {
   /// Adds a new image to storage.
   Future<void> addImage(SidebarImageModel image);
 
+  /// Gets an image by its UUID.
+  Future<SidebarImageModel?> getImageById(String id);
+
   /// Removes an image by its UUID.
   Future<bool> removeImage(String id);
 
@@ -55,6 +58,11 @@ class SidebarImageLocalDataSourceImpl implements SidebarImageLocalDataSource {
     await _isar.writeTxn(() async {
       await _isar.sidebarImageModels.put(image);
     });
+  }
+
+  @override
+  Future<SidebarImageModel?> getImageById(String id) async {
+    return _isar.sidebarImageModels.filter().idEqualTo(id).findFirst();
   }
 
   @override
