@@ -337,8 +337,6 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
                     side: side,
                     cursor: _getSideCursor(side, image.rotation),
                     onDrag: (delta) => _handleSideDrag(side, delta),
-                    rotation: image.rotation,
-                    isVertical: side == 'left' || side == 'right',
                   ),
                 ),
 
@@ -593,7 +591,7 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
 }
 
 /// Corner handle widget (square, for proportional resize only).
-class _CornerHandle extends StatelessWidget {
+class _CornerHandle extends StatefulWidget {
   const _CornerHandle({
     required this.corner,
     required this.cursor,
@@ -605,15 +603,28 @@ class _CornerHandle extends StatelessWidget {
   final void Function(Offset delta) onDrag;
 
   @override
+  State<_CornerHandle> createState() => _CornerHandleState();
+}
+
+class _CornerHandleState extends State<_CornerHandle> {
+  bool _isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
     const hitSize = SelectionHandleConstants.cornerHitSize;
     const visualSize = SelectionHandleConstants.cornerHandleSize;
 
+    final borderColor = _isHovered
+        ? SelectionHandleConstants.handleBorderColor
+        : SelectionHandleConstants.handleBorderColor.withOpacity(0.5);
+
     return MouseRegion(
-      cursor: cursor,
+      cursor: widget.cursor,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onPanUpdate: (details) => onDrag(details.delta),
+        onPanUpdate: (details) => widget.onDrag(details.delta),
         child: SizedBox(
           width: hitSize,
           height: hitSize,
@@ -624,7 +635,7 @@ class _CornerHandle extends StatelessWidget {
               decoration: BoxDecoration(
                 color: SelectionHandleConstants.handleFillColor,
                 border: Border.all(
-                  color: SelectionHandleConstants.handleBorderColor,
+                  color: borderColor,
                   width: SelectionHandleConstants.handleBorderWidth,
                 ),
               ),
@@ -636,52 +647,53 @@ class _CornerHandle extends StatelessWidget {
   }
 }
 
-/// Side handle widget (rectangle, for non-proportional stretch).
-class _SideHandle extends StatelessWidget {
+/// Side handle widget (square, for non-proportional stretch).
+class _SideHandle extends StatefulWidget {
   const _SideHandle({
     required this.side,
     required this.cursor,
     required this.onDrag,
-    required this.rotation,
-    this.isVertical = false,
   });
 
   final String side;
   final MouseCursor cursor;
   final void Function(Offset delta) onDrag;
-  final double rotation;
-  final bool isVertical;
+
+  @override
+  State<_SideHandle> createState() => _SideHandleState();
+}
+
+class _SideHandleState extends State<_SideHandle> {
+  bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
     const hitSize = SelectionHandleConstants.sideHitSize;
-    final visualWidth = isVertical
-        ? SelectionHandleConstants.sideHandleHeight
-        : SelectionHandleConstants.sideHandleWidth;
-    final visualHeight = isVertical
-        ? SelectionHandleConstants.sideHandleWidth
-        : SelectionHandleConstants.sideHandleHeight;
+    const visualSize = SelectionHandleConstants.cornerHandleSize;
+
+    final borderColor = _isHovered
+        ? SelectionHandleConstants.handleBorderColor
+        : SelectionHandleConstants.handleBorderColor.withOpacity(0.5);
 
     return MouseRegion(
-      cursor: cursor,
+      cursor: widget.cursor,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onPanUpdate: (details) => onDrag(details.delta),
+        onPanUpdate: (details) => widget.onDrag(details.delta),
         child: SizedBox(
           width: hitSize,
           height: hitSize,
           child: Center(
-            child: Transform.rotate(
-              angle: rotation,
-              child: Container(
-                width: visualWidth,
-                height: visualHeight,
-                decoration: BoxDecoration(
-                  color: SelectionHandleConstants.handleFillColor,
-                  border: Border.all(
-                    color: SelectionHandleConstants.handleBorderColor,
-                    width: SelectionHandleConstants.handleBorderWidth,
-                  ),
+            child: Container(
+              width: visualSize,
+              height: visualSize,
+              decoration: BoxDecoration(
+                color: SelectionHandleConstants.handleFillColor,
+                border: Border.all(
+                  color: borderColor,
+                  width: SelectionHandleConstants.handleBorderWidth,
                 ),
               ),
             ),
