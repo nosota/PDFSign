@@ -780,7 +780,7 @@ class _RotateIconPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width * 0.35;
+    final radius = size.width * 0.45;
 
     // Base rotation for each quadrant (where the arc "points")
     // Arc's concave side faces toward the object's corner
@@ -801,8 +801,8 @@ class _RotateIconPainter extends CustomPainter {
     // Adjust for object rotation
     final adjustedRotation = baseRotation + rotation;
 
-    // Draw arc (90 degrees = π/2 radians)
-    const sweepAngle = math.pi / 2;
+    // Draw arc (135 degrees = 3π/4 radians)
+    const sweepAngle = 3 * math.pi / 4;
     final startAngle = adjustedRotation;
 
     final rect = Rect.fromCircle(center: center, radius: radius);
@@ -833,8 +833,8 @@ class _RotateIconPainter extends CustomPainter {
   }
 
   void _drawArrowHead(Canvas canvas, Offset tip, double direction, Paint paint) {
-    const arrowLength = 6.0;
-    const arrowWidth = 4.0;
+    const arrowLength = 8.0;
+    const arrowWidth = 5.0;
 
     // Calculate the three points of the triangle
     final baseCenter = Offset(
