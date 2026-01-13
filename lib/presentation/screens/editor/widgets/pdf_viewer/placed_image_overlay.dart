@@ -177,6 +177,7 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
     var angle = (baseAngles[corner]! + rotation * 180 / math.pi) % 360;
     if (angle < 0) angle += 360;
 
+    // 8 directions, 45° each
     if (angle >= 337.5 || angle < 22.5) {
       return SystemMouseCursors.resizeLeftRight;
     }
@@ -266,22 +267,22 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            // [1] Image with Transform.rotate INSIDE
+            // [1] Image with Transform.rotate OUTSIDE (hit area rotates with image)
             Positioned(
               left: padding - scaledWidth / 2,
               top: padding - scaledHeight / 2,
-              child: MouseRegion(
-                cursor: _isDragging
-                    ? SystemMouseCursors.grabbing
-                    : SystemMouseCursors.grab,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: _handleTap,
-                  onPanStart: _handlePanStart,
-                  onPanUpdate: _handlePanUpdate,
-                  onPanEnd: _handlePanEnd,
-                  child: Transform.rotate(
-                    angle: image.rotation,
+              child: Transform.rotate(
+                angle: image.rotation,
+                child: MouseRegion(
+                  cursor: _isDragging
+                      ? SystemMouseCursors.grabbing
+                      : SystemMouseCursors.grab,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: _handleTap,
+                    onPanStart: _handlePanStart,
+                    onPanUpdate: _handlePanUpdate,
+                    onPanEnd: _handlePanEnd,
                     child: SizedBox(
                       width: scaledWidth,
                       height: scaledHeight,
@@ -314,7 +315,12 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
               ),
             ),
 
-            // [2] Corner handles (OUTSIDE rotation, in screen coords)
+            // [2] Rotate zones (OUTSIDE corners, rendered first = below in z-order)
+            if (widget.isSelected)
+              for (final quadrant in ['topLeft', 'topRight', 'bottomLeft', 'bottomRight'])
+                _buildRotateZone(quadrant, cornerPositions[quadrant]!, image.rotation),
+
+            // [3] Corner handles (OUTSIDE rotation, in screen coords)
             if (widget.isSelected)
               for (final corner in ['topLeft', 'topRight', 'bottomLeft', 'bottomRight'])
                 Positioned(
@@ -327,7 +333,7 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
                   ),
                 ),
 
-            // [3] Side handles (OUTSIDE rotation, in screen coords)
+            // [4] Side handles (OUTSIDE rotation, in screen coords)
             if (widget.isSelected)
               for (final side in ['top', 'bottom', 'left', 'right'])
                 Positioned(
@@ -339,11 +345,6 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
                     onDrag: (delta) => _handleSideDrag(side, delta),
                   ),
                 ),
-
-            // [4] Rotate zones (with icons, OUTSIDE corners)
-            if (widget.isSelected)
-              for (final quadrant in ['topLeft', 'topRight', 'bottomLeft', 'bottomRight'])
-                _buildRotateZone(quadrant, cornerPositions[quadrant]!, image.rotation),
           ],
         ),
       ),
