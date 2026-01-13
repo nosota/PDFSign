@@ -5,10 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:file_picker/file_picker.dart';
+
+import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/pdf_save_service_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_viewer_state.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/go_to_page_dialog.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/page_indicator.dart';
+import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_drop_target.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_page_list.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_viewer_constants.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/zoom_controls.dart';
@@ -43,6 +50,9 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
 
   // Scroll amount for arrow keys
   static const double _arrowScrollAmount = 50.0;
+
+  // Internal clipboard for copy/paste (stores image ID to duplicate)
+  String? _clipboardImageId;
 
   /// The visual scale during pinch gesture (baseScale * gestureScaleFactor)
   double get _visualScale => _baseScale * _gestureScaleFactor;
@@ -167,6 +177,36 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
     final isCmd = HardwareKeyboard.instance.isMetaPressed;
     final logicalKey = event.logicalKey;
 
+    // Delete/Backspace: Delete selected image
+    if (logicalKey == LogicalKeyboardKey.delete ||
+        logicalKey == LogicalKeyboardKey.backspace) {
+      _deleteSelectedImage();
+      return KeyEventResult.handled;
+    }
+
+    // Cmd+C: Copy selected image
+    if (isCmd && logicalKey == LogicalKeyboardKey.keyC) {
+      _copySelectedImage();
+      return KeyEventResult.handled;
+    }
+
+    // Cmd+V: Paste copied image
+    if (isCmd && logicalKey == LogicalKeyboardKey.keyV) {
+      _pasteImage();
+      return KeyEventResult.handled;
+    }
+
+    // Cmd+S: Save document
+    if (isCmd && logicalKey == LogicalKeyboardKey.keyS) {
+      final isShift = HardwareKeyboard.instance.isShiftPressed;
+      if (isShift) {
+        _saveAs();
+      } else {
+        _save();
+      }
+      return KeyEventResult.handled;
+    }
+
     // Cmd+R: Reload document
     if (isCmd && logicalKey == LogicalKeyboardKey.keyR) {
       _reloadDocument();
@@ -250,6 +290,124 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
     }
 
     return KeyEventResult.ignored;
+  }
+
+  void _deleteSelectedImage() {
+    final selectedId = ref.read(editorSelectionProvider);
+    if (selectedId != null) {
+      ref.read(placedImagesProvider.notifier).removeImage(selectedId);
+      ref.read(editorSelectionProvider.notifier).clear();
+      ref.read(documentDirtyProvider.notifier).markDirty();
+    }
+  }
+
+  void _copySelectedImage() {
+    final selectedId = ref.read(editorSelectionProvider);
+    if (selectedId != null) {
+      setState(() {
+        _clipboardImageId = selectedId;
+      });
+    }
+  }
+
+  void _pasteImage() {
+    if (_clipboardImageId != null) {
+      final duplicate = ref.read(placedImagesProvider.notifier).duplicateImage(
+            _clipboardImageId!,
+            offset: const Offset(20, 20),
+          );
+      if (duplicate != null) {
+        ref.read(editorSelectionProvider.notifier).select(duplicate.id);
+        ref.read(documentDirtyProvider.notifier).markDirty();
+      }
+    }
+  }
+
+  Future<void> _save() async {
+    final state = ref.read(pdfDocumentProvider);
+    final filePath = state.maybeMap(
+      loaded: (s) => s.document.filePath,
+      orElse: () => null,
+    );
+
+    if (filePath == null) return;
+
+    final placedImages = ref.read(placedImagesProvider);
+    if (placedImages.isEmpty) {
+      // Nothing to save
+      return;
+    }
+
+    final saveService = ref.read(pdfSaveServiceProvider);
+    final result = await saveService.savePdf(
+      originalPath: filePath,
+      placedImages: placedImages,
+    );
+
+    result.fold(
+      (failure) {
+        // Show error snackbar
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Save failed: ${failure.message}')),
+          );
+        }
+      },
+      (_) {
+        // Mark as clean and show success
+        ref.read(documentDirtyProvider.notifier).markClean();
+        // Clear placed images since they're now embedded in the PDF
+        ref.read(placedImagesProvider.notifier).clear();
+        // Reload the document to show the embedded images
+        _reloadDocument();
+      },
+    );
+  }
+
+  Future<void> _saveAs() async {
+    final state = ref.read(pdfDocumentProvider);
+    final filePath = state.maybeMap(
+      loaded: (s) => s.document.filePath,
+      orElse: () => null,
+    );
+
+    if (filePath == null) return;
+
+    // Show save dialog
+    final outputPath = await FilePicker.platform.saveFile(
+      dialogTitle: 'Save PDF As',
+      fileName: 'document.pdf',
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+
+    if (outputPath == null) return; // User cancelled
+
+    final placedImages = ref.read(placedImagesProvider);
+    final saveService = ref.read(pdfSaveServiceProvider);
+    final result = await saveService.savePdf(
+      originalPath: filePath,
+      placedImages: placedImages,
+      outputPath: outputPath,
+    );
+
+    result.fold(
+      (failure) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Save failed: ${failure.message}')),
+          );
+        }
+      },
+      (savedPath) {
+        ref.read(documentDirtyProvider.notifier).markClean();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Saved to: $savedPath')),
+          );
+        }
+      },
+    );
   }
 
   void _scrollBy(double deltaX, double deltaY) {
@@ -377,74 +535,80 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
             onScaleStart: _handleScaleStart,
             onScaleUpdate: _handleScaleUpdate,
             onScaleEnd: _handleScaleEnd,
-            child: Container(
-              color: PdfViewerConstants.backgroundColor,
-              child: Stack(
-                children: [
-                  // PDF pages with Transform.scale for smooth pinch-to-zoom
-                  ClipRect(
-                    child: _isPinching
-                        ? Transform.scale(
-                            scale: _gestureScaleFactor,
-                            child: PdfPageList(
+            child: PdfDropTarget(
+              document: state.document,
+              scale: state.scale,
+              getScrollOffset: () =>
+                  _pageListKey.currentState?.scrollOffsetXY ?? Offset.zero,
+              child: Container(
+                color: PdfViewerConstants.backgroundColor,
+                child: Stack(
+                  children: [
+                    // PDF pages with Transform.scale for smooth pinch-to-zoom
+                    ClipRect(
+                      child: _isPinching
+                          ? Transform.scale(
+                              scale: _gestureScaleFactor,
+                              child: PdfPageList(
+                                key: _pageListKey,
+                                document: state.document,
+                                scale: state.scale, // Use render scale, not visual
+                                onPageChanged: (page) {
+                                  ref.read(pdfDocumentProvider.notifier).setCurrentPage(page);
+                                },
+                                onScroll: _handleScroll,
+                              ),
+                            )
+                          : PdfPageList(
                               key: _pageListKey,
                               document: state.document,
-                              scale: state.scale, // Use render scale, not visual
+                              scale: state.scale,
                               onPageChanged: (page) {
                                 ref.read(pdfDocumentProvider.notifier).setCurrentPage(page);
                               },
                               onScroll: _handleScroll,
                             ),
-                          )
-                        : PdfPageList(
-                            key: _pageListKey,
-                            document: state.document,
-                            scale: state.scale,
-                            onPageChanged: (page) {
-                              ref.read(pdfDocumentProvider.notifier).setCurrentPage(page);
-                            },
-                            onScroll: _handleScroll,
-                          ),
-                  ),
-
-                  // Zoom controls (bottom right)
-                  Positioned(
-                    right: 16,
-                    bottom: 16,
-                    child: ZoomControls(
-                      currentScale: displayScale,
-                      isFitWidth: state.isFitWidth && !_isPinching,
-                      canZoomIn: state.scale < ZoomConstraints.maxScale - 0.001,
-                      canZoomOut: state.scale > ZoomConstraints.minScale + 0.001,
-                      onZoomIn: () {
-                        ref.read(pdfDocumentProvider.notifier).zoomInStep();
-                      },
-                      onZoomOut: () {
-                        ref.read(pdfDocumentProvider.notifier).zoomOutStep();
-                      },
-                      onFitWidth: () {
-                        ref.read(pdfDocumentProvider.notifier).fitToWidth();
-                      },
-                      onPresetSelected: (scale) {
-                        ref.read(pdfDocumentProvider.notifier).setScale(scale);
-                      },
                     ),
-                  ),
 
-                  // Page indicator (bottom center)
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 16,
-                    child: Center(
-                      child: PageIndicator(
-                        currentPage: state.currentPage,
-                        totalPages: state.document.pageCount,
-                        isScrolling: _isScrolling || _isPinching,
+                    // Zoom controls (bottom right)
+                    Positioned(
+                      right: 16,
+                      bottom: 16,
+                      child: ZoomControls(
+                        currentScale: displayScale,
+                        isFitWidth: state.isFitWidth && !_isPinching,
+                        canZoomIn: state.scale < ZoomConstraints.maxScale - 0.001,
+                        canZoomOut: state.scale > ZoomConstraints.minScale + 0.001,
+                        onZoomIn: () {
+                          ref.read(pdfDocumentProvider.notifier).zoomInStep();
+                        },
+                        onZoomOut: () {
+                          ref.read(pdfDocumentProvider.notifier).zoomOutStep();
+                        },
+                        onFitWidth: () {
+                          ref.read(pdfDocumentProvider.notifier).fitToWidth();
+                        },
+                        onPresetSelected: (scale) {
+                          ref.read(pdfDocumentProvider.notifier).setScale(scale);
+                        },
                       ),
                     ),
-                  ),
-                ],
+
+                    // Page indicator (bottom center)
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 16,
+                      child: Center(
+                        child: PageIndicator(
+                          currentPage: state.currentPage,
+                          totalPages: state.document.pageCount,
+                          isScrolling: _isScrolling || _isPinching,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

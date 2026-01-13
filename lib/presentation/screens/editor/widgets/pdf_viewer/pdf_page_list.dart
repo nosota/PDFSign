@@ -349,6 +349,13 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
   /// Returns scroll offset for center-focused zoom calculations.
   double get scrollOffset => _verticalController.hasClients ? _verticalController.offset : 0;
 
+  /// Returns horizontal scroll offset.
+  double get horizontalScrollOffset =>
+      _horizontalController.hasClients ? _horizontalController.offset : 0;
+
+  /// Returns combined scroll offset (horizontal, vertical).
+  Offset get scrollOffsetXY => Offset(horizontalScrollOffset, scrollOffset);
+
   /// Returns viewport dimensions.
   double get viewportHeight =>
       _verticalController.hasClients ? _verticalController.position.viewportDimension : 0;

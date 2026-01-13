@@ -4,11 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pdfsign/domain/entities/sidebar_image.dart';
 import 'package:pdfsign/presentation/providers/sidebar/sidebar_images_provider.dart';
 import 'package:pdfsign/presentation/providers/sidebar/sidebar_selection_provider.dart';
-import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/image_thumbnail_card.dart';
+import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/draggable_image_card.dart';
 
 /// Scrollable, reorderable list of image thumbnails.
 ///
-/// Supports drag-and-drop reordering of images.
+/// Supports:
+/// - Short drag: reorder within sidebar
+/// - Long press drag: drag to PDF viewer
 class ImageList extends ConsumerWidget {
   const ImageList({
     required this.images,
@@ -34,7 +36,7 @@ class ImageList extends ConsumerWidget {
         return ReorderableDragStartListener(
           key: ValueKey(image.id),
           index: index,
-          child: ImageThumbnailCard(
+          child: DraggableImageCard(
             image: image,
             isSelected: image.id == selectedId,
           ),

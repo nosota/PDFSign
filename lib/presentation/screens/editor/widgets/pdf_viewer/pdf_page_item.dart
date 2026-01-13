@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:pdfsign/domain/entities/pdf_page_info.dart';
+import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_page_cache_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_page_placeholder.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_viewer_constants.dart';
+import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/placed_image_overlay.dart';
 
 /// A single PDF page widget with shadow and loading state.
 class PdfPageItem extends ConsumerWidget {
@@ -46,7 +48,7 @@ class PdfPageItem extends ConsumerWidget {
     );
 
     return imageAsync.when(
-      data: (bytes) => _buildPageImage(bytes, scaledWidth, scaledHeight),
+      data: (bytes) => _buildPageImage(ref, bytes, scaledWidth, scaledHeight),
       loading: () => PdfPagePlaceholder(
         width: scaledWidth,
         height: scaledHeight,
@@ -65,23 +67,46 @@ class PdfPageItem extends ConsumerWidget {
     );
   }
 
-  Widget _buildPageImage(Uint8List bytes, double width, double height) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        color: PdfViewerConstants.pageBackground,
-        borderRadius: BorderRadius.circular(PdfViewerConstants.pageBorderRadius),
-        boxShadow: PdfViewerConstants.pageShadow,
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Image.memory(
-        bytes,
+  Widget _buildPageImage(
+    WidgetRef ref,
+    Uint8List bytes,
+    double width,
+    double height,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        // Clear selection when tapping on page background
+        ref.read(editorSelectionProvider.notifier).clear();
+      },
+      child: Container(
         width: width,
         height: height,
-        fit: BoxFit.contain,
-        gaplessPlayback: true,
-        filterQuality: FilterQuality.high,
+        decoration: BoxDecoration(
+          color: PdfViewerConstants.pageBackground,
+          borderRadius: BorderRadius.circular(PdfViewerConstants.pageBorderRadius),
+          boxShadow: PdfViewerConstants.pageShadow,
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          children: [
+            // PDF page image
+            Image.memory(
+              bytes,
+              width: width,
+              height: height,
+              fit: BoxFit.contain,
+              gaplessPlayback: true,
+              filterQuality: FilterQuality.high,
+            ),
+            // Placed images overlay
+            Positioned.fill(
+              child: PlacedImageOverlay(
+                pageIndex: pageInfo.pageNumber - 1, // 0-indexed
+                scale: scale,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
