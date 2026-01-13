@@ -20,7 +20,7 @@ class SelectionHandleConstants {
   static const double sideHitSize = 20.0;
 
   // Rotate zones (невидимые, снаружи углов)
-  static const double rotateZoneOffset = 12.0;
+  static const double rotateZoneOffset = 4.0;
   static const double rotateZoneSize = 20.0;
 
   // Ограничения
@@ -300,7 +300,7 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
                               child: Container(
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: SelectionHandleConstants.selectionBorderColor,
+                                    color: SelectionHandleConstants.selectionBorderColor.withOpacity(0.5),
                                     width: SelectionHandleConstants.selectionBorderWidth,
                                   ),
                                 ),
