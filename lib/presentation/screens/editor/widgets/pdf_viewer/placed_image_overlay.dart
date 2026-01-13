@@ -779,69 +779,95 @@ class _RotateIconPainter extends CustomPainter {
       ..color = color
       ..style = PaintingStyle.fill;
 
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width * 0.45;
+    final widgetCenter = Offset(size.width / 2, size.height / 2);
 
-    // Base rotation for each quadrant (where the arc "points")
-    // Arc's concave side faces toward the object's corner
-    double baseRotation;
+    // Направление от угла объекта наружу (диагональ)
+    // Это направление должно указывать на середину дуги
+    Offset diagonalDir;
     switch (quadrant) {
       case 'topLeft':
-        baseRotation = math.pi; // 180° — concave faces bottom-right
+        diagonalDir = const Offset(-1, -1);
       case 'topRight':
-        baseRotation = -math.pi / 2; // -90° — concave faces bottom-left
+        diagonalDir = const Offset(1, -1);
       case 'bottomLeft':
-        baseRotation = math.pi / 2; // 90° — concave faces top-right
+        diagonalDir = const Offset(-1, 1);
       case 'bottomRight':
-        baseRotation = 0; // 0° — concave faces top-left
+        diagonalDir = const Offset(1, 1);
       default:
-        baseRotation = 0;
+        diagonalDir = const Offset(1, 1);
     }
 
-    // Adjust for object rotation
-    final adjustedRotation = baseRotation + rotation;
+    // Нормализуем
+    final normalizedDiag = diagonalDir / diagonalDir.distance;
 
-    // Draw arc (135 degrees = 3π/4 radians)
-    const sweepAngle = 3 * math.pi / 4;
-    final startAngle = adjustedRotation;
+    // Поворачиваем диагональ вместе с объектом
+    final rotatedDiag = Offset(
+      normalizedDiag.dx * math.cos(rotation) - normalizedDiag.dy * math.sin(rotation),
+      normalizedDiag.dx * math.sin(rotation) + normalizedDiag.dy * math.cos(rotation),
+    );
 
+    // Угол направления диагонали (середина дуги будет здесь)
+    final diagAngle = math.atan2(rotatedDiag.dy, rotatedDiag.dx);
+
+    // Большой радиус — дуга почти прямая
+    const radius = 50.0;
+
+    // Центр окружности смещён от виджета по диагонали внутрь (к углу объекта)
+    // чтобы дуга проходила через виджет
+    final center = widgetCenter - rotatedDiag * (radius - size.width * 0.35);
+
+    // Дуга симметрична относительно диагонали
+    // sweepAngle / 2 в каждую сторону от diagAngle
+    const sweepAngle = math.pi / 3; // 60° — достаточно для видимого изгиба
+    final startAngle = diagAngle - sweepAngle / 2;
+    final endAngle = diagAngle + sweepAngle / 2;
+
+    // Рисуем дугу
     final rect = Rect.fromCircle(center: center, radius: radius);
     canvas.drawArc(rect, startAngle, sweepAngle, false, strokePaint);
 
-    // Calculate arrow positions at both ends of the arc
-    final arrow1Angle = startAngle;
-    final arrow2Angle = startAngle + sweepAngle;
-
-    final arrow1Pos = Offset(
-      center.dx + radius * math.cos(arrow1Angle),
-      center.dy + radius * math.sin(arrow1Angle),
+    // Позиции концов дуги (здесь основания стрелок)
+    final arc1End = Offset(
+      center.dx + radius * math.cos(startAngle),
+      center.dy + radius * math.sin(startAngle),
     );
-    final arrow2Pos = Offset(
-      center.dx + radius * math.cos(arrow2Angle),
-      center.dy + radius * math.sin(arrow2Angle),
+    final arc2End = Offset(
+      center.dx + radius * math.cos(endAngle),
+      center.dy + radius * math.sin(endAngle),
     );
 
-    // Arrow directions (tangent to arc, pointing in rotation direction)
-    // Arrow 1: points backward along arc (counter-clockwise)
-    // Arrow 2: points forward along arc (clockwise)
-    final arrow1Dir = arrow1Angle - math.pi / 2;
-    final arrow2Dir = arrow2Angle + math.pi / 2;
+    // Направления стрелок: касательная + отклонение наружу
+    const outwardAngle = 0.2;
+    final arrow1Dir = startAngle - math.pi / 2 + outwardAngle;
+    final arrow2Dir = endAngle + math.pi / 2 - outwardAngle;
 
-    // Draw filled triangle arrows
-    _drawArrowHead(canvas, arrow1Pos, arrow1Dir, fillPaint);
-    _drawArrowHead(canvas, arrow2Pos, arrow2Dir, fillPaint);
+    // Размеры стрелки
+    const arrowLength = 5.0;
+    const arrowWidth = 4.0;
+
+    // Tip смещён вперёд от конца дуги
+    final arrow1Tip = Offset(
+      arc1End.dx + arrowLength * math.cos(arrow1Dir),
+      arc1End.dy + arrowLength * math.sin(arrow1Dir),
+    );
+    final arrow2Tip = Offset(
+      arc2End.dx + arrowLength * math.cos(arrow2Dir),
+      arc2End.dy + arrowLength * math.sin(arrow2Dir),
+    );
+
+    // Рисуем стрелки
+    _drawArrowHead(canvas, arrow1Tip, arc1End, arrow1Dir, arrowWidth, fillPaint);
+    _drawArrowHead(canvas, arrow2Tip, arc2End, arrow2Dir, arrowWidth, fillPaint);
   }
 
-  void _drawArrowHead(Canvas canvas, Offset tip, double direction, Paint paint) {
-    const arrowLength = 8.0;
-    const arrowWidth = 5.0;
-
-    // Calculate the three points of the triangle
-    final baseCenter = Offset(
-      tip.dx - arrowLength * math.cos(direction),
-      tip.dy - arrowLength * math.sin(direction),
-    );
-
+  void _drawArrowHead(
+    Canvas canvas,
+    Offset tip,
+    Offset baseCenter,
+    double direction,
+    double arrowWidth,
+    Paint paint,
+  ) {
     final perpendicular = direction + math.pi / 2;
     final baseLeft = Offset(
       baseCenter.dx + arrowWidth / 2 * math.cos(perpendicular),
