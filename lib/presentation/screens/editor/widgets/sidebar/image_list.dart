@@ -45,17 +45,19 @@ class ImageList extends ConsumerWidget {
     );
   }
 
-  /// Decoration for the item being dragged.
+  /// Decoration for the item being dragged (Figma-style: scale + opacity).
   Widget _proxyDecorator(Widget child, int index, Animation<double> animation) {
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
-        final elevation = Tween<double>(begin: 0, end: 8).evaluate(animation);
-        return Material(
-          elevation: elevation,
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
-          child: child,
+        final scale = Tween<double>(begin: 1.0, end: 1.02).evaluate(animation);
+        final opacity = Tween<double>(begin: 1.0, end: 0.9).evaluate(animation);
+        return Opacity(
+          opacity: opacity,
+          child: Transform.scale(
+            scale: scale,
+            child: child,
+          ),
         );
       },
       child: child,
