@@ -112,4 +112,24 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get menuCloseWindow => 'Закрыть окно';
+
+  @override
+  String get saveChangesTitle => 'Сохранить изменения?';
+
+  @override
+  String saveChangesMessage(String fileName) {
+    return 'Сохранить изменения в «$fileName» перед закрытием?';
+  }
+
+  @override
+  String get saveButton => 'Сохранить';
+
+  @override
+  String get discardButton => 'Не сохранять';
+
+  @override
+  String get documentEdited => 'Изменён';
+
+  @override
+  String get documentSaved => 'Сохранён';
 }

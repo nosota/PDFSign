@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'package:pdfsign/core/platform/toolbar_channel.dart';
 import 'package:pdfsign/core/theme/app_theme.dart';
@@ -13,6 +14,7 @@ import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.da
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/editor_screen.dart';
+import 'package:pdfsign/presentation/widgets/dialogs/save_changes_dialog.dart';
 import 'package:pdfsign/presentation/widgets/menus/app_menu_bar.dart';
 
 /// Root app widget for PDF viewer windows (sub windows).
@@ -37,20 +39,79 @@ class PdfViewerApp extends ConsumerStatefulWidget {
   ConsumerState<PdfViewerApp> createState() => _PdfViewerAppState();
 }
 
-class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
+class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
+    with WindowListener {
+  /// Navigator key for showing dialogs.
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   void initState() {
     super.initState();
     // Initialize toolbar channel and register share callback
     ToolbarChannel.init();
     ToolbarChannel.setOnSharePressed(_handleShare);
+
+    // Register window listener for close interception
+    windowManager.addListener(this);
+    windowManager.setPreventClose(true);
+
+    // Set initial window title
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _updateWindowTitle();
+    });
   }
 
   @override
   void dispose() {
     // Unregister share callback
     ToolbarChannel.setOnSharePressed(null);
+    // Remove window listener
+    windowManager.removeListener(this);
     super.dispose();
+  }
+
+  /// Updates the window title based on dirty state.
+  void _updateWindowTitle() {
+    final isDirty = ref.read(documentDirtyProvider);
+    final navigatorContext = _navigatorKey.currentContext;
+    if (navigatorContext == null) return;
+
+    final l10n = AppLocalizations.of(navigatorContext);
+    if (l10n == null) return;
+
+    final suffix = isDirty ? l10n.documentEdited : l10n.documentSaved;
+    windowManager.setTitle('${widget.fileName} - $suffix');
+  }
+
+  /// Intercepts window close to show save dialog if needed.
+  @override
+  void onWindowClose() async {
+    final isDirty = ref.read(documentDirtyProvider);
+
+    if (!isDirty) {
+      await windowManager.destroy();
+      return;
+    }
+
+    // Show save dialog
+    final navigatorContext = _navigatorKey.currentContext;
+    if (navigatorContext == null) {
+      await windowManager.destroy();
+      return;
+    }
+
+    final result = await SaveChangesDialog.show(
+      navigatorContext,
+      widget.fileName,
+    );
+
+    if (result == SaveChangesResult.save) {
+      await _handleSave();
+      await windowManager.destroy();
+    } else if (result == SaveChangesResult.discard) {
+      await windowManager.destroy();
+    }
+    // null = dialog dismissed or cancelled, don't close
   }
 
   Future<void> _handleShare() async {
@@ -163,7 +224,13 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
 
   @override
   Widget build(BuildContext context) {
+    // Listen to dirty state changes and update window title
+    ref.listen<bool>(documentDirtyProvider, (_, __) {
+      _updateWindowTitle();
+    });
+
     return MaterialApp(
+      navigatorKey: _navigatorKey,
       title: widget.fileName,
       theme: createAppTheme(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,

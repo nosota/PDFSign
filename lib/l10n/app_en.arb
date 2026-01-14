@@ -114,5 +114,34 @@
   "menuCloseWindow": "Close Window",
   "@menuCloseWindow": {
     "description": "Close Window menu item"
+  },
+  "saveChangesTitle": "Save Changes?",
+  "@saveChangesTitle": {
+    "description": "Title for save changes dialog"
+  },
+  "saveChangesMessage": "Do you want to save changes to \"{fileName}\" before closing?",
+  "@saveChangesMessage": {
+    "description": "Message for save changes dialog",
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "saveButton": "Save",
+  "@saveButton": {
+    "description": "Save button in dialog"
+  },
+  "discardButton": "Discard",
+  "@discardButton": {
+    "description": "Discard button in dialog"
+  },
+  "documentEdited": "Edited",
+  "@documentEdited": {
+    "description": "Window title suffix when document has unsaved changes"
+  },
+  "documentSaved": "Saved",
+  "@documentSaved": {
+    "description": "Window title suffix when document is saved"
   }
 }

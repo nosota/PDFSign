@@ -106,4 +106,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get menuCloseWindow => 'Close Window';
+
+  @override
+  String get saveChangesTitle => 'Save Changes?';
+
+  @override
+  String saveChangesMessage(String fileName) {
+    return 'Do you want to save changes to \"$fileName\" before closing?';
+  }
+
+  @override
+  String get saveButton => 'Save';
+
+  @override
+  String get discardButton => 'Discard';
+
+  @override
+  String get documentEdited => 'Edited';
+
+  @override
+  String get documentSaved => 'Saved';
 }

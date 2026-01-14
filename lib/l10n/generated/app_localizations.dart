@@ -247,6 +247,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Close Window'**
   String get menuCloseWindow;
+
+  /// Title for save changes dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes?'**
+  String get saveChangesTitle;
+
+  /// Message for save changes dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to save changes to \"{fileName}\" before closing?'**
+  String saveChangesMessage(String fileName);
+
+  /// Save button in dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveButton;
+
+  /// Discard button in dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discardButton;
+
+  /// Window title suffix when document has unsaved changes
+  ///
+  /// In en, this message translates to:
+  /// **'Edited'**
+  String get documentEdited;
+
+  /// Window title suffix when document is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get documentSaved;
 }
 
 class _AppLocalizationsDelegate

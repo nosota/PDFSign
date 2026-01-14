@@ -24,5 +24,11 @@
   "menuSave": "Сохранить",
   "menuSaveAs": "Сохранить как...",
   "menuShare": "Поделиться...",
-  "menuCloseWindow": "Закрыть окно"
+  "menuCloseWindow": "Закрыть окно",
+  "saveChangesTitle": "Сохранить изменения?",
+  "saveChangesMessage": "Сохранить изменения в «{fileName}» перед закрытием?",
+  "saveButton": "Сохранить",
+  "discardButton": "Не сохранять",
+  "documentEdited": "Изменён",
+  "documentSaved": "Сохранён"
 }
