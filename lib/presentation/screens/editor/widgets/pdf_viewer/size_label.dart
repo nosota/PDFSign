@@ -52,13 +52,20 @@ class SizeLabel extends ConsumerWidget {
       onTap: () => ref.read(sizeUnitPreferenceProvider.notifier).toggle(),
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
-        child: Text(
-          _formatSize(unit),
-          style: TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w500,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          decoration: BoxDecoration(
             color: const Color(0xFF0066FF).withOpacity(0.7),
-            fontFeatures: const [FontFeature.tabularFigures()],
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Text(
+            _formatSize(unit),
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+              fontFeatures: [FontFeature.tabularFigures()],
+            ),
           ),
         ),
       ),
