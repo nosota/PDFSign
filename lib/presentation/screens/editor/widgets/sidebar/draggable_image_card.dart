@@ -72,7 +72,7 @@ class DraggableImageCard extends ConsumerWidget {
           // Grip handle for reordering
           ReorderableDragStartListener(
             index: index,
-            child: _GripHandle(isSelected: isSelected),
+            child: const _GripHandle(),
           ),
 
           // Image + comment area
@@ -145,9 +145,7 @@ class DraggableImageCard extends ConsumerWidget {
 
 /// Grip handle for reordering items in the list.
 class _GripHandle extends StatefulWidget {
-  const _GripHandle({required this.isSelected});
-
-  final bool isSelected;
+  const _GripHandle();
 
   @override
   State<_GripHandle> createState() => _GripHandleState();
@@ -169,9 +167,7 @@ class _GripHandleState extends State<_GripHandle> {
         width: 28,
         margin: const EdgeInsets.only(left: 8, top: 4, bottom: 4),
         decoration: BoxDecoration(
-          color: widget.isSelected
-              ? theme.colorScheme.primary.withOpacity(0.1)
-              : (_isHovered ? theme.colorScheme.surfaceContainerHighest : null),
+          color: _isHovered ? theme.colorScheme.surfaceContainerHighest : null,
           borderRadius: const BorderRadius.horizontal(
             left: Radius.circular(6),
           ),

@@ -53,7 +53,7 @@ class _ImageThumbnailCardState extends ConsumerState<ImageThumbnailCard> {
               ),
               border: Border.all(
                 color: widget.isSelected
-                    ? theme.colorScheme.primary
+                    ? theme.colorScheme.primary.withOpacity(0.5)
                     : theme.dividerColor,
                 width: widget.isSelected
                     ? SidebarConstants.selectionBorderWidth
