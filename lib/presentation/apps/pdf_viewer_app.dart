@@ -44,6 +44,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
   /// Navigator key for showing dialogs.
   final _navigatorKey = GlobalKey<NavigatorState>();
 
+  /// Whether the document has been modified at least once.
+  /// Used to determine if status suffix should be shown in title.
+  bool _hasBeenModified = false;
+
   @override
   void initState() {
     super.initState();
@@ -55,9 +59,9 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     windowManager.addListener(this);
     windowManager.setPreventClose(true);
 
-    // Set initial window title
+    // Set initial window title (just filename, no suffix)
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _updateWindowTitle();
+      windowManager.setTitle(widget.fileName);
     });
   }
 
@@ -71,8 +75,21 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
   }
 
   /// Updates the window title based on dirty state.
-  void _updateWindowTitle() {
-    final isDirty = ref.read(documentDirtyProvider);
+  ///
+  /// Shows no suffix until document is modified for the first time.
+  /// After first modification: "- Edited" when dirty, "- Saved" when clean.
+  void _updateWindowTitle(bool isDirty) {
+    // Track if document has ever been modified
+    if (isDirty) {
+      _hasBeenModified = true;
+    }
+
+    // No suffix until first modification
+    if (!_hasBeenModified) {
+      windowManager.setTitle(widget.fileName);
+      return;
+    }
+
     final navigatorContext = _navigatorKey.currentContext;
     if (navigatorContext == null) return;
 
@@ -225,8 +242,8 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
   @override
   Widget build(BuildContext context) {
     // Listen to dirty state changes and update window title
-    ref.listen<bool>(documentDirtyProvider, (_, __) {
-      _updateWindowTitle();
+    ref.listen<bool>(documentDirtyProvider, (_, isDirty) {
+      _updateWindowTitle(isDirty);
     });
 
     return MaterialApp(
