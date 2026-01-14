@@ -13,5 +13,6 @@ KNOWN ISSUES:
 * "Дергание" после перемещения изображений в правой боковой панели.
 
 
->>> При масштабировании не сохраняются изображения вытянутые на PDF
-> 
+Here is your Essential Studio® suite with a 7-day license key. This key can be used until your community license request is approved. 
+We will send your long-term license key then.
+Syncfusion Community License: Ngo9BigBOggjHTQxAR8/V1JGaF5cXGpCf0x0RHxbf1x2ZFBMYFRbRHNPMyBoS35RcEViWHtedXRdRmVbUk1xVEF
