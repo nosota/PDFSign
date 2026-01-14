@@ -32,35 +32,64 @@ class DraggableSidebarImage {
   }
 }
 
-/// Wrapper that makes ImageThumbnailCard draggable to the PDF viewer.
+/// Image card with grip handle for reordering and draggable image for PDF.
+///
+/// Structure:
+/// ```
+/// ┌────┬──────────────────────┐
+/// │ ⋮⋮ │   🖼 image.png       │
+/// │    │                      │
+/// │grip│  ← drag = to PDF     │
+/// └────┴──────────────────────┘
+/// ```
+///
+/// - Drag grip handle (⋮⋮): reorder within sidebar
+/// - Drag image area: drag to PDF viewer
 class DraggableImageCard extends ConsumerWidget {
   const DraggableImageCard({
     required this.image,
+    required this.index,
     required this.isSelected,
     super.key,
   });
 
   final SidebarImage image;
+  final int index;
   final bool isSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dragData = DraggableSidebarImage.fromSidebarImage(image);
 
-    return LongPressDraggable<DraggableSidebarImage>(
-      data: dragData,
-      delay: const Duration(milliseconds: 100),
-      feedback: _buildDragFeedback(context),
-      childWhenDragging: Opacity(
-        opacity: 0.3,
-        child: ImageThumbnailCard(
-          image: image,
-          isSelected: false,
-        ),
-      ),
-      child: ImageThumbnailCard(
-        image: image,
-        isSelected: isSelected,
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Grip handle for reordering
+          ReorderableDragStartListener(
+            index: index,
+            child: _GripHandle(isSelected: isSelected),
+          ),
+
+          // Image area for dragging to PDF
+          Expanded(
+            child: Draggable<DraggableSidebarImage>(
+              data: dragData,
+              feedback: _buildDragFeedback(context),
+              childWhenDragging: Opacity(
+                opacity: 0.3,
+                child: ImageThumbnailCard(
+                  image: image,
+                  isSelected: false,
+                ),
+              ),
+              child: ImageThumbnailCard(
+                image: image,
+                isSelected: isSelected,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -85,6 +114,51 @@ class DraggableImageCard extends ConsumerWidget {
         width: width,
         height: height,
         fit: BoxFit.contain,
+      ),
+    );
+  }
+}
+
+/// Grip handle for reordering items in the list.
+class _GripHandle extends StatefulWidget {
+  const _GripHandle({required this.isSelected});
+
+  final bool isSelected;
+
+  @override
+  State<_GripHandle> createState() => _GripHandleState();
+}
+
+class _GripHandleState extends State<_GripHandle> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final baseColor = theme.colorScheme.onSurfaceVariant;
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.grab,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: Container(
+        width: 28,
+        margin: const EdgeInsets.only(left: 8, top: 4, bottom: 4),
+        decoration: BoxDecoration(
+          color: widget.isSelected
+              ? theme.colorScheme.primary.withOpacity(0.1)
+              : (_isHovered ? theme.colorScheme.surfaceContainerHighest : null),
+          borderRadius: const BorderRadius.horizontal(
+            left: Radius.circular(6),
+          ),
+        ),
+        child: Center(
+          child: Icon(
+            Icons.drag_indicator,
+            size: 20,
+            color: _isHovered ? baseColor : baseColor.withOpacity(0.5),
+          ),
+        ),
       ),
     );
   }

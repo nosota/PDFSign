@@ -9,8 +9,8 @@ import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/draggable_im
 /// Scrollable, reorderable list of image thumbnails.
 ///
 /// Supports:
-/// - Short drag: reorder within sidebar
-/// - Long press drag: drag to PDF viewer
+/// - Drag grip handle (⋮⋮): reorder within sidebar
+/// - Drag image: drag to PDF viewer
 class ImageList extends ConsumerWidget {
   const ImageList({
     required this.images,
@@ -33,13 +33,11 @@ class ImageList extends ConsumerWidget {
       proxyDecorator: _proxyDecorator,
       itemBuilder: (context, index) {
         final image = images[index];
-        return ReorderableDragStartListener(
+        return DraggableImageCard(
           key: ValueKey(image.id),
+          image: image,
           index: index,
-          child: DraggableImageCard(
-            image: image,
-            isSelected: image.id == selectedId,
-          ),
+          isSelected: image.id == selectedId,
         );
       },
     );

@@ -42,9 +42,10 @@ class _ImageThumbnailCardState extends ConsumerState<ImageThumbnailCard> {
         child: GestureDetector(
           onTap: _handleTap,
           child: Container(
-            margin: const EdgeInsets.symmetric(
-              horizontal: SidebarConstants.thumbnailPadding,
-              vertical: SidebarConstants.thumbnailPadding / 2,
+            margin: const EdgeInsets.only(
+              right: SidebarConstants.thumbnailPadding,
+              top: SidebarConstants.thumbnailPadding / 2,
+              bottom: SidebarConstants.thumbnailPadding / 2,
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(
