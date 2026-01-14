@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pdfsign/domain/entities/placed_image.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
+import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/size_label.dart';
 
 /// Selection handle constants.
 class SelectionHandleConstants {
@@ -348,6 +349,54 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
                     isRotating: _isRotating,
                   ),
                 ),
+
+            // [5] Size label (positioned at visually bottom edge)
+            if (widget.isSelected)
+              Builder(
+                builder: (context) {
+                  final bottomInfo = _findBottomEdge(
+                    widgetCenter: centerLocal,
+                    scaledWidth: scaledWidth,
+                    scaledHeight: scaledHeight,
+                    rotation: image.rotation,
+                    originalWidth: image.size.width,
+                    originalHeight: image.size.height,
+                  );
+
+                  // Offset perpendicular to edge (outward from object)
+                  const labelOffset = 16.0;
+                  Offset outward;
+                  switch (bottomInfo.edge) {
+                    case 'top':
+                      outward = _rotatePoint(const Offset(0, -1), image.rotation);
+                    case 'bottom':
+                      outward = _rotatePoint(const Offset(0, 1), image.rotation);
+                    case 'left':
+                      outward = _rotatePoint(const Offset(-1, 0), image.rotation);
+                    case 'right':
+                      outward = _rotatePoint(const Offset(1, 0), image.rotation);
+                    default:
+                      outward = _rotatePoint(const Offset(0, 1), image.rotation);
+                  }
+
+                  final labelPos = bottomInfo.center + outward * labelOffset;
+
+                  return Positioned(
+                    left: labelPos.dx,
+                    top: labelPos.dy,
+                    child: FractionalTranslation(
+                      translation: const Offset(-0.5, -0.5),
+                      child: Transform.rotate(
+                        angle: bottomInfo.labelRotation,
+                        child: SizeLabel(
+                          firstDimension: bottomInfo.firstDim,
+                          secondDimension: bottomInfo.secondDim,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
           ],
         ),
       ),
@@ -593,6 +642,100 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
     setState(() => _isRotating = false);
     _rotateStartRotation = null;
     _rotateStartAngle = null;
+  }
+
+  // ==========================================================================
+  // SIZE LABEL (positioned at visually bottom edge)
+  // ==========================================================================
+
+  /// Finds the visually bottom edge (maximum Y center in screen coords).
+  ///
+  /// Returns edge name, center position, label rotation, and dimensions.
+  ({
+    String edge,
+    Offset center,
+    double labelRotation,
+    double firstDim,
+    double secondDim,
+  }) _findBottomEdge({
+    required Offset widgetCenter,
+    required double scaledWidth,
+    required double scaledHeight,
+    required double rotation,
+    required double originalWidth,
+    required double originalHeight,
+  }) {
+    final halfW = scaledWidth / 2;
+    final halfH = scaledHeight / 2;
+
+    // Edge centers in local coords (before rotation)
+    final localCenters = {
+      'top': Offset(0, -halfH),
+      'bottom': Offset(0, halfH),
+      'left': Offset(-halfW, 0),
+      'right': Offset(halfW, 0),
+    };
+
+    // Find edge with max Y in screen coords
+    String bottomEdge = 'bottom';
+    double maxY = double.negativeInfinity;
+
+    for (final entry in localCenters.entries) {
+      final rotated = _rotatePoint(entry.value, rotation);
+      final screenPos = widgetCenter + rotated;
+      if (screenPos.dy > maxY) {
+        maxY = screenPos.dy;
+        bottomEdge = entry.key;
+      }
+    }
+
+    // Screen position of bottom edge center
+    final localCenter = localCenters[bottomEdge]!;
+    final screenCenter = widgetCenter + _rotatePoint(localCenter, rotation);
+
+    // Label rotation = parallel to edge, but normalized to be readable
+    double labelRotation;
+    double firstDim;
+    double secondDim;
+
+    switch (bottomEdge) {
+      case 'top':
+        labelRotation = rotation + math.pi; // flipped 180°
+        firstDim = originalWidth;
+        secondDim = originalHeight;
+      case 'bottom':
+        labelRotation = rotation;
+        firstDim = originalWidth;
+        secondDim = originalHeight;
+      case 'left':
+        labelRotation = rotation - math.pi / 2;
+        firstDim = originalHeight;
+        secondDim = originalWidth;
+      case 'right':
+        labelRotation = rotation + math.pi / 2;
+        firstDim = originalHeight;
+        secondDim = originalWidth;
+      default:
+        labelRotation = rotation;
+        firstDim = originalWidth;
+        secondDim = originalHeight;
+    }
+
+    // Normalize angle to [-π/2, π/2] so text is readable (not upside down)
+    while (labelRotation > math.pi / 2) {
+      labelRotation -= math.pi;
+    }
+    while (labelRotation < -math.pi / 2) {
+      labelRotation += math.pi;
+    }
+
+    return (
+      edge: bottomEdge,
+      center: screenCenter,
+      labelRotation: labelRotation,
+      firstDim: firstDim,
+      secondDim: secondDim,
+    );
   }
 }
 
