@@ -453,11 +453,12 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
   }
 
   void _handlePanUpdate(DragUpdateDetails details) {
-    // Convert delta from screen to PDF coordinates
-    final delta = details.delta / widget.scale;
-    final newPosition = widget.image.position + delta;
+    // Delta is in rotated local coordinates (because GestureDetector is inside Transform.rotate)
+    // Convert to screen/PDF coordinates by rotating by +rotation
+    final localDelta = details.delta / widget.scale;
+    final pdfDelta = _rotatePoint(localDelta, widget.image.rotation);
+    final newPosition = widget.image.position + pdfDelta;
 
-    // Update position (clamping will be done when saving)
     ref.read(placedImagesProvider.notifier).moveImage(
           widget.image.id,
           newPosition,
