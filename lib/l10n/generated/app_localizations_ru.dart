@@ -85,4 +85,31 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get menuFile => 'Файл';
+
+  @override
+  String get menuOpen => 'Открыть...';
+
+  @override
+  String get menuOpenRecent => 'Открыть недавние';
+
+  @override
+  String get menuNoRecentFiles => 'Нет недавних файлов';
+
+  @override
+  String get menuClearMenu => 'Очистить меню';
+
+  @override
+  String get menuSave => 'Сохранить';
+
+  @override
+  String get menuSaveAs => 'Сохранить как...';
+
+  @override
+  String get menuShare => 'Поделиться...';
+
+  @override
+  String get menuCloseWindow => 'Закрыть окно';
 }

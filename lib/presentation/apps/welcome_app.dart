@@ -28,18 +28,24 @@ class WelcomeApp extends ConsumerWidget {
       ],
     );
 
-    return AppMenuBar(
-      // Welcome screen doesn't have Share functionality
-      includeShare: false,
-      onFileOpened: () => windowManager.hide(),
-      child: MaterialApp.router(
-        title: 'PDFSign',
-        theme: createAppTheme(),
-        routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        debugShowCheckedModeBanner: false,
-      ),
+    return MaterialApp.router(
+      title: 'PDFSign',
+      theme: createAppTheme(),
+      routerConfig: router,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      debugShowCheckedModeBanner: false,
+      builder: (context, child) {
+        final l10n = AppLocalizations.of(context)!;
+        return AppMenuBar(
+          localizations: l10n,
+          // Welcome screen doesn't have Save or Share functionality
+          includeSaveMenu: false,
+          includeShare: false,
+          onFileOpened: () => windowManager.hide(),
+          child: child!,
+        );
+      },
     );
   }
 }

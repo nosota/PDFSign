@@ -15,5 +15,14 @@
   "cancel": "Отмена",
   "confirm": "Подтвердить",
   "error": "Ошибка",
-  "ok": "OK"
+  "ok": "OK",
+  "menuFile": "Файл",
+  "menuOpen": "Открыть...",
+  "menuOpenRecent": "Открыть недавние",
+  "menuNoRecentFiles": "Нет недавних файлов",
+  "menuClearMenu": "Очистить меню",
+  "menuSave": "Сохранить",
+  "menuSaveAs": "Сохранить как...",
+  "menuShare": "Поделиться...",
+  "menuCloseWindow": "Закрыть окно"
 }

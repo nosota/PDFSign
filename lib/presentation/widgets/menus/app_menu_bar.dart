@@ -1,20 +1,24 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:pdfsign/core/window/window_manager_service.dart';
 import 'package:pdfsign/domain/entities/recent_file.dart';
+import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/file_picker_provider.dart';
 import 'package:pdfsign/presentation/providers/recent_files_provider.dart';
 
 /// Base menu bar builder with common File menu items.
 ///
-/// Provides Open, Open Recent, and Close Window functionality.
+/// Provides Open, Open Recent, Save, Save As, Share, and Close Window functionality.
+/// All menu labels are localized via AppLocalizations.
 class AppMenuBar extends ConsumerWidget {
   const AppMenuBar({
     required this.child,
+    required this.localizations,
+    this.includeSaveMenu = false,
+    this.onSave,
+    this.onSaveAs,
     this.includeShare = false,
     this.onShare,
     this.onFileOpened,
@@ -23,6 +27,18 @@ class AppMenuBar extends ConsumerWidget {
 
   /// The child widget to wrap with the menu bar.
   final Widget child;
+
+  /// Localization strings.
+  final AppLocalizations localizations;
+
+  /// Whether to include Save and Save As menu items.
+  final bool includeSaveMenu;
+
+  /// Callback when Save is selected.
+  final VoidCallback? onSave;
+
+  /// Callback when Save As is selected.
+  final VoidCallback? onSaveAs;
 
   /// Whether to include the Share menu item.
   final bool includeShare;
@@ -57,7 +73,7 @@ class AppMenuBar extends ConsumerWidget {
         ),
         // File menu
         PlatformMenu(
-          label: 'File',
+          label: localizations.menuFile,
           menus: _buildFileMenuItems(context, ref, recentFilesAsync),
         ),
       ],
@@ -75,7 +91,7 @@ class AppMenuBar extends ConsumerWidget {
       PlatformMenuItemGroup(
         members: [
           PlatformMenuItem(
-            label: 'Open...',
+            label: localizations.menuOpen,
             shortcut: const SingleActivator(
               LogicalKeyboardKey.keyO,
               meta: true,
@@ -92,13 +108,40 @@ class AppMenuBar extends ConsumerWidget {
       ),
     ];
 
-    // Group 3: Share (optional)
+    // Group 3: Save and Save As (optional)
+    if (includeSaveMenu) {
+      items.add(
+        PlatformMenuItemGroup(
+          members: [
+            PlatformMenuItem(
+              label: localizations.menuSave,
+              shortcut: const SingleActivator(
+                LogicalKeyboardKey.keyS,
+                meta: true,
+              ),
+              onSelected: onSave,
+            ),
+            PlatformMenuItem(
+              label: localizations.menuSaveAs,
+              shortcut: const SingleActivator(
+                LogicalKeyboardKey.keyS,
+                meta: true,
+                shift: true,
+              ),
+              onSelected: onSaveAs,
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Group 4: Share (optional)
     if (includeShare) {
       items.add(
         PlatformMenuItemGroup(
           members: [
             PlatformMenuItem(
-              label: 'Share...',
+              label: localizations.menuShare,
               onSelected: onShare,
             ),
           ],
@@ -106,12 +149,12 @@ class AppMenuBar extends ConsumerWidget {
       );
     }
 
-    // Group 4: Close Window
+    // Group 5: Close Window
     items.add(
       PlatformMenuItemGroup(
         members: [
           PlatformMenuItem(
-            label: 'Close Window',
+            label: localizations.menuCloseWindow,
             shortcut: const SingleActivator(
               LogicalKeyboardKey.keyW,
               meta: true,
@@ -154,7 +197,7 @@ class AppMenuBar extends ConsumerWidget {
         PlatformMenuItemGroup(
           members: [
             PlatformMenuItem(
-              label: 'Clear Menu',
+              label: localizations.menuClearMenu,
               onSelected: () =>
                   ref.read(recentFilesProvider.notifier).clearAll(),
             ),
@@ -166,8 +209,8 @@ class AppMenuBar extends ConsumerWidget {
       menuItems.add(
         PlatformMenuItemGroup(
           members: [
-            const PlatformMenuItem(
-              label: 'No Recent Files',
+            PlatformMenuItem(
+              label: localizations.menuNoRecentFiles,
               onSelected: null,
             ),
           ],
@@ -176,7 +219,7 @@ class AppMenuBar extends ConsumerWidget {
     }
 
     return PlatformMenu(
-      label: 'Open Recent',
+      label: localizations.menuOpenRecent,
       menus: menuItems,
     );
   }

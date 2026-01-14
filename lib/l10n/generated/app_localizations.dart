@@ -193,6 +193,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OK'**
   String get ok;
+
+  /// File menu label
+  ///
+  /// In en, this message translates to:
+  /// **'File'**
+  String get menuFile;
+
+  /// Open menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Open...'**
+  String get menuOpen;
+
+  /// Open Recent submenu label
+  ///
+  /// In en, this message translates to:
+  /// **'Open Recent'**
+  String get menuOpenRecent;
+
+  /// Shown when no recent files available
+  ///
+  /// In en, this message translates to:
+  /// **'No Recent Files'**
+  String get menuNoRecentFiles;
+
+  /// Clear recent files menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Menu'**
+  String get menuClearMenu;
+
+  /// Save menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get menuSave;
+
+  /// Save As menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Save As...'**
+  String get menuSaveAs;
+
+  /// Share menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Share...'**
+  String get menuShare;
+
+  /// Close Window menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Close Window'**
+  String get menuCloseWindow;
 }
 
 class _AppLocalizationsDelegate

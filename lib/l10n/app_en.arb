@@ -78,5 +78,41 @@
   "ok": "OK",
   "@ok": {
     "description": "OK button label"
+  },
+  "menuFile": "File",
+  "@menuFile": {
+    "description": "File menu label"
+  },
+  "menuOpen": "Open...",
+  "@menuOpen": {
+    "description": "Open menu item"
+  },
+  "menuOpenRecent": "Open Recent",
+  "@menuOpenRecent": {
+    "description": "Open Recent submenu label"
+  },
+  "menuNoRecentFiles": "No Recent Files",
+  "@menuNoRecentFiles": {
+    "description": "Shown when no recent files available"
+  },
+  "menuClearMenu": "Clear Menu",
+  "@menuClearMenu": {
+    "description": "Clear recent files menu item"
+  },
+  "menuSave": "Save",
+  "@menuSave": {
+    "description": "Save menu item"
+  },
+  "menuSaveAs": "Save As...",
+  "@menuSaveAs": {
+    "description": "Save As menu item"
+  },
+  "menuShare": "Share...",
+  "@menuShare": {
+    "description": "Share menu item"
+  },
+  "menuCloseWindow": "Close Window",
+  "@menuCloseWindow": {
+    "description": "Close Window menu item"
   }
 }

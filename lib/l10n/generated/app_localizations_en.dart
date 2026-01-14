@@ -79,4 +79,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get menuFile => 'File';
+
+  @override
+  String get menuOpen => 'Open...';
+
+  @override
+  String get menuOpenRecent => 'Open Recent';
+
+  @override
+  String get menuNoRecentFiles => 'No Recent Files';
+
+  @override
+  String get menuClearMenu => 'Clear Menu';
+
+  @override
+  String get menuSave => 'Save';
+
+  @override
+  String get menuSaveAs => 'Save As...';
+
+  @override
+  String get menuShare => 'Share...';
+
+  @override
+  String get menuCloseWindow => 'Close Window';
 }
