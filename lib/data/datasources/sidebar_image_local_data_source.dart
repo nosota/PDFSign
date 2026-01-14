@@ -29,6 +29,9 @@ abstract class SidebarImageLocalDataSource {
 
   /// Gets the next available orderIndex.
   Future<int> getNextOrderIndex();
+
+  /// Updates the comment for an image.
+  Future<bool> updateComment(String id, String? comment);
 }
 
 /// Implementation of [SidebarImageLocalDataSource] using Isar.
@@ -102,5 +105,19 @@ class SidebarImageLocalDataSourceImpl implements SidebarImageLocalDataSource {
         .sortByOrderIndexDesc()
         .findFirst();
     return lastImage == null ? 0 : lastImage.orderIndex + 1;
+  }
+
+  @override
+  Future<bool> updateComment(String id, String? comment) async {
+    return _isar.writeTxn(() async {
+      final model = await _isar.sidebarImageModels
+          .filter()
+          .idEqualTo(id)
+          .findFirst();
+      if (model == null) return false;
+      model.comment = comment;
+      await _isar.sidebarImageModels.put(model);
+      return true;
+    });
   }
 }

@@ -88,4 +88,10 @@ class SidebarImages extends _$SidebarImages {
     final repository = ref.read(sidebarImageRepositoryProvider);
     await repository.clearAllImages();
   }
+
+  /// Updates the comment for an image by ID.
+  Future<void> updateComment(String id, String? comment) async {
+    final repository = ref.read(sidebarImageRepositoryProvider);
+    await repository.updateComment(id, comment);
+  }
 }

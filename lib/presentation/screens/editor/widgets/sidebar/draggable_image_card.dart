@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:pdfsign/domain/entities/sidebar_image.dart';
+import 'package:pdfsign/presentation/providers/sidebar/sidebar_images_provider.dart';
+import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/image_comment_field.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/image_thumbnail_card.dart';
 
 /// Data object passed during drag operation.
@@ -40,11 +42,13 @@ class DraggableSidebarImage {
 /// │ ⋮⋮ │   🖼 image.png       │
 /// │    │                      │
 /// │grip│  ← drag = to PDF     │
+/// │    │   Comment text...    │
 /// └────┴──────────────────────┘
 /// ```
 ///
 /// - Drag grip handle (⋮⋮): reorder within sidebar
 /// - Drag image area: drag to PDF viewer
+/// - Comment field: inline editable text below image
 class DraggableImageCard extends ConsumerWidget {
   const DraggableImageCard({
     required this.image,
@@ -71,22 +75,42 @@ class DraggableImageCard extends ConsumerWidget {
             child: _GripHandle(isSelected: isSelected),
           ),
 
-          // Image area for dragging to PDF
+          // Image + comment area
           Expanded(
-            child: Draggable<DraggableSidebarImage>(
-              data: dragData,
-              feedback: _buildDragFeedback(context),
-              childWhenDragging: Opacity(
-                opacity: 0.3,
-                child: ImageThumbnailCard(
-                  image: image,
-                  isSelected: false,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Image area for dragging to PDF
+                Draggable<DraggableSidebarImage>(
+                  data: dragData,
+                  feedback: _buildDragFeedback(context),
+                  childWhenDragging: Opacity(
+                    opacity: 0.3,
+                    child: ImageThumbnailCard(
+                      image: image,
+                      isSelected: false,
+                    ),
+                  ),
+                  child: ImageThumbnailCard(
+                    image: image,
+                    isSelected: isSelected,
+                  ),
                 ),
-              ),
-              child: ImageThumbnailCard(
-                image: image,
-                isSelected: isSelected,
-              ),
+
+                // Comment field
+                Padding(
+                  padding: const EdgeInsets.only(right: 8, bottom: 4),
+                  child: ImageCommentField(
+                    comment: image.comment,
+                    onCommentChanged: (comment) {
+                      ref
+                          .read(sidebarImagesProvider.notifier)
+                          .updateComment(image.id, comment);
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ],

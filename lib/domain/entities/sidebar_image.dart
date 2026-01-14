@@ -28,6 +28,9 @@ class SidebarImage extends Equatable {
   /// File size in bytes.
   final int fileSize;
 
+  /// Optional user comment for the image.
+  final String? comment;
+
   const SidebarImage({
     required this.id,
     required this.filePath,
@@ -37,12 +40,15 @@ class SidebarImage extends Equatable {
     required this.width,
     required this.height,
     required this.fileSize,
+    this.comment,
   });
 
   /// Aspect ratio (width / height).
   double get aspectRatio => width / height;
 
   /// Creates a copy with updated fields.
+  ///
+  /// Use [clearComment] to explicitly set comment to null.
   SidebarImage copyWith({
     String? id,
     String? filePath,
@@ -52,6 +58,8 @@ class SidebarImage extends Equatable {
     int? width,
     int? height,
     int? fileSize,
+    String? comment,
+    bool clearComment = false,
   }) {
     return SidebarImage(
       id: id ?? this.id,
@@ -62,6 +70,7 @@ class SidebarImage extends Equatable {
       width: width ?? this.width,
       height: height ?? this.height,
       fileSize: fileSize ?? this.fileSize,
+      comment: clearComment ? null : (comment ?? this.comment),
     );
   }
 
@@ -75,6 +84,7 @@ class SidebarImage extends Equatable {
         width,
         height,
         fileSize,
+        comment,
       ];
 
   @override

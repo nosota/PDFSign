@@ -154,4 +154,17 @@ class SidebarImageRepositoryImpl implements SidebarImageRepository {
       return Left(StorageFailure(message: 'Failed to cleanup images: $e'));
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> updateComment(String id, String? comment) async {
+    try {
+      final updated = await _localDataSource.updateComment(id, comment);
+      if (!updated) {
+        return Left(StorageFailure(message: 'Image not found: $id'));
+      }
+      return const Right(unit);
+    } catch (e) {
+      return Left(StorageFailure(message: 'Failed to update comment: $e'));
+    }
+  }
 }

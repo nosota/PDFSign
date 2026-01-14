@@ -56,4 +56,12 @@ abstract class SidebarImageRepository {
   /// Returns the remaining valid images after cleanup.
   /// Returns a [Failure] if the operation fails.
   Future<Either<Failure, List<SidebarImage>>> cleanupInvalidImages();
+
+  /// Updates the comment for an image.
+  ///
+  /// [id] is the image UUID.
+  /// [comment] is the new comment (null to remove).
+  /// Returns [Unit] on success.
+  /// Returns a [Failure] if the image doesn't exist or update fails.
+  Future<Either<Failure, Unit>> updateComment(String id, String? comment);
 }

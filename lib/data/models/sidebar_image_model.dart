@@ -39,6 +39,9 @@ class SidebarImageModel {
   /// File size in bytes.
   late int fileSize;
 
+  /// Optional user comment.
+  String? comment;
+
   /// Converts this model to a domain entity.
   SidebarImage toEntity() {
     return SidebarImage(
@@ -50,6 +53,7 @@ class SidebarImageModel {
       width: width,
       height: height,
       fileSize: fileSize,
+      comment: comment,
     );
   }
 
@@ -63,6 +67,7 @@ class SidebarImageModel {
       ..orderIndex = entity.orderIndex
       ..width = entity.width
       ..height = entity.height
-      ..fileSize = entity.fileSize;
+      ..fileSize = entity.fileSize
+      ..comment = entity.comment;
   }
 }
