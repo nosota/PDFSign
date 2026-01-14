@@ -94,6 +94,7 @@ class _PlacedImageWidget extends ConsumerStatefulWidget {
 
 class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
   bool _isDragging = false;
+  bool _isRotating = false;
 
   // Rotation state (saved at drag start for smooth rotation)
   double? _rotateStartAngle;
@@ -330,6 +331,7 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
                     corner: corner,
                     cursor: _getCornerCursor(corner, image.rotation),
                     onDrag: (delta) => _handleCornerDrag(corner, delta),
+                    isRotating: _isRotating,
                   ),
                 ),
 
@@ -343,6 +345,7 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
                     side: side,
                     cursor: _getSideCursor(side, image.rotation),
                     onDrag: (delta) => _handleSideDrag(side, delta),
+                    isRotating: _isRotating,
                   ),
                 ),
           ],
@@ -542,6 +545,7 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
   // ==========================================================================
 
   void _handleRotateDragStart() {
+    setState(() => _isRotating = true);
     _rotateStartRotation = widget.image.rotation;
     _rotateStartAngle = null;
   }
@@ -586,6 +590,7 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
   }
 
   void _handleRotateDragEnd() {
+    setState(() => _isRotating = false);
     _rotateStartRotation = null;
     _rotateStartAngle = null;
   }
@@ -597,11 +602,13 @@ class _CornerHandle extends StatefulWidget {
     required this.corner,
     required this.cursor,
     required this.onDrag,
+    this.isRotating = false,
   });
 
   final String corner;
   final MouseCursor cursor;
   final void Function(Offset delta) onDrag;
+  final bool isRotating;
 
   @override
   State<_CornerHandle> createState() => _CornerHandleState();
@@ -619,8 +626,12 @@ class _CornerHandleState extends State<_CornerHandle> {
         ? SelectionHandleConstants.handleBorderColor
         : SelectionHandleConstants.handleBorderColor.withOpacity(0.5);
 
+    // Use grabbing cursor during rotation to override handle cursor
+    final cursor =
+        widget.isRotating ? SystemMouseCursors.grabbing : widget.cursor;
+
     return MouseRegion(
-      cursor: widget.cursor,
+      cursor: cursor,
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
@@ -654,11 +665,13 @@ class _SideHandle extends StatefulWidget {
     required this.side,
     required this.cursor,
     required this.onDrag,
+    this.isRotating = false,
   });
 
   final String side;
   final MouseCursor cursor;
   final void Function(Offset delta) onDrag;
+  final bool isRotating;
 
   @override
   State<_SideHandle> createState() => _SideHandleState();
@@ -676,8 +689,12 @@ class _SideHandleState extends State<_SideHandle> {
         ? SelectionHandleConstants.handleBorderColor
         : SelectionHandleConstants.handleBorderColor.withOpacity(0.5);
 
+    // Use grabbing cursor during rotation to override handle cursor
+    final cursor =
+        widget.isRotating ? SystemMouseCursors.grabbing : widget.cursor;
+
     return MouseRegion(
-      cursor: widget.cursor,
+      cursor: cursor,
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
