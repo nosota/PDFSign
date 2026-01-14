@@ -9,8 +9,9 @@ part 'placed_images_provider.g.dart';
 
 /// Provider for managing images placed on PDF pages.
 ///
-/// Each PDF viewer window has its own list of placed images.
-@riverpod
+/// Uses keepAlive to persist state during zoom/scroll operations
+/// when pages may temporarily become invisible.
+@Riverpod(keepAlive: true)
 class PlacedImages extends _$PlacedImages {
   final _uuid = const Uuid();
 
