@@ -27,6 +27,20 @@ class ToolbarChannel {
     _onSharePressed = callback;
   }
 
+  /// Requests native toolbar setup for this window.
+  ///
+  /// Should be called only for PDF viewer windows that need the toolbar.
+  /// Settings and other windows should NOT call this method.
+  static Future<void> setupToolbar() async {
+    try {
+      await _channel.invokeMethod('setupToolbar');
+    } catch (e) {
+      if (kDebugMode) {
+        print('ToolbarChannel: Failed to setup toolbar: $e');
+      }
+    }
+  }
+
   static Future<void> _handleMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'onSharePressed':

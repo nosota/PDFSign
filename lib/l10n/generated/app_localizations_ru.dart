@@ -132,4 +132,28 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get documentSaved => 'Сохранён';
+
+  @override
+  String get menuSettings => 'Настройки...';
+
+  @override
+  String get settingsTitle => 'Настройки';
+
+  @override
+  String get settingsLanguage => 'Язык';
+
+  @override
+  String get settingsLanguageSystem => 'Системный по умолчанию';
+
+  @override
+  String get settingsUnits => 'Единицы';
+
+  @override
+  String get settingsUnitsCentimeters => 'Сантиметры';
+
+  @override
+  String get settingsUnitsInches => 'Дюймы';
+
+  @override
+  String get settingsSearchLanguages => 'Поиск языков...';
 }

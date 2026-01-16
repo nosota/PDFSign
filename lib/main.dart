@@ -9,6 +9,7 @@ import 'package:pdfsign/core/window/window_arguments.dart';
 import 'package:pdfsign/core/window/window_manager_service.dart';
 import 'package:pdfsign/data/models/sidebar_image_model.dart';
 import 'package:pdfsign/presentation/apps/pdf_viewer_app.dart';
+import 'package:pdfsign/presentation/apps/settings_app.dart';
 import 'package:pdfsign/presentation/apps/welcome_app.dart';
 import 'package:pdfsign/presentation/providers/data_source_providers.dart';
 import 'package:pdfsign/presentation/providers/shared_preferences_provider.dart';
@@ -17,7 +18,7 @@ import 'package:pdfsign/presentation/providers/shared_preferences_provider.dart'
 ///
 /// Handles multi-window support:
 /// - Main window (no args) → Welcome Screen
-/// - Sub windows (with args) → PDF Viewer with file
+/// - Sub windows (with args) → PDF Viewer, Settings, etc.
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -26,9 +27,19 @@ Future<void> main(List<String> args) async {
     // Main window → Welcome Screen
     await _runWelcomeWindow();
   } else {
-    // Sub window → PDF Viewer
+    // Sub window → route based on window type
     final controller = await WindowController.fromCurrentEngine();
-    await _runPdfViewerWindow(controller);
+    final arguments = WindowArguments.fromJson(controller.arguments);
+
+    switch (arguments.windowType) {
+      case WindowType.pdfViewer:
+        await _runPdfViewerWindow(controller, arguments);
+      case WindowType.settings:
+        await _runSettingsWindow();
+      case WindowType.welcome:
+        // Should not happen, but handle gracefully
+        await _runWelcomeWindow();
+    }
   }
 }
 
@@ -65,10 +76,10 @@ Future<void> _runWelcomeWindow() async {
 }
 
 /// Runs a PDF viewer window (sub window).
-Future<void> _runPdfViewerWindow(WindowController controller) async {
-  // Get window arguments
-  final arguments = WindowArguments.fromJson(controller.arguments);
-
+Future<void> _runPdfViewerWindow(
+  WindowController controller,
+  WindowArguments arguments,
+) async {
   // Initialize window for this sub-window
   await WindowManagerService.instance.initializeSubWindow(
     title: arguments.fileName ?? 'PDF Viewer',
@@ -88,6 +99,29 @@ Future<void> _runPdfViewerWindow(WindowController controller) async {
         filePath: arguments.filePath ?? '',
         fileName: arguments.fileName ?? 'PDF Viewer',
       ),
+    ),
+  );
+}
+
+/// Runs a settings window (sub window).
+Future<void> _runSettingsWindow() async {
+  // Get localized title (fallback to English)
+  const title = 'Settings';
+
+  // Initialize window for settings
+  await WindowManagerService.instance.initializeSettingsWindow(title: title);
+
+  // Pre-initialize dependencies
+  final sharedPrefs = await SharedPreferences.getInstance();
+  final isar = await _initializeIsar();
+
+  runApp(
+    ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(sharedPrefs),
+        isarProvider.overrideWithValue(isar),
+      ],
+      child: const SettingsApp(),
     ),
   );
 }

@@ -7,6 +7,9 @@ enum WindowType {
 
   /// PDF viewer window for displaying a document.
   pdfViewer,
+
+  /// Settings window for app preferences.
+  settings,
 }
 
 /// Arguments passed between windows.
@@ -35,6 +38,11 @@ class WindowArguments {
       filePath: filePath,
       fileName: fileName,
     );
+  }
+
+  /// Creates arguments for a settings window.
+  factory WindowArguments.settings() {
+    return const WindowArguments(windowType: WindowType.settings);
   }
 
   /// Creates arguments from a JSON string.

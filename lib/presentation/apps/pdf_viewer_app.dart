@@ -13,6 +13,7 @@ import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/original_pdf_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
+import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/editor_screen.dart';
 import 'package:pdfsign/presentation/widgets/dialogs/save_changes_dialog.dart';
 import 'package:pdfsign/presentation/widgets/menus/app_menu_bar.dart';
@@ -51,8 +52,9 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
   @override
   void initState() {
     super.initState();
-    // Initialize toolbar channel and register share callback
+    // Initialize toolbar channel, request toolbar setup, and register share callback
     ToolbarChannel.init();
+    ToolbarChannel.setupToolbar(); // Request native toolbar with Share button
     ToolbarChannel.setOnSharePressed(_handleShare);
 
     // Register window listener for close interception
@@ -292,17 +294,22 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
       _updateWindowTitle(isDirty);
     });
 
+    // Watch locale preference for live updates
+    final locale = ref.watch(localePreferenceProvider.notifier).getLocale();
+
     return MaterialApp(
       navigatorKey: _navigatorKey,
       title: widget.fileName,
       theme: createAppTheme(),
+      locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+      supportedLocales: allSupportedLocales,
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
         final l10n = AppLocalizations.of(context)!;
         return AppMenuBar(
           localizations: l10n,
+          navigatorKey: _navigatorKey,
           includeSaveMenu: true,
           onSave: _handleSave,
           onSaveAs: _handleSaveAs,

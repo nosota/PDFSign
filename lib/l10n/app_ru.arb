@@ -30,5 +30,13 @@
   "saveButton": "Сохранить",
   "discardButton": "Не сохранять",
   "documentEdited": "Изменён",
-  "documentSaved": "Сохранён"
+  "documentSaved": "Сохранён",
+  "menuSettings": "Настройки...",
+  "settingsTitle": "Настройки",
+  "settingsLanguage": "Язык",
+  "settingsLanguageSystem": "Системный по умолчанию",
+  "settingsUnits": "Единицы",
+  "settingsUnitsCentimeters": "Сантиметры",
+  "settingsUnitsInches": "Дюймы",
+  "settingsSearchLanguages": "Поиск языков..."
 }

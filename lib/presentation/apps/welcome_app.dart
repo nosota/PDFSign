@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
+import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
 import 'package:pdfsign/presentation/screens/welcome/welcome_screen.dart';
 import 'package:pdfsign/presentation/widgets/menus/app_menu_bar.dart';
 
@@ -12,33 +12,36 @@ import 'package:pdfsign/presentation/widgets/menus/app_menu_bar.dart';
 ///
 /// Shows the welcome screen with recent files and file picker.
 /// Includes File menu with Open, Open Recent, Close Window.
-class WelcomeApp extends ConsumerWidget {
+class WelcomeApp extends ConsumerStatefulWidget {
   const WelcomeApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final router = GoRouter(
-      initialLocation: '/',
-      routes: [
-        GoRoute(
-          path: '/',
-          name: 'welcome',
-          builder: (context, state) => const WelcomeScreen(),
-        ),
-      ],
-    );
+  ConsumerState<WelcomeApp> createState() => _WelcomeAppState();
+}
 
-    return MaterialApp.router(
+class _WelcomeAppState extends ConsumerState<WelcomeApp> {
+  /// Navigator key for showing dialogs from menu callbacks.
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  Widget build(BuildContext context) {
+    // Watch locale preference for live updates
+    ref.watch(localePreferenceProvider);
+    final locale = ref.watch(localePreferenceProvider.notifier).getLocale();
+
+    return MaterialApp(
+      navigatorKey: _navigatorKey,
       title: 'PDFSign',
       theme: createAppTheme(),
-      routerConfig: router,
+      locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+      supportedLocales: allSupportedLocales,
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
         final l10n = AppLocalizations.of(context)!;
         return AppMenuBar(
           localizations: l10n,
+          navigatorKey: _navigatorKey,
           // Welcome screen doesn't have Save or Share functionality
           includeSaveMenu: false,
           includeShare: false,
@@ -46,6 +49,7 @@ class WelcomeApp extends ConsumerWidget {
           child: child!,
         );
       },
+      home: const WelcomeScreen(),
     );
   }
 }

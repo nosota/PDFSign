@@ -143,5 +143,37 @@
   "documentSaved": "Saved",
   "@documentSaved": {
     "description": "Window title suffix when document is saved"
+  },
+  "menuSettings": "Settings...",
+  "@menuSettings": {
+    "description": "Settings menu item"
+  },
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Settings dialog title"
+  },
+  "settingsLanguage": "Language",
+  "@settingsLanguage": {
+    "description": "Language setting label"
+  },
+  "settingsLanguageSystem": "System Default",
+  "@settingsLanguageSystem": {
+    "description": "System default language option"
+  },
+  "settingsUnits": "Units",
+  "@settingsUnits": {
+    "description": "Units setting label"
+  },
+  "settingsUnitsCentimeters": "Centimeters",
+  "@settingsUnitsCentimeters": {
+    "description": "Centimeters unit option"
+  },
+  "settingsUnitsInches": "Inches",
+  "@settingsUnitsInches": {
+    "description": "Inches unit option"
+  },
+  "settingsSearchLanguages": "Search languages...",
+  "@settingsSearchLanguages": {
+    "description": "Placeholder text for language search field"
   }
 }

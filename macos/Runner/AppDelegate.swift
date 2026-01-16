@@ -18,25 +18,51 @@ class AppDelegate: FlutterAppDelegate {
     FlutterMultiWindowPlugin.setOnWindowCreatedCallback { controller in
       RegisterGeneratedPlugins(registry: controller)
 
-      // Add toolbar and drop target to PDF viewer windows (sub-windows) after window is ready
+      // Setup method channel for toolbar requests
+      // Toolbar is only added when Flutter explicitly requests it (PDF viewer windows)
+      let channel = FlutterMethodChannel(
+        name: "com.pdfsign/toolbar",
+        binaryMessenger: controller.engine.binaryMessenger
+      )
+
+      channel.setMethodCallHandler { [weak controller] call, result in
+        guard let controller = controller else {
+          result(nil)
+          return
+        }
+
+        switch call.method {
+        case "setupToolbar":
+          // Setup toolbar when Flutter explicitly requests it
+          DispatchQueue.main.async {
+            if let window = controller.view.window {
+              let toolbarHelper = PDFSignToolbarHelper(
+                window: window,
+                binaryMessenger: controller.engine.binaryMessenger
+              )
+              toolbarHelper.setupToolbar()
+
+              // Keep reference to prevent deallocation
+              objc_setAssociatedObject(
+                window,
+                "toolbarHelper",
+                toolbarHelper,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+              )
+            }
+          }
+          result(nil)
+
+        default:
+          // Let PDFSignToolbarHelper handle other methods (onSharePressed)
+          result(FlutterMethodNotImplemented)
+        }
+      }
+
+      // Setup drop target for sub-windows (desktop_drop only handles main window)
+      // This is needed for all sub-windows that accept file drops
       DispatchQueue.main.async {
         if let window = controller.view.window {
-          // Setup toolbar
-          let toolbarHelper = PDFSignToolbarHelper(
-            window: window,
-            binaryMessenger: controller.engine.binaryMessenger
-          )
-          toolbarHelper.setupToolbar()
-
-          // Keep reference to prevent deallocation
-          objc_setAssociatedObject(
-            window,
-            "toolbarHelper",
-            toolbarHelper,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-          )
-
-          // Setup drop target for sub-window (desktop_drop only handles main window)
           let dropHelper = SubWindowDropTarget(
             flutterViewController: controller,
             binaryMessenger: controller.engine.binaryMessenger

@@ -51,19 +51,24 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: const [
-          // PDF viewer (expands to fill remaining space)
-          Expanded(
-            child: PdfViewer(),
-          ),
+      // Force LTR layout direction to keep panels in place for RTL languages.
+      // Text inside widgets will still be RTL as it inherits from MaterialApp.
+      body: Directionality(
+        textDirection: TextDirection.ltr,
+        child: Row(
+          children: const [
+            // PDF viewer (expands to fill remaining space)
+            Expanded(
+              child: PdfViewer(),
+            ),
 
-          // Resize handle
-          SidebarResizeHandle(),
+            // Resize handle
+            SidebarResizeHandle(),
 
-          // Right sidebar with images
-          ImageSidebar(),
-        ],
+            // Right sidebar with images
+            ImageSidebar(),
+          ],
+        ),
       ),
     );
   }

@@ -1,0 +1,449 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for Portuguese (`pt`).
+class AppLocalizationsPt extends AppLocalizations {
+  AppLocalizationsPt([String locale = 'pt']) : super(locale);
+
+  @override
+  String get openPdf => 'Abrir PDF';
+
+  @override
+  String get selectPdf => 'Selecionar PDF';
+
+  @override
+  String get recentFiles => 'Arquivos recentes';
+
+  @override
+  String get removeFromList => 'Remover da lista';
+
+  @override
+  String get openedNow => 'Aberto agora';
+
+  @override
+  String openedMinutesAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'minutos',
+      one: 'minuto',
+    );
+    return 'Aberto há $count $_temp0';
+  }
+
+  @override
+  String openedHoursAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'horas',
+      one: 'hora',
+    );
+    return 'Aberto há $count $_temp0';
+  }
+
+  @override
+  String get openedYesterday => 'Aberto ontem';
+
+  @override
+  String openedDaysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'dias',
+      one: 'dia',
+    );
+    return 'Aberto há $count $_temp0';
+  }
+
+  @override
+  String get fileNotFound => 'Arquivo não encontrado';
+
+  @override
+  String get fileAccessDenied => 'Acesso negado';
+
+  @override
+  String get clearRecentFiles => 'Limpar arquivos recentes';
+
+  @override
+  String get cancel => 'Cancelar';
+
+  @override
+  String get confirm => 'Confirmar';
+
+  @override
+  String get error => 'Erro';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get menuFile => 'Arquivo';
+
+  @override
+  String get menuOpen => 'Abrir...';
+
+  @override
+  String get menuOpenRecent => 'Abrir recentes';
+
+  @override
+  String get menuNoRecentFiles => 'Nenhum arquivo recente';
+
+  @override
+  String get menuClearMenu => 'Limpar menu';
+
+  @override
+  String get menuSave => 'Salvar';
+
+  @override
+  String get menuSaveAs => 'Salvar como...';
+
+  @override
+  String get menuShare => 'Compartilhar...';
+
+  @override
+  String get menuCloseWindow => 'Fechar janela';
+
+  @override
+  String get saveChangesTitle => 'Salvar alterações?';
+
+  @override
+  String saveChangesMessage(String fileName) {
+    return 'Deseja salvar as alterações em \"$fileName\" antes de fechar?';
+  }
+
+  @override
+  String get saveButton => 'Salvar';
+
+  @override
+  String get discardButton => 'Não salvar';
+
+  @override
+  String get documentEdited => 'Editado';
+
+  @override
+  String get documentSaved => 'Salvo';
+
+  @override
+  String get menuSettings => 'Configurações...';
+
+  @override
+  String get settingsTitle => 'Configurações';
+
+  @override
+  String get settingsLanguage => 'Idioma';
+
+  @override
+  String get settingsLanguageSystem => 'Padrão do sistema';
+
+  @override
+  String get settingsUnits => 'Unidades';
+
+  @override
+  String get settingsUnitsCentimeters => 'Centímetros';
+
+  @override
+  String get settingsUnitsInches => 'Polegadas';
+
+  @override
+  String get settingsSearchLanguages => 'Pesquisar idiomas...';
+}
+
+/// The translations for Portuguese, as used in Brazil (`pt_BR`).
+class AppLocalizationsPtBr extends AppLocalizationsPt {
+  AppLocalizationsPtBr() : super('pt_BR');
+
+  @override
+  String get openPdf => 'Abrir PDF';
+
+  @override
+  String get selectPdf => 'Selecionar PDF';
+
+  @override
+  String get recentFiles => 'Arquivos recentes';
+
+  @override
+  String get removeFromList => 'Remover da lista';
+
+  @override
+  String get openedNow => 'Aberto agora';
+
+  @override
+  String openedMinutesAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'minutos',
+      one: 'minuto',
+    );
+    return 'Aberto há $count $_temp0';
+  }
+
+  @override
+  String openedHoursAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'horas',
+      one: 'hora',
+    );
+    return 'Aberto há $count $_temp0';
+  }
+
+  @override
+  String get openedYesterday => 'Aberto ontem';
+
+  @override
+  String openedDaysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'dias',
+      one: 'dia',
+    );
+    return 'Aberto há $count $_temp0';
+  }
+
+  @override
+  String get fileNotFound => 'Arquivo não encontrado';
+
+  @override
+  String get fileAccessDenied => 'Acesso negado';
+
+  @override
+  String get clearRecentFiles => 'Limpar arquivos recentes';
+
+  @override
+  String get cancel => 'Cancelar';
+
+  @override
+  String get confirm => 'Confirmar';
+
+  @override
+  String get error => 'Erro';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get menuFile => 'Arquivo';
+
+  @override
+  String get menuOpen => 'Abrir...';
+
+  @override
+  String get menuOpenRecent => 'Abrir recentes';
+
+  @override
+  String get menuNoRecentFiles => 'Nenhum arquivo recente';
+
+  @override
+  String get menuClearMenu => 'Limpar menu';
+
+  @override
+  String get menuSave => 'Salvar';
+
+  @override
+  String get menuSaveAs => 'Salvar como...';
+
+  @override
+  String get menuShare => 'Compartilhar...';
+
+  @override
+  String get menuCloseWindow => 'Fechar janela';
+
+  @override
+  String get saveChangesTitle => 'Salvar alterações?';
+
+  @override
+  String saveChangesMessage(String fileName) {
+    return 'Deseja salvar as alterações em \"$fileName\" antes de fechar?';
+  }
+
+  @override
+  String get saveButton => 'Salvar';
+
+  @override
+  String get discardButton => 'Não salvar';
+
+  @override
+  String get documentEdited => 'Editado';
+
+  @override
+  String get documentSaved => 'Salvo';
+
+  @override
+  String get menuSettings => 'Configurações...';
+
+  @override
+  String get settingsTitle => 'Configurações';
+
+  @override
+  String get settingsLanguage => 'Idioma';
+
+  @override
+  String get settingsLanguageSystem => 'Padrão do sistema';
+
+  @override
+  String get settingsUnits => 'Unidades';
+
+  @override
+  String get settingsUnitsCentimeters => 'Centímetros';
+
+  @override
+  String get settingsUnitsInches => 'Polegadas';
+
+  @override
+  String get settingsSearchLanguages => 'Pesquisar idiomas...';
+}
+
+/// The translations for Portuguese, as used in Portugal (`pt_PT`).
+class AppLocalizationsPtPt extends AppLocalizationsPt {
+  AppLocalizationsPtPt() : super('pt_PT');
+
+  @override
+  String get openPdf => 'Abrir PDF';
+
+  @override
+  String get selectPdf => 'Selecionar PDF';
+
+  @override
+  String get recentFiles => 'Ficheiros recentes';
+
+  @override
+  String get removeFromList => 'Remover da lista';
+
+  @override
+  String get openedNow => 'Aberto agora';
+
+  @override
+  String openedMinutesAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'minutos',
+      one: 'minuto',
+    );
+    return 'Aberto há $count $_temp0';
+  }
+
+  @override
+  String openedHoursAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'horas',
+      one: 'hora',
+    );
+    return 'Aberto há $count $_temp0';
+  }
+
+  @override
+  String get openedYesterday => 'Aberto ontem';
+
+  @override
+  String openedDaysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'dias',
+      one: 'dia',
+    );
+    return 'Aberto há $count $_temp0';
+  }
+
+  @override
+  String get fileNotFound => 'Ficheiro não encontrado';
+
+  @override
+  String get fileAccessDenied => 'Acesso negado';
+
+  @override
+  String get clearRecentFiles => 'Limpar ficheiros recentes';
+
+  @override
+  String get cancel => 'Cancelar';
+
+  @override
+  String get confirm => 'Confirmar';
+
+  @override
+  String get error => 'Erro';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get menuFile => 'Ficheiro';
+
+  @override
+  String get menuOpen => 'Abrir...';
+
+  @override
+  String get menuOpenRecent => 'Abrir recentes';
+
+  @override
+  String get menuNoRecentFiles => 'Sem ficheiros recentes';
+
+  @override
+  String get menuClearMenu => 'Limpar menu';
+
+  @override
+  String get menuSave => 'Guardar';
+
+  @override
+  String get menuSaveAs => 'Guardar como...';
+
+  @override
+  String get menuShare => 'Partilhar...';
+
+  @override
+  String get menuCloseWindow => 'Fechar janela';
+
+  @override
+  String get saveChangesTitle => 'Guardar alterações?';
+
+  @override
+  String saveChangesMessage(String fileName) {
+    return 'Deseja guardar as alterações em \"$fileName\" antes de fechar?';
+  }
+
+  @override
+  String get saveButton => 'Guardar';
+
+  @override
+  String get discardButton => 'Não guardar';
+
+  @override
+  String get documentEdited => 'Editado';
+
+  @override
+  String get documentSaved => 'Guardado';
+
+  @override
+  String get menuSettings => 'Definições...';
+
+  @override
+  String get settingsTitle => 'Definições';
+
+  @override
+  String get settingsLanguage => 'Idioma';
+
+  @override
+  String get settingsLanguageSystem => 'Predefinição do sistema';
+
+  @override
+  String get settingsUnits => 'Unidades';
+
+  @override
+  String get settingsUnitsCentimeters => 'Centímetros';
+
+  @override
+  String get settingsUnitsInches => 'Polegadas';
+
+  @override
+  String get settingsSearchLanguages => 'Pesquisar idiomas...';
+}

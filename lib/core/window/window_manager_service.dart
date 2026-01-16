@@ -47,6 +47,23 @@ class WindowManagerService {
     await windowManager.setTitle(title);
   }
 
+  /// Initializes the settings window with fixed size.
+  ///
+  /// Settings window: 650x500, not resizable, no minimize button.
+  Future<void> initializeSettingsWindow({required String title}) async {
+    await windowManager.ensureInitialized();
+
+    const windowSize = Size(650, 500);
+
+    await windowManager.setTitle(title);
+    await windowManager.setSize(windowSize);
+    await windowManager.setMinimumSize(windowSize);
+    await windowManager.setMaximumSize(windowSize);
+    await windowManager.setResizable(false);
+    await windowManager.setMinimizable(false);
+    await windowManager.center();
+  }
+
   /// Creates a new window to display a PDF file.
   ///
   /// Returns the window ID if successful, null otherwise.
@@ -80,6 +97,38 @@ class WindowManagerService {
     } catch (e) {
       if (kDebugMode) {
         print('Failed to create PDF window: $e');
+      }
+      return null;
+    }
+  }
+
+  /// Creates a new settings window.
+  ///
+  /// Returns the window ID if successful, null otherwise.
+  Future<String?> createSettingsWindow() async {
+    try {
+      final arguments = WindowArguments.settings();
+
+      final configuration = WindowConfiguration(
+        arguments: arguments.toJson(),
+        hiddenAtLaunch: false,
+      );
+
+      final window = await WindowController.create(configuration);
+
+      final windowId = window.windowId;
+
+      // Show the window
+      await window.show();
+
+      if (kDebugMode) {
+        print('Created settings window $windowId');
+      }
+
+      return windowId;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Failed to create settings window: $e');
       }
       return null;
     }

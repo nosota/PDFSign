@@ -16,6 +16,7 @@ class AppMenuBar extends ConsumerWidget {
   const AppMenuBar({
     required this.child,
     required this.localizations,
+    this.navigatorKey,
     this.includeSaveMenu = false,
     this.onSave,
     this.onSaveAs,
@@ -30,6 +31,9 @@ class AppMenuBar extends ConsumerWidget {
 
   /// Localization strings.
   final AppLocalizations localizations;
+
+  /// Navigator key for showing dialogs from menu callbacks.
+  final GlobalKey<NavigatorState>? navigatorKey;
 
   /// Whether to include Save and Save As menu items.
   final bool includeSaveMenu;
@@ -56,13 +60,25 @@ class AppMenuBar extends ConsumerWidget {
     return PlatformMenuBar(
       menus: [
         // macOS App menu (first menu is always the app menu)
-        const PlatformMenu(
+        PlatformMenu(
           label: 'PDFSign',
           menus: [
-            PlatformProvidedMenuItem(
+            const PlatformProvidedMenuItem(
               type: PlatformProvidedMenuItemType.about,
             ),
             PlatformMenuItemGroup(
+              members: [
+                PlatformMenuItem(
+                  label: localizations.menuSettings,
+                  shortcut: const SingleActivator(
+                    LogicalKeyboardKey.comma,
+                    meta: true,
+                  ),
+                  onSelected: () => _showSettings(),
+                ),
+              ],
+            ),
+            const PlatformMenuItemGroup(
               members: [
                 PlatformProvidedMenuItem(
                   type: PlatformProvidedMenuItemType.quit,
@@ -276,5 +292,9 @@ class AppMenuBar extends ConsumerWidget {
 
   Future<void> _handleCloseWindow() async {
     await WindowManagerService.instance.closeCurrentWindow();
+  }
+
+  Future<void> _showSettings() async {
+    await WindowManagerService.instance.createSettingsWindow();
   }
 }

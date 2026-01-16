@@ -1,208 +1,138 @@
-## Полный список локализации PDFSign
+## Supported Languages
 
-### Базовые (Tier 1)
+PDFSign currently supports **58 languages** across multiple regions and writing systems.
 
-| # | Язык | Код | Страны | Примечания |
-|---|------|-----|--------|------------|
-| 1 | English (US) | en_US | США, глобально | Базовый |
-| 2 | English (UK) | en_GB | UK, Ирландия, Мальта | Spelling: colour, organisation |
-| 3 | German | de | Германия, Австрия, Швейцария | |
-| 4 | French | fr | Франция, Бельгия, Швейцария, Канада, Африка | |
-| 5 | Spanish | es | Испания, Латинская Америка (20 стран) | |
-| 6 | Portuguese (BR) | pt_BR | Бразилия | |
-| 7 | Portuguese (PT) | pt_PT | Португалия | Отличия от BR |
-| 8 | Italian | it | Италия, Швейцария | |
-| 9 | Japanese | ja | Япония | |
-| 10 | Korean | ko | Южная Корея | |
-| 11 | Chinese (Simplified) | zh_CN | Китай, Сингапур | |
-| 12 | Chinese (Traditional) | zh_TW | Тайвань, Гонконг, Макао | |
-| 13 | Turkish | tr | Турция, Кипр | 🏠 Твой рынок |
+### Western European
 
----
+| Language | Native Name | Code |
+|----------|-------------|------|
+| English (US) | English (US) | en_US |
+| English (UK) | English (UK) | en_GB |
+| English (Australia) | English (Australia) | en_AU |
+| English (New Zealand) | English (New Zealand) | en_NZ |
+| German | Deutsch | de |
+| French | Français | fr |
+| Spanish (Spain) | Español (España) | es_ES |
+| Spanish (Mexico) | Español (México) | es_MX |
+| Spanish (Argentina) | Español (Argentina) | es_AR |
+| Portuguese (Brazil) | Português (Brasil) | pt_BR |
+| Portuguese (Portugal) | Português (Portugal) | pt_PT |
+| Italian | Italiano | it |
+| Dutch | Nederlands | nl |
+| Catalan | Català | ca |
+| Basque | Euskara | eu |
 
-### Славянские + СНГ
+### Northern European & Baltic
 
-| # | Язык | Код | Страны | Примечания |
-|---|------|-----|--------|------------|
-| 14 | Russian | ru | Россия, СНГ | Санкции, но рынок огромный |
-| 15 | Ukrainian | uk | Украина | IT-сообщество |
-| 16 | Belarusian | be | Беларусь | Небольшой, но для полноты |
-| 17 | Polish | pl | Польша | Крупный IT-рынок |
-| 18 | Czech | cs | Чехия | |
-| 19 | Slovak | sk | Словакия | Похож на чешский |
-| 20 | Bulgarian | bg | Болгария | |
-| 21 | Serbian | sr | Сербия | Кириллица |
-| 22 | Croatian | hr | Хорватия | Латиница |
-| 23 | Slovenian | sl | Словения | |
+| Language | Native Name | Code |
+|----------|-------------|------|
+| Swedish | Svenska | sv |
+| Norwegian | Norsk | nb |
+| Danish | Dansk | da |
+| Finnish | Suomi | fi |
+| Icelandic | Íslenska | is |
+| Estonian | Eesti | et |
+| Latvian | Latviešu | lv |
+| Lithuanian | Lietuvių | lt |
 
----
+### Eastern European & Slavic
 
-### Кавказ
+| Language | Native Name | Code |
+|----------|-------------|------|
+| Russian | Русский | ru |
+| Ukrainian | Українська | uk |
+| Belarusian | Беларуская | be |
+| Polish | Polski | pl |
+| Czech | Čeština | cs |
+| Slovak | Slovenčina | sk |
+| Bulgarian | Български | bg |
+| Serbian | Српски | sr |
+| Croatian | Hrvatski | hr |
+| Slovenian | Slovenščina | sl |
+| Romanian | Română | ro |
+| Hungarian | Magyar | hu |
+| Greek | Ελληνικά | el |
+| Albanian | Shqip | sq |
 
-| # | Язык | Код | Страны | Примечания |
-|---|------|-----|--------|------------|
-| 24 | Georgian | ka | Грузия | Уникальный алфавит |
-| 25 | Armenian | hy | Армения | Уникальный алфавит |
-| 26 | Azerbaijani | az | Азербайджан | Латиница (с 1991) |
+### Caucasus & Central Asia
 
----
+| Language | Native Name | Code |
+|----------|-------------|------|
+| Georgian | ქართული | ka |
+| Armenian | Հայերdelays | hy |
+| Azerbaijani | Azərbaycan | az |
+| Turkish | Türkçe | tr |
+| Kazakh | Қazақ | kk |
+| Uzbek | Oʻzbek | uz |
+| Mongolian | Монгол | mn |
 
-### Северные страны (Скандинавия + Балтика)
+### South & Southeast Asia
 
-| # | Язык | Код | Страны | Примечания |
-|---|------|-----|--------|------------|
-| 27 | Swedish | sv | Швеция | |
-| 28 | Norwegian (Bokmål) | nb | Норвегия | Основной вариант |
-| 29 | Danish | da | Дания | |
-| 30 | Finnish | fi | Финляндия | Сложная грамматика |
-| 31 | Icelandic | is | Исландия | Маленький рынок |
-| 32 | Estonian | et | Эстония | |
-| 33 | Latvian | lv | Латвия | |
-| 34 | Lithuanian | lt | Литва | |
+| Language | Native Name | Code |
+|----------|-------------|------|
+| Vietnamese | Tiếng Việt | vi |
+| Thai | ไทย | th |
+| Indonesian | Bahasa Indonesia | id |
+| Malay | Bahasa Melayu | ms |
+| Filipino | Filipino | fil |
+| Hindi | हिन्दी | hi |
+| Bengali | বাংলা | bn |
+| Tamil | தமிழ் | ta |
+| Khmer | ខ្មែរ | km |
+| Burmese | မြန်မာ | my |
 
----
+### Middle East (RTL)
 
-### Азия
+| Language | Native Name | Code | Direction |
+|----------|-------------|------|-----------|
+| Arabic | العربية | ar | Right-to-Left |
+| Hebrew | עברית | he | Right-to-Left |
+| Persian | فارسی | fa | Right-to-Left |
 
-| # | Язык | Код | Страны | Примечания |
-|---|------|-----|--------|------------|
-| 35 | Vietnamese | vi | Вьетнам | Латиница + тоны |
-| 36 | Thai | th | Таиланд | Свой алфавит |
-| 37 | Indonesian | id | Индонезия | Латиница, 275 млн |
-| 38 | Malay | ms | Малайзия, Бруней | Похож на индонезийский |
-| 39 | Filipino/Tagalog | fil | Филиппины | |
-| 40 | Hindi | hi | Индия | Деванагари |
-| 41 | Bengali | bn | Бангладеш, Индия | 230 млн носителей |
-| 42 | Tamil | ta | Индия, Шри-Ланка, Сингапур | |
-| 43 | Khmer | km | Камбоджа | Свой алфавит |
-| 44 | Burmese | my | Мьянма | Свой алфавит |
-| 45 | Mongolian | mn | Монголия | Кириллица |
-| 46 | Kazakh | kk | Казахстан | Переход на латиницу |
-| 47 | Uzbek | uz | Узбекистан | Латиница |
+### Constructed Languages
 
----
-
-### Ближний Восток (RTL ⚠️)
-
-| # | Язык | Код | Страны | Примечания |
-|---|------|-----|--------|------------|
-| 48 | Arabic | ar | 22 страны, 400+ млн | RTL! |
-| 49 | Hebrew | he | Израиль | RTL! |
-| 50 | Persian/Farsi | fa | Иран, Афганистан, Таджикистан | RTL! |
-
----
-
-### Океания + Тихоокеанский регион
-
-| # | Язык | Код | Страны | Примечания |
-|---|------|-----|--------|------------|
-| 51 | English (AU) | en_AU | Австралия | Spelling + сленг |
-| 52 | English (NZ) | en_NZ | Новая Зеландия | |
-| 53 | Maori | mi | Новая Зеландия | Опционально, для имиджа |
-| 54 | Samoan | sm | Самоа | Маленький рынок |
-| 55 | Tongan | to | Тонга | Маленький рынок |
+| Language | Native Name | Code |
+|----------|-------------|------|
+| Esperanto | Esperanto | eo |
 
 ---
 
-### Прочие европейские
+## Planned Languages
 
-| # | Язык | Код | Страны | Примечания |
-|---|------|-----|--------|------------|
-| 56 | Dutch | nl | Нидерланды, Бельгия | Богатый рынок |
-| 57 | Greek | el | Греция, Кипр | |
-| 58 | Hungarian | hu | Венгрия | Сложная грамматика |
-| 59 | Romanian | ro | Румыния, Молдова | IT-хаб |
-| 60 | Albanian | sq | Албания, Косово | |
-| 61 | Catalan | ca | Каталония (Испания) | Опционально |
-| 62 | Basque | eu | Страна Басков | Опционально |
+The following languages are planned for future releases:
 
----
+### East Asian (CJK)
 
-## Итого: 62 языка
+| Language | Native Name | Code | Status |
+|----------|-------------|------|--------|
+| Chinese (Simplified) | 简体中文 | zh_CN | Planned |
+| Chinese (Traditional) | 繁體中文 | zh_TW | Planned |
+| Japanese | 日本語 | ja | Planned |
+| Korean | 한국어 | ko | Planned |
 
-### Группировка по алфавитам/особенностям
-
-```
-Латиница (большинство):     ~40 языков
-Кириллица:                  Russian, Ukrainian, Belarusian, 
-                            Bulgarian, Serbian, Mongolian, Kazakh
-Уникальные алфавиты:        Georgian, Armenian, Thai, Khmer,
-                            Burmese, Tamil, Bengali, Hindi
-CJK (иероглифы):            Chinese (2), Japanese, Korean
-RTL (справа налево):        Arabic, Hebrew, Persian
-```
+*Note: CJK languages require additional font support and text rendering optimizations. We are working to ensure proper display quality before release.*
 
 ---
 
-## Рекомендуемые фазы
+## Regional Variants
 
-```
-Фаза 1 — MVP (13 языков):
-English (US), English (UK), German, French, Spanish, 
-Portuguese (BR), Italian, Japanese, Korean, 
-Chinese (Simplified), Turkish, Russian, Ukrainian
+### Spanish
 
-Фаза 2 — Европа + СНГ (12 языков):
-Dutch, Polish, Czech, Swedish, Norwegian, Danish, Finnish,
-Portuguese (PT), Greek, Romanian, Belarusian, Kazakh
+PDFSign supports three regional variants of Spanish to better serve users across different regions:
 
-Фаза 3 — Азия (10 языков):
-Chinese (Traditional), Vietnamese, Thai, Indonesian, 
-Malay, Hindi, Filipino, Bengali, Azerbaijani, Uzbek
+| Variant | Region | Key Differences |
+|---------|--------|-----------------|
+| Español (España) | Spain | Uses "vosotros" form, European vocabulary ("ordenador", "ajustes") |
+| Español (México) | Mexico & Latin America | Uses "ustedes" form, neutral Latin American vocabulary |
+| Español (Argentina) | Argentina & Uruguay | Uses "vos" form (voseo), River Plate vocabulary |
 
-Фаза 4 — Кавказ + Балтика + расширение (10 языков):
-Georgian, Armenian, Estonian, Latvian, Lithuanian,
-Hungarian, Bulgarian, Serbian, Croatian, Slovak
-
-Фаза 5 — RTL + остальные (7 языков):
-Arabic, Hebrew, Persian, 
-English (AU/NZ), Mongolian, Albanian, Slovenian
-
-Фаза 6 — Нишевые (10 языков):
-Icelandic, Maori, Catalan, Basque, Tamil, Khmer, 
-Burmese, Samoan, Tongan, остальные по запросу
-```
+**Automatic selection:** If your system is set to Spanish from a Latin American country not listed above, PDFSign will default to Español (México) as the most neutral variant.
 
 ---
 
-## Технические требования
+## Language Settings
 
-| Группа | Требования |
-|--------|------------|
-| RTL (Arabic, Hebrew, Persian) | Зеркальная вёрстка всего UI |
-| CJK | Шрифты 15-20 MB, проверить line-height |
-| Индийские (Hindi, Bengali, Tamil) | Сложные лигатуры, проверить рендеринг |
-| Thai, Khmer, Burmese | Нет пробелов между словами, word-wrap |
-| Все | Плюрализация (1 файл, 2 файла, 5 файлов) |
-
----
-
-Добавляю!
-
----
-
-### Искусственные / Международные
-
-| # | Язык | Код | Сообщество | Примечания |
-|---|------|-----|------------|------------|
-| 63 | Esperanto | eo | ~2 млн говорящих по миру | Гик-аудитория, tech-savvy, лояльное сообщество |
-
----
-
-## Почему это хороший выбор
-
-**Плюсы Эсперанто:**
-
-1. **Лояльное сообщество** — эсперантисты активно поддерживают продукты с локализацией, шарят в соцсетях
-2. **PR-эффект** — "Мы даже на Эсперанто!" — выделяет среди конкурентов
-3. **Простой перевод** — логичная грамматика, нет исключений
-4. **Tech-savvy аудитория** — пересечение с программистами, линуксоидами
-5. **Бесплатные переводчики** — сообщество часто помогает с локализацией бесплатно
-
-**Где найти переводчиков:**
-- Reddit: r/Esperanto
-- Telegram: Esperanto-группы
-- lernu.net — крупнейший ресурс
-
-
-Хочешь финальный промпт для настройки i18n во Flutter под все 63 языка?
+- **Default behavior:** PDFSign uses your system language automatically
+- **Manual override:** Go to PDFSign → Settings → Language to select a specific language
+- **Fallback:** If your system language is not supported, PDFSign defaults to English (US)
+- **Regional fallback for Spanish:** Users with Spanish system locale from unlisted countries will see Español (México)
