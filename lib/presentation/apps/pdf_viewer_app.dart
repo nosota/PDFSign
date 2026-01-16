@@ -8,11 +8,13 @@ import 'package:window_manager/window_manager.dart';
 
 import 'package:pdfsign/core/platform/toolbar_channel.dart';
 import 'package:pdfsign/core/theme/app_theme.dart';
+import 'package:pdfsign/core/window/window_broadcast.dart';
 import 'package:pdfsign/data/services/pdf_save_service.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/original_pdf_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/size_unit_preference_provider.dart';
 import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/editor_screen.dart';
 import 'package:pdfsign/presentation/widgets/dialogs/save_changes_dialog.dart';
@@ -52,10 +54,13 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
   @override
   void initState() {
     super.initState();
-    // Initialize toolbar channel, request toolbar setup, and register share callback
+    // Initialize toolbar channel for native toolbar
     ToolbarChannel.init();
     ToolbarChannel.setupToolbar(); // Request native toolbar with Share button
     ToolbarChannel.setOnSharePressed(_handleShare);
+
+    // Initialize window broadcast for inter-window communication
+    _initWindowBroadcast();
 
     // Register window listener for close interception
     windowManager.addListener(this);
@@ -70,6 +75,12 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     });
   }
 
+  /// Initializes window broadcast for receiving unit change notifications.
+  Future<void> _initWindowBroadcast() async {
+    WindowBroadcast.setOnUnitChanged(_handleUnitChanged);
+    await WindowBroadcast.init();
+  }
+
   /// Stores the original PDF bytes for use in Save operations.
   Future<void> _initOriginalPdfStorage() async {
     final storage = ref.read(originalPdfStorageProvider);
@@ -78,8 +89,9 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
 
   @override
   void dispose() {
-    // Unregister share callback
+    // Unregister callbacks
     ToolbarChannel.setOnSharePressed(null);
+    WindowBroadcast.setOnUnitChanged(null);
     // Remove window listener
     windowManager.removeListener(this);
     // Clean up original PDF storage
@@ -142,6 +154,23 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
       await windowManager.destroy();
     }
     // null = dialog dismissed or cancelled, don't close
+  }
+
+  /// Reloads preferences when window becomes active.
+  ///
+  /// This syncs settings changed in other windows (e.g., Settings window).
+  @override
+  void onWindowFocus() {
+    // Reload size unit preference to sync with changes from Settings
+    ref.read(sizeUnitPreferenceProvider.notifier).reload();
+  }
+
+  /// Handles unit changed broadcast from another window.
+  ///
+  /// This is called instantly when another window changes the size unit,
+  /// without waiting for window focus.
+  void _handleUnitChanged() {
+    ref.read(sizeUnitPreferenceProvider.notifier).reload();
   }
 
   Future<void> _handleShare() async {

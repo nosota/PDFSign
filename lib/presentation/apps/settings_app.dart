@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:pdfsign/core/theme/app_theme.dart';
+import 'package:pdfsign/core/window/window_broadcast.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/size_unit_preference_provider.dart';
 import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
@@ -12,11 +13,39 @@ import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
 /// - Sidebar with sections on the left
 /// - Content area on the right
 /// Fixed size 650x500, not resizable.
-class SettingsApp extends ConsumerWidget {
+class SettingsApp extends ConsumerStatefulWidget {
   const SettingsApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SettingsApp> createState() => _SettingsAppState();
+}
+
+class _SettingsAppState extends ConsumerState<SettingsApp> {
+  @override
+  void initState() {
+    super.initState();
+    _initWindowBroadcast();
+  }
+
+  /// Initializes window broadcast for receiving unit change notifications.
+  Future<void> _initWindowBroadcast() async {
+    WindowBroadcast.setOnUnitChanged(_handleUnitChanged);
+    await WindowBroadcast.init();
+  }
+
+  /// Handles unit changed broadcast from another window.
+  void _handleUnitChanged() {
+    ref.read(sizeUnitPreferenceProvider.notifier).reload();
+  }
+
+  @override
+  void dispose() {
+    WindowBroadcast.setOnUnitChanged(null);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // Watch locale preference for live updates
     final locale = ref.watch(localePreferenceProvider.notifier).getLocale();
 

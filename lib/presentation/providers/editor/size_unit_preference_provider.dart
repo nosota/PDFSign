@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:pdfsign/core/window/window_broadcast.dart';
 import 'package:pdfsign/presentation/providers/shared_preferences_provider.dart';
 
 /// Units for displaying object dimensions.
@@ -36,6 +37,8 @@ class SizeUnitPreferenceNotifier extends Notifier<SizeUnit> {
     final newUnit = state == SizeUnit.cm ? SizeUnit.inch : SizeUnit.cm;
     prefs.setString(_key, newUnit.name);
     state = newUnit;
+    // Notify other windows about the change
+    WindowBroadcast.broadcastUnitChanged();
   }
 
   /// Sets the unit directly.
@@ -44,5 +47,21 @@ class SizeUnitPreferenceNotifier extends Notifier<SizeUnit> {
     final prefs = ref.read(sharedPreferencesProvider);
     prefs.setString(_key, unit.name);
     state = unit;
+    // Notify other windows about the change
+    WindowBroadcast.broadcastUnitChanged();
+  }
+
+  /// Reloads the preference from SharedPreferences.
+  ///
+  /// Call this when the window becomes active to sync with changes
+  /// made in other windows (e.g., Settings).
+  Future<void> reload() async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    await prefs.reload(); // Refresh cache from disk
+    final stored = prefs.getString(_key);
+    final newUnit = stored == 'inch' ? SizeUnit.inch : SizeUnit.cm;
+    if (state != newUnit) {
+      state = newUnit;
+    }
   }
 }
