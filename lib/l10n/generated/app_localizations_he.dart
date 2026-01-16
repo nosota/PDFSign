@@ -132,4 +132,48 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get settingsSearchLanguages => 'חיפוש שפות...';
+
+  @override
+  String get settingsGeneral => 'General';
+
+  @override
+  String get addImage => 'Add Image';
+
+  @override
+  String get selectImages => 'Select Images';
+
+  @override
+  String get zoomFitWidth => 'Fit Width';
+
+  @override
+  String get zoomIn => 'Zoom In';
+
+  @override
+  String get zoomOut => 'Zoom Out';
+
+  @override
+  String get selectZoomLevel => 'Select zoom level';
+
+  @override
+  String get goToPage => 'Go to Page';
+
+  @override
+  String get go => 'Go';
+
+  @override
+  String get savePdfAs => 'Save PDF As';
+
+  @override
+  String get incorrectPassword => 'Incorrect password';
+
+  @override
+  String get saveFailed => 'Save failed';
+
+  @override
+  String savedTo(String path) {
+    return 'Saved to: $path';
+  }
+
+  @override
+  String get noOriginalPdfStored => 'No original PDF stored';
 }

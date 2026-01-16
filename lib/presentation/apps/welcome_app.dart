@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:pdfsign/core/theme/app_theme.dart';
+import 'package:pdfsign/core/window/window_broadcast.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
 import 'package:pdfsign/presentation/screens/welcome/welcome_screen.dart';
@@ -22,6 +23,29 @@ class WelcomeApp extends ConsumerStatefulWidget {
 class _WelcomeAppState extends ConsumerState<WelcomeApp> {
   /// Navigator key for showing dialogs from menu callbacks.
   final _navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _initWindowBroadcast();
+  }
+
+  /// Initializes window broadcast for receiving preference change notifications.
+  Future<void> _initWindowBroadcast() async {
+    WindowBroadcast.setOnLocaleChanged(_handleLocaleChanged);
+    await WindowBroadcast.init();
+  }
+
+  /// Handles locale changed broadcast from another window.
+  void _handleLocaleChanged() {
+    ref.read(localePreferenceProvider.notifier).reload();
+  }
+
+  @override
+  void dispose() {
+    WindowBroadcast.setOnLocaleChanged(null);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

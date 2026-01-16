@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:pdfsign/core/constants/sidebar_constants.dart';
+import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/sidebar/sidebar_images_provider.dart';
 
 /// Button at the bottom of the sidebar for adding images.
@@ -13,6 +14,7 @@ class AddImageButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       height: SidebarConstants.addButtonHeight,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -28,7 +30,7 @@ class AddImageButton extends ConsumerWidget {
         child: TextButton.icon(
           onPressed: () => _pickImages(context, ref),
           icon: const Icon(Icons.add, size: 18),
-          label: const Text('Add Image'),
+          label: Text(l10n.addImage),
           style: TextButton.styleFrom(
             foregroundColor: Theme.of(context).colorScheme.primary,
           ),
@@ -38,10 +40,11 @@ class AddImageButton extends ConsumerWidget {
   }
 
   Future<void> _pickImages(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context)!;
     final result = await FilePicker.platform.pickFiles(
       type: FileType.image,
       allowMultiple: true,
-      dialogTitle: 'Select Images',
+      dialogTitle: l10n.selectImages,
     );
 
     if (result != null && result.files.isNotEmpty) {

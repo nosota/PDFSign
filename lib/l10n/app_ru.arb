@@ -38,5 +38,19 @@
   "settingsUnits": "Единицы",
   "settingsUnitsCentimeters": "Сантиметры",
   "settingsUnitsInches": "Дюймы",
-  "settingsSearchLanguages": "Поиск языков..."
+  "settingsSearchLanguages": "Поиск языков...",
+  "settingsGeneral": "Основные",
+  "addImage": "Добавить изображение",
+  "selectImages": "Выбрать изображения",
+  "zoomFitWidth": "По ширине",
+  "zoomIn": "Увеличить",
+  "zoomOut": "Уменьшить",
+  "selectZoomLevel": "Выбрать масштаб",
+  "goToPage": "Перейти к странице",
+  "go": "Перейти",
+  "savePdfAs": "Сохранить PDF как",
+  "incorrectPassword": "Неверный пароль",
+  "saveFailed": "Ошибка сохранения",
+  "savedTo": "Сохранено: {path}",
+  "noOriginalPdfStored": "Исходный PDF не найден"
 }

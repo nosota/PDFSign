@@ -175,5 +175,66 @@
   "settingsSearchLanguages": "Search languages...",
   "@settingsSearchLanguages": {
     "description": "Placeholder text for language search field"
+  },
+  "settingsGeneral": "General",
+  "@settingsGeneral": {
+    "description": "General settings section in sidebar"
+  },
+  "addImage": "Add Image",
+  "@addImage": {
+    "description": "Button label for adding an image"
+  },
+  "selectImages": "Select Images",
+  "@selectImages": {
+    "description": "File picker dialog title for selecting images"
+  },
+  "zoomFitWidth": "Fit Width",
+  "@zoomFitWidth": {
+    "description": "Zoom preset for fitting document width"
+  },
+  "zoomIn": "Zoom In",
+  "@zoomIn": {
+    "description": "Zoom in button tooltip"
+  },
+  "zoomOut": "Zoom Out",
+  "@zoomOut": {
+    "description": "Zoom out button tooltip"
+  },
+  "selectZoomLevel": "Select zoom level",
+  "@selectZoomLevel": {
+    "description": "Tooltip for zoom dropdown"
+  },
+  "goToPage": "Go to Page",
+  "@goToPage": {
+    "description": "Dialog title for go to page"
+  },
+  "go": "Go",
+  "@go": {
+    "description": "Go button label"
+  },
+  "savePdfAs": "Save PDF As",
+  "@savePdfAs": {
+    "description": "File picker dialog title for Save As"
+  },
+  "incorrectPassword": "Incorrect password",
+  "@incorrectPassword": {
+    "description": "Error message when PDF password is wrong"
+  },
+  "saveFailed": "Save failed",
+  "@saveFailed": {
+    "description": "Save operation failed message prefix"
+  },
+  "savedTo": "Saved to: {path}",
+  "@savedTo": {
+    "description": "Success message after saving file",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "noOriginalPdfStored": "No original PDF stored",
+  "@noOriginalPdfStored": {
+    "description": "Error when original PDF data is not available"
   }
 }

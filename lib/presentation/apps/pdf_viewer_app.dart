@@ -75,9 +75,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     });
   }
 
-  /// Initializes window broadcast for receiving unit change notifications.
+  /// Initializes window broadcast for receiving preference change notifications.
   Future<void> _initWindowBroadcast() async {
     WindowBroadcast.setOnUnitChanged(_handleUnitChanged);
+    WindowBroadcast.setOnLocaleChanged(_handleLocaleChanged);
     await WindowBroadcast.init();
   }
 
@@ -92,6 +93,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     // Unregister callbacks
     ToolbarChannel.setOnSharePressed(null);
     WindowBroadcast.setOnUnitChanged(null);
+    WindowBroadcast.setOnLocaleChanged(null);
     // Remove window listener
     windowManager.removeListener(this);
     // Clean up original PDF storage
@@ -171,6 +173,11 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
   /// without waiting for window focus.
   void _handleUnitChanged() {
     ref.read(sizeUnitPreferenceProvider.notifier).reload();
+  }
+
+  /// Handles locale changed broadcast from another window.
+  void _handleLocaleChanged() {
+    ref.read(localePreferenceProvider.notifier).reload();
   }
 
   Future<void> _handleShare() async {
@@ -324,6 +331,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     });
 
     // Watch locale preference for live updates
+    ref.watch(localePreferenceProvider);
     final locale = ref.watch(localePreferenceProvider.notifier).getLocale();
 
     return MaterialApp(

@@ -448,6 +448,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search languages...'**
   String get settingsSearchLanguages;
+
+  /// General settings section in sidebar
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get settingsGeneral;
+
+  /// Button label for adding an image
+  ///
+  /// In en, this message translates to:
+  /// **'Add Image'**
+  String get addImage;
+
+  /// File picker dialog title for selecting images
+  ///
+  /// In en, this message translates to:
+  /// **'Select Images'**
+  String get selectImages;
+
+  /// Zoom preset for fitting document width
+  ///
+  /// In en, this message translates to:
+  /// **'Fit Width'**
+  String get zoomFitWidth;
+
+  /// Zoom in button tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom In'**
+  String get zoomIn;
+
+  /// Zoom out button tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom Out'**
+  String get zoomOut;
+
+  /// Tooltip for zoom dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Select zoom level'**
+  String get selectZoomLevel;
+
+  /// Dialog title for go to page
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Page'**
+  String get goToPage;
+
+  /// Go button label
+  ///
+  /// In en, this message translates to:
+  /// **'Go'**
+  String get go;
+
+  /// File picker dialog title for Save As
+  ///
+  /// In en, this message translates to:
+  /// **'Save PDF As'**
+  String get savePdfAs;
+
+  /// Error message when PDF password is wrong
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect password'**
+  String get incorrectPassword;
+
+  /// Save operation failed message prefix
+  ///
+  /// In en, this message translates to:
+  /// **'Save failed'**
+  String get saveFailed;
+
+  /// Success message after saving file
+  ///
+  /// In en, this message translates to:
+  /// **'Saved to: {path}'**
+  String savedTo(String path);
+
+  /// Error when original PDF data is not available
+  ///
+  /// In en, this message translates to:
+  /// **'No original PDF stored'**
+  String get noOriginalPdfStored;
 }
 
 class _AppLocalizationsDelegate

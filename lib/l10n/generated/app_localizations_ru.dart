@@ -156,4 +156,48 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get settingsSearchLanguages => 'Поиск языков...';
+
+  @override
+  String get settingsGeneral => 'Основные';
+
+  @override
+  String get addImage => 'Добавить изображение';
+
+  @override
+  String get selectImages => 'Выбрать изображения';
+
+  @override
+  String get zoomFitWidth => 'По ширине';
+
+  @override
+  String get zoomIn => 'Увеличить';
+
+  @override
+  String get zoomOut => 'Уменьшить';
+
+  @override
+  String get selectZoomLevel => 'Выбрать масштаб';
+
+  @override
+  String get goToPage => 'Перейти к странице';
+
+  @override
+  String get go => 'Перейти';
+
+  @override
+  String get savePdfAs => 'Сохранить PDF как';
+
+  @override
+  String get incorrectPassword => 'Неверный пароль';
+
+  @override
+  String get saveFailed => 'Ошибка сохранения';
+
+  @override
+  String savedTo(String path) {
+    return 'Сохранено: $path';
+  }
+
+  @override
+  String get noOriginalPdfStored => 'Исходный PDF не найден';
 }

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:pdfsign/core/window/window_broadcast.dart';
 import 'package:pdfsign/presentation/providers/shared_preferences_provider.dart';
 
 const _key = 'locale_preference';
@@ -143,6 +144,22 @@ class LocalePreferenceNotifier extends Notifier<String?> {
       prefs.setString(_key, localeCode);
     }
     state = localeCode;
+    // Notify other windows about the change
+    WindowBroadcast.broadcastLocaleChanged();
+  }
+
+  /// Reloads the preference from SharedPreferences.
+  ///
+  /// Call this when receiving a broadcast from another window
+  /// to sync with changes made there.
+  Future<void> reload() async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    await prefs.reload(); // Refresh cache from disk
+    final stored = prefs.getString(_key);
+    final newLocale = (stored == null || stored == 'system') ? null : stored;
+    if (state != newLocale) {
+      state = newLocale;
+    }
   }
 
   /// Gets the actual Locale to use.

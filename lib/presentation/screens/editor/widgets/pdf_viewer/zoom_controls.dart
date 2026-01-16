@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:pdfsign/core/theme/app_colors.dart';
+import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_viewer_state.dart';
 
 /// Zoom controls widget with dropdown and +/- buttons.
@@ -41,14 +42,15 @@ class ZoomControls extends StatelessWidget {
   /// Whether zoom out is allowed (not at min scale).
   final bool canZoomOut;
 
-  String get _zoomLabel {
-    if (isFitWidth) return 'Fit Width';
+  String _zoomLabel(AppLocalizations l10n) {
+    if (isFitWidth) return l10n.zoomFitWidth;
     final percent = (currentScale * 100).round();
     return '$percent%';
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -67,7 +69,7 @@ class ZoomControls extends StatelessWidget {
           _ZoomButton(
             icon: Icons.remove,
             onPressed: canZoomOut ? onZoomOut : null,
-            tooltip: 'Zoom Out (⌘-)',
+            tooltip: '${l10n.zoomOut} (⌘-)',
           ),
           Container(
             width: 1,
@@ -75,11 +77,13 @@ class ZoomControls extends StatelessWidget {
             color: AppColors.border,
           ),
           _ZoomDropdown(
-            label: _zoomLabel,
+            label: _zoomLabel(l10n),
             currentScale: currentScale,
             isFitWidth: isFitWidth,
             onFitWidth: onFitWidth,
             onPresetSelected: onPresetSelected,
+            fitWidthLabel: l10n.zoomFitWidth,
+            selectZoomLevelTooltip: l10n.selectZoomLevel,
           ),
           Container(
             width: 1,
@@ -89,7 +93,7 @@ class ZoomControls extends StatelessWidget {
           _ZoomButton(
             icon: Icons.add,
             onPressed: canZoomIn ? onZoomIn : null,
-            tooltip: 'Zoom In (⌘+)',
+            tooltip: '${l10n.zoomIn} (⌘+)',
           ),
         ],
       ),
@@ -137,6 +141,8 @@ class _ZoomDropdown extends StatelessWidget {
     required this.isFitWidth,
     required this.onFitWidth,
     required this.onPresetSelected,
+    required this.fitWidthLabel,
+    required this.selectZoomLevelTooltip,
   });
 
   final String label;
@@ -144,6 +150,17 @@ class _ZoomDropdown extends StatelessWidget {
   final bool isFitWidth;
   final VoidCallback onFitWidth;
   final void Function(double scale) onPresetSelected;
+  final String fitWidthLabel;
+  final String selectZoomLevelTooltip;
+
+  /// Returns the display label for a preset.
+  /// Uses localized string for "Fit Width", percentage for others.
+  String _presetLabel(ZoomPreset preset) {
+    if (preset == ZoomPreset.fitWidth) {
+      return fitWidthLabel;
+    }
+    return preset.label;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +172,7 @@ class _ZoomDropdown extends StatelessWidget {
           onPresetSelected(preset.scale!);
         }
       },
-      tooltip: 'Select zoom level',
+      tooltip: selectZoomLevelTooltip,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Row(
@@ -198,7 +215,7 @@ class _ZoomDropdown extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  preset.label,
+                  _presetLabel(preset),
                   style: TextStyle(
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                   ),

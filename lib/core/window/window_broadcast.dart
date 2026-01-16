@@ -10,11 +10,17 @@ class WindowBroadcast {
   WindowBroadcast._();
 
   static VoidCallback? _onUnitChanged;
+  static VoidCallback? _onLocaleChanged;
   static bool _initialized = false;
 
   /// Sets callback for when size unit changes in another window.
   static void setOnUnitChanged(VoidCallback? callback) {
     _onUnitChanged = callback;
+  }
+
+  /// Sets callback for when locale changes in another window.
+  static void setOnLocaleChanged(VoidCallback? callback) {
+    _onLocaleChanged = callback;
   }
 
   /// Initializes the broadcast listener for this window.
@@ -36,6 +42,16 @@ class WindowBroadcast {
 
   /// Broadcasts that size unit preference changed to all other windows.
   static Future<void> broadcastUnitChanged() async {
+    await _broadcast('unitChanged');
+  }
+
+  /// Broadcasts that locale preference changed to all other windows.
+  static Future<void> broadcastLocaleChanged() async {
+    await _broadcast('localeChanged');
+  }
+
+  /// Internal method to broadcast a message to all other windows.
+  static Future<void> _broadcast(String method) async {
     try {
       // Get all windows
       final allWindows = await WindowController.getAll();
@@ -48,7 +64,7 @@ class WindowBroadcast {
       for (final window in allWindows) {
         if (window.windowId != currentId) {
           try {
-            await window.invokeMethod('unitChanged', null);
+            await window.invokeMethod(method, null);
           } catch (e) {
             // Window may be closed or not ready, ignore
             if (kDebugMode) {
@@ -70,6 +86,9 @@ class WindowBroadcast {
     switch (call.method) {
       case 'unitChanged':
         _onUnitChanged?.call();
+        return null;
+      case 'localeChanged':
+        _onLocaleChanged?.call();
         return null;
       default:
         return null;

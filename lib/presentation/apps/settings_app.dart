@@ -27,9 +27,10 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
     _initWindowBroadcast();
   }
 
-  /// Initializes window broadcast for receiving unit change notifications.
+  /// Initializes window broadcast for receiving preference change notifications.
   Future<void> _initWindowBroadcast() async {
     WindowBroadcast.setOnUnitChanged(_handleUnitChanged);
+    WindowBroadcast.setOnLocaleChanged(_handleLocaleChanged);
     await WindowBroadcast.init();
   }
 
@@ -38,15 +39,22 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
     ref.read(sizeUnitPreferenceProvider.notifier).reload();
   }
 
+  /// Handles locale changed broadcast from another window.
+  void _handleLocaleChanged() {
+    ref.read(localePreferenceProvider.notifier).reload();
+  }
+
   @override
   void dispose() {
     WindowBroadcast.setOnUnitChanged(null);
+    WindowBroadcast.setOnLocaleChanged(null);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     // Watch locale preference for live updates
+    ref.watch(localePreferenceProvider);
     final locale = ref.watch(localePreferenceProvider.notifier).getLocale();
 
     return MaterialApp(
@@ -92,6 +100,7 @@ class _SettingsSidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       width: 160,
       color: _backgroundColor,
@@ -101,7 +110,7 @@ class _SettingsSidebar extends StatelessWidget {
           const SizedBox(height: 12),
           _SidebarItem(
             icon: Icons.tune,
-            label: 'General',
+            label: l10n.settingsGeneral,
             isSelected: selectedSection == 'general',
             onTap: () {},
           ),
