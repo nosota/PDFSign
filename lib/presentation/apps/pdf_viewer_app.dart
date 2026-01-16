@@ -11,8 +11,8 @@ import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/data/services/pdf_save_service.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/original_pdf_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
-import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/editor_screen.dart';
 import 'package:pdfsign/presentation/widgets/dialogs/save_changes_dialog.dart';
 import 'package:pdfsign/presentation/widgets/menus/app_menu_bar.dart';
@@ -59,10 +59,19 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     windowManager.addListener(this);
     windowManager.setPreventClose(true);
 
+    // Store original PDF bytes for Save operations
+    _initOriginalPdfStorage();
+
     // Set initial window title (just filename, no suffix)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       windowManager.setTitle(widget.fileName);
     });
+  }
+
+  /// Stores the original PDF bytes for use in Save operations.
+  Future<void> _initOriginalPdfStorage() async {
+    final storage = ref.read(originalPdfStorageProvider);
+    await storage.store(widget.filePath);
   }
 
   @override
@@ -71,6 +80,8 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     ToolbarChannel.setOnSharePressed(null);
     // Remove window listener
     windowManager.removeListener(this);
+    // Clean up original PDF storage
+    ref.read(originalPdfStorageProvider).dispose();
     super.dispose();
   }
 
@@ -143,10 +154,21 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
       return;
     }
 
+    // Get original bytes from storage
+    final storage = ref.read(originalPdfStorageProvider);
+    if (!storage.hasData) {
+      // Fallback: share original file
+      final file = XFile(widget.filePath);
+      await Share.shareXFiles([file]);
+      return;
+    }
+
+    final originalBytes = await storage.getBytes();
+
     // Create temp PDF with placed images
     final saveService = PdfSaveService();
-    final result = await saveService.createTempPdfWithImages(
-      originalPath: widget.filePath,
+    final result = await saveService.createTempPdfWithImagesFromBytes(
+      originalBytes: originalBytes,
       placedImages: placedImages,
     );
 
@@ -175,12 +197,29 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
 
   Future<void> _handleSave() async {
     final placedImages = ref.read(placedImagesProvider);
-    if (placedImages.isEmpty) return;
+    final isDirty = ref.read(documentDirtyProvider);
+
+    // Nothing to save if no changes were made
+    if (placedImages.isEmpty && !isDirty) return;
+
+    // Get original bytes from storage
+    final storage = ref.read(originalPdfStorageProvider);
+    if (!storage.hasData) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Save failed: no original PDF stored')),
+        );
+      }
+      return;
+    }
+
+    final originalBytes = await storage.getBytes();
 
     final saveService = PdfSaveService();
-    final result = await saveService.savePdf(
-      originalPath: widget.filePath,
+    final result = await saveService.savePdfFromBytes(
+      originalBytes: originalBytes,
       placedImages: placedImages,
+      outputPath: widget.filePath,
     );
 
     result.fold(
@@ -193,11 +232,9 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
         }
       },
       (_) {
-        // Mark as clean and clear placed images
+        // Mark as clean but DO NOT clear objects or reload document
+        // Objects remain editable for further modifications
         ref.read(documentDirtyProvider.notifier).markClean();
-        ref.read(placedImagesProvider.notifier).clear();
-        // Reload the document to show the embedded images
-        ref.read(pdfDocumentProvider.notifier).reloadDocument();
       },
     );
   }
@@ -213,9 +250,16 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     if (outputPath == null) return;
 
     final placedImages = ref.read(placedImagesProvider);
+    final storage = ref.read(originalPdfStorageProvider);
+
+    // Get original bytes (from storage or fallback to disk)
+    final originalBytes = storage.hasData
+        ? await storage.getBytes()
+        : await File(widget.filePath).readAsBytes();
+
     final saveService = PdfSaveService();
-    final result = await saveService.savePdf(
-      originalPath: widget.filePath,
+    final result = await saveService.savePdfFromBytes(
+      originalBytes: originalBytes,
       placedImages: placedImages,
       outputPath: outputPath,
     );
@@ -229,6 +273,8 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
         }
       },
       (savedPath) {
+        // Mark as clean but DO NOT clear objects
+        // Objects remain editable for further modifications
         ref.read(documentDirtyProvider.notifier).markClean();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

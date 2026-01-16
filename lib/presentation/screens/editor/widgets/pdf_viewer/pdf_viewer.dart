@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:file_picker/file_picker.dart';
 
 import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/original_pdf_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/pdf_save_service_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
@@ -333,15 +335,29 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
     if (filePath == null) return;
 
     final placedImages = ref.read(placedImagesProvider);
-    if (placedImages.isEmpty) {
-      // Nothing to save
+    final isDirty = ref.read(documentDirtyProvider);
+
+    // Nothing to save if no changes were made
+    if (placedImages.isEmpty && !isDirty) return;
+
+    // Get original bytes from storage
+    final storage = ref.read(originalPdfStorageProvider);
+    if (!storage.hasData) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Save failed: no original PDF stored')),
+        );
+      }
       return;
     }
 
+    final originalBytes = await storage.getBytes();
+
     final saveService = ref.read(pdfSaveServiceProvider);
-    final result = await saveService.savePdf(
-      originalPath: filePath,
+    final result = await saveService.savePdfFromBytes(
+      originalBytes: originalBytes,
       placedImages: placedImages,
+      outputPath: filePath,
     );
 
     result.fold(
@@ -354,12 +370,9 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
         }
       },
       (_) {
-        // Mark as clean and show success
+        // Mark as clean but DO NOT clear objects or reload document
+        // Objects remain editable for further modifications
         ref.read(documentDirtyProvider.notifier).markClean();
-        // Clear placed images since they're now embedded in the PDF
-        ref.read(placedImagesProvider.notifier).clear();
-        // Reload the document to show the embedded images
-        _reloadDocument();
       },
     );
   }
@@ -384,9 +397,16 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
     if (outputPath == null) return; // User cancelled
 
     final placedImages = ref.read(placedImagesProvider);
+    final storage = ref.read(originalPdfStorageProvider);
+
+    // Get original bytes from storage or fallback to disk
+    final originalBytes = storage.hasData
+        ? await storage.getBytes()
+        : await File(filePath).readAsBytes();
+
     final saveService = ref.read(pdfSaveServiceProvider);
-    final result = await saveService.savePdf(
-      originalPath: filePath,
+    final result = await saveService.savePdfFromBytes(
+      originalBytes: originalBytes,
       placedImages: placedImages,
       outputPath: outputPath,
     );
@@ -400,6 +420,7 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
         }
       },
       (savedPath) {
+        // Mark as clean but DO NOT clear objects
         ref.read(documentDirtyProvider.notifier).markClean();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
