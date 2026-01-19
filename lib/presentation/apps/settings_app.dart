@@ -1,9 +1,12 @@
+import 'package:desktop_multi_window/desktop_multi_window.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/core/window/window_broadcast.dart';
+import 'package:pdfsign/core/window/window_manager_service.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/size_unit_preference_provider.dart';
 import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
@@ -35,6 +38,14 @@ class _SettingsAppState extends ConsumerState<SettingsApp>
 
     // Register window listener for focus tracking
     windowManager.addListener(this);
+
+    // DEBUG: Log window ID on startup
+    if (kDebugMode) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final controller = await WindowController.fromCurrentEngine();
+        print('>>> Settings window started with ID: ${controller.windowId}');
+      });
+    }
   }
 
   /// Initializes window broadcast for receiving preference change notifications.
@@ -66,9 +77,33 @@ class _SettingsAppState extends ConsumerState<SettingsApp>
     setState(() {});
   }
 
+  /// Handles window close notification.
+  @override
+  void onWindowClose() {
+    if (kDebugMode) {
+      print('>>> Settings onWindowClose() called - cleaning up');
+    }
+    // Clean up resources BEFORE window closes
+    windowManager.removeListener(this);
+    WindowManagerService.instance.clearSettingsWindowId();
+    WindowBroadcast.setOnUnitChanged(null);
+    WindowBroadcast.setOnLocaleChanged(null);
+    if (kDebugMode) {
+      print('>>> Settings cleanup completed');
+    }
+  }
+
   @override
   void dispose() {
-    windowManager.removeListener(this);
+    if (kDebugMode) {
+      print('>>> Settings dispose() called');
+    }
+    // Cleanup already done in onWindowClose(), but do it again just in case
+    // (dispose might be called without onWindowClose in some scenarios)
+    try {
+      windowManager.removeListener(this);
+    } catch (_) {}
+    WindowManagerService.instance.clearSettingsWindowId();
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
     super.dispose();
@@ -102,6 +137,11 @@ class _SettingsAppState extends ConsumerState<SettingsApp>
           includeSaveAs: false,
           includeSaveAll: false,
           includeShare: false,
+          // Use WindowManagerService to close - it uses proper close method
+          onCloseWindow: () async {
+            WindowManagerService.instance.clearSettingsWindowId();
+            await WindowManagerService.instance.closeCurrentWindow();
+          },
           child: child!,
         );
       },

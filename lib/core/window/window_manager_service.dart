@@ -8,6 +8,15 @@ import 'package:window_manager/window_manager.dart';
 
 import 'window_arguments.dart';
 
+/// Extension to add close functionality to WindowController.
+/// The desktop_multi_window package doesn't provide a built-in close method.
+extension WindowControllerClose on WindowController {
+  /// Closes this window by invoking the native close method.
+  Future<void> close() {
+    return invokeMethod('window_close');
+  }
+}
+
 /// Service for managing multiple windows in the application.
 ///
 /// Handles creation of new PDF viewer windows and window lifecycle.
@@ -122,22 +131,21 @@ class WindowManagerService {
       return null;
     }
 
-    // Check if Settings window already exists and is still alive
-    if (_settingsWindowId != null) {
-      final stillExists = await _isSettingsWindowAlive();
-      if (stillExists) {
-        // Window exists, bring it to front
-        await _bringSettingsWindowToFront();
-        return _settingsWindowId;
-      }
-      // Window was closed, reset state
-      _settingsWindowId = null;
-    }
-
-    // Set flag BEFORE any async operation to prevent race condition
+    // Set flag IMMEDIATELY before ANY async operation to prevent race condition
     _isCreatingSettingsWindow = true;
 
     try {
+      // Check if Settings window already exists and is still alive
+      if (_settingsWindowId != null) {
+        final stillExists = await _isSettingsWindowAlive();
+        if (stillExists) {
+          // Window exists, bring it to front
+          await _bringSettingsWindowToFront();
+          return _settingsWindowId;
+        }
+        // Window was closed, reset state
+        _settingsWindowId = null;
+      }
       final arguments = WindowArguments.settings();
 
       final configuration = WindowConfiguration(
@@ -193,6 +201,14 @@ class WindowManagerService {
     }
   }
 
+  /// Clears the Settings window ID when the window is closed.
+  void clearSettingsWindowId() {
+    _settingsWindowId = null;
+    if (kDebugMode) {
+      print('Settings window ID cleared');
+    }
+  }
+
   /// Brings the existing Settings window to front.
   Future<void> _bringSettingsWindowToFront() async {
     if (_settingsWindowId == null) return;
@@ -245,8 +261,8 @@ class WindowManagerService {
       // Main window - exit app
       exit(0);
     } else {
-      // Sub window - just hide it
-      await controller.hide();
+      // Sub window - close it properly using the extension method
+      await controller.close();
     }
   }
 
