@@ -102,6 +102,9 @@ class AppLocalizationsDa extends AppLocalizations {
   String get menuSaveAs => 'Gem som...';
 
   @override
+  String get menuSaveAll => 'Gem alle';
+
+  @override
   String get menuShare => 'Del...';
 
   @override

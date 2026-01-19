@@ -23,6 +23,7 @@
   "menuClearMenu": "Neteja el menu",
   "menuSave": "Desa",
   "menuSaveAs": "Anomena i desa...",
+  "menuSaveAll": "Desa-ho tot",
   "menuShare": "Comparteix...",
   "menuCloseWindow": "Tanca la finestra",
   "saveChangesTitle": "Desar els canvis?",

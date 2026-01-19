@@ -84,6 +84,9 @@ class AppLocalizationsLv extends AppLocalizations {
   String get menuSaveAs => 'Saglabat ka...';
 
   @override
+  String get menuSaveAll => 'Saglabāt visu';
+
+  @override
   String get menuShare => 'Dalieties...';
 
   @override

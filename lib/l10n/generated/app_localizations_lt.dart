@@ -84,6 +84,9 @@ class AppLocalizationsLt extends AppLocalizations {
   String get menuSaveAs => 'Issaugoti kaip...';
 
   @override
+  String get menuSaveAll => 'Išsaugoti viską';
+
+  @override
   String get menuShare => 'Bendrinti...';
 
   @override

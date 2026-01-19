@@ -102,6 +102,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuSaveAs => 'Save As...';
 
   @override
+  String get menuSaveAll => 'Save All';
+
+  @override
   String get menuShare => 'Share...';
 
   @override
@@ -292,6 +295,9 @@ class AppLocalizationsEnAu extends AppLocalizationsEn {
 
   @override
   String get menuSaveAs => 'Save As...';
+
+  @override
+  String get menuSaveAll => 'Save All';
 
   @override
   String get menuShare => 'Share...';
@@ -486,6 +492,9 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   String get menuSaveAs => 'Save As...';
 
   @override
+  String get menuSaveAll => 'Save All';
+
+  @override
   String get menuShare => 'Share...';
 
   @override
@@ -678,6 +687,9 @@ class AppLocalizationsEnNz extends AppLocalizationsEn {
   String get menuSaveAs => 'Save As...';
 
   @override
+  String get menuSaveAll => 'Save All';
+
+  @override
   String get menuShare => 'Share...';
 
   @override
@@ -868,6 +880,9 @@ class AppLocalizationsEnUs extends AppLocalizationsEn {
 
   @override
   String get menuSaveAs => 'Save As...';
+
+  @override
+  String get menuSaveAll => 'Save All';
 
   @override
   String get menuShare => 'Share...';

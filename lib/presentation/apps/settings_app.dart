@@ -4,8 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/core/window/window_broadcast.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
+import 'package:pdfsign/presentation/providers/editor/global_dirty_state_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/size_unit_preference_provider.dart';
 import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
+import 'package:pdfsign/presentation/widgets/menus/app_menu_bar.dart';
 
 /// Root app widget for the settings window.
 ///
@@ -31,7 +33,11 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
   Future<void> _initWindowBroadcast() async {
     WindowBroadcast.setOnUnitChanged(_handleUnitChanged);
     WindowBroadcast.setOnLocaleChanged(_handleLocaleChanged);
+    WindowBroadcast.setOnDirtyStateChanged(_handleDirtyStateChanged);
     await WindowBroadcast.init();
+
+    // Request dirty states from all PDF windows
+    await WindowBroadcast.broadcastRequestDirtyStates();
   }
 
   /// Handles unit changed broadcast from another window.
@@ -44,10 +50,24 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
     ref.read(localePreferenceProvider.notifier).reload();
   }
 
+  /// Handles dirty state changed broadcast from a PDF window.
+  void _handleDirtyStateChanged(String windowId, bool isDirty) {
+    ref.read(globalDirtyStateProvider.notifier).updateWindowState(
+          windowId,
+          isDirty,
+        );
+  }
+
+  /// Triggers Save All across all PDF windows.
+  Future<void> _handleSaveAll() async {
+    await WindowBroadcast.broadcastSaveAll();
+  }
+
   @override
   void dispose() {
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
+    WindowBroadcast.setOnDirtyStateChanged(null);
     super.dispose();
   }
 
@@ -64,6 +84,32 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: allSupportedLocales,
       debugShowCheckedModeBanner: false,
+      builder: (context, child) {
+        final l10n = AppLocalizations.of(context)!;
+        // Use Consumer to reactively watch global dirty state
+        return Consumer(
+          builder: (context, ref, _) {
+            final globalDirtyState = ref.watch(globalDirtyStateProvider);
+            final hasAnyDirtyWindow =
+                globalDirtyState.values.any((dirty) => dirty);
+
+            return AppMenuBar(
+              localizations: l10n,
+              // Settings window: Save and Save As are always disabled
+              onSave: null,
+              onSaveAs: null,
+              onSaveAll: _handleSaveAll,
+              isSaveEnabled: false,
+              isSaveAsEnabled: false,
+              // Save All enabled when any PDF window has unsaved changes
+              isSaveAllEnabled: hasAnyDirtyWindow,
+              // No Share in Settings
+              includeShare: false,
+              child: child!,
+            );
+          },
+        );
+      },
       home: const _SettingsContent(),
     );
   }

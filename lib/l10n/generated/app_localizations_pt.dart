@@ -102,6 +102,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get menuSaveAs => 'Salvar como...';
 
   @override
+  String get menuSaveAll => 'Salvar tudo';
+
+  @override
   String get menuShare => 'Compartilhar...';
 
   @override
@@ -294,6 +297,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get menuSaveAs => 'Salvar como...';
 
   @override
+  String get menuSaveAll => 'Salvar tudo';
+
+  @override
   String get menuShare => 'Compartilhar...';
 
   @override
@@ -484,6 +490,9 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get menuSaveAs => 'Guardar como...';
+
+  @override
+  String get menuSaveAll => 'Salvar tudo';
 
   @override
   String get menuShare => 'Partilhar...';

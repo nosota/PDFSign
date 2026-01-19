@@ -23,6 +23,7 @@
   "menuClearMenu": "Effacer le menu",
   "menuSave": "Enregistrer",
   "menuSaveAs": "Enregistrer sous...",
+  "menuSaveAll": "Tout enregistrer",
   "menuShare": "Partager...",
   "menuCloseWindow": "Fermer la fenêtre",
   "saveChangesTitle": "Enregistrer les modifications?",

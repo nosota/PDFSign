@@ -23,6 +23,7 @@
   "menuClearMenu": "ล้างเมนู",
   "menuSave": "บันทึก",
   "menuSaveAs": "บันทึกเป็น...",
+  "menuSaveAll": "บันทึกทั้งหมด",
   "menuShare": "แชร์...",
   "menuCloseWindow": "ปิดหน้าต่าง",
   "saveChangesTitle": "บันทึกการเปลี่ยนแปลง?",

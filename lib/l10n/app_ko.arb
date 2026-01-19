@@ -23,6 +23,7 @@
   "menuClearMenu": "메뉴 지우기",
   "menuSave": "저장",
   "menuSaveAs": "다른 이름으로 저장...",
+  "menuSaveAll": "모두 저장",
   "menuShare": "공유...",
   "menuCloseWindow": "윈도우 닫기",
   "saveChangesTitle": "변경사항을 저장하시겠습니까?",

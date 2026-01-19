@@ -102,6 +102,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get menuSaveAs => 'Enregistrer sous...';
 
   @override
+  String get menuSaveAll => 'Tout enregistrer';
+
+  @override
   String get menuShare => 'Partager...';
 
   @override

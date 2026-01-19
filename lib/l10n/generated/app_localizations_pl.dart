@@ -108,6 +108,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get menuSaveAs => 'Zapisz jako...';
 
   @override
+  String get menuSaveAll => 'Zapisz wszystko';
+
+  @override
   String get menuShare => 'Udostępnij...';
 
   @override

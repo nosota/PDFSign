@@ -84,6 +84,9 @@ class AppLocalizationsMn extends AppLocalizations {
   String get menuSaveAs => 'Uur nereeer khadgalakh...';
 
   @override
+  String get menuSaveAll => 'Бүгдийг хадгалах';
+
+  @override
   String get menuShare => 'Khuvaaltsakh...';
 
   @override

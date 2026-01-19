@@ -102,6 +102,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get menuSaveAs => 'Tallenna nimellä...';
 
   @override
+  String get menuSaveAll => 'Tallenna kaikki';
+
+  @override
   String get menuShare => 'Jaa...';
 
   @override

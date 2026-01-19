@@ -84,6 +84,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get menuSaveAs => 'Boshqacha saqlash...';
 
   @override
+  String get menuSaveAll => 'Barchasini saqlash';
+
+  @override
   String get menuShare => 'Ulashish...';
 
   @override

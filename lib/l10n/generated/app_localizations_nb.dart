@@ -102,6 +102,9 @@ class AppLocalizationsNb extends AppLocalizations {
   String get menuSaveAs => 'Lagre som...';
 
   @override
+  String get menuSaveAll => 'Lagre alle';
+
+  @override
   String get menuShare => 'Del...';
 
   @override

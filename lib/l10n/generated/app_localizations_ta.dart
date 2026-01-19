@@ -84,6 +84,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get menuSaveAs => 'Veraraga semiykkavu...';
 
   @override
+  String get menuSaveAll => 'அனைத்தையும் சேமிக்கவும்';
+
+  @override
   String get menuShare => 'Pakirvu...';
 
   @override

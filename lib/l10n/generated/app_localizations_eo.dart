@@ -84,6 +84,9 @@ class AppLocalizationsEo extends AppLocalizations {
   String get menuSaveAs => 'Konservi kiel...';
 
   @override
+  String get menuSaveAll => 'Konservi ĉiujn';
+
+  @override
   String get menuShare => 'Kunhavigi...';
 
   @override

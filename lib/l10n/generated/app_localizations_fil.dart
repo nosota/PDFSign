@@ -84,6 +84,9 @@ class AppLocalizationsFil extends AppLocalizations {
   String get menuSaveAs => 'I-save Bilang...';
 
   @override
+  String get menuSaveAll => 'I-save Lahat';
+
+  @override
   String get menuShare => 'Ibahagi...';
 
   @override

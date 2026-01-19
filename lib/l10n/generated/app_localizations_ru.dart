@@ -108,6 +108,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get menuSaveAs => 'Сохранить как...';
 
   @override
+  String get menuSaveAll => 'Сохранить все';
+
+  @override
   String get menuShare => 'Поделиться...';
 
   @override

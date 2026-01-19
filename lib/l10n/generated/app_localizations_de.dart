@@ -102,6 +102,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get menuSaveAs => 'Sichern unter...';
 
   @override
+  String get menuSaveAll => 'Alle speichern';
+
+  @override
   String get menuShare => 'Teilen...';
 
   @override

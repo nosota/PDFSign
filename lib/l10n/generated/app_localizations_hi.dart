@@ -84,6 +84,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get menuSaveAs => 'Is roop mein sahejein...';
 
   @override
+  String get menuSaveAll => 'सभी सहेजें';
+
+  @override
   String get menuShare => 'Sajha karein...';
 
   @override

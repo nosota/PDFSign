@@ -84,6 +84,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get menuSaveAs => '別名で保存...';
 
   @override
+  String get menuSaveAll => 'すべて保存';
+
+  @override
   String get menuShare => '共有...';
 
   @override

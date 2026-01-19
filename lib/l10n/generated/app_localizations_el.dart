@@ -84,6 +84,9 @@ class AppLocalizationsEl extends AppLocalizations {
   String get menuSaveAs => 'Apothikefsi os...';
 
   @override
+  String get menuSaveAll => 'Αποθήκευση όλων';
+
+  @override
   String get menuShare => 'Koinopoiisi...';
 
   @override

@@ -84,6 +84,9 @@ class AppLocalizationsHu extends AppLocalizations {
   String get menuSaveAs => 'Mentés másként...';
 
   @override
+  String get menuSaveAll => 'Összes mentése';
+
+  @override
   String get menuShare => 'Megosztás...';
 
   @override

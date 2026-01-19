@@ -23,6 +23,7 @@
   "menuClearMenu": "Menü löschen",
   "menuSave": "Sichern",
   "menuSaveAs": "Sichern unter...",
+  "menuSaveAll": "Alle speichern",
   "menuShare": "Teilen...",
   "menuCloseWindow": "Fenster schließen",
   "saveChangesTitle": "Änderungen sichern?",

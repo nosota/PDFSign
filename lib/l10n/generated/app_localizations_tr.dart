@@ -84,6 +84,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get menuSaveAs => 'Farklı Kaydet...';
 
   @override
+  String get menuSaveAll => 'Tümünü Kaydet';
+
+  @override
   String get menuShare => 'Paylaş...';
 
   @override

@@ -23,6 +23,7 @@
   "menuClearMenu": "清除菜单",
   "menuSave": "保存",
   "menuSaveAs": "另存为...",
+  "menuSaveAll": "全部保存",
   "menuShare": "共享...",
   "menuCloseWindow": "关闭窗口",
   "saveChangesTitle": "保存更改？",

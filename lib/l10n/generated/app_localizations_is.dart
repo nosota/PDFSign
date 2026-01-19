@@ -84,6 +84,9 @@ class AppLocalizationsIs extends AppLocalizations {
   String get menuSaveAs => 'Vista sem...';
 
   @override
+  String get menuSaveAll => 'Vista allt';
+
+  @override
   String get menuShare => 'Deila...';
 
   @override

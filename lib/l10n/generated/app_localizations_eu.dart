@@ -84,6 +84,9 @@ class AppLocalizationsEu extends AppLocalizations {
   String get menuSaveAs => 'Gorde honela...';
 
   @override
+  String get menuSaveAll => 'Gorde dena';
+
+  @override
   String get menuShare => 'Partekatu...';
 
   @override

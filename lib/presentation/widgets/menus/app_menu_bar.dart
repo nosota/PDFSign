@@ -17,9 +17,12 @@ class AppMenuBar extends ConsumerWidget {
     required this.child,
     required this.localizations,
     this.navigatorKey,
-    this.includeSaveMenu = false,
     this.onSave,
     this.onSaveAs,
+    this.onSaveAll,
+    this.isSaveEnabled = false,
+    this.isSaveAsEnabled = false,
+    this.isSaveAllEnabled = false,
     this.includeShare = false,
     this.onShare,
     this.onFileOpened,
@@ -35,14 +38,23 @@ class AppMenuBar extends ConsumerWidget {
   /// Navigator key for showing dialogs from menu callbacks.
   final GlobalKey<NavigatorState>? navigatorKey;
 
-  /// Whether to include Save and Save As menu items.
-  final bool includeSaveMenu;
-
   /// Callback when Save is selected.
   final VoidCallback? onSave;
 
   /// Callback when Save As is selected.
   final VoidCallback? onSaveAs;
+
+  /// Callback when Save All is selected.
+  final VoidCallback? onSaveAll;
+
+  /// Whether Save menu item is enabled.
+  final bool isSaveEnabled;
+
+  /// Whether Save As menu item is enabled.
+  final bool isSaveAsEnabled;
+
+  /// Whether Save All menu item is enabled.
+  final bool isSaveAllEnabled;
 
   /// Whether to include the Share menu item.
   final bool includeShare;
@@ -122,34 +134,38 @@ class AppMenuBar extends ConsumerWidget {
           _buildOpenRecentMenu(ref, recentFilesAsync, onFileOpened),
         ],
       ),
+      // Group 3: Save, Save As, Save All (always shown, disabled via bool flags)
+      PlatformMenuItemGroup(
+        members: [
+          PlatformMenuItem(
+            label: localizations.menuSave,
+            shortcut: const SingleActivator(
+              LogicalKeyboardKey.keyS,
+              meta: true,
+            ),
+            onSelected: isSaveEnabled ? onSave : null,
+          ),
+          PlatformMenuItem(
+            label: localizations.menuSaveAs,
+            shortcut: const SingleActivator(
+              LogicalKeyboardKey.keyS,
+              meta: true,
+              shift: true,
+            ),
+            onSelected: isSaveAsEnabled ? onSaveAs : null,
+          ),
+          PlatformMenuItem(
+            label: localizations.menuSaveAll,
+            shortcut: const SingleActivator(
+              LogicalKeyboardKey.keyS,
+              meta: true,
+              alt: true,
+            ),
+            onSelected: isSaveAllEnabled ? onSaveAll : null,
+          ),
+        ],
+      ),
     ];
-
-    // Group 3: Save and Save As (optional)
-    if (includeSaveMenu) {
-      items.add(
-        PlatformMenuItemGroup(
-          members: [
-            PlatformMenuItem(
-              label: localizations.menuSave,
-              shortcut: const SingleActivator(
-                LogicalKeyboardKey.keyS,
-                meta: true,
-              ),
-              onSelected: onSave,
-            ),
-            PlatformMenuItem(
-              label: localizations.menuSaveAs,
-              shortcut: const SingleActivator(
-                LogicalKeyboardKey.keyS,
-                meta: true,
-                shift: true,
-              ),
-              onSelected: onSaveAs,
-            ),
-          ],
-        ),
-      );
-    }
 
     // Group 4: Share (optional)
     if (includeShare) {

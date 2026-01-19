@@ -105,6 +105,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get menuSaveAs => 'Uložit jako...';
 
   @override
+  String get menuSaveAll => 'Uložit vše';
+
+  @override
   String get menuShare => 'Sdílet...';
 
   @override

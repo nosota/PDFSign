@@ -102,6 +102,9 @@ class AppLocalizationsSv extends AppLocalizations {
   String get menuSaveAs => 'Spara som...';
 
   @override
+  String get menuSaveAll => 'Spara alla';
+
+  @override
   String get menuShare => 'Dela...';
 
   @override

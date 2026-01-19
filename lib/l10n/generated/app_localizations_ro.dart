@@ -84,6 +84,9 @@ class AppLocalizationsRo extends AppLocalizations {
   String get menuSaveAs => 'Salvare ca...';
 
   @override
+  String get menuSaveAll => 'Salvează tot';
+
+  @override
   String get menuShare => 'Partajare...';
 
   @override

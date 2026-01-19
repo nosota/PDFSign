@@ -66,8 +66,11 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp> {
         return AppMenuBar(
           localizations: l10n,
           navigatorKey: _navigatorKey,
-          // Welcome screen doesn't have Save or Share functionality
-          includeSaveMenu: false,
+          // Welcome screen: Save, Save As, Save All are disabled
+          isSaveEnabled: false,
+          isSaveAsEnabled: false,
+          isSaveAllEnabled: false,
+          // Share is also not included
           includeShare: false,
           onFileOpened: () => windowManager.hide(),
           child: child!,

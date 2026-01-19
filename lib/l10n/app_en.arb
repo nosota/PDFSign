@@ -107,6 +107,10 @@
   "@menuSaveAs": {
     "description": "Save As menu item"
   },
+  "menuSaveAll": "Save All",
+  "@menuSaveAll": {
+    "description": "Save All menu item - saves all open documents with unsaved changes"
+  },
   "menuShare": "Share...",
   "@menuShare": {
     "description": "Share menu item"

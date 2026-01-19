@@ -84,6 +84,9 @@ class AppLocalizationsFa extends AppLocalizations {
   String get menuSaveAs => 'ذخیره به عنوان...';
 
   @override
+  String get menuSaveAll => 'ذخیره همه';
+
+  @override
   String get menuShare => 'اشتراک‌گذاری...';
 
   @override

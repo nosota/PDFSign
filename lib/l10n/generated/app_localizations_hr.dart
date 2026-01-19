@@ -84,6 +84,9 @@ class AppLocalizationsHr extends AppLocalizations {
   String get menuSaveAs => 'Spremi kao...';
 
   @override
+  String get menuSaveAll => 'Spremi sve';
+
+  @override
   String get menuShare => 'Podijeli...';
 
   @override

@@ -84,6 +84,9 @@ class AppLocalizationsTh extends AppLocalizations {
   String get menuSaveAs => 'บันทึกเป็น...';
 
   @override
+  String get menuSaveAll => 'บันทึกทั้งหมด';
+
+  @override
   String get menuShare => 'แชร์...';
 
   @override

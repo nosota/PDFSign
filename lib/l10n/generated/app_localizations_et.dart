@@ -84,6 +84,9 @@ class AppLocalizationsEt extends AppLocalizations {
   String get menuSaveAs => 'Salvesta kui...';
 
   @override
+  String get menuSaveAll => 'Salvesta kõik';
+
+  @override
   String get menuShare => 'Jaga...';
 
   @override

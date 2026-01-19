@@ -84,6 +84,9 @@ class AppLocalizationsMy extends AppLocalizations {
   String get menuSaveAs => 'Aloat thein...';
 
   @override
+  String get menuSaveAll => 'အားလုံးသိမ်းဆည်းပါ';
+
+  @override
   String get menuShare => 'Mhway vway...';
 
   @override

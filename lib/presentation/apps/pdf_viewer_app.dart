@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +13,7 @@ import 'package:pdfsign/core/window/window_broadcast.dart';
 import 'package:pdfsign/data/services/pdf_save_service.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/global_dirty_state_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/original_pdf_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/size_unit_preference_provider.dart';
@@ -51,6 +53,9 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
   /// Used to determine if status suffix should be shown in title.
   bool _hasBeenModified = false;
 
+  /// Current window ID for dirty state tracking.
+  String? _windowId;
+
   @override
   void initState() {
     super.initState();
@@ -77,9 +82,27 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
 
   /// Initializes window broadcast for receiving preference change notifications.
   Future<void> _initWindowBroadcast() async {
+    // Get current window ID
+    final currentWindow = await WindowController.fromCurrentEngine();
+    _windowId = currentWindow.windowId;
+
+    // Register own dirty state in global tracker (starts as clean)
+    ref.read(globalDirtyStateProvider.notifier).updateWindowState(
+          _windowId!,
+          false,
+        );
+
+    // Set up broadcast callbacks
     WindowBroadcast.setOnUnitChanged(_handleUnitChanged);
     WindowBroadcast.setOnLocaleChanged(_handleLocaleChanged);
+    WindowBroadcast.setOnSaveAll(_handleSaveAllBroadcast);
+    WindowBroadcast.setOnDirtyStateChanged(_handleDirtyStateChanged);
+    WindowBroadcast.setOnRequestDirtyStates(_handleRequestDirtyStates);
+
     await WindowBroadcast.init();
+
+    // Request dirty states from all other windows
+    await WindowBroadcast.broadcastRequestDirtyStates();
   }
 
   /// Stores the original PDF bytes for use in Save operations.
@@ -90,10 +113,19 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
 
   @override
   void dispose() {
+    // Remove this window from global dirty state tracker
+    if (_windowId != null) {
+      ref.read(globalDirtyStateProvider.notifier).removeWindow(_windowId!);
+    }
+
     // Unregister callbacks
     ToolbarChannel.setOnSharePressed(null);
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
+    WindowBroadcast.setOnSaveAll(null);
+    WindowBroadcast.setOnDirtyStateChanged(null);
+    WindowBroadcast.setOnRequestDirtyStates(null);
+
     // Remove window listener
     windowManager.removeListener(this);
     // Clean up original PDF storage
@@ -158,11 +190,14 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     // null = dialog dismissed or cancelled, don't close
   }
 
-  /// Reloads preferences when window becomes active.
+  /// Reloads preferences and refreshes UI when window becomes active.
   ///
-  /// This syncs settings changed in other windows (e.g., Settings window).
+  /// This syncs settings changed in other windows (e.g., Settings window)
+  /// and ensures menu state reflects current dirty state.
   @override
   void onWindowFocus() {
+    // Force rebuild to update menu state with current dirty state
+    setState(() {});
     // Reload size unit preference to sync with changes from Settings
     ref.read(sizeUnitPreferenceProvider.notifier).reload();
   }
@@ -178,6 +213,52 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
   /// Handles locale changed broadcast from another window.
   void _handleLocaleChanged() {
     ref.read(localePreferenceProvider.notifier).reload();
+  }
+
+  /// Handles dirty state changed broadcast from another window.
+  void _handleDirtyStateChanged(String windowId, bool isDirty) {
+    ref.read(globalDirtyStateProvider.notifier).updateWindowState(
+          windowId,
+          isDirty,
+        );
+  }
+
+  /// Handles request for dirty states from another window.
+  ///
+  /// Responds by broadcasting this window's current dirty state.
+  void _handleRequestDirtyStates() {
+    if (_windowId == null) return;
+    final isDirty = ref.read(documentDirtyProvider);
+    WindowBroadcast.broadcastDirtyStateChanged(_windowId!, isDirty);
+  }
+
+  /// Broadcasts this window's dirty state change to all other windows.
+  void _broadcastDirtyState(bool isDirty) {
+    if (_windowId == null) return;
+
+    // Update local global state
+    ref.read(globalDirtyStateProvider.notifier).updateWindowState(
+          _windowId!,
+          isDirty,
+        );
+
+    // Broadcast to other windows
+    WindowBroadcast.broadcastDirtyStateChanged(_windowId!, isDirty);
+  }
+
+  /// Handles Save All broadcast from any window.
+  ///
+  /// Only saves if this document has unsaved changes.
+  void _handleSaveAllBroadcast() {
+    final isDirty = ref.read(documentDirtyProvider);
+    if (isDirty) {
+      _handleSave();
+    }
+  }
+
+  /// Triggers Save All across all PDF windows.
+  Future<void> _handleSaveAll() async {
+    await WindowBroadcast.broadcastSaveAll();
   }
 
   Future<void> _handleShare() async {
@@ -325,9 +406,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
 
   @override
   Widget build(BuildContext context) {
-    // Listen to dirty state changes and update window title
-    ref.listen<bool>(documentDirtyProvider, (_, isDirty) {
-      _updateWindowTitle(isDirty);
+    // Listen to dirty state changes to update window title and broadcast
+    ref.listen<bool>(documentDirtyProvider, (previous, current) {
+      _updateWindowTitle(current);
+      _broadcastDirtyState(current);
     });
 
     // Watch locale preference for live updates
@@ -344,15 +426,33 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
         final l10n = AppLocalizations.of(context)!;
-        return AppMenuBar(
-          localizations: l10n,
-          navigatorKey: _navigatorKey,
-          includeSaveMenu: true,
-          onSave: _handleSave,
-          onSaveAs: _handleSaveAs,
-          includeShare: true,
-          onShare: _handleShare,
-          child: child!,
+        // Use Consumer to reactively watch state inside MaterialApp.builder
+        // This ensures menu updates immediately when dirty state changes,
+        // not just when the parent widget rebuilds
+        return Consumer(
+          builder: (context, ref, _) {
+            final isDirty = ref.watch(documentDirtyProvider);
+            final globalDirtyState = ref.watch(globalDirtyStateProvider);
+            final hasAnyDirtyWindow =
+                globalDirtyState.values.any((dirty) => dirty);
+
+            return AppMenuBar(
+              localizations: l10n,
+              navigatorKey: _navigatorKey,
+              onSave: _handleSave,
+              onSaveAs: _handleSaveAs,
+              onSaveAll: _handleSaveAll,
+              // Save enabled only when this window has unsaved changes
+              isSaveEnabled: isDirty,
+              // Save As always enabled for PDF windows
+              isSaveAsEnabled: true,
+              // Save All enabled when any PDF window has unsaved changes
+              isSaveAllEnabled: hasAnyDirtyWindow,
+              includeShare: true,
+              onShare: _handleShare,
+              child: child!,
+            );
+          },
         );
       },
       home: EditorScreen(filePath: widget.filePath),

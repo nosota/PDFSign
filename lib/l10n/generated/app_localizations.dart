@@ -353,6 +353,12 @@ abstract class AppLocalizations {
   /// **'Save As...'**
   String get menuSaveAs;
 
+  /// Save All menu item - saves all open documents with unsaved changes
+  ///
+  /// In en, this message translates to:
+  /// **'Save All'**
+  String get menuSaveAll;
+
   /// Share menu item
   ///
   /// In en, this message translates to:

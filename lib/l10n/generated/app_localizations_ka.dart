@@ -84,6 +84,9 @@ class AppLocalizationsKa extends AppLocalizations {
   String get menuSaveAs => 'Shenakhva rogorc...';
 
   @override
+  String get menuSaveAll => 'ყველას შენახვა';
+
+  @override
   String get menuShare => 'Gaziareba...';
 
   @override

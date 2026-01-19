@@ -84,6 +84,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get menuSaveAs => 'Luu nhu...';
 
   @override
+  String get menuSaveAll => 'Lưu Tất Cả';
+
+  @override
   String get menuShare => 'Chia se...';
 
   @override

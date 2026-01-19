@@ -84,6 +84,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get menuSaveAs => '另存为...';
 
   @override
+  String get menuSaveAll => '全部保存';
+
+  @override
   String get menuShare => '共享...';
 
   @override
@@ -258,6 +261,9 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get menuSaveAs => '另存为...';
 
   @override
+  String get menuSaveAll => '全部保存';
+
+  @override
   String get menuShare => '共享...';
 
   @override
@@ -430,6 +436,9 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get menuSaveAs => '另存新檔...';
+
+  @override
+  String get menuSaveAll => '全部保存';
 
   @override
   String get menuShare => '分享...';

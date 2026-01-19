@@ -23,6 +23,7 @@
   "menuClearMenu": "Tyhjennä valikko",
   "menuSave": "Tallenna",
   "menuSaveAs": "Tallenna nimellä...",
+  "menuSaveAll": "Tallenna kaikki",
   "menuShare": "Jaa...",
   "menuCloseWindow": "Sulje ikkuna",
   "saveChangesTitle": "Tallenna muutokset?",

@@ -84,6 +84,9 @@ class AppLocalizationsCa extends AppLocalizations {
   String get menuSaveAs => 'Anomena i desa...';
 
   @override
+  String get menuSaveAll => 'Desa-ho tot';
+
+  @override
   String get menuShare => 'Comparteix...';
 
   @override

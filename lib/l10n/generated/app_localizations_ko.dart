@@ -84,6 +84,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get menuSaveAs => '다른 이름으로 저장...';
 
   @override
+  String get menuSaveAll => '모두 저장';
+
+  @override
   String get menuShare => '공유...';
 
   @override

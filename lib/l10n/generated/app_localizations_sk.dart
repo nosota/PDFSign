@@ -105,6 +105,9 @@ class AppLocalizationsSk extends AppLocalizations {
   String get menuSaveAs => 'Uložiť ako...';
 
   @override
+  String get menuSaveAll => 'Uložiť všetko';
+
+  @override
   String get menuShare => 'Zdieľať...';
 
   @override

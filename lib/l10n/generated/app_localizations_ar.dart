@@ -84,6 +84,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get menuSaveAs => 'حفظ باسم...';
 
   @override
+  String get menuSaveAll => 'حفظ الكل';
+
+  @override
   String get menuShare => 'مشاركة...';
 
   @override

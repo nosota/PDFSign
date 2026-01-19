@@ -84,6 +84,9 @@ class AppLocalizationsBg extends AppLocalizations {
   String get menuSaveAs => 'Запази като...';
 
   @override
+  String get menuSaveAll => 'Запази всички';
+
+  @override
   String get menuShare => 'Сподели...';
 
   @override

@@ -84,6 +84,9 @@ class AppLocalizationsKm extends AppLocalizations {
   String get menuSaveAs => 'Tuktuk chea...';
 
   @override
+  String get menuSaveAll => 'រក្សាទុកទាំងអស់';
+
+  @override
   String get menuShare => 'Chek ruum...';
 
   @override

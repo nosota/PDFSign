@@ -84,6 +84,9 @@ class AppLocalizationsHy extends AppLocalizations {
   String get menuSaveAs => 'Pakhpanel orpes...';
 
   @override
+  String get menuSaveAll => 'Save All';
+
+  @override
   String get menuShare => 'Kisel...';
 
   @override

@@ -84,6 +84,9 @@ class AppLocalizationsAz extends AppLocalizations {
   String get menuSaveAs => 'Ferqli yadda saxla...';
 
   @override
+  String get menuSaveAll => 'Hamısını saxla';
+
+  @override
   String get menuShare => 'Payla...';
 
   @override

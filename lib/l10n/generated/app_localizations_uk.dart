@@ -108,6 +108,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get menuSaveAs => 'Зберегти як...';
 
   @override
+  String get menuSaveAll => 'Зберегти все';
+
+  @override
   String get menuShare => 'Поділитися...';
 
   @override

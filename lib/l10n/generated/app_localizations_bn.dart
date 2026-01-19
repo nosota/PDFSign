@@ -84,6 +84,9 @@ class AppLocalizationsBn extends AppLocalizations {
   String get menuSaveAs => 'Erup sanchhoy korun...';
 
   @override
+  String get menuSaveAll => 'সব সংরক্ষণ করুন';
+
+  @override
   String get menuShare => 'Share korun...';
 
   @override

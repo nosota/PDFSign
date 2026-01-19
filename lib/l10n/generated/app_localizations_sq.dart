@@ -84,6 +84,9 @@ class AppLocalizationsSq extends AppLocalizations {
   String get menuSaveAs => 'Ruaj si...';
 
   @override
+  String get menuSaveAll => 'Ruaj të gjitha';
+
+  @override
   String get menuShare => 'Ndaj...';
 
   @override

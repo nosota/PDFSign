@@ -84,6 +84,9 @@ class AppLocalizationsSl extends AppLocalizations {
   String get menuSaveAs => 'Shrani kot...';
 
   @override
+  String get menuSaveAll => 'Shrani vse';
+
+  @override
   String get menuShare => 'Deli...';
 
   @override

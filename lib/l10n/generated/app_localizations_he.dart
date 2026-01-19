@@ -84,6 +84,9 @@ class AppLocalizationsHe extends AppLocalizations {
   String get menuSaveAs => 'שמור בשם...';
 
   @override
+  String get menuSaveAll => 'שמור הכל';
+
+  @override
   String get menuShare => 'שתף...';
 
   @override

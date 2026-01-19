@@ -84,6 +84,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get menuSaveAs => 'Simpan sebagai...';
 
   @override
+  String get menuSaveAll => 'Simpan Semua';
+
+  @override
   String get menuShare => 'Bagikan...';
 
   @override
