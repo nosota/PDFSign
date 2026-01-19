@@ -23,6 +23,9 @@ class SettingsApp extends ConsumerStatefulWidget {
 }
 
 class _SettingsAppState extends ConsumerState<SettingsApp> {
+  /// Notifier for Save All menu state.
+  final _saveAllEnabledNotifier = ValueNotifier<bool>(false);
+
   @override
   void initState() {
     super.initState();
@@ -65,6 +68,7 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
 
   @override
   void dispose() {
+    _saveAllEnabledNotifier.dispose();
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
     WindowBroadcast.setOnDirtyStateChanged(null);
@@ -77,6 +81,12 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
     ref.watch(localePreferenceProvider);
     final locale = ref.watch(localePreferenceProvider.notifier).getLocale();
 
+    // Listen to global dirty state changes for Save All
+    ref.listen<Map<String, bool>>(globalDirtyStateProvider, (previous, current) {
+      final hasAnyDirty = current.values.any((dirty) => dirty);
+      _saveAllEnabledNotifier.value = hasAnyDirty;
+    });
+
     return MaterialApp(
       title: 'Settings',
       theme: createAppTheme(),
@@ -86,13 +96,11 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
         final l10n = AppLocalizations.of(context)!;
-        // Use Consumer to reactively watch global dirty state
-        return Consumer(
-          builder: (context, ref, _) {
-            final globalDirtyState = ref.watch(globalDirtyStateProvider);
-            final hasAnyDirtyWindow =
-                globalDirtyState.values.any((dirty) => dirty);
-
+        // Use ValueListenableBuilder to reactively update Save All state.
+        // This bypasses MaterialApp.builder caching issues.
+        return ValueListenableBuilder<bool>(
+          valueListenable: _saveAllEnabledNotifier,
+          builder: (context, hasAnyDirtyWindow, _) {
             return AppMenuBar(
               localizations: l10n,
               // Settings window: Save and Save As are always disabled

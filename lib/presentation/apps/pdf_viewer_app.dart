@@ -56,6 +56,12 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
   /// Current window ID for dirty state tracking.
   String? _windowId;
 
+  /// Notifier for menu state updates.
+  /// Used to bypass MaterialApp.builder caching issues.
+  final _menuStateNotifier = ValueNotifier<_MenuState>(
+    const _MenuState(isDirty: false, hasAnyDirtyWindow: false),
+  );
+
   @override
   void initState() {
     super.initState();
@@ -113,6 +119,9 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
 
   @override
   void dispose() {
+    // Dispose menu state notifier
+    _menuStateNotifier.dispose();
+
     // Remove this window from global dirty state tracker
     if (_windowId != null) {
       ref.read(globalDirtyStateProvider.notifier).removeWindow(_windowId!);
@@ -244,6 +253,21 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
 
     // Broadcast to other windows
     WindowBroadcast.broadcastDirtyStateChanged(_windowId!, isDirty);
+  }
+
+  /// Updates menu state notifier from current provider values.
+  ///
+  /// Called from listeners - computes fresh state each time to avoid
+  /// race conditions between nested listener executions.
+  void _updateMenuState() {
+    final isDirty = ref.read(documentDirtyProvider);
+    final globalState = ref.read(globalDirtyStateProvider);
+    final hasAnyDirty = globalState.values.any((d) => d);
+
+    _menuStateNotifier.value = _MenuState(
+      isDirty: isDirty,
+      hasAnyDirtyWindow: hasAnyDirty,
+    );
   }
 
   /// Handles Save All broadcast from any window.
@@ -406,10 +430,18 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
 
   @override
   Widget build(BuildContext context) {
-    // Listen to dirty state changes to update window title and broadcast
+    // Listen to dirty state changes to update window title, broadcast, and menu.
+    // Uses _updateMenuState() to read fresh values and avoid race conditions
+    // when _broadcastDirtyState triggers globalDirtyStateProvider listener.
     ref.listen<bool>(documentDirtyProvider, (previous, current) {
       _updateWindowTitle(current);
       _broadcastDirtyState(current);
+      _updateMenuState();
+    });
+
+    // Listen to global dirty state changes for Save All (from other windows)
+    ref.listen<Map<String, bool>>(globalDirtyStateProvider, (previous, current) {
+      _updateMenuState();
     });
 
     // Watch locale preference for live updates
@@ -426,16 +458,12 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
         final l10n = AppLocalizations.of(context)!;
-        // Use Consumer to reactively watch state inside MaterialApp.builder
-        // This ensures menu updates immediately when dirty state changes,
-        // not just when the parent widget rebuilds
-        return Consumer(
-          builder: (context, ref, _) {
-            final isDirty = ref.watch(documentDirtyProvider);
-            final globalDirtyState = ref.watch(globalDirtyStateProvider);
-            final hasAnyDirtyWindow =
-                globalDirtyState.values.any((dirty) => dirty);
-
+        // Use ValueListenableBuilder to reactively update menu state.
+        // This bypasses MaterialApp.builder caching issues that prevent
+        // Consumer from rebuilding when providers change.
+        return ValueListenableBuilder<_MenuState>(
+          valueListenable: _menuStateNotifier,
+          builder: (context, menuState, _) {
             return AppMenuBar(
               localizations: l10n,
               navigatorKey: _navigatorKey,
@@ -443,11 +471,11 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
               onSaveAs: _handleSaveAs,
               onSaveAll: _handleSaveAll,
               // Save enabled only when this window has unsaved changes
-              isSaveEnabled: isDirty,
+              isSaveEnabled: menuState.isDirty,
               // Save As always enabled for PDF windows
               isSaveAsEnabled: true,
               // Save All enabled when any PDF window has unsaved changes
-              isSaveAllEnabled: hasAnyDirtyWindow,
+              isSaveAllEnabled: menuState.hasAnyDirtyWindow,
               includeShare: true,
               onShare: _handleShare,
               child: child!,
@@ -458,4 +486,28 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
       home: EditorScreen(filePath: widget.filePath),
     );
   }
+}
+
+/// Immutable state for menu enabled/disabled flags.
+///
+/// Used with ValueNotifier to trigger menu rebuilds when state changes,
+/// bypassing MaterialApp.builder caching issues.
+class _MenuState {
+  const _MenuState({
+    required this.isDirty,
+    required this.hasAnyDirtyWindow,
+  });
+
+  final bool isDirty;
+  final bool hasAnyDirtyWindow;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is _MenuState &&
+          isDirty == other.isDirty &&
+          hasAnyDirtyWindow == other.hasAnyDirtyWindow;
+
+  @override
+  int get hashCode => Object.hash(isDirty, hasAnyDirtyWindow);
 }
