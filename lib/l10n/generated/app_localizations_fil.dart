@@ -134,46 +134,46 @@ class AppLocalizationsFil extends AppLocalizations {
   String get settingsSearchLanguages => 'Maghanap ng wika...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Pangkalahatan';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Magdagdag ng larawan';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Pumili ng mga larawan';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Iayon sa lapad';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Palakihin';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Paliitin';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Pumili ng antas ng zoom';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Pumunta sa pahina';
 
   @override
-  String get go => 'Go';
+  String get go => 'Pumunta';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'I-save ang PDF bilang';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Maling password';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Hindi ma-save';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Na-save sa: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Walang nakaimbak na orihinal na PDF';
 }

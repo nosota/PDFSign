@@ -134,46 +134,46 @@ class AppLocalizationsLv extends AppLocalizations {
   String get settingsSearchLanguages => 'Meklēt valodas...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Vispārīgi';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Pievienot attēlu';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Izvēlieties attēlus';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Pielāgot platumam';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Pietuvināt';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Attālināt';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Izvēlieties tālummaiņas līmeni';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Doties uz lapu';
 
   @override
-  String get go => 'Go';
+  String get go => 'Doties';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Saglabāt PDF kā';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Nepareiza parole';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Saglabāšana neizdevās';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Saglabāts: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Nav saglabāts oriģinālais PDF';
 }

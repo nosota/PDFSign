@@ -38,5 +38,19 @@
   "settingsUnits": "Yksiköt",
   "settingsUnitsCentimeters": "Senttimetrit",
   "settingsUnitsInches": "Tuumat",
-  "settingsSearchLanguages": "Etsi kieliä..."
+  "settingsSearchLanguages": "Etsi kieliä...",
+  "settingsGeneral": "Yleistä",
+  "addImage": "Lisää kuva",
+  "selectImages": "Valitse kuvat",
+  "zoomFitWidth": "Sovita leveyteen",
+  "zoomIn": "Lähennä",
+  "zoomOut": "Loitonna",
+  "selectZoomLevel": "Valitse zoomaustaso",
+  "goToPage": "Siirry sivulle",
+  "go": "Siirry",
+  "savePdfAs": "Tallenna PDF nimellä",
+  "incorrectPassword": "Väärä salasana",
+  "saveFailed": "Tallennus epäonnistui",
+  "savedTo": "Tallennettu: {path}",
+  "noOriginalPdfStored": "Alkuperäistä PDF:ää ei tallennettu"
 }

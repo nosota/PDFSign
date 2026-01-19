@@ -155,45 +155,45 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsGeneral => 'General';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Añadir imagen';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Seleccionar imágenes';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Ajustar ancho';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Acercar';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Alejar';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Seleccionar nivel de zoom';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Ir a página';
 
   @override
-  String get go => 'Go';
+  String get go => 'Ir';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Guardar PDF como';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Contraseña incorrecta';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Error al guardar';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Guardado en: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'No hay PDF original almacenado';
 }
 
 /// The translations for Spanish Castilian, as used in Argentina (`es_AR`).
@@ -342,6 +342,50 @@ class AppLocalizationsEsAr extends AppLocalizationsEs {
 
   @override
   String get settingsSearchLanguages => 'Buscar idiomas...';
+
+  @override
+  String get settingsGeneral => 'General';
+
+  @override
+  String get addImage => 'Agregar imagen';
+
+  @override
+  String get selectImages => 'Seleccionar imágenes';
+
+  @override
+  String get zoomFitWidth => 'Ajustar ancho';
+
+  @override
+  String get zoomIn => 'Acercar';
+
+  @override
+  String get zoomOut => 'Alejar';
+
+  @override
+  String get selectZoomLevel => 'Seleccionar nivel de zoom';
+
+  @override
+  String get goToPage => 'Ir a página';
+
+  @override
+  String get go => 'Ir';
+
+  @override
+  String get savePdfAs => 'Guardar PDF como';
+
+  @override
+  String get incorrectPassword => 'Contraseña incorrecta';
+
+  @override
+  String get saveFailed => 'Error al guardar';
+
+  @override
+  String savedTo(String path) {
+    return 'Guardado en: $path';
+  }
+
+  @override
+  String get noOriginalPdfStored => 'No hay PDF original almacenado';
 }
 
 /// The translations for Spanish Castilian, as used in Spain (`es_ES`).
@@ -490,6 +534,50 @@ class AppLocalizationsEsEs extends AppLocalizationsEs {
 
   @override
   String get settingsSearchLanguages => 'Buscar idiomas...';
+
+  @override
+  String get settingsGeneral => 'General';
+
+  @override
+  String get addImage => 'Añadir imagen';
+
+  @override
+  String get selectImages => 'Seleccionar imágenes';
+
+  @override
+  String get zoomFitWidth => 'Ajustar ancho';
+
+  @override
+  String get zoomIn => 'Acercar';
+
+  @override
+  String get zoomOut => 'Alejar';
+
+  @override
+  String get selectZoomLevel => 'Seleccionar nivel de zoom';
+
+  @override
+  String get goToPage => 'Ir a página';
+
+  @override
+  String get go => 'Ir';
+
+  @override
+  String get savePdfAs => 'Guardar PDF como';
+
+  @override
+  String get incorrectPassword => 'Contraseña incorrecta';
+
+  @override
+  String get saveFailed => 'Error al guardar';
+
+  @override
+  String savedTo(String path) {
+    return 'Guardado en: $path';
+  }
+
+  @override
+  String get noOriginalPdfStored => 'No hay PDF original almacenado';
 }
 
 /// The translations for Spanish Castilian, as used in Mexico (`es_MX`).
@@ -638,4 +726,48 @@ class AppLocalizationsEsMx extends AppLocalizationsEs {
 
   @override
   String get settingsSearchLanguages => 'Buscar idiomas...';
+
+  @override
+  String get settingsGeneral => 'General';
+
+  @override
+  String get addImage => 'Agregar imagen';
+
+  @override
+  String get selectImages => 'Seleccionar imágenes';
+
+  @override
+  String get zoomFitWidth => 'Ajustar ancho';
+
+  @override
+  String get zoomIn => 'Acercar';
+
+  @override
+  String get zoomOut => 'Alejar';
+
+  @override
+  String get selectZoomLevel => 'Seleccionar nivel de zoom';
+
+  @override
+  String get goToPage => 'Ir a página';
+
+  @override
+  String get go => 'Ir';
+
+  @override
+  String get savePdfAs => 'Guardar PDF como';
+
+  @override
+  String get incorrectPassword => 'Contraseña incorrecta';
+
+  @override
+  String get saveFailed => 'Error al guardar';
+
+  @override
+  String savedTo(String path) {
+    return 'Guardado en: $path';
+  }
+
+  @override
+  String get noOriginalPdfStored => 'No hay PDF original almacenado';
 }

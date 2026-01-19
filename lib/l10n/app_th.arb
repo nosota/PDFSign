@@ -38,5 +38,19 @@
   "settingsUnits": "หน่วย",
   "settingsUnitsCentimeters": "เซนติเมตร",
   "settingsUnitsInches": "นิ้ว",
-  "settingsSearchLanguages": "ค้นหาภาษา..."
+  "settingsSearchLanguages": "ค้นหาภาษา...",
+  "settingsGeneral": "ทั่วไป",
+  "addImage": "เพิ่มรูปภาพ",
+  "selectImages": "เลือกรูปภาพ",
+  "zoomFitWidth": "พอดีความกว้าง",
+  "zoomIn": "ซูมเข้า",
+  "zoomOut": "ซูมออก",
+  "selectZoomLevel": "เลือกระดับการซูม",
+  "goToPage": "ไปที่หน้า",
+  "go": "ไป",
+  "savePdfAs": "บันทึก PDF เป็น",
+  "incorrectPassword": "รหัสผ่านไม่ถูกต้อง",
+  "saveFailed": "บันทึกล้มเหลว",
+  "savedTo": "บันทึกที่: {path}",
+  "noOriginalPdfStored": "ไม่มี PDF ต้นฉบับถูกจัดเก็บ"
 }

@@ -134,46 +134,46 @@ class AppLocalizationsHe extends AppLocalizations {
   String get settingsSearchLanguages => 'חיפוש שפות...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'כללי';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'הוסף תמונה';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'בחר תמונות';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'התאם לרוחב';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'הגדל';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'הקטן';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'בחר רמת זום';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'עבור לעמוד';
 
   @override
-  String get go => 'Go';
+  String get go => 'עבור';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'שמור PDF בשם';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'סיסמה שגויה';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'השמירה נכשלה';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'נשמר ב: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'לא נשמר PDF מקורי';
 }

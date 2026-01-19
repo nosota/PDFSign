@@ -152,48 +152,48 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settingsSearchLanguages => 'Pesquisar idiomas...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Geral';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Adicionar imagem';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Selecionar imagens';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Ajustar largura';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Aumentar zoom';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Diminuir zoom';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Selecionar nível de zoom';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Ir para página';
 
   @override
-  String get go => 'Go';
+  String get go => 'Ir';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Salvar PDF como';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Senha incorreta';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Falha ao salvar';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Salvo em: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Nenhum PDF original armazenado';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -342,6 +342,50 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get settingsSearchLanguages => 'Pesquisar idiomas...';
+
+  @override
+  String get settingsGeneral => 'Geral';
+
+  @override
+  String get addImage => 'Adicionar imagem';
+
+  @override
+  String get selectImages => 'Selecionar imagens';
+
+  @override
+  String get zoomFitWidth => 'Ajustar largura';
+
+  @override
+  String get zoomIn => 'Aumentar zoom';
+
+  @override
+  String get zoomOut => 'Diminuir zoom';
+
+  @override
+  String get selectZoomLevel => 'Selecionar nível de zoom';
+
+  @override
+  String get goToPage => 'Ir para página';
+
+  @override
+  String get go => 'Ir';
+
+  @override
+  String get savePdfAs => 'Salvar PDF como';
+
+  @override
+  String get incorrectPassword => 'Senha incorreta';
+
+  @override
+  String get saveFailed => 'Falha ao salvar';
+
+  @override
+  String savedTo(String path) {
+    return 'Salvo em: $path';
+  }
+
+  @override
+  String get noOriginalPdfStored => 'Nenhum PDF original armazenado';
 }
 
 /// The translations for Portuguese, as used in Portugal (`pt_PT`).
@@ -490,4 +534,48 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get settingsSearchLanguages => 'Pesquisar idiomas...';
+
+  @override
+  String get settingsGeneral => 'Geral';
+
+  @override
+  String get addImage => 'Adicionar imagem';
+
+  @override
+  String get selectImages => 'Selecionar imagens';
+
+  @override
+  String get zoomFitWidth => 'Ajustar largura';
+
+  @override
+  String get zoomIn => 'Aumentar';
+
+  @override
+  String get zoomOut => 'Diminuir';
+
+  @override
+  String get selectZoomLevel => 'Selecionar nível de zoom';
+
+  @override
+  String get goToPage => 'Ir para página';
+
+  @override
+  String get go => 'Ir';
+
+  @override
+  String get savePdfAs => 'Guardar PDF como';
+
+  @override
+  String get incorrectPassword => 'Palavra-passe incorreta';
+
+  @override
+  String get saveFailed => 'Falha ao guardar';
+
+  @override
+  String savedTo(String path) {
+    return 'Guardado em: $path';
+  }
+
+  @override
+  String get noOriginalPdfStored => 'Nenhum PDF original armazenado';
 }

@@ -38,5 +38,19 @@
   "settingsUnits": "Unitateak",
   "settingsUnitsCentimeters": "Zentimetroak",
   "settingsUnitsInches": "Hazbeteak",
-  "settingsSearchLanguages": "Bilatu hizkuntzak..."
+  "settingsSearchLanguages": "Bilatu hizkuntzak...",
+  "settingsGeneral": "Orokorra",
+  "addImage": "Gehitu irudia",
+  "selectImages": "Hautatu irudiak",
+  "zoomFitWidth": "Egokitu zabaleran",
+  "zoomIn": "Handitu",
+  "zoomOut": "Txikitu",
+  "selectZoomLevel": "Hautatu zoom maila",
+  "goToPage": "Joan orrialdera",
+  "go": "Joan",
+  "savePdfAs": "Gorde PDF honela",
+  "incorrectPassword": "Pasahitz okerra",
+  "saveFailed": "Gordetzeak huts egin du",
+  "savedTo": "Gordeta: {path}",
+  "noOriginalPdfStored": "Ez dago jatorrizko PDF-ik gordetuta"
 }

@@ -134,46 +134,46 @@ class AppLocalizationsIs extends AppLocalizations {
   String get settingsSearchLanguages => 'Leita að tungumálum...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Almennt';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Bæta við mynd';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Velja myndir';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Passa við breidd';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Stækka';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Minnka';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Velja stækkunarstig';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Fara á síðu';
 
   @override
-  String get go => 'Go';
+  String get go => 'Fara';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Vista PDF sem';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Rangt lykilorð';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Vistun mistókst';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Vistað í: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Ekkert upprunalegt PDF vistað';
 }

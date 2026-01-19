@@ -38,5 +38,19 @@
   "settingsUnits": "Einingar",
   "settingsUnitsCentimeters": "Sentimetrar",
   "settingsUnitsInches": "Tommur",
-  "settingsSearchLanguages": "Leita að tungumálum..."
+  "settingsSearchLanguages": "Leita að tungumálum...",
+  "settingsGeneral": "Almennt",
+  "addImage": "Bæta við mynd",
+  "selectImages": "Velja myndir",
+  "zoomFitWidth": "Passa við breidd",
+  "zoomIn": "Stækka",
+  "zoomOut": "Minnka",
+  "selectZoomLevel": "Velja stækkunarstig",
+  "goToPage": "Fara á síðu",
+  "go": "Fara",
+  "savePdfAs": "Vista PDF sem",
+  "incorrectPassword": "Rangt lykilorð",
+  "saveFailed": "Vistun mistókst",
+  "savedTo": "Vistað í: {path}",
+  "noOriginalPdfStored": "Ekkert upprunalegt PDF vistað"
 }

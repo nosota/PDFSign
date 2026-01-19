@@ -134,46 +134,46 @@ class AppLocalizationsTa extends AppLocalizations {
   String get settingsSearchLanguages => 'மொழிகளைத் தேடு...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'பொது';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'படம் சேர்';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'படங்களைத் தேர்ந்தெடு';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'அகலத்திற்கு பொருத்து';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'பெரிதாக்கு';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'சிறிதாக்கு';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'பெரிதாக்க நிலையைத் தேர்ந்தெடு';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'பக்கத்திற்குச் செல்';
 
   @override
-  String get go => 'Go';
+  String get go => 'செல்';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'PDF ஆக சேமி';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'தவறான கடவுச்சொல்';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'சேமிப்பு தோல்வி';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'சேமிக்கப்பட்டது: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'அசல் PDF சேமிக்கப்படவில்லை';
 }

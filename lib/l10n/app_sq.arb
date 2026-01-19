@@ -38,5 +38,19 @@
   "settingsUnits": "Njesite",
   "settingsUnitsCentimeters": "Centimetra",
   "settingsUnitsInches": "Inca",
-  "settingsSearchLanguages": "Kërko gjuhët..."
+  "settingsSearchLanguages": "Kërko gjuhët...",
+  "settingsGeneral": "Të përgjithshme",
+  "addImage": "Shto imazh",
+  "selectImages": "Zgjidh imazhe",
+  "zoomFitWidth": "Përshtat gjerësinë",
+  "zoomIn": "Zmadho",
+  "zoomOut": "Zvogëlo",
+  "selectZoomLevel": "Zgjidh nivelin e zmadhimit",
+  "goToPage": "Shko te faqja",
+  "go": "Shko",
+  "savePdfAs": "Ruaj PDF si",
+  "incorrectPassword": "Fjalëkalim i gabuar",
+  "saveFailed": "Ruajtja dështoi",
+  "savedTo": "U ruajt në: {path}",
+  "noOriginalPdfStored": "Asnjë PDF origjinal i ruajtur"
 }

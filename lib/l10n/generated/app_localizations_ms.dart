@@ -134,46 +134,46 @@ class AppLocalizationsMs extends AppLocalizations {
   String get settingsSearchLanguages => 'Cari bahasa...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Umum';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Tambah imej';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Pilih imej';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Muat lebar';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Zum masuk';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Zum keluar';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Pilih tahap zum';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Pergi ke halaman';
 
   @override
-  String get go => 'Go';
+  String get go => 'Pergi';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Simpan PDF sebagai';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Kata laluan salah';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Gagal menyimpan';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Disimpan ke: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Tiada PDF asal disimpan';
 }

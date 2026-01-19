@@ -38,5 +38,19 @@
   "settingsUnits": "Chapaqi miavorner",
   "settingsUnitsCentimeters": "Santimetrer",
   "settingsUnitsInches": "Duymer",
-  "settingsSearchLanguages": "Որոdelays լdelays..."
+  "settingsSearchLanguages": "Lezuneri porokhum...",
+  "settingsGeneral": "Yndhanur",
+  "addImage": "Avelatsnel patker",
+  "selectImages": "Yntrel patkerner",
+  "zoomFitWidth": "Hamarjetsnel laynutyamb",
+  "zoomIn": "Metatsnel",
+  "zoomOut": "Pokratsnel",
+  "selectZoomLevel": "Yntrel masshtabi makardaky",
+  "goToPage": "Anjnel ej",
+  "go": "Anjnel",
+  "savePdfAs": "Pakhpanel PDF orpes",
+  "incorrectPassword": "Sphal gaghtnabar",
+  "saveFailed": "Pakhpanman skhalkutyun",
+  "savedTo": "Pakhpanvatso e: {path}",
+  "noOriginalPdfStored": "Bnatipi PDF-y pakhpanvatso che"
 }

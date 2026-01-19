@@ -134,46 +134,46 @@ class AppLocalizationsMn extends AppLocalizations {
   String get settingsSearchLanguages => 'Хэл хайх...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Ерөнхий';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Зураг нэмэх';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Зураг сонгох';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Өргөнд тохируулах';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Томруулах';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Жижигрүүлэх';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Томруулах түвшин сонгох';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Хуудас руу очих';
 
   @override
-  String get go => 'Go';
+  String get go => 'Очих';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'PDF болгон хадгалах';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Буруу нууц үг';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Хадгалалт амжилтгүй';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Хадгалагдсан: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Эх PDF хадгалагдаагүй';
 }

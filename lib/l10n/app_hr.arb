@@ -38,5 +38,19 @@
   "settingsUnits": "Jedinice",
   "settingsUnitsCentimeters": "Centimetri",
   "settingsUnitsInches": "Inci",
-  "settingsSearchLanguages": "Pretraži jezike..."
+  "settingsSearchLanguages": "Pretraži jezike...",
+  "settingsGeneral": "Opće",
+  "addImage": "Dodaj sliku",
+  "selectImages": "Odaberi slike",
+  "zoomFitWidth": "Prilagodi širini",
+  "zoomIn": "Povećaj",
+  "zoomOut": "Smanji",
+  "selectZoomLevel": "Odaberi razinu zumiranja",
+  "goToPage": "Idi na stranicu",
+  "go": "Idi",
+  "savePdfAs": "Spremi PDF kao",
+  "incorrectPassword": "Pogrešna lozinka",
+  "saveFailed": "Spremanje nije uspjelo",
+  "savedTo": "Spremljeno u: {path}",
+  "noOriginalPdfStored": "Nema pohranjenog izvornog PDF-a"
 }

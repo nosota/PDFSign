@@ -134,46 +134,46 @@ class AppLocalizationsEo extends AppLocalizations {
   String get settingsSearchLanguages => 'Serĉi lingvojn...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Ĝenerale';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Aldoni bildon';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Elekti bildojn';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Adapti larĝon';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Pligrandigi';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Malpligrandigi';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Elekti zoomnivelon';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Iri al paĝo';
 
   @override
-  String get go => 'Go';
+  String get go => 'Iri';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Konservi PDF kiel';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Malĝusta pasvorto';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Konservado fiaskis';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Konservita al: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Neniu originala PDF konservita';
 }

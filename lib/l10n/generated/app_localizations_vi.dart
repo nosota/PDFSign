@@ -134,46 +134,46 @@ class AppLocalizationsVi extends AppLocalizations {
   String get settingsSearchLanguages => 'Tìm kiếm ngôn ngữ...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Chung';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Thêm hình ảnh';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Chọn hình ảnh';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Vừa chiều rộng';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Phóng to';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Thu nhỏ';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Chọn mức thu phóng';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Đi đến trang';
 
   @override
-  String get go => 'Go';
+  String get go => 'Đi';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Lưu PDF thành';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Mật khẩu không đúng';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Lưu thất bại';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Đã lưu tại: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Không có PDF gốc được lưu';
 }

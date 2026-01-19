@@ -38,5 +38,19 @@
   "settingsUnits": "Unuoj",
   "settingsUnitsCentimeters": "Centimetroj",
   "settingsUnitsInches": "Coloj",
-  "settingsSearchLanguages": "Serĉi lingvojn..."
+  "settingsSearchLanguages": "Serĉi lingvojn...",
+  "settingsGeneral": "Ĝenerale",
+  "addImage": "Aldoni bildon",
+  "selectImages": "Elekti bildojn",
+  "zoomFitWidth": "Adapti larĝon",
+  "zoomIn": "Pligrandigi",
+  "zoomOut": "Malpligrandigi",
+  "selectZoomLevel": "Elekti zoomnivelon",
+  "goToPage": "Iri al paĝo",
+  "go": "Iri",
+  "savePdfAs": "Konservi PDF kiel",
+  "incorrectPassword": "Malĝusta pasvorto",
+  "saveFailed": "Konservado fiaskis",
+  "savedTo": "Konservita al: {path}",
+  "noOriginalPdfStored": "Neniu originala PDF konservita"
 }

@@ -38,5 +38,19 @@
   "settingsUnits": "Одиниці",
   "settingsUnitsCentimeters": "Сантиметри",
   "settingsUnitsInches": "Дюйми",
-  "settingsSearchLanguages": "Пошук мов..."
+  "settingsSearchLanguages": "Пошук мов...",
+  "settingsGeneral": "Загальні",
+  "addImage": "Додати зображення",
+  "selectImages": "Вибрати зображення",
+  "zoomFitWidth": "За шириною",
+  "zoomIn": "Збільшити",
+  "zoomOut": "Зменшити",
+  "selectZoomLevel": "Вибрати масштаб",
+  "goToPage": "Перейти до сторінки",
+  "go": "Перейти",
+  "savePdfAs": "Зберегти PDF як",
+  "incorrectPassword": "Невірний пароль",
+  "saveFailed": "Помилка збереження",
+  "savedTo": "Збережено: {path}",
+  "noOriginalPdfStored": "Оригінальний PDF не знайдено"
 }

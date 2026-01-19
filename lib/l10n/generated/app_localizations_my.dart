@@ -134,46 +134,46 @@ class AppLocalizationsMy extends AppLocalizations {
   String get settingsSearchLanguages => 'ဘာသာစကား ရှာရန်...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'အထွေထွေ';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'ပုံထည့်ရန်';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'ပုံများရွေးရန်';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'အကျယ်နဲ့ကိုက်ညီအောင်';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'ချဲ့ကြည့်ရန်';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'ချုံ့ကြည့်ရန်';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'ချဲ့/ချုံ့အဆင့်ရွေးရန်';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'စာမျက်နှာသို့သွားရန်';
 
   @override
-  String get go => 'Go';
+  String get go => 'သွားရန်';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'PDF အဖြစ်သိမ်းရန်';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'စကားဝှက်မှားနေသည်';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'သိမ်းဆည်းမှုမအောင်မြင်ပါ';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'သိမ်းဆည်းပြီး: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'မူရင်း PDF မသိမ်းရသေးပါ';
 }

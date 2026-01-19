@@ -38,5 +38,19 @@
   "settingsUnits": "Einheiten",
   "settingsUnitsCentimeters": "Zentimeter",
   "settingsUnitsInches": "Zoll",
-  "settingsSearchLanguages": "Sprachen suchen..."
+  "settingsSearchLanguages": "Sprachen suchen...",
+  "settingsGeneral": "Allgemein",
+  "addImage": "Bild hinzufügen",
+  "selectImages": "Bilder auswählen",
+  "zoomFitWidth": "Breite anpassen",
+  "zoomIn": "Vergrößern",
+  "zoomOut": "Verkleinern",
+  "selectZoomLevel": "Zoomstufe auswählen",
+  "goToPage": "Gehe zu Seite",
+  "go": "Los",
+  "savePdfAs": "PDF speichern unter",
+  "incorrectPassword": "Falsches Passwort",
+  "saveFailed": "Speichern fehlgeschlagen",
+  "savedTo": "Gespeichert unter: {path}",
+  "noOriginalPdfStored": "Kein Original-PDF gespeichert"
 }

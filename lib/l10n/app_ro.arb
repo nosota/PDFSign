@@ -38,5 +38,19 @@
   "settingsUnits": "Unitati",
   "settingsUnitsCentimeters": "Centimetri",
   "settingsUnitsInches": "Toli",
-  "settingsSearchLanguages": "Căutare limbi..."
+  "settingsSearchLanguages": "Căutare limbi...",
+  "settingsGeneral": "General",
+  "addImage": "Adaugă imagine",
+  "selectImages": "Selectează imagini",
+  "zoomFitWidth": "Potrivire lățime",
+  "zoomIn": "Mărește",
+  "zoomOut": "Micșorează",
+  "selectZoomLevel": "Selectează nivelul de zoom",
+  "goToPage": "Mergi la pagina",
+  "go": "Mergi",
+  "savePdfAs": "Salvează PDF ca",
+  "incorrectPassword": "Parolă incorectă",
+  "saveFailed": "Salvare eșuată",
+  "savedTo": "Salvat în: {path}",
+  "noOriginalPdfStored": "Niciun PDF original stocat"
 }

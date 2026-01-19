@@ -38,5 +38,19 @@
   "settingsUnits": "Satuan",
   "settingsUnitsCentimeters": "Sentimeter",
   "settingsUnitsInches": "Inci",
-  "settingsSearchLanguages": "Cari bahasa..."
+  "settingsSearchLanguages": "Cari bahasa...",
+  "settingsGeneral": "Umum",
+  "addImage": "Tambah gambar",
+  "selectImages": "Pilih gambar",
+  "zoomFitWidth": "Sesuaikan lebar",
+  "zoomIn": "Perbesar",
+  "zoomOut": "Perkecil",
+  "selectZoomLevel": "Pilih tingkat zoom",
+  "goToPage": "Pergi ke halaman",
+  "go": "Pergi",
+  "savePdfAs": "Simpan PDF sebagai",
+  "incorrectPassword": "Kata sandi salah",
+  "saveFailed": "Gagal menyimpan",
+  "savedTo": "Disimpan ke: {path}",
+  "noOriginalPdfStored": "Tidak ada PDF asli tersimpan"
 }

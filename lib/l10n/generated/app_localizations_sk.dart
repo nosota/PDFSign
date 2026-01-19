@@ -155,46 +155,46 @@ class AppLocalizationsSk extends AppLocalizations {
   String get settingsSearchLanguages => 'Hľadať jazyky...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Všeobecné';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Pridať obrázok';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Vybrať obrázky';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Prispôsobiť šírke';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Priblížiť';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Oddialiť';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Vybrať úroveň priblíženia';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Prejsť na stranu';
 
   @override
-  String get go => 'Go';
+  String get go => 'Prejsť';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Uložiť PDF ako';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Nesprávne heslo';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Uloženie zlyhalo';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Uložené do: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Žiadne pôvodné PDF nie je uložené';
 }

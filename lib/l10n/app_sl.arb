@@ -38,5 +38,19 @@
   "settingsUnits": "Enote",
   "settingsUnitsCentimeters": "Centimetri",
   "settingsUnitsInches": "Palci",
-  "settingsSearchLanguages": "Iskanje jezikov..."
+  "settingsSearchLanguages": "Iskanje jezikov...",
+  "settingsGeneral": "Splošno",
+  "addImage": "Dodaj sliko",
+  "selectImages": "Izberi slike",
+  "zoomFitWidth": "Prilagodi širini",
+  "zoomIn": "Povečaj",
+  "zoomOut": "Pomanjšaj",
+  "selectZoomLevel": "Izberi stopnjo povečave",
+  "goToPage": "Pojdi na stran",
+  "go": "Pojdi",
+  "savePdfAs": "Shrani PDF kot",
+  "incorrectPassword": "Napačno geslo",
+  "saveFailed": "Shranjevanje ni uspelo",
+  "savedTo": "Shranjeno v: {path}",
+  "noOriginalPdfStored": "Izvirni PDF ni shranjen"
 }

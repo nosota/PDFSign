@@ -38,5 +38,19 @@
   "settingsUnits": "Eenheden",
   "settingsUnitsCentimeters": "Centimeters",
   "settingsUnitsInches": "Inches",
-  "settingsSearchLanguages": "Talen zoeken..."
+  "settingsSearchLanguages": "Talen zoeken...",
+  "settingsGeneral": "Algemeen",
+  "addImage": "Afbeelding toevoegen",
+  "selectImages": "Afbeeldingen selecteren",
+  "zoomFitWidth": "Breedte aanpassen",
+  "zoomIn": "Inzoomen",
+  "zoomOut": "Uitzoomen",
+  "selectZoomLevel": "Zoomniveau selecteren",
+  "goToPage": "Ga naar pagina",
+  "go": "Ga",
+  "savePdfAs": "PDF opslaan als",
+  "incorrectPassword": "Onjuist wachtwoord",
+  "saveFailed": "Opslaan mislukt",
+  "savedTo": "Opgeslagen naar: {path}",
+  "noOriginalPdfStored": "Geen originele PDF opgeslagen"
 }

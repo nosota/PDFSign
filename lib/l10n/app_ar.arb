@@ -38,5 +38,19 @@
   "settingsUnits": "الوحدات",
   "settingsUnitsCentimeters": "سنتيمتر",
   "settingsUnitsInches": "بوصة",
-  "settingsSearchLanguages": "البحث عن اللغات..."
+  "settingsSearchLanguages": "البحث عن اللغات...",
+  "settingsGeneral": "عام",
+  "addImage": "إضافة صورة",
+  "selectImages": "اختيار الصور",
+  "zoomFitWidth": "ملاءمة العرض",
+  "zoomIn": "تكبير",
+  "zoomOut": "تصغير",
+  "selectZoomLevel": "اختر مستوى التكبير",
+  "goToPage": "الانتقال إلى صفحة",
+  "go": "انتقال",
+  "savePdfAs": "حفظ PDF باسم",
+  "incorrectPassword": "كلمة المرور غير صحيحة",
+  "saveFailed": "فشل الحفظ",
+  "savedTo": "تم الحفظ في: {path}",
+  "noOriginalPdfStored": "لا يوجد ملف PDF أصلي محفوظ"
 }

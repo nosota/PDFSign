@@ -38,5 +38,19 @@
   "settingsUnits": "Olcu vahidleri",
   "settingsUnitsCentimeters": "Santimetr",
   "settingsUnitsInches": "Duym",
-  "settingsSearchLanguages": "Dil axtar..."
+  "settingsSearchLanguages": "Dil axtar...",
+  "settingsGeneral": "Ümumi",
+  "addImage": "Şəkil əlavə et",
+  "selectImages": "Şəkilləri seç",
+  "zoomFitWidth": "Enə sığdır",
+  "zoomIn": "Yaxınlaşdır",
+  "zoomOut": "Uzaqlaşdır",
+  "selectZoomLevel": "Böyütmə səviyyəsini seç",
+  "goToPage": "Səhifəyə keç",
+  "go": "Keç",
+  "savePdfAs": "PDF olaraq saxla",
+  "incorrectPassword": "Yanlış şifrə",
+  "saveFailed": "Saxlama uğursuz",
+  "savedTo": "Saxlanıldı: {path}",
+  "noOriginalPdfStored": "Orijinal PDF saxlanılmayıb"
 }

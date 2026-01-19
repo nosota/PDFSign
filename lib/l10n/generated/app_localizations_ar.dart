@@ -134,46 +134,46 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settingsSearchLanguages => 'البحث عن اللغات...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'عام';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'إضافة صورة';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'اختيار الصور';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'ملاءمة العرض';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'تكبير';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'تصغير';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'اختر مستوى التكبير';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'الانتقال إلى صفحة';
 
   @override
-  String get go => 'Go';
+  String get go => 'انتقال';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'حفظ PDF باسم';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'كلمة المرور غير صحيحة';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'فشل الحفظ';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'تم الحفظ في: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'لا يوجد ملف PDF أصلي محفوظ';
 }

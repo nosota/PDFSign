@@ -134,46 +134,46 @@ class AppLocalizationsEu extends AppLocalizations {
   String get settingsSearchLanguages => 'Bilatu hizkuntzak...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Orokorra';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Gehitu irudia';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Hautatu irudiak';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Egokitu zabaleran';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Handitu';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Txikitu';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Hautatu zoom maila';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Joan orrialdera';
 
   @override
-  String get go => 'Go';
+  String get go => 'Joan';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Gorde PDF honela';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Pasahitz okerra';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Gordetzeak huts egin du';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Gordeta: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Ez dago jatorrizko PDF-ik gordetuta';
 }

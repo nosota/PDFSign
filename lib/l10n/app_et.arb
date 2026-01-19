@@ -38,5 +38,19 @@
   "settingsUnits": "Uhikud",
   "settingsUnitsCentimeters": "Sentimeetrid",
   "settingsUnitsInches": "Tollid",
-  "settingsSearchLanguages": "Otsi keeli..."
+  "settingsSearchLanguages": "Otsi keeli...",
+  "settingsGeneral": "Üldine",
+  "addImage": "Lisa pilt",
+  "selectImages": "Vali pildid",
+  "zoomFitWidth": "Sobita laiusega",
+  "zoomIn": "Suurenda",
+  "zoomOut": "Vähenda",
+  "selectZoomLevel": "Vali suurenduse tase",
+  "goToPage": "Mine leheküljele",
+  "go": "Mine",
+  "savePdfAs": "Salvesta PDF kui",
+  "incorrectPassword": "Vale parool",
+  "saveFailed": "Salvestamine ebaõnnestus",
+  "savedTo": "Salvestatud: {path}",
+  "noOriginalPdfStored": "Algset PDF-i pole salvestatud"
 }

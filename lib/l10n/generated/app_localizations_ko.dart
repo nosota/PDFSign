@@ -134,46 +134,46 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settingsSearchLanguages => '언어 검색...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => '일반';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => '이미지 추가';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => '이미지 선택';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => '너비에 맞춤';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => '확대';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => '축소';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => '확대/축소 수준 선택';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => '페이지로 이동';
 
   @override
-  String get go => 'Go';
+  String get go => '이동';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'PDF 다른 이름으로 저장';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => '잘못된 비밀번호';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => '저장 실패';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return '저장 위치: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => '원본 PDF가 저장되지 않음';
 }

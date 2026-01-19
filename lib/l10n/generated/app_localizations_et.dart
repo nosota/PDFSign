@@ -134,46 +134,46 @@ class AppLocalizationsEt extends AppLocalizations {
   String get settingsSearchLanguages => 'Otsi keeli...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Üldine';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Lisa pilt';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Vali pildid';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Sobita laiusega';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Suurenda';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Vähenda';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Vali suurenduse tase';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Mine leheküljele';
 
   @override
-  String get go => 'Go';
+  String get go => 'Mine';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Salvesta PDF kui';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Vale parool';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Salvestamine ebaõnnestus';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Salvestatud: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Algset PDF-i pole salvestatud';
 }

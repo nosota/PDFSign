@@ -134,46 +134,46 @@ class AppLocalizationsBe extends AppLocalizations {
   String get settingsSearchLanguages => 'Пошук моў...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Агульныя';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Дадаць выяву';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Выбраць выявы';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Па шырыні';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Павялічыць';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Паменшыць';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Выбраць маштаб';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Перайсці да старонкі';
 
   @override
-  String get go => 'Go';
+  String get go => 'Перайсці';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Захаваць PDF як';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Няправільны пароль';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Памылка захавання';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Захавана: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Арыгінальны PDF не знойдзены';
 }

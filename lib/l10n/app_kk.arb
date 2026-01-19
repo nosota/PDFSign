@@ -38,5 +38,19 @@
   "settingsUnits": "Olshem birlkteri",
   "settingsUnitsCentimeters": "Santimetr",
   "settingsUnitsInches": "Diuym",
-  "settingsSearchLanguages": "Тілдерді іздеу..."
+  "settingsSearchLanguages": "Тілдерді іздеу...",
+  "settingsGeneral": "Жалпы",
+  "addImage": "Сурет қосу",
+  "selectImages": "Суреттерді таңдау",
+  "zoomFitWidth": "Енге сәйкестендіру",
+  "zoomIn": "Үлкейту",
+  "zoomOut": "Кішірейту",
+  "selectZoomLevel": "Масштаб деңгейін таңдау",
+  "goToPage": "Бетке өту",
+  "go": "Өту",
+  "savePdfAs": "PDF ретінде сақтау",
+  "incorrectPassword": "Құпия сөз қате",
+  "saveFailed": "Сақтау сәтсіз",
+  "savedTo": "Сақталды: {path}",
+  "noOriginalPdfStored": "Түпнұсқа PDF сақталмаған"
 }

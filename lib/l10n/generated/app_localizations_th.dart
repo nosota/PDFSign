@@ -134,46 +134,46 @@ class AppLocalizationsTh extends AppLocalizations {
   String get settingsSearchLanguages => 'ค้นหาภาษา...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'ทั่วไป';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'เพิ่มรูปภาพ';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'เลือกรูปภาพ';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'พอดีความกว้าง';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'ซูมเข้า';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'ซูมออก';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'เลือกระดับการซูม';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'ไปที่หน้า';
 
   @override
-  String get go => 'Go';
+  String get go => 'ไป';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'บันทึก PDF เป็น';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'รหัสผ่านไม่ถูกต้อง';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'บันทึกล้มเหลว';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'บันทึกที่: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'ไม่มี PDF ต้นฉบับถูกจัดเก็บ';
 }

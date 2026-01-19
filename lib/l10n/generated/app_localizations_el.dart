@@ -134,46 +134,46 @@ class AppLocalizationsEl extends AppLocalizations {
   String get settingsSearchLanguages => 'Αναζήτηση γλωσσών...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Γενικά';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Προσθήκη εικόνας';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Επιλογή εικόνων';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Προσαρμογή πλάτους';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Μεγέθυνση';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Σμίκρυνση';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Επιλογή επιπέδου ζουμ';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Μετάβαση σε σελίδα';
 
   @override
-  String get go => 'Go';
+  String get go => 'Μετάβαση';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Αποθήκευση PDF ως';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Λάθος κωδικός';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Αποτυχία αποθήκευσης';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Αποθηκεύτηκε σε: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Δεν αποθηκεύτηκε αρχικό PDF';
 }

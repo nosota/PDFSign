@@ -134,46 +134,46 @@ class AppLocalizationsAz extends AppLocalizations {
   String get settingsSearchLanguages => 'Dil axtar...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Ümumi';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Şəkil əlavə et';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Şəkilləri seç';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Enə sığdır';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Yaxınlaşdır';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Uzaqlaşdır';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Böyütmə səviyyəsini seç';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Səhifəyə keç';
 
   @override
-  String get go => 'Go';
+  String get go => 'Keç';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'PDF olaraq saxla';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Yanlış şifrə';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Saxlama uğursuz';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Saxlanıldı: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Orijinal PDF saxlanılmayıb';
 }

@@ -38,5 +38,19 @@
   "settingsUnits": "Matavimo vienetai",
   "settingsUnitsCentimeters": "Centimetrai",
   "settingsUnitsInches": "Coliai",
-  "settingsSearchLanguages": "Ieškoti kalbų..."
+  "settingsSearchLanguages": "Ieškoti kalbų...",
+  "settingsGeneral": "Bendra",
+  "addImage": "Pridėti vaizdą",
+  "selectImages": "Pasirinkti vaizdus",
+  "zoomFitWidth": "Pritaikyti pločiui",
+  "zoomIn": "Priartinti",
+  "zoomOut": "Atitolinti",
+  "selectZoomLevel": "Pasirinkti mastelio lygį",
+  "goToPage": "Eiti į puslapį",
+  "go": "Eiti",
+  "savePdfAs": "Išsaugoti PDF kaip",
+  "incorrectPassword": "Neteisingas slaptažodis",
+  "saveFailed": "Išsaugoti nepavyko",
+  "savedTo": "Išsaugota: {path}",
+  "noOriginalPdfStored": "Originalus PDF neišsaugotas"
 }

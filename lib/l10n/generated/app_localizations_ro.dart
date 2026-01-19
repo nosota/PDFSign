@@ -137,43 +137,43 @@ class AppLocalizationsRo extends AppLocalizations {
   String get settingsGeneral => 'General';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Adaugă imagine';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Selectează imagini';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Potrivire lățime';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Mărește';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Micșorează';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Selectează nivelul de zoom';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Mergi la pagina';
 
   @override
-  String get go => 'Go';
+  String get go => 'Mergi';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Salvează PDF ca';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Parolă incorectă';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Salvare eșuată';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Salvat în: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Niciun PDF original stocat';
 }

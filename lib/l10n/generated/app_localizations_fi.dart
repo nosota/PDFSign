@@ -152,46 +152,46 @@ class AppLocalizationsFi extends AppLocalizations {
   String get settingsSearchLanguages => 'Etsi kieliä...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Yleistä';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Lisää kuva';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Valitse kuvat';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Sovita leveyteen';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Lähennä';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Loitonna';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Valitse zoomaustaso';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Siirry sivulle';
 
   @override
-  String get go => 'Go';
+  String get go => 'Siirry';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Tallenna PDF nimellä';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Väärä salasana';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Tallennus epäonnistui';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Tallennettu: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Alkuperäistä PDF:ää ei tallennettu';
 }

@@ -38,5 +38,19 @@
   "settingsUnits": "Ekai",
   "settingsUnitsCentimeters": "Sentimeter",
   "settingsUnitsInches": "Inch",
-  "settingsSearchLanguages": "ভাষা অনুসন্ধান..."
+  "settingsSearchLanguages": "ভাষা অনুসন্ধান...",
+  "settingsGeneral": "সাধারণ",
+  "addImage": "ছবি যোগ করুন",
+  "selectImages": "ছবি নির্বাচন করুন",
+  "zoomFitWidth": "প্রস্থে মানানসই",
+  "zoomIn": "জুম ইন",
+  "zoomOut": "জুম আউট",
+  "selectZoomLevel": "জুম স্তর নির্বাচন করুন",
+  "goToPage": "পৃষ্ঠায় যান",
+  "go": "যান",
+  "savePdfAs": "PDF হিসাবে সংরক্ষণ করুন",
+  "incorrectPassword": "ভুল পাসওয়ার্ড",
+  "saveFailed": "সংরক্ষণ ব্যর্থ",
+  "savedTo": "সংরক্ষিত: {path}",
+  "noOriginalPdfStored": "কোনো মূল PDF সংরক্ষিত নেই"
 }

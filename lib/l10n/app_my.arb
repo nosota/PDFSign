@@ -38,5 +38,19 @@
   "settingsUnits": "Tinetunit myar",
   "settingsUnitsCentimeters": "Centimeter",
   "settingsUnitsInches": "Inch",
-  "settingsSearchLanguages": "ဘာသာစကား ရှာရန်..."
+  "settingsSearchLanguages": "ဘာသာစကား ရှာရန်...",
+  "settingsGeneral": "အထွေထွေ",
+  "addImage": "ပုံထည့်ရန်",
+  "selectImages": "ပုံများရွေးရန်",
+  "zoomFitWidth": "အကျယ်နဲ့ကိုက်ညီအောင်",
+  "zoomIn": "ချဲ့ကြည့်ရန်",
+  "zoomOut": "ချုံ့ကြည့်ရန်",
+  "selectZoomLevel": "ချဲ့/ချုံ့အဆင့်ရွေးရန်",
+  "goToPage": "စာမျက်နှာသို့သွားရန်",
+  "go": "သွားရန်",
+  "savePdfAs": "PDF အဖြစ်သိမ်းရန်",
+  "incorrectPassword": "စကားဝှက်မှားနေသည်",
+  "saveFailed": "သိမ်းဆည်းမှုမအောင်မြင်ပါ",
+  "savedTo": "သိမ်းဆည်းပြီး: {path}",
+  "noOriginalPdfStored": "မူရင်း PDF မသိမ်းရသေးပါ"
 }

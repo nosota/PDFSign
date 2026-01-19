@@ -134,46 +134,46 @@ class AppLocalizationsHu extends AppLocalizations {
   String get settingsSearchLanguages => 'Nyelvek keresése...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Általános';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Kép hozzáadása';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Képek kiválasztása';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Szélesség illesztése';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Nagyítás';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Kicsinyítés';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Nagyítási szint kiválasztása';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Ugrás oldalra';
 
   @override
-  String get go => 'Go';
+  String get go => 'Ugrás';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'PDF mentése másként';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Helytelen jelszó';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Mentés sikertelen';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Mentve ide: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Nincs eredeti PDF tárolva';
 }

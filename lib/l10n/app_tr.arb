@@ -38,5 +38,19 @@
   "settingsUnits": "Birimler",
   "settingsUnitsCentimeters": "Santimetre",
   "settingsUnitsInches": "İnç",
-  "settingsSearchLanguages": "Dil ara..."
+  "settingsSearchLanguages": "Dil ara...",
+  "settingsGeneral": "Genel",
+  "addImage": "Resim ekle",
+  "selectImages": "Resimleri seç",
+  "zoomFitWidth": "Genişliğe sığdır",
+  "zoomIn": "Yakınlaştır",
+  "zoomOut": "Uzaklaştır",
+  "selectZoomLevel": "Yakınlaştırma seviyesi seç",
+  "goToPage": "Sayfaya git",
+  "go": "Git",
+  "savePdfAs": "PDF olarak kaydet",
+  "incorrectPassword": "Hatalı şifre",
+  "saveFailed": "Kaydetme başarısız",
+  "savedTo": "Kaydedildi: {path}",
+  "noOriginalPdfStored": "Orijinal PDF kaydedilmedi"
 }

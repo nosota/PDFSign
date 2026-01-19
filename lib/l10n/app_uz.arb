@@ -38,5 +38,19 @@
   "settingsUnits": "Oʻlchov birliklari",
   "settingsUnitsCentimeters": "Santimetr",
   "settingsUnitsInches": "Dyuym",
-  "settingsSearchLanguages": "Tillarni qidirish..."
+  "settingsSearchLanguages": "Tillarni qidirish...",
+  "settingsGeneral": "Umumiy",
+  "addImage": "Rasm qoʻshish",
+  "selectImages": "Rasmlarni tanlash",
+  "zoomFitWidth": "Kenglikka moslashtirish",
+  "zoomIn": "Kattalashtirish",
+  "zoomOut": "Kichiklashtirish",
+  "selectZoomLevel": "Masshtab darajasini tanlash",
+  "goToPage": "Sahifaga oʻtish",
+  "go": "Oʻtish",
+  "savePdfAs": "PDF sifatida saqlash",
+  "incorrectPassword": "Notoʻgʻri parol",
+  "saveFailed": "Saqlash muvaffaqiyatsiz",
+  "savedTo": "Saqlandi: {path}",
+  "noOriginalPdfStored": "Asl PDF saqlanmagan"
 }

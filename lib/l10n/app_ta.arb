@@ -38,5 +38,19 @@
   "settingsUnits": "Alagu",
   "settingsUnitsCentimeters": "Sentimeettar",
   "settingsUnitsInches": "Inchu",
-  "settingsSearchLanguages": "மொழிகளைத் தேடு..."
+  "settingsSearchLanguages": "மொழிகளைத் தேடு...",
+  "settingsGeneral": "பொது",
+  "addImage": "படம் சேர்",
+  "selectImages": "படங்களைத் தேர்ந்தெடு",
+  "zoomFitWidth": "அகலத்திற்கு பொருத்து",
+  "zoomIn": "பெரிதாக்கு",
+  "zoomOut": "சிறிதாக்கு",
+  "selectZoomLevel": "பெரிதாக்க நிலையைத் தேர்ந்தெடு",
+  "goToPage": "பக்கத்திற்குச் செல்",
+  "go": "செல்",
+  "savePdfAs": "PDF ஆக சேமி",
+  "incorrectPassword": "தவறான கடவுச்சொல்",
+  "saveFailed": "சேமிப்பு தோல்வி",
+  "savedTo": "சேமிக்கப்பட்டது: {path}",
+  "noOriginalPdfStored": "அசல் PDF சேமிக்கப்படவில்லை"
 }

@@ -137,43 +137,43 @@ class AppLocalizationsCa extends AppLocalizations {
   String get settingsGeneral => 'General';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Afegeix imatge';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Selecciona imatges';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Ajusta a l\'amplada';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Apropa';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Allunya';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Selecciona nivell de zoom';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Vés a la pàgina';
 
   @override
-  String get go => 'Go';
+  String get go => 'Vés';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Desa PDF com';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Contrasenya incorrecta';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Error en desar';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Desat a: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'No hi ha PDF original emmagatzemat';
 }

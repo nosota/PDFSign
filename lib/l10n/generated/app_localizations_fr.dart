@@ -152,46 +152,46 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsSearchLanguages => 'Rechercher des langues...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Général';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Ajouter une image';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Sélectionner des images';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Ajuster à la largeur';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Zoom avant';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Zoom arrière';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Sélectionner le niveau de zoom';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Aller à la page';
 
   @override
-  String get go => 'Go';
+  String get go => 'Aller';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Enregistrer le PDF sous';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Mot de passe incorrect';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Échec de l\'enregistrement';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Enregistré dans : $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Aucun PDF original stocké';
 }

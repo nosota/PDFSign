@@ -38,5 +38,19 @@
   "settingsUnits": "Don vi",
   "settingsUnitsCentimeters": "Centimet",
   "settingsUnitsInches": "Inch",
-  "settingsSearchLanguages": "Tìm kiếm ngôn ngữ..."
+  "settingsSearchLanguages": "Tìm kiếm ngôn ngữ...",
+  "settingsGeneral": "Chung",
+  "addImage": "Thêm hình ảnh",
+  "selectImages": "Chọn hình ảnh",
+  "zoomFitWidth": "Vừa chiều rộng",
+  "zoomIn": "Phóng to",
+  "zoomOut": "Thu nhỏ",
+  "selectZoomLevel": "Chọn mức thu phóng",
+  "goToPage": "Đi đến trang",
+  "go": "Đi",
+  "savePdfAs": "Lưu PDF thành",
+  "incorrectPassword": "Mật khẩu không đúng",
+  "saveFailed": "Lưu thất bại",
+  "savedTo": "Đã lưu tại: {path}",
+  "noOriginalPdfStored": "Không có PDF gốc được lưu"
 }

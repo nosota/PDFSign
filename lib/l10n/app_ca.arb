@@ -38,5 +38,19 @@
   "settingsUnits": "Unitats",
   "settingsUnitsCentimeters": "Centimetres",
   "settingsUnitsInches": "Polzades",
-  "settingsSearchLanguages": "Cercar idiomes..."
+  "settingsSearchLanguages": "Cercar idiomes...",
+  "settingsGeneral": "General",
+  "addImage": "Afegeix imatge",
+  "selectImages": "Selecciona imatges",
+  "zoomFitWidth": "Ajusta a l'amplada",
+  "zoomIn": "Apropa",
+  "zoomOut": "Allunya",
+  "selectZoomLevel": "Selecciona nivell de zoom",
+  "goToPage": "Vés a la pàgina",
+  "go": "Vés",
+  "savePdfAs": "Desa PDF com",
+  "incorrectPassword": "Contrasenya incorrecta",
+  "saveFailed": "Error en desar",
+  "savedTo": "Desat a: {path}",
+  "noOriginalPdfStored": "No hi ha PDF original emmagatzemat"
 }

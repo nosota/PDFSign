@@ -38,5 +38,19 @@
   "settingsUnits": "Unità",
   "settingsUnitsCentimeters": "Centimetri",
   "settingsUnitsInches": "Pollici",
-  "settingsSearchLanguages": "Cerca lingue..."
+  "settingsSearchLanguages": "Cerca lingue...",
+  "settingsGeneral": "Generale",
+  "addImage": "Aggiungi immagine",
+  "selectImages": "Seleziona immagini",
+  "zoomFitWidth": "Adatta larghezza",
+  "zoomIn": "Ingrandisci",
+  "zoomOut": "Riduci",
+  "selectZoomLevel": "Seleziona livello di zoom",
+  "goToPage": "Vai alla pagina",
+  "go": "Vai",
+  "savePdfAs": "Salva PDF come",
+  "incorrectPassword": "Password errata",
+  "saveFailed": "Salvataggio fallito",
+  "savedTo": "Salvato in: {path}",
+  "noOriginalPdfStored": "Nessun PDF originale memorizzato"
 }

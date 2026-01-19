@@ -38,5 +38,19 @@
   "settingsUnits": "Ikaiyaan",
   "settingsUnitsCentimeters": "Centimeter",
   "settingsUnitsInches": "Inch",
-  "settingsSearchLanguages": "भाषाएं खोजें..."
+  "settingsSearchLanguages": "भाषाएं खोजें...",
+  "settingsGeneral": "सामान्य",
+  "addImage": "छवि जोड़ें",
+  "selectImages": "छवियां चुनें",
+  "zoomFitWidth": "चौड़ाई में फ़िट करें",
+  "zoomIn": "ज़ूम इन",
+  "zoomOut": "ज़ूम आउट",
+  "selectZoomLevel": "ज़ूम स्तर चुनें",
+  "goToPage": "पृष्ठ पर जाएं",
+  "go": "जाएं",
+  "savePdfAs": "PDF के रूप में सहेजें",
+  "incorrectPassword": "गलत पासवर्ड",
+  "saveFailed": "सहेजना विफल",
+  "savedTo": "इसमें सहेजा गया: {path}",
+  "noOriginalPdfStored": "कोई मूल PDF संग्रहीत नहीं"
 }

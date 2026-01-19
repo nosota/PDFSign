@@ -38,5 +38,19 @@
   "settingsUnits": "Адзінкі",
   "settingsUnitsCentimeters": "Сантыметры",
   "settingsUnitsInches": "Цалі",
-  "settingsSearchLanguages": "Пошук моў..."
+  "settingsSearchLanguages": "Пошук моў...",
+  "settingsGeneral": "Агульныя",
+  "addImage": "Дадаць выяву",
+  "selectImages": "Выбраць выявы",
+  "zoomFitWidth": "Па шырыні",
+  "zoomIn": "Павялічыць",
+  "zoomOut": "Паменшыць",
+  "selectZoomLevel": "Выбраць маштаб",
+  "goToPage": "Перайсці да старонкі",
+  "go": "Перайсці",
+  "savePdfAs": "Захаваць PDF як",
+  "incorrectPassword": "Няправільны пароль",
+  "saveFailed": "Памылка захавання",
+  "savedTo": "Захавана: {path}",
+  "noOriginalPdfStored": "Арыгінальны PDF не знойдзены"
 }

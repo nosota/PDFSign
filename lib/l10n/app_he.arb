@@ -38,5 +38,19 @@
   "settingsUnits": "יחידות",
   "settingsUnitsCentimeters": "סנטימטרים",
   "settingsUnitsInches": "אינצים",
-  "settingsSearchLanguages": "חיפוש שפות..."
+  "settingsSearchLanguages": "חיפוש שפות...",
+  "settingsGeneral": "כללי",
+  "addImage": "הוסף תמונה",
+  "selectImages": "בחר תמונות",
+  "zoomFitWidth": "התאם לרוחב",
+  "zoomIn": "הגדל",
+  "zoomOut": "הקטן",
+  "selectZoomLevel": "בחר רמת זום",
+  "goToPage": "עבור לעמוד",
+  "go": "עבור",
+  "savePdfAs": "שמור PDF בשם",
+  "incorrectPassword": "סיסמה שגויה",
+  "saveFailed": "השמירה נכשלה",
+  "savedTo": "נשמר ב: {path}",
+  "noOriginalPdfStored": "לא נשמר PDF מקורי"
 }

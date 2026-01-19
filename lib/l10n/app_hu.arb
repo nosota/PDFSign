@@ -38,5 +38,19 @@
   "settingsUnits": "Mértékegységek",
   "settingsUnitsCentimeters": "Centiméter",
   "settingsUnitsInches": "Hüvelyk",
-  "settingsSearchLanguages": "Nyelvek keresése..."
+  "settingsSearchLanguages": "Nyelvek keresése...",
+  "settingsGeneral": "Általános",
+  "addImage": "Kép hozzáadása",
+  "selectImages": "Képek kiválasztása",
+  "zoomFitWidth": "Szélesség illesztése",
+  "zoomIn": "Nagyítás",
+  "zoomOut": "Kicsinyítés",
+  "selectZoomLevel": "Nagyítási szint kiválasztása",
+  "goToPage": "Ugrás oldalra",
+  "go": "Ugrás",
+  "savePdfAs": "PDF mentése másként",
+  "incorrectPassword": "Helytelen jelszó",
+  "saveFailed": "Mentés sikertelen",
+  "savedTo": "Mentve ide: {path}",
+  "noOriginalPdfStored": "Nincs eredeti PDF tárolva"
 }

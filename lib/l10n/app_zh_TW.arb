@@ -38,5 +38,19 @@
   "settingsUnits": "單位",
   "settingsUnitsCentimeters": "公分",
   "settingsUnitsInches": "英吋",
-  "settingsSearchLanguages": "搜尋語言..."
+  "settingsSearchLanguages": "搜尋語言...",
+  "settingsGeneral": "一般",
+  "addImage": "新增圖片",
+  "selectImages": "選擇圖片",
+  "zoomFitWidth": "符合寬度",
+  "zoomIn": "放大",
+  "zoomOut": "縮小",
+  "selectZoomLevel": "選擇縮放級別",
+  "goToPage": "前往頁面",
+  "go": "前往",
+  "savePdfAs": "PDF另存新檔",
+  "incorrectPassword": "密碼錯誤",
+  "saveFailed": "儲存失敗",
+  "savedTo": "已儲存至：{path}",
+  "noOriginalPdfStored": "未儲存原始PDF"
 }

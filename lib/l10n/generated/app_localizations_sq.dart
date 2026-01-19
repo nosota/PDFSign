@@ -134,46 +134,46 @@ class AppLocalizationsSq extends AppLocalizations {
   String get settingsSearchLanguages => 'Kërko gjuhët...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Të përgjithshme';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Shto imazh';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Zgjidh imazhe';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Përshtat gjerësinë';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Zmadho';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Zvogëlo';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Zgjidh nivelin e zmadhimit';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Shko te faqja';
 
   @override
-  String get go => 'Go';
+  String get go => 'Shko';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Ruaj PDF si';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Fjalëkalim i gabuar';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Ruajtja dështoi';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'U ruajt në: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Asnjë PDF origjinal i ruajtur';
 }

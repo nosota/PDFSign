@@ -152,46 +152,46 @@ class AppLocalizationsSv extends AppLocalizations {
   String get settingsSearchLanguages => 'Sök språk...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Allmänt';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Lägg till bild';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Välj bilder';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Anpassa bredd';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Zooma in';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Zooma ut';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Välj zoomnivå';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Gå till sida';
 
   @override
-  String get go => 'Go';
+  String get go => 'Gå';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Spara PDF som';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Felaktigt lösenord';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Sparandet misslyckades';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Sparat till: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Ingen original-PDF sparad';
 }

@@ -38,5 +38,19 @@
   "settingsUnits": "Khemjeekh neghj",
   "settingsUnitsCentimeters": "Santimetr",
   "settingsUnitsInches": "Inch",
-  "settingsSearchLanguages": "Хэл хайх..."
+  "settingsSearchLanguages": "Хэл хайх...",
+  "settingsGeneral": "Ерөнхий",
+  "addImage": "Зураг нэмэх",
+  "selectImages": "Зураг сонгох",
+  "zoomFitWidth": "Өргөнд тохируулах",
+  "zoomIn": "Томруулах",
+  "zoomOut": "Жижигрүүлэх",
+  "selectZoomLevel": "Томруулах түвшин сонгох",
+  "goToPage": "Хуудас руу очих",
+  "go": "Очих",
+  "savePdfAs": "PDF болгон хадгалах",
+  "incorrectPassword": "Буруу нууц үг",
+  "saveFailed": "Хадгалалт амжилтгүй",
+  "savedTo": "Хадгалагдсан: {path}",
+  "noOriginalPdfStored": "Эх PDF хадгалагдаагүй"
 }

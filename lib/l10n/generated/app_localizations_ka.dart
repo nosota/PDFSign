@@ -134,46 +134,46 @@ class AppLocalizationsKa extends AppLocalizations {
   String get settingsSearchLanguages => 'ენების ძიება...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'ზოგადი';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'სურათის დამატება';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'სურათების არჩევა';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'სიგანეზე მორგება';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'გადიდება';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'შემცირება';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'მასშტაბის არჩევა';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'გვერდზე გადასვლა';
 
   @override
-  String get go => 'Go';
+  String get go => 'გადასვლა';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'PDF-ის შენახვა როგორც';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'არასწორი პაროლი';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'შენახვა ვერ მოხერხდა';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'შენახულია: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'ორიგინალი PDF არ არის შენახული';
 }

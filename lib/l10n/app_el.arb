@@ -38,5 +38,19 @@
   "settingsUnits": "Monades",
   "settingsUnitsCentimeters": "Ekatosta",
   "settingsUnitsInches": "Intses",
-  "settingsSearchLanguages": "Αναζήτηση γλωσσών..."
+  "settingsSearchLanguages": "Αναζήτηση γλωσσών...",
+  "settingsGeneral": "Γενικά",
+  "addImage": "Προσθήκη εικόνας",
+  "selectImages": "Επιλογή εικόνων",
+  "zoomFitWidth": "Προσαρμογή πλάτους",
+  "zoomIn": "Μεγέθυνση",
+  "zoomOut": "Σμίκρυνση",
+  "selectZoomLevel": "Επιλογή επιπέδου ζουμ",
+  "goToPage": "Μετάβαση σε σελίδα",
+  "go": "Μετάβαση",
+  "savePdfAs": "Αποθήκευση PDF ως",
+  "incorrectPassword": "Λάθος κωδικός",
+  "saveFailed": "Αποτυχία αποθήκευσης",
+  "savedTo": "Αποθηκεύτηκε σε: {path}",
+  "noOriginalPdfStored": "Δεν αποθηκεύτηκε αρχικό PDF"
 }

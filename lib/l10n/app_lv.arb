@@ -38,5 +38,19 @@
   "settingsUnits": "Mervienibas",
   "settingsUnitsCentimeters": "Centimetri",
   "settingsUnitsInches": "Collas",
-  "settingsSearchLanguages": "Meklēt valodas..."
+  "settingsSearchLanguages": "Meklēt valodas...",
+  "settingsGeneral": "Vispārīgi",
+  "addImage": "Pievienot attēlu",
+  "selectImages": "Izvēlieties attēlus",
+  "zoomFitWidth": "Pielāgot platumam",
+  "zoomIn": "Pietuvināt",
+  "zoomOut": "Attālināt",
+  "selectZoomLevel": "Izvēlieties tālummaiņas līmeni",
+  "goToPage": "Doties uz lapu",
+  "go": "Doties",
+  "savePdfAs": "Saglabāt PDF kā",
+  "incorrectPassword": "Nepareiza parole",
+  "saveFailed": "Saglabāšana neizdevās",
+  "savedTo": "Saglabāts: {path}",
+  "noOriginalPdfStored": "Nav saglabāts oriģinālais PDF"
 }

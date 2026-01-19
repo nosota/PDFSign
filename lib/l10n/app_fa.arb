@@ -38,5 +38,19 @@
   "settingsUnits": "واحدها",
   "settingsUnitsCentimeters": "سانتی‌متر",
   "settingsUnitsInches": "اینچ",
-  "settingsSearchLanguages": "جستجوی زبان‌ها..."
+  "settingsSearchLanguages": "جستجوی زبان‌ها...",
+  "settingsGeneral": "عمومی",
+  "addImage": "افزودن تصویر",
+  "selectImages": "انتخاب تصاویر",
+  "zoomFitWidth": "تناسب با عرض",
+  "zoomIn": "بزرگنمایی",
+  "zoomOut": "کوچک‌نمایی",
+  "selectZoomLevel": "انتخاب سطح بزرگنمایی",
+  "goToPage": "رفتن به صفحه",
+  "go": "برو",
+  "savePdfAs": "ذخیره PDF به عنوان",
+  "incorrectPassword": "رمز عبور نادرست",
+  "saveFailed": "ذخیره ناموفق",
+  "savedTo": "ذخیره شده در: {path}",
+  "noOriginalPdfStored": "PDF اصلی ذخیره نشده است"
 }

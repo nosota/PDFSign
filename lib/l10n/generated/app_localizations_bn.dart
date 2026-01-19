@@ -134,46 +134,46 @@ class AppLocalizationsBn extends AppLocalizations {
   String get settingsSearchLanguages => 'ভাষা অনুসন্ধান...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'সাধারণ';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'ছবি যোগ করুন';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'ছবি নির্বাচন করুন';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'প্রস্থে মানানসই';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'জুম ইন';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'জুম আউট';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'জুম স্তর নির্বাচন করুন';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'পৃষ্ঠায় যান';
 
   @override
-  String get go => 'Go';
+  String get go => 'যান';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'PDF হিসাবে সংরক্ষণ করুন';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'ভুল পাসওয়ার্ড';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'সংরক্ষণ ব্যর্থ';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'সংরক্ষিত: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'কোনো মূল PDF সংরক্ষিত নেই';
 }

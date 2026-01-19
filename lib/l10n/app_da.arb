@@ -38,5 +38,19 @@
   "settingsUnits": "Enheder",
   "settingsUnitsCentimeters": "Centimeter",
   "settingsUnitsInches": "Tommer",
-  "settingsSearchLanguages": "Søg sprog..."
+  "settingsSearchLanguages": "Søg sprog...",
+  "settingsGeneral": "Generelt",
+  "addImage": "Tilføj billede",
+  "selectImages": "Vælg billeder",
+  "zoomFitWidth": "Tilpas bredde",
+  "zoomIn": "Zoom ind",
+  "zoomOut": "Zoom ud",
+  "selectZoomLevel": "Vælg zoomniveau",
+  "goToPage": "Gå til side",
+  "go": "Gå",
+  "savePdfAs": "Gem PDF som",
+  "incorrectPassword": "Forkert adgangskode",
+  "saveFailed": "Gemning mislykkedes",
+  "savedTo": "Gemt til: {path}",
+  "noOriginalPdfStored": "Ingen original PDF gemt"
 }

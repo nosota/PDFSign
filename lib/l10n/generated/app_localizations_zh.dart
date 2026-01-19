@@ -134,48 +134,48 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsSearchLanguages => '搜索语言...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => '通用';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => '添加图片';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => '选择图片';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => '适应宽度';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => '放大';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => '缩小';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => '选择缩放级别';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => '跳转到页面';
 
   @override
-  String get go => 'Go';
+  String get go => '跳转';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'PDF另存为';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => '密码错误';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => '保存失败';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return '已保存至：$path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => '未存储原始PDF';
 }
 
 /// The translations for Chinese, as used in China (`zh_CN`).
@@ -306,6 +306,50 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get settingsSearchLanguages => '搜索语言...';
+
+  @override
+  String get settingsGeneral => '通用';
+
+  @override
+  String get addImage => '添加图片';
+
+  @override
+  String get selectImages => '选择图片';
+
+  @override
+  String get zoomFitWidth => '适应宽度';
+
+  @override
+  String get zoomIn => '放大';
+
+  @override
+  String get zoomOut => '缩小';
+
+  @override
+  String get selectZoomLevel => '选择缩放级别';
+
+  @override
+  String get goToPage => '跳转到页面';
+
+  @override
+  String get go => '跳转';
+
+  @override
+  String get savePdfAs => 'PDF另存为';
+
+  @override
+  String get incorrectPassword => '密码错误';
+
+  @override
+  String get saveFailed => '保存失败';
+
+  @override
+  String savedTo(String path) {
+    return '已保存至：$path';
+  }
+
+  @override
+  String get noOriginalPdfStored => '未存储原始PDF';
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
@@ -436,4 +480,48 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get settingsSearchLanguages => '搜尋語言...';
+
+  @override
+  String get settingsGeneral => '一般';
+
+  @override
+  String get addImage => '新增圖片';
+
+  @override
+  String get selectImages => '選擇圖片';
+
+  @override
+  String get zoomFitWidth => '符合寬度';
+
+  @override
+  String get zoomIn => '放大';
+
+  @override
+  String get zoomOut => '縮小';
+
+  @override
+  String get selectZoomLevel => '選擇縮放級別';
+
+  @override
+  String get goToPage => '前往頁面';
+
+  @override
+  String get go => '前往';
+
+  @override
+  String get savePdfAs => 'PDF另存新檔';
+
+  @override
+  String get incorrectPassword => '密碼錯誤';
+
+  @override
+  String get saveFailed => '儲存失敗';
+
+  @override
+  String savedTo(String path) {
+    return '已儲存至：$path';
+  }
+
+  @override
+  String get noOriginalPdfStored => '未儲存原始PDF';
 }

@@ -134,46 +134,46 @@ class AppLocalizationsHr extends AppLocalizations {
   String get settingsSearchLanguages => 'Pretraži jezike...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Opće';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Dodaj sliku';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Odaberi slike';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Prilagodi širini';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Povećaj';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Smanji';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Odaberi razinu zumiranja';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Idi na stranicu';
 
   @override
-  String get go => 'Go';
+  String get go => 'Idi';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Spremi PDF kao';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Pogrešna lozinka';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Spremanje nije uspjelo';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Spremljeno u: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Nema pohranjenog izvornog PDF-a';
 }

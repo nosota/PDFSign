@@ -38,5 +38,19 @@
   "settingsUnits": "Enheter",
   "settingsUnitsCentimeters": "Centimeter",
   "settingsUnitsInches": "Tum",
-  "settingsSearchLanguages": "Sök språk..."
+  "settingsSearchLanguages": "Sök språk...",
+  "settingsGeneral": "Allmänt",
+  "addImage": "Lägg till bild",
+  "selectImages": "Välj bilder",
+  "zoomFitWidth": "Anpassa bredd",
+  "zoomIn": "Zooma in",
+  "zoomOut": "Zooma ut",
+  "selectZoomLevel": "Välj zoomnivå",
+  "goToPage": "Gå till sida",
+  "go": "Gå",
+  "savePdfAs": "Spara PDF som",
+  "incorrectPassword": "Felaktigt lösenord",
+  "saveFailed": "Sparandet misslyckades",
+  "savedTo": "Sparat till: {path}",
+  "noOriginalPdfStored": "Ingen original-PDF sparad"
 }

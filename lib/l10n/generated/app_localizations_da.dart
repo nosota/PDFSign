@@ -152,46 +152,46 @@ class AppLocalizationsDa extends AppLocalizations {
   String get settingsSearchLanguages => 'Søg sprog...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Generelt';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Tilføj billede';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Vælg billeder';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Tilpas bredde';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Zoom ind';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Zoom ud';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Vælg zoomniveau';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Gå til side';
 
   @override
-  String get go => 'Go';
+  String get go => 'Gå';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Gem PDF som';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Forkert adgangskode';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Gemning mislykkedes';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Gemt til: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Ingen original PDF gemt';
 }

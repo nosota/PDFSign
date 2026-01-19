@@ -38,5 +38,19 @@
   "settingsUnits": "Erteuelebi",
   "settingsUnitsCentimeters": "Santimetrebi",
   "settingsUnitsInches": "Diumebi",
-  "settingsSearchLanguages": "ენების ძიება..."
+  "settingsSearchLanguages": "ენების ძიება...",
+  "settingsGeneral": "ზოგადი",
+  "addImage": "სურათის დამატება",
+  "selectImages": "სურათების არჩევა",
+  "zoomFitWidth": "სიგანეზე მორგება",
+  "zoomIn": "გადიდება",
+  "zoomOut": "შემცირება",
+  "selectZoomLevel": "მასშტაბის არჩევა",
+  "goToPage": "გვერდზე გადასვლა",
+  "go": "გადასვლა",
+  "savePdfAs": "PDF-ის შენახვა როგორც",
+  "incorrectPassword": "არასწორი პაროლი",
+  "saveFailed": "შენახვა ვერ მოხერხდა",
+  "savedTo": "შენახულია: {path}",
+  "noOriginalPdfStored": "ორიგინალი PDF არ არის შენახული"
 }

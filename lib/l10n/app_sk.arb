@@ -38,5 +38,19 @@
   "settingsUnits": "Jednotky",
   "settingsUnitsCentimeters": "Centimetre",
   "settingsUnitsInches": "Palce",
-  "settingsSearchLanguages": "Hľadať jazyky..."
+  "settingsSearchLanguages": "Hľadať jazyky...",
+  "settingsGeneral": "Všeobecné",
+  "addImage": "Pridať obrázok",
+  "selectImages": "Vybrať obrázky",
+  "zoomFitWidth": "Prispôsobiť šírke",
+  "zoomIn": "Priblížiť",
+  "zoomOut": "Oddialiť",
+  "selectZoomLevel": "Vybrať úroveň priblíženia",
+  "goToPage": "Prejsť na stranu",
+  "go": "Prejsť",
+  "savePdfAs": "Uložiť PDF ako",
+  "incorrectPassword": "Nesprávne heslo",
+  "saveFailed": "Uloženie zlyhalo",
+  "savedTo": "Uložené do: {path}",
+  "noOriginalPdfStored": "Žiadne pôvodné PDF nie je uložené"
 }

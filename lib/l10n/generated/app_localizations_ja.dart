@@ -134,46 +134,46 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settingsSearchLanguages => '言語を検索...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => '一般';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => '画像を追加';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => '画像を選択';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => '幅に合わせる';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => '拡大';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => '縮小';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'ズームレベルを選択';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'ページに移動';
 
   @override
-  String get go => 'Go';
+  String get go => '移動';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'PDFを別名で保存';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'パスワードが正しくありません';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => '保存に失敗しました';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return '保存先: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => '元のPDFが保存されていません';
 }

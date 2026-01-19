@@ -131,49 +131,49 @@ class AppLocalizationsHy extends AppLocalizations {
   String get settingsUnitsInches => 'Duymer';
 
   @override
-  String get settingsSearchLanguages => 'Որոdelays լdelays...';
+  String get settingsSearchLanguages => 'Lezuneri porokhum...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Yndhanur';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Avelatsnel patker';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Yntrel patkerner';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Hamarjetsnel laynutyamb';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Metatsnel';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Pokratsnel';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Yntrel masshtabi makardaky';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Anjnel ej';
 
   @override
-  String get go => 'Go';
+  String get go => 'Anjnel';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Pakhpanel PDF orpes';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Sphal gaghtnabar';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Pakhpanman skhalkutyun';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Pakhpanvatso e: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Bnatipi PDF-y pakhpanvatso che';
 }

@@ -152,46 +152,46 @@ class AppLocalizationsNb extends AppLocalizations {
   String get settingsSearchLanguages => 'Søk etter språk...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'Generelt';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'Legg til bilde';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'Velg bilder';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'Tilpass bredde';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'Zoom inn';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'Zoom ut';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'Velg zoomnivå';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'Gå til side';
 
   @override
-  String get go => 'Go';
+  String get go => 'Gå';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'Lagre PDF som';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'Feil passord';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'Lagring mislyktes';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'Lagret til: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'Ingen original PDF lagret';
 }

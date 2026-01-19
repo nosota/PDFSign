@@ -134,46 +134,46 @@ class AppLocalizationsKm extends AppLocalizations {
   String get settingsSearchLanguages => 'ស្វែងរកភាសា...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'ទូទៅ';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'បន្ថែមរូបភាព';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'ជ្រើសរើសរូបភាព';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'សម្រួលតាមទទឹង';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'ពង្រីក';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'បង្រួម';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'ជ្រើសរើសកម្រិតពង្រីក';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'ទៅទំព័រ';
 
   @override
-  String get go => 'Go';
+  String get go => 'ទៅ';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'រក្សាទុក PDF ជា';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'ពាក្យសម្ងាត់មិនត្រឹមត្រូវ';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'រក្សាទុកបរាជ័យ';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'បានរក្សាទុកនៅ: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'គ្មាន PDF ដើមត្រូវបានរក្សាទុក';
 }

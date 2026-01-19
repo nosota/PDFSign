@@ -134,46 +134,46 @@ class AppLocalizationsFa extends AppLocalizations {
   String get settingsSearchLanguages => 'جستجوی زبان‌ها...';
 
   @override
-  String get settingsGeneral => 'General';
+  String get settingsGeneral => 'عمومی';
 
   @override
-  String get addImage => 'Add Image';
+  String get addImage => 'افزودن تصویر';
 
   @override
-  String get selectImages => 'Select Images';
+  String get selectImages => 'انتخاب تصاویر';
 
   @override
-  String get zoomFitWidth => 'Fit Width';
+  String get zoomFitWidth => 'تناسب با عرض';
 
   @override
-  String get zoomIn => 'Zoom In';
+  String get zoomIn => 'بزرگنمایی';
 
   @override
-  String get zoomOut => 'Zoom Out';
+  String get zoomOut => 'کوچک‌نمایی';
 
   @override
-  String get selectZoomLevel => 'Select zoom level';
+  String get selectZoomLevel => 'انتخاب سطح بزرگنمایی';
 
   @override
-  String get goToPage => 'Go to Page';
+  String get goToPage => 'رفتن به صفحه';
 
   @override
-  String get go => 'Go';
+  String get go => 'برو';
 
   @override
-  String get savePdfAs => 'Save PDF As';
+  String get savePdfAs => 'ذخیره PDF به عنوان';
 
   @override
-  String get incorrectPassword => 'Incorrect password';
+  String get incorrectPassword => 'رمز عبور نادرست';
 
   @override
-  String get saveFailed => 'Save failed';
+  String get saveFailed => 'ذخیره ناموفق';
 
   @override
   String savedTo(String path) {
-    return 'Saved to: $path';
+    return 'ذخیره شده در: $path';
   }
 
   @override
-  String get noOriginalPdfStored => 'No original PDF stored';
+  String get noOriginalPdfStored => 'PDF اصلی ذخیره نشده است';
 }
