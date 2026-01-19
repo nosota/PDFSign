@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/core/window/window_broadcast.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
-import 'package:pdfsign/presentation/providers/editor/global_dirty_state_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/size_unit_preference_provider.dart';
 import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
 import 'package:pdfsign/presentation/widgets/menus/app_menu_bar.dart';
@@ -22,25 +22,26 @@ class SettingsApp extends ConsumerStatefulWidget {
   ConsumerState<SettingsApp> createState() => _SettingsAppState();
 }
 
-class _SettingsAppState extends ConsumerState<SettingsApp> {
-  /// Notifier for Save All menu state.
-  final _saveAllEnabledNotifier = ValueNotifier<bool>(false);
+class _SettingsAppState extends ConsumerState<SettingsApp>
+    with WindowListener {
+  /// Whether this window currently has focus.
+  /// Only focused window renders PlatformMenuBar to avoid conflicts.
+  bool _isWindowFocused = true;
 
   @override
   void initState() {
     super.initState();
     _initWindowBroadcast();
+
+    // Register window listener for focus tracking
+    windowManager.addListener(this);
   }
 
   /// Initializes window broadcast for receiving preference change notifications.
   Future<void> _initWindowBroadcast() async {
     WindowBroadcast.setOnUnitChanged(_handleUnitChanged);
     WindowBroadcast.setOnLocaleChanged(_handleLocaleChanged);
-    WindowBroadcast.setOnDirtyStateChanged(_handleDirtyStateChanged);
     await WindowBroadcast.init();
-
-    // Request dirty states from all PDF windows
-    await WindowBroadcast.broadcastRequestDirtyStates();
   }
 
   /// Handles unit changed broadcast from another window.
@@ -53,25 +54,23 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
     ref.read(localePreferenceProvider.notifier).reload();
   }
 
-  /// Handles dirty state changed broadcast from a PDF window.
-  void _handleDirtyStateChanged(String windowId, bool isDirty) {
-    ref.read(globalDirtyStateProvider.notifier).updateWindowState(
-          windowId,
-          isDirty,
-        );
+  @override
+  void onWindowFocus() {
+    _isWindowFocused = true;
+    setState(() {});
   }
 
-  /// Triggers Save All across all PDF windows.
-  Future<void> _handleSaveAll() async {
-    await WindowBroadcast.broadcastSaveAll();
+  @override
+  void onWindowBlur() {
+    _isWindowFocused = false;
+    setState(() {});
   }
 
   @override
   void dispose() {
-    _saveAllEnabledNotifier.dispose();
+    windowManager.removeListener(this);
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
-    WindowBroadcast.setOnDirtyStateChanged(null);
     super.dispose();
   }
 
@@ -81,12 +80,6 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
     ref.watch(localePreferenceProvider);
     final locale = ref.watch(localePreferenceProvider.notifier).getLocale();
 
-    // Listen to global dirty state changes for Save All
-    ref.listen<Map<String, bool>>(globalDirtyStateProvider, (previous, current) {
-      final hasAnyDirty = current.values.any((dirty) => dirty);
-      _saveAllEnabledNotifier.value = hasAnyDirty;
-    });
-
     return MaterialApp(
       title: 'Settings',
       theme: createAppTheme(),
@@ -95,27 +88,21 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
       supportedLocales: allSupportedLocales,
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
+        // Only render PlatformMenuBar when this window has focus.
+        // This prevents multiple windows from fighting over the native menu.
+        if (!_isWindowFocused) {
+          return child!;
+        }
+
         final l10n = AppLocalizations.of(context)!;
-        // Use ValueListenableBuilder to reactively update Save All state.
-        // This bypasses MaterialApp.builder caching issues.
-        return ValueListenableBuilder<bool>(
-          valueListenable: _saveAllEnabledNotifier,
-          builder: (context, hasAnyDirtyWindow, _) {
-            return AppMenuBar(
-              localizations: l10n,
-              // Settings window: Save and Save As are always disabled
-              onSave: null,
-              onSaveAs: null,
-              onSaveAll: _handleSaveAll,
-              isSaveEnabled: false,
-              isSaveAsEnabled: false,
-              // Save All enabled when any PDF window has unsaved changes
-              isSaveAllEnabled: hasAnyDirtyWindow,
-              // No Share in Settings
-              includeShare: false,
-              child: child!,
-            );
-          },
+        return AppMenuBar(
+          localizations: l10n,
+          // Settings window: hide Save, Save As, Save All, and Share
+          includeSave: false,
+          includeSaveAs: false,
+          includeSaveAll: false,
+          includeShare: false,
+          child: child!,
         );
       },
       home: const _SettingsContent(),

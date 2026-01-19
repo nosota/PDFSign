@@ -23,9 +23,13 @@ class AppMenuBar extends ConsumerWidget {
     this.isSaveEnabled = false,
     this.isSaveAsEnabled = false,
     this.isSaveAllEnabled = false,
+    this.includeSave = true,
+    this.includeSaveAs = true,
+    this.includeSaveAll = true,
     this.includeShare = false,
     this.onShare,
     this.onFileOpened,
+    this.onCloseWindow,
     super.key,
   });
 
@@ -56,6 +60,15 @@ class AppMenuBar extends ConsumerWidget {
   /// Whether Save All menu item is enabled.
   final bool isSaveAllEnabled;
 
+  /// Whether to include Save menu item.
+  final bool includeSave;
+
+  /// Whether to include Save As menu item.
+  final bool includeSaveAs;
+
+  /// Whether to include Save All menu item.
+  final bool includeSaveAll;
+
   /// Whether to include the Share menu item.
   final bool includeShare;
 
@@ -64,6 +77,11 @@ class AppMenuBar extends ConsumerWidget {
 
   /// Callback when a file is successfully opened.
   final VoidCallback? onFileOpened;
+
+  /// Callback when Close Window is selected.
+  /// If provided, this is called instead of default close behavior.
+  /// Use this to implement save confirmation dialogs.
+  final VoidCallback? onCloseWindow;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -134,38 +152,51 @@ class AppMenuBar extends ConsumerWidget {
           _buildOpenRecentMenu(ref, recentFilesAsync, onFileOpened),
         ],
       ),
-      // Group 3: Save, Save As, Save All (always shown, disabled via bool flags)
-      PlatformMenuItemGroup(
-        members: [
-          PlatformMenuItem(
-            label: localizations.menuSave,
-            shortcut: const SingleActivator(
-              LogicalKeyboardKey.keyS,
-              meta: true,
-            ),
-            onSelected: isSaveEnabled ? onSave : null,
-          ),
-          PlatformMenuItem(
-            label: localizations.menuSaveAs,
-            shortcut: const SingleActivator(
-              LogicalKeyboardKey.keyS,
-              meta: true,
-              shift: true,
-            ),
-            onSelected: isSaveAsEnabled ? onSaveAs : null,
-          ),
-          PlatformMenuItem(
-            label: localizations.menuSaveAll,
-            shortcut: const SingleActivator(
-              LogicalKeyboardKey.keyS,
-              meta: true,
-              alt: true,
-            ),
-            onSelected: isSaveAllEnabled ? onSaveAll : null,
-          ),
-        ],
-      ),
     ];
+
+    // Group 3: Save, Save As, Save All (conditionally shown via include* flags)
+    final saveMembers = <PlatformMenuItem>[];
+    if (includeSave) {
+      saveMembers.add(
+        PlatformMenuItem(
+          label: localizations.menuSave,
+          shortcut: const SingleActivator(
+            LogicalKeyboardKey.keyS,
+            meta: true,
+          ),
+          onSelected: isSaveEnabled ? onSave : null,
+        ),
+      );
+    }
+    if (includeSaveAs) {
+      saveMembers.add(
+        PlatformMenuItem(
+          label: localizations.menuSaveAs,
+          shortcut: const SingleActivator(
+            LogicalKeyboardKey.keyS,
+            meta: true,
+            shift: true,
+          ),
+          onSelected: isSaveAsEnabled ? onSaveAs : null,
+        ),
+      );
+    }
+    if (includeSaveAll) {
+      saveMembers.add(
+        PlatformMenuItem(
+          label: localizations.menuSaveAll,
+          shortcut: const SingleActivator(
+            LogicalKeyboardKey.keyS,
+            meta: true,
+            alt: true,
+          ),
+          onSelected: isSaveAllEnabled ? onSaveAll : null,
+        ),
+      );
+    }
+    if (saveMembers.isNotEmpty) {
+      items.add(PlatformMenuItemGroup(members: saveMembers));
+    }
 
     // Group 4: Share (optional)
     if (includeShare) {
@@ -191,7 +222,7 @@ class AppMenuBar extends ConsumerWidget {
               LogicalKeyboardKey.keyW,
               meta: true,
             ),
-            onSelected: () => _handleCloseWindow(),
+            onSelected: onCloseWindow ?? () => _handleCloseWindow(),
           ),
         ],
       ),

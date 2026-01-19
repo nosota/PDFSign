@@ -20,14 +20,22 @@ class WelcomeApp extends ConsumerStatefulWidget {
   ConsumerState<WelcomeApp> createState() => _WelcomeAppState();
 }
 
-class _WelcomeAppState extends ConsumerState<WelcomeApp> {
+class _WelcomeAppState extends ConsumerState<WelcomeApp>
+    with WindowListener {
   /// Navigator key for showing dialogs from menu callbacks.
   final _navigatorKey = GlobalKey<NavigatorState>();
+
+  /// Whether this window currently has focus.
+  /// Only focused window renders PlatformMenuBar to avoid conflicts.
+  bool _isWindowFocused = true;
 
   @override
   void initState() {
     super.initState();
     _initWindowBroadcast();
+
+    // Register window listener for focus tracking
+    windowManager.addListener(this);
   }
 
   /// Initializes window broadcast for receiving preference change notifications.
@@ -42,7 +50,20 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp> {
   }
 
   @override
+  void onWindowFocus() {
+    _isWindowFocused = true;
+    setState(() {});
+  }
+
+  @override
+  void onWindowBlur() {
+    _isWindowFocused = false;
+    setState(() {});
+  }
+
+  @override
   void dispose() {
+    windowManager.removeListener(this);
     WindowBroadcast.setOnLocaleChanged(null);
     super.dispose();
   }
@@ -62,15 +83,20 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp> {
       supportedLocales: allSupportedLocales,
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
+        // Only render PlatformMenuBar when this window has focus.
+        // This prevents multiple windows from fighting over the native menu.
+        if (!_isWindowFocused) {
+          return child!;
+        }
+
         final l10n = AppLocalizations.of(context)!;
         return AppMenuBar(
           localizations: l10n,
           navigatorKey: _navigatorKey,
-          // Welcome screen: Save, Save As, Save All are disabled
-          isSaveEnabled: false,
-          isSaveAsEnabled: false,
-          isSaveAllEnabled: false,
-          // Share is also not included
+          // Welcome screen: hide Save, Save As, Save All, and Share
+          includeSave: false,
+          includeSaveAs: false,
+          includeSaveAll: false,
           includeShare: false,
           onFileOpened: () => windowManager.hide(),
           child: child!,

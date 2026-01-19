@@ -62,6 +62,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     const _MenuState(isDirty: false, hasAnyDirtyWindow: false),
   );
 
+  /// Whether this window currently has focus.
+  /// Only focused window renders PlatformMenuBar to avoid conflicts.
+  bool _isWindowFocused = true;
+
   @override
   void initState() {
     super.initState();
@@ -205,10 +209,19 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
   /// and ensures menu state reflects current dirty state.
   @override
   void onWindowFocus() {
-    // Force rebuild to update menu state with current dirty state
+    _isWindowFocused = true;
+    // Force rebuild to render PlatformMenuBar and update menu state
     setState(() {});
     // Reload size unit preference to sync with changes from Settings
     ref.read(sizeUnitPreferenceProvider.notifier).reload();
+  }
+
+  /// Called when window loses focus.
+  /// Stops rendering PlatformMenuBar so focused window can take control.
+  @override
+  void onWindowBlur() {
+    _isWindowFocused = false;
+    setState(() {});
   }
 
   /// Handles unit changed broadcast from another window.
@@ -457,6 +470,12 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
       supportedLocales: allSupportedLocales,
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
+        // Only render PlatformMenuBar when this window has focus.
+        // This prevents multiple windows from fighting over the native menu.
+        if (!_isWindowFocused) {
+          return child!;
+        }
+
         final l10n = AppLocalizations.of(context)!;
         // Use ValueListenableBuilder to reactively update menu state.
         // This bypasses MaterialApp.builder caching issues that prevent
@@ -478,6 +497,8 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
               isSaveAllEnabled: menuState.hasAnyDirtyWindow,
               includeShare: true,
               onShare: _handleShare,
+              // Use custom close to trigger save confirmation dialog
+              onCloseWindow: () => windowManager.close(),
               child: child!,
             );
           },
