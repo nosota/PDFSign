@@ -19,6 +19,12 @@ class WindowManagerService {
   /// Tracks IDs of currently open PDF viewer windows.
   final Set<String> _openWindows = {};
 
+  /// Tracks the ID of the currently open Settings window (singleton).
+  String? _settingsWindowId;
+
+  /// Flag to prevent race condition when creating Settings window.
+  bool _isCreatingSettingsWindow = false;
+
   /// Gets the set of currently open window IDs.
   Set<String> get openWindows => Set.unmodifiable(_openWindows);
 
@@ -102,10 +108,35 @@ class WindowManagerService {
     }
   }
 
-  /// Creates a new settings window.
+  /// Creates or focuses the Settings window (singleton pattern).
   ///
+  /// If Settings window is already open, focuses it and returns its ID.
+  /// Otherwise creates a new Settings window.
   /// Returns the window ID if successful, null otherwise.
   Future<String?> createSettingsWindow() async {
+    // Prevent race condition: if already creating, return null
+    if (_isCreatingSettingsWindow) {
+      if (kDebugMode) {
+        print('Settings window creation already in progress, ignoring');
+      }
+      return null;
+    }
+
+    // Check if Settings window already exists and is still alive
+    if (_settingsWindowId != null) {
+      final stillExists = await _isSettingsWindowAlive();
+      if (stillExists) {
+        // Window exists, bring it to front
+        await _bringSettingsWindowToFront();
+        return _settingsWindowId;
+      }
+      // Window was closed, reset state
+      _settingsWindowId = null;
+    }
+
+    // Set flag BEFORE any async operation to prevent race condition
+    _isCreatingSettingsWindow = true;
+
     try {
       final arguments = WindowArguments.settings();
 
@@ -115,22 +146,68 @@ class WindowManagerService {
       );
 
       final window = await WindowController.create(configuration);
-
-      final windowId = window.windowId;
+      _settingsWindowId = window.windowId;
 
       // Show the window
       await window.show();
 
       if (kDebugMode) {
-        print('Created settings window $windowId');
+        print('Created settings window $_settingsWindowId');
       }
 
-      return windowId;
+      return _settingsWindowId;
     } catch (e) {
       if (kDebugMode) {
         print('Failed to create settings window: $e');
       }
       return null;
+    } finally {
+      _isCreatingSettingsWindow = false;
+    }
+  }
+
+  /// Checks if the Settings window is still alive by querying all windows.
+  Future<bool> _isSettingsWindowAlive() async {
+    if (_settingsWindowId == null) return false;
+
+    try {
+      // Get all currently open windows
+      final allWindows = await WindowController.getAll();
+      final allWindowIds = allWindows.map((w) => w.windowId).toList();
+
+      final exists = allWindowIds.contains(_settingsWindowId);
+
+      if (kDebugMode) {
+        print(
+          'Settings window $_settingsWindowId exists: $exists '
+          '(all windows: $allWindowIds)',
+        );
+      }
+
+      return exists;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error checking if settings window exists: $e');
+      }
+      return false;
+    }
+  }
+
+  /// Brings the existing Settings window to front.
+  Future<void> _bringSettingsWindowToFront() async {
+    if (_settingsWindowId == null) return;
+
+    try {
+      final window = WindowController.fromWindowId(_settingsWindowId!);
+      await window.show();
+
+      if (kDebugMode) {
+        print('Brought settings window to front: $_settingsWindowId');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error bringing settings window to front: $e');
+      }
     }
   }
 
