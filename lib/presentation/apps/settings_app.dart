@@ -90,18 +90,32 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
   /// Handles window close request (system close button or Cmd+W).
   /// If this is the last visible window, terminates the application.
   void _handleWindowClose() async {
-    final service = WindowManagerService.instance;
+    // Get current window ID
+    final currentWindow = await WindowController.fromCurrentEngine();
+    final currentId = currentWindow.windowId;
 
-    // Check state BEFORE cleanup to make correct decision
-    final hasOpenPdfs = service.hasOpenWindows;
-    final isWelcomeVisible = !service.isWelcomeHidden;
+    // Get all windows from native to check if there are other visible windows.
+    // We can't rely on local state because each sub-window runs in
+    // its own Flutter engine with its own WindowManagerService instance.
+    final allWindows = await WindowController.getAll();
+
+    // Count windows: exclude this window and main window (ID "0", Welcome may be hidden)
+    // For Settings, we also need to check if Welcome is visible
+    final service = WindowManagerService.instance;
+    final isWelcomeHidden = service.isWelcomeHidden;
+
+    final otherVisibleWindows = allWindows.where((w) {
+      if (w.windowId == currentId) return false; // exclude self
+      if (w.windowId == '0' && isWelcomeHidden) return false; // exclude hidden Welcome
+      return true;
+    }).toList();
 
     if (kDebugMode) {
       print('>>> Settings _handleWindowClose:');
-      print('>>>   hasOpenPdfs: $hasOpenPdfs');
-      print('>>>   isWelcomeHidden: ${service.isWelcomeHidden}');
-      print('>>>   isWelcomeVisible: $isWelcomeVisible');
-      print('>>>   openWindows: ${service.openWindows}');
+      print('>>>   this windowId: $currentId');
+      print('>>>   all windows: ${allWindows.map((w) => w.windowId).toList()}');
+      print('>>>   isWelcomeHidden: $isWelcomeHidden');
+      print('>>>   other visible: ${otherVisibleWindows.map((w) => w.windowId).toList()}');
     }
 
     // Clean up resources
@@ -110,7 +124,7 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
     WindowBroadcast.setOnLocaleChanged(null);
     SubWindowChannel.dispose();
 
-    if (!hasOpenPdfs && !isWelcomeVisible) {
+    if (otherVisibleWindows.isEmpty) {
       // This is the last visible window - terminate the app
       if (kDebugMode) {
         print('>>> Settings: last visible window, calling exit(0)');

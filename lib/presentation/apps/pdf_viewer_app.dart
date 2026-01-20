@@ -219,26 +219,24 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   /// Unregisters from global tracker and closes the window.
   /// If this is the last visible window, terminates the application.
   Future<void> _destroyWindow() async {
-    final service = WindowManagerService.instance;
+    // Get all windows from native to check if there are other visible windows.
+    // We can't rely on local _openWindows because each sub-window runs in
+    // its own Flutter engine with its own WindowManagerService instance.
+    final allWindows = await WindowController.getAll();
 
-    // Unregister from PDF window tracker FIRST to get accurate count
-    if (_windowId != null) {
-      service.unregisterWindow(_windowId!);
-    }
-
-    // Check if there are other visible windows
-    // Welcome is hidden (it hides when first PDF opens), so it doesn't count
-    final hasOtherPdfs = service.hasOpenWindows;
-    final hasSettings = service.hasSettingsWindow;
+    // Count windows: exclude this window (we're closing it) and main window (ID "0", Welcome is hidden)
+    final otherVisibleWindows = allWindows.where((w) {
+      return w.windowId != _windowId && w.windowId != '0';
+    }).toList();
 
     if (kDebugMode) {
       print('>>> PDF _destroyWindow:');
-      print('>>>   hasOtherPdfs: $hasOtherPdfs');
-      print('>>>   hasSettings: $hasSettings');
-      print('>>>   openWindows: ${service.openWindows}');
+      print('>>>   this windowId: $_windowId');
+      print('>>>   all windows: ${allWindows.map((w) => w.windowId).toList()}');
+      print('>>>   other visible: ${otherVisibleWindows.map((w) => w.windowId).toList()}');
     }
 
-    if (!hasOtherPdfs && !hasSettings) {
+    if (otherVisibleWindows.isEmpty) {
       // This is the last visible window - terminate the app
       if (kDebugMode) {
         print('>>> PDF: last visible window, calling exit(0)');
