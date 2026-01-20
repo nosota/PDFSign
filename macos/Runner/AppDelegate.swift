@@ -44,7 +44,9 @@ class AppDelegate: FlutterAppDelegate {
       )
 
       toolbarChannel.setMethodCallHandler { [weak controller] call, result in
+        NSLog("ToolbarChannel: received method call '%@'", call.method)
         guard let controller = controller else {
+          NSLog("ToolbarChannel: controller is nil!")
           result(nil)
           return
         }
@@ -52,8 +54,11 @@ class AppDelegate: FlutterAppDelegate {
         switch call.method {
         case "setupToolbar":
           // Setup toolbar when Flutter explicitly requests it
+          NSLog("ToolbarChannel: setupToolbar called")
           DispatchQueue.main.async {
+            NSLog("ToolbarChannel: in main queue, checking window...")
             if let window = controller.view.window {
+              NSLog("ToolbarChannel: window found, creating toolbar helper")
               let toolbarHelper = PDFSignToolbarHelper(
                 window: window,
                 binaryMessenger: controller.engine.binaryMessenger
@@ -67,6 +72,29 @@ class AppDelegate: FlutterAppDelegate {
                 toolbarHelper,
                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC
               )
+              NSLog("ToolbarChannel: toolbar setup complete")
+            } else {
+              NSLog("ToolbarChannel: window is NIL! Retrying in 100ms...")
+              // Retry after a short delay
+              DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                if let window = controller.view.window {
+                  NSLog("ToolbarChannel: retry succeeded, window found")
+                  let toolbarHelper = PDFSignToolbarHelper(
+                    window: window,
+                    binaryMessenger: controller.engine.binaryMessenger
+                  )
+                  toolbarHelper.setupToolbar()
+                  objc_setAssociatedObject(
+                    window,
+                    "toolbarHelper",
+                    toolbarHelper,
+                    .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+                  )
+                  NSLog("ToolbarChannel: retry toolbar setup complete")
+                } else {
+                  NSLog("ToolbarChannel: retry failed, window still nil!")
+                }
+              }
             }
           }
           result(nil)
@@ -260,7 +288,7 @@ class SubWindowDelegate: NSObject, NSWindowDelegate {
 }
 
 /// Helper class to manage NSToolbar for PDF viewer windows.
-class PDFSignToolbarHelper: NSObject, NSToolbarDelegate {
+class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation {
   private weak var window: NSWindow?
   private var methodChannel: FlutterMethodChannel?
   private let shareItemIdentifier = NSToolbarItem.Identifier("ShareItem")
@@ -275,12 +303,18 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate {
   }
 
   func setupToolbar() {
-    guard let window = window else { return }
+    guard let window = window else {
+      NSLog("PDFSignToolbarHelper: window is nil")
+      return
+    }
 
+    NSLog("PDFSignToolbarHelper: setting up toolbar for window %@", window.title)
     let toolbar = NSToolbar(identifier: "PDFSignToolbar")
     toolbar.delegate = self
     toolbar.displayMode = .iconOnly
+    toolbar.allowsUserCustomization = false
     window.toolbar = toolbar
+    NSLog("PDFSignToolbarHelper: toolbar set up successfully")
   }
 
   // MARK: - NSToolbarDelegate
@@ -298,6 +332,7 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate {
     itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
     willBeInsertedIntoToolbar flag: Bool
   ) -> NSToolbarItem? {
+    NSLog("PDFSignToolbarHelper: toolbar item requested: %@", itemIdentifier.rawValue)
     if itemIdentifier == shareItemIdentifier {
       let item = NSToolbarItem(itemIdentifier: itemIdentifier)
       item.label = "Share"
@@ -316,6 +351,9 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate {
 
       item.action = #selector(shareButtonClicked)
       item.target = self
+      item.isEnabled = true
+      item.autovalidates = false  // Disable auto-validation
+      NSLog("PDFSignToolbarHelper: Share item created, isEnabled=%d", item.isEnabled ? 1 : 0)
       return item
     }
     return nil
@@ -323,6 +361,14 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate {
 
   @objc func shareButtonClicked() {
     methodChannel?.invokeMethod("onSharePressed", arguments: nil)
+  }
+
+  // MARK: - NSToolbarItemValidation
+
+  /// Always enable the Share toolbar item.
+  @objc func validateToolbarItem(_ item: NSToolbarItem) -> Bool {
+    NSLog("PDFSignToolbarHelper: validateToolbarItem called for %@, returning true", item.itemIdentifier.rawValue)
+    return true
   }
 }
 

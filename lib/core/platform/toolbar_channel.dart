@@ -32,8 +32,14 @@ class ToolbarChannel {
   /// Should be called only for PDF viewer windows that need the toolbar.
   /// Settings and other windows should NOT call this method.
   static Future<void> setupToolbar() async {
+    if (kDebugMode) {
+      print('ToolbarChannel: calling setupToolbar...');
+    }
     try {
       await _channel.invokeMethod('setupToolbar');
+      if (kDebugMode) {
+        print('ToolbarChannel: setupToolbar call completed');
+      }
     } catch (e) {
       if (kDebugMode) {
         print('ToolbarChannel: Failed to setup toolbar: $e');

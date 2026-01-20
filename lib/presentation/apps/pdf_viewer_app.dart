@@ -74,8 +74,11 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     super.initState();
     // Initialize toolbar channel for native toolbar
     ToolbarChannel.init();
-    ToolbarChannel.setupToolbar(); // Request native toolbar with Share button
     ToolbarChannel.setOnSharePressed(_handleShare);
+    // Delay toolbar setup to ensure native window is fully ready
+    Future.delayed(const Duration(milliseconds: 200), () {
+      ToolbarChannel.setupToolbar(); // Request native toolbar with Share button
+    });
 
     // Initialize window channel for close interception and focus tracking
     _initWindowChannel();
