@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:pdfsign/core/platform/settings_singleton_channel.dart';
 import 'package:pdfsign/core/platform/sub_window_channel.dart';
 import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/core/window/window_broadcast.dart';
@@ -117,6 +118,9 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
       print('>>>   isWelcomeHidden: $isWelcomeHidden');
       print('>>>   other visible: ${otherVisibleWindows.map((w) => w.windowId).toList()}');
     }
+
+    // Clear native-side Settings window ID (source of truth for singleton)
+    await SettingsSingletonChannel.clearSettingsWindowId();
 
     // Clean up resources
     service.clearSettingsWindowId();

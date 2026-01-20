@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:window_manager/window_manager.dart';
 
+import '../platform/settings_singleton_channel.dart';
 import 'window_arguments.dart';
 import 'window_broadcast.dart';
 
@@ -20,7 +21,9 @@ import 'window_broadcast.dart';
 ///
 /// Handles creation of new PDF viewer windows and window lifecycle.
 class WindowManagerService {
-  WindowManagerService._();
+  WindowManagerService._() {
+    _initSettingsBroadcastListeners();
+  }
 
   static final WindowManagerService instance = WindowManagerService._();
 
@@ -28,10 +31,27 @@ class WindowManagerService {
   final Set<String> _openWindows = {};
 
   /// Tracks the ID of the currently open Settings window (singleton).
+  /// Updated via broadcast when Settings opens/closes from any window.
   String? _settingsWindowId;
 
   /// Flag to prevent race condition when creating Settings window.
   bool _isCreatingSettingsWindow = false;
+
+  /// Initialize broadcast listeners for Settings tracking across engines.
+  void _initSettingsBroadcastListeners() {
+    WindowBroadcast.setOnSettingsOpened((windowId) {
+      _settingsWindowId = windowId;
+      if (kDebugMode) {
+        print('Received settingsOpened broadcast: $windowId');
+      }
+    });
+    WindowBroadcast.setOnSettingsClosed(() {
+      _settingsWindowId = null;
+      if (kDebugMode) {
+        print('Received settingsClosed broadcast');
+      }
+    });
+  }
 
   /// Tracks whether Welcome window is hidden.
   /// Once hidden (by opening PDF or closing Welcome while other windows exist),
@@ -136,33 +156,71 @@ class WindowManagerService {
 
   /// Creates or focuses the Settings window (singleton pattern).
   ///
+  /// Uses native-side storage to enforce singleton across all Flutter engines.
   /// If Settings window is already open, focuses it and returns its ID.
   /// Otherwise creates a new Settings window.
   /// Returns the window ID if successful, null otherwise.
   Future<String?> createSettingsWindow() async {
-    // Prevent race condition: if already creating, return null
+    if (kDebugMode) {
+      print('>>> createSettingsWindow called, _isCreating=$_isCreatingSettingsWindow');
+    }
+
+    // Prevent race condition within this engine
     if (_isCreatingSettingsWindow) {
       if (kDebugMode) {
-        print('Settings window creation already in progress, ignoring');
+        print('>>> Settings window creation already in progress, IGNORING');
       }
       return null;
     }
 
-    // Set flag IMMEDIATELY before ANY async operation to prevent race condition
     _isCreatingSettingsWindow = true;
+    if (kDebugMode) {
+      print('>>> _isCreatingSettingsWindow set to TRUE');
+      try {
+        final currentWindow = await WindowController.fromCurrentEngine();
+        print('>>> Current engine windowId: ${currentWindow.windowId}');
+      } catch (_) {}
+    }
 
     try {
-      // Check if Settings window already exists and is still alive
-      if (_settingsWindowId != null) {
-        final stillExists = await _isSettingsWindowAlive();
-        if (stillExists) {
-          // Window exists, bring it to front
-          await _bringSettingsWindowToFront();
-          return _settingsWindowId;
+      // Check native-side storage for existing Settings window
+      // This is the source of truth shared across all Flutter engines
+      final existingId = await SettingsSingletonChannel.getSettingsWindowId();
+
+      if (existingId != null) {
+        if (kDebugMode) {
+          print('>>> Native reports Settings exists: $existingId');
         }
-        // Window was closed, reset state
-        _settingsWindowId = null;
+
+        // Verify the window still exists by checking native window list
+        final allWindows = await WindowController.getAll();
+        final windowExists = allWindows.any((w) => w.windowId == existingId);
+
+        if (windowExists) {
+          // Focus the existing Settings window using Flutter's WindowController
+          try {
+            final window = WindowController.fromWindowId(existingId);
+            await window.show();
+            if (kDebugMode) {
+              print('>>> Focused existing Settings window via WindowController');
+            }
+            _settingsWindowId = existingId;
+            return existingId;
+          } catch (e) {
+            if (kDebugMode) {
+              print('>>> Failed to focus Settings: $e');
+            }
+          }
+        }
+
+        // Window no longer exists, clear native ID
+        if (kDebugMode) {
+          print('>>> Settings window $existingId no longer exists, clearing');
+        }
+        await SettingsSingletonChannel.clearSettingsWindowId();
       }
+
+      // Create new Settings window
       final arguments = WindowArguments.settings();
 
       final configuration = WindowConfiguration(
@@ -172,6 +230,9 @@ class WindowManagerService {
 
       final window = await WindowController.create(configuration);
       _settingsWindowId = window.windowId;
+
+      // Register with native-side storage
+      await SettingsSingletonChannel.setSettingsWindowId(_settingsWindowId!);
 
       // Show the window
       await window.show();

@@ -8,6 +8,9 @@ typedef DirtyStateCallback = void Function(String windowId, bool isDirty);
 /// Callback type for responding to dirty state requests.
 typedef DirtyStateResponseCallback = void Function();
 
+/// Callback type for Settings window opened event.
+typedef SettingsOpenedCallback = void Function(String windowId);
+
 /// Service for broadcasting messages between windows.
 ///
 /// Uses desktop_multi_window's native inter-window communication
@@ -23,6 +26,8 @@ class WindowBroadcast {
   static VoidCallback? _onHideWelcome;
   static DirtyStateCallback? _onDirtyStateChanged;
   static DirtyStateResponseCallback? _onRequestDirtyStates;
+  static SettingsOpenedCallback? _onSettingsOpened;
+  static VoidCallback? _onSettingsClosed;
   static bool _initialized = false;
 
   /// Sets callback for when size unit changes in another window.
@@ -76,6 +81,18 @@ class WindowBroadcast {
   /// PDF windows should respond by broadcasting their current dirty state.
   static void setOnRequestDirtyStates(DirtyStateResponseCallback? callback) {
     _onRequestDirtyStates = callback;
+  }
+
+  /// Sets callback for when Settings window opens.
+  ///
+  /// The callback receives the Settings window ID.
+  static void setOnSettingsOpened(SettingsOpenedCallback? callback) {
+    _onSettingsOpened = callback;
+  }
+
+  /// Sets callback for when Settings window closes.
+  static void setOnSettingsClosed(VoidCallback? callback) {
+    _onSettingsClosed = callback;
   }
 
   /// Initializes the broadcast listener for this window.
@@ -152,6 +169,20 @@ class WindowBroadcast {
   /// Called when a new window opens and needs to know the global dirty state.
   static Future<void> broadcastRequestDirtyStates() async {
     await _broadcast('requestDirtyStates');
+  }
+
+  /// Broadcasts that Settings window has opened with its window ID.
+  ///
+  /// Called when Settings window is created to notify all other windows.
+  static Future<void> broadcastSettingsOpened(String windowId) async {
+    await _broadcastWithData('settingsOpened', {'windowId': windowId});
+  }
+
+  /// Broadcasts that Settings window has closed.
+  ///
+  /// Called when Settings window closes to notify all other windows.
+  static Future<void> broadcastSettingsClosed() async {
+    await _broadcast('settingsClosed');
   }
 
   /// Internal method to broadcast a message to all other windows.
@@ -281,6 +312,16 @@ class WindowBroadcast {
         return null;
       case 'requestDirtyStates':
         _onRequestDirtyStates?.call();
+        return null;
+      case 'settingsOpened':
+        final args = call.arguments as Map<dynamic, dynamic>?;
+        final windowId = args?['windowId'] as String?;
+        if (windowId != null) {
+          _onSettingsOpened?.call(windowId);
+        }
+        return null;
+      case 'settingsClosed':
+        _onSettingsClosed?.call();
         return null;
       default:
         return null;

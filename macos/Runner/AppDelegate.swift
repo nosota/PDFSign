@@ -4,6 +4,10 @@ import desktop_multi_window
 
 @main
 class AppDelegate: FlutterAppDelegate {
+  /// Global Settings window ID, shared across all Flutter engines.
+  /// Used to enforce singleton pattern for Settings window.
+  static var settingsWindowId: String?
+
   override func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
     // Don't auto-terminate when last window closes
     // Flutter/Welcome window handles app lifecycle with exit(0)
@@ -15,9 +19,16 @@ class AppDelegate: FlutterAppDelegate {
   }
 
   override func applicationDidFinishLaunching(_ notification: Notification) {
+    // Setup Settings singleton channel for main window
+    if let mainController = mainFlutterWindow?.contentViewController as? FlutterViewController {
+      setupSettingsSingletonChannel(binaryMessenger: mainController.engine.binaryMessenger)
+    }
     // Register plugin callback for new windows created by desktop_multi_window
     FlutterMultiWindowPlugin.setOnWindowCreatedCallback { controller in
       RegisterGeneratedPlugins(registry: controller)
+
+      // Setup Settings singleton channel for sub-windows
+      setupSettingsSingletonChannel(binaryMessenger: controller.engine.binaryMessenger)
 
       // Setup window lifecycle channel for sub-windows
       // This handles window close events and allows Flutter to control closing
@@ -147,6 +158,59 @@ class AppDelegate: FlutterAppDelegate {
           )
         }
       }
+    }
+  }
+}
+
+/// Sets up the Settings singleton channel for a Flutter engine.
+/// This channel allows any Flutter engine to check/set the global Settings window ID.
+func setupSettingsSingletonChannel(binaryMessenger: FlutterBinaryMessenger) {
+  let channel = FlutterMethodChannel(
+    name: "com.pdfsign/settings_singleton",
+    binaryMessenger: binaryMessenger
+  )
+
+  channel.setMethodCallHandler { call, result in
+    switch call.method {
+    case "getSettingsWindowId":
+      // Return the current Settings window ID (or nil if none)
+      result(AppDelegate.settingsWindowId)
+
+    case "setSettingsWindowId":
+      // Store the Settings window ID
+      let windowId = call.arguments as? String
+      AppDelegate.settingsWindowId = windowId
+      result(nil)
+
+    case "clearSettingsWindowId":
+      // Clear the Settings window ID
+      AppDelegate.settingsWindowId = nil
+      result(nil)
+
+    case "focusSettingsWindow":
+      // Try to bring the Settings window to front
+      guard AppDelegate.settingsWindowId != nil else {
+        result(false)
+        return
+      }
+
+      // Find the window with title "Settings" and bring it to front
+      for window in NSApplication.shared.windows {
+        if window.contentViewController is FlutterViewController {
+          if window.title == "Settings" {
+            window.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            result(true)
+            return
+          }
+        }
+      }
+      // If we have an ID but couldn't find the window, it was closed
+      AppDelegate.settingsWindowId = nil
+      result(false)
+
+    default:
+      result(FlutterMethodNotImplemented)
     }
   }
 }
