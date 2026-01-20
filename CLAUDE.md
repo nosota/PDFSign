@@ -1,4 +1,4 @@
-# # CLAUDE.md — Authoritative Rules for Claude Code
+# CLAUDE.md — Authoritative Rules for Claude Code
 
 This file defines **enforceable rules and invariants** for the Flutter PDF signature/stamp project. It MUST contain policy only. Architecture diagrams, usage examples, workflows, and explanations MUST live in `docs/`.
 

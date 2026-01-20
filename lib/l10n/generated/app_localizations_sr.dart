@@ -93,6 +93,30 @@ class AppLocalizationsSr extends AppLocalizations {
   String get menuCloseWindow => 'Затвори прозор';
 
   @override
+  String get menuCloseAll => 'Затвори све';
+
+  @override
+  String get closeAllDialogTitle => 'Сачувај измене?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Желите ли да сачувате измене у $count документа пре затварања?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Желите ли да сачувате измене у 1 документу пре затварања?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Сачувај све';
+
+  @override
+  String get closeAllDialogDontSave => 'Не сачувај';
+
+  @override
+  String get closeAllDialogCancel => 'Откажи';
+
+  @override
   String get saveChangesTitle => 'Сачувај измене?';
 
   @override

@@ -1,3 +1,8 @@
+# TODO.md — My personal TODO list
+
+Claude Code MUST NOT use the file TODO.md! It is not a list of features to implement. It is not a software requirements!
+Claude Code MUST ignore this file!
+
 * Z порядок: наверх, вниз, на самый верх и в самый низ.
 * Заменить белый цвет на прозрачность (помощь пользователю, чтобы сделать фон прозрачным)
 * Добавить Undo / Redo + соотв кнопки на заголовке окна 
@@ -9,6 +14,8 @@
 * Close All
 * Ctrl + Q зарквает окна и не спрашивает сохранить или нет изменения, должен вначале вызывать Close All
 * Open не добавялет файлы в историю открытых файлов на Welcoome Screen и в меню File -> Open Recent.
+* Вокруг документа серый фон, но если я зумирую документ, что он становится маленьким, то сверху и снизу за пределами серого фона появляется белый (светлый) фон. Нужно серый фон сделать бесконечным во все стороны высоты и ширины. 
+* Нельзя было открыть два одних и тех же файла одновременно.
 
 Here is your Essential Studio® suite with a 7-day license key. This key can be used until your community license request is approved. 
 We will send your long-term license key then.

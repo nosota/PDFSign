@@ -93,6 +93,30 @@ class AppLocalizationsKm extends AppLocalizations {
   String get menuCloseWindow => 'But baong aas';
 
   @override
+  String get menuCloseAll => 'បិទទាំងអស់';
+
+  @override
+  String get closeAllDialogTitle => 'រក្សាទុកការផ្លាស់ប្តូរ?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'តើអ្នកចង់រក្សាទុកការផ្លាស់ប្តូរក្នុងឯកសារ $count មុនពេលបិទទេ?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'តើអ្នកចង់រក្សាទុកការផ្លាស់ប្តូរក្នុងឯកសារ 1 មុនពេលបិទទេ?';
+
+  @override
+  String get closeAllDialogSaveAll => 'រក្សាទុកទាំងអស់';
+
+  @override
+  String get closeAllDialogDontSave => 'កុំរក្សាទុក';
+
+  @override
+  String get closeAllDialogCancel => 'បោះបង់';
+
+  @override
   String get saveChangesTitle => 'Tuktuk kar phlash phder?';
 
   @override

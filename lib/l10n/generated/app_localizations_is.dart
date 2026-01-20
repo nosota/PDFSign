@@ -93,6 +93,30 @@ class AppLocalizationsIs extends AppLocalizations {
   String get menuCloseWindow => 'Loka glugga';
 
   @override
+  String get menuCloseAll => 'Loka öllu';
+
+  @override
+  String get closeAllDialogTitle => 'Vista breytingar?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Viltu vista breytingar í $count skjölum áður en lokað er?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Viltu vista breytingar í 1 skjali áður en lokað er?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Vista allt';
+
+  @override
+  String get closeAllDialogDontSave => 'Ekki vista';
+
+  @override
+  String get closeAllDialogCancel => 'Hætta við';
+
+  @override
   String get saveChangesTitle => 'Vista breytingar?';
 
   @override

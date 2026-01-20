@@ -30,6 +30,9 @@ class AppMenuBar extends ConsumerWidget {
     this.onShare,
     this.onFileOpened,
     this.onCloseWindow,
+    this.includeCloseAll = false,
+    this.onCloseAll,
+    this.isCloseAllEnabled = false,
     super.key,
   });
 
@@ -82,6 +85,15 @@ class AppMenuBar extends ConsumerWidget {
   /// If provided, this is called instead of default close behavior.
   /// Use this to implement save confirmation dialogs.
   final VoidCallback? onCloseWindow;
+
+  /// Whether to include Close All menu item.
+  final bool includeCloseAll;
+
+  /// Callback when Close All is selected.
+  final VoidCallback? onCloseAll;
+
+  /// Whether Close All menu item is enabled.
+  final bool isCloseAllEnabled;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -212,20 +224,36 @@ class AppMenuBar extends ConsumerWidget {
       );
     }
 
-    // Group 5: Close Window
-    items.add(
-      PlatformMenuItemGroup(
-        members: [
-          PlatformMenuItem(
-            label: localizations.menuCloseWindow,
-            shortcut: const SingleActivator(
-              LogicalKeyboardKey.keyW,
-              meta: true,
-            ),
-            onSelected: onCloseWindow ?? () => _handleCloseWindow(),
+    // Group 5: Close All (optional) and Close Window
+    final closeItems = <PlatformMenuItem>[];
+
+    if (includeCloseAll) {
+      closeItems.add(
+        PlatformMenuItem(
+          label: localizations.menuCloseAll,
+          shortcut: const SingleActivator(
+            LogicalKeyboardKey.keyW,
+            meta: true,
+            alt: true,
           ),
-        ],
+          onSelected: isCloseAllEnabled ? onCloseAll : null,
+        ),
+      );
+    }
+
+    closeItems.add(
+      PlatformMenuItem(
+        label: localizations.menuCloseWindow,
+        shortcut: const SingleActivator(
+          LogicalKeyboardKey.keyW,
+          meta: true,
+        ),
+        onSelected: onCloseWindow ?? () => _handleCloseWindow(),
       ),
+    );
+
+    items.add(
+      PlatformMenuItemGroup(members: closeItems),
     );
 
     return items;

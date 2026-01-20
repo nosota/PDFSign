@@ -93,6 +93,30 @@ class AppLocalizationsAr extends AppLocalizations {
   String get menuCloseWindow => 'إغلاق النافذة';
 
   @override
+  String get menuCloseAll => 'إغلاق الكل';
+
+  @override
+  String get closeAllDialogTitle => 'حفظ التغييرات؟';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'هل تريد حفظ التغييرات في $count مستند قبل الإغلاق؟';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'هل تريد حفظ التغييرات في مستند واحد قبل الإغلاق؟';
+
+  @override
+  String get closeAllDialogSaveAll => 'حفظ الكل';
+
+  @override
+  String get closeAllDialogDontSave => 'عدم الحفظ';
+
+  @override
+  String get closeAllDialogCancel => 'إلغاء';
+
+  @override
   String get saveChangesTitle => 'حفظ التغييرات؟';
 
   @override

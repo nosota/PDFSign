@@ -111,6 +111,30 @@ class AppLocalizationsNb extends AppLocalizations {
   String get menuCloseWindow => 'Lukk vindu';
 
   @override
+  String get menuCloseAll => 'Lukk alle';
+
+  @override
+  String get closeAllDialogTitle => 'Lagre endringer?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Vil du lagre endringene i $count dokumenter før lukking?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Vil du lagre endringene i 1 dokument før lukking?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Lagre alle';
+
+  @override
+  String get closeAllDialogDontSave => 'Ikke lagre';
+
+  @override
+  String get closeAllDialogCancel => 'Avbryt';
+
+  @override
   String get saveChangesTitle => 'Lagre endringer?';
 
   @override

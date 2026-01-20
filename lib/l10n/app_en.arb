@@ -119,6 +119,39 @@
   "@menuCloseWindow": {
     "description": "Close Window menu item"
   },
+  "menuCloseAll": "Close All",
+  "@menuCloseAll": {
+    "description": "Close All menu item - closes all open PDF windows"
+  },
+  "closeAllDialogTitle": "Save Changes?",
+  "@closeAllDialogTitle": {
+    "description": "Title for close all dialog"
+  },
+  "closeAllDialogMessage": "Do you want to save changes to {count} documents before closing?",
+  "@closeAllDialogMessage": {
+    "description": "Message for close all dialog with multiple documents",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closeAllDialogMessageOne": "Do you want to save changes to 1 document before closing?",
+  "@closeAllDialogMessageOne": {
+    "description": "Message for close all dialog with single document"
+  },
+  "closeAllDialogSaveAll": "Save All",
+  "@closeAllDialogSaveAll": {
+    "description": "Save All button in close all dialog"
+  },
+  "closeAllDialogDontSave": "Don't Save",
+  "@closeAllDialogDontSave": {
+    "description": "Don't Save button in close all dialog"
+  },
+  "closeAllDialogCancel": "Cancel",
+  "@closeAllDialogCancel": {
+    "description": "Cancel button in close all dialog"
+  },
   "saveChangesTitle": "Save Changes?",
   "@saveChangesTitle": {
     "description": "Title for save changes dialog"

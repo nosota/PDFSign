@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/core/window/window_broadcast.dart';
+import 'package:pdfsign/core/window/window_manager_service.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
+import 'package:pdfsign/presentation/providers/editor/global_dirty_state_provider.dart';
 import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
 import 'package:pdfsign/presentation/screens/welcome/welcome_screen.dart';
+import 'package:pdfsign/presentation/widgets/dialogs/close_all_dialog.dart';
 import 'package:pdfsign/presentation/widgets/menus/app_menu_bar.dart';
 
 /// Root app widget for the welcome window (main window).
@@ -34,14 +39,25 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
     super.initState();
     _initWindowBroadcast();
 
-    // Register window listener for focus tracking
+    // Register window listener for focus tracking and close interception
     windowManager.addListener(this);
+    windowManager.setPreventClose(true);
   }
 
   /// Initializes window broadcast for receiving preference change notifications.
   Future<void> _initWindowBroadcast() async {
     WindowBroadcast.setOnLocaleChanged(_handleLocaleChanged);
+    WindowBroadcast.setOnShowWelcome(_handleShowWelcome);
     await WindowBroadcast.init();
+  }
+
+  /// Handles showWelcome broadcast from a sub-window that's about to close.
+  ///
+  /// Shows this window to ensure there's always a visible window
+  /// and macOS doesn't terminate the app.
+  void _handleShowWelcome() {
+    windowManager.show();
+    windowManager.focus();
   }
 
   /// Handles locale changed broadcast from another window.
@@ -61,10 +77,77 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
     setState(() {});
   }
 
+  /// Handles window close.
+  ///
+  /// If there are other windows (PDF or Settings), hides Welcome Screen.
+  /// If Welcome is the only window, quits the application.
+  @override
+  void onWindowClose() async {
+    final hasOtherWindows = _hasOtherOpenWindows();
+
+    if (hasOtherWindows) {
+      // Other windows exist - just hide Welcome
+      await windowManager.hide();
+    } else {
+      // Welcome is the only window - quit the app
+      exit(0);
+    }
+  }
+
+  /// Checks if there are any other open windows (PDF or Settings).
+  bool _hasOtherOpenWindows() {
+    final service = WindowManagerService.instance;
+    // Check for PDF windows
+    if (service.hasOpenWindows) return true;
+    // Check for Settings window (need to expose this)
+    if (service.hasSettingsWindow) return true;
+    return false;
+  }
+
+  /// Handles Close All menu action.
+  ///
+  /// Shows CloseAllDialog if any PDF windows have unsaved changes,
+  /// then broadcasts close to all PDF windows.
+  Future<void> _handleCloseAll() async {
+    final navigatorContext = _navigatorKey.currentContext;
+    if (navigatorContext == null) return;
+
+    final globalState = ref.read(globalDirtyStateProvider);
+    final dirtyCount = globalState.values.where((d) => d).length;
+
+    if (dirtyCount == 0) {
+      // No dirty windows, close all without dialog
+      await WindowBroadcast.broadcastCloseAll();
+      return;
+    }
+
+    // Show close all dialog
+    final result = await CloseAllDialog.show(navigatorContext, dirtyCount);
+
+    switch (result) {
+      case CloseAllResult.saveAll:
+        // Save all dirty windows first, then close all
+        await WindowBroadcast.broadcastSaveAll();
+        // Small delay to ensure saves complete
+        await Future.delayed(const Duration(milliseconds: 100));
+        await WindowBroadcast.broadcastCloseAll();
+        break;
+      case CloseAllResult.discard:
+        // Close all without saving
+        await WindowBroadcast.broadcastCloseAll();
+        break;
+      case CloseAllResult.cancel:
+      case null:
+        // User cancelled, do nothing
+        break;
+    }
+  }
+
   @override
   void dispose() {
     windowManager.removeListener(this);
     WindowBroadcast.setOnLocaleChanged(null);
+    WindowBroadcast.setOnShowWelcome(null);
     super.dispose();
   }
 
@@ -90,6 +173,7 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
         }
 
         final l10n = AppLocalizations.of(context)!;
+        final hasOpenPdfs = WindowManagerService.instance.hasOpenWindows;
         return AppMenuBar(
           localizations: l10n,
           navigatorKey: _navigatorKey,
@@ -99,6 +183,12 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
           includeSaveAll: false,
           includeShare: false,
           onFileOpened: () => windowManager.hide(),
+          // Close All - enabled only if there are PDF windows
+          includeCloseAll: true,
+          onCloseAll: _handleCloseAll,
+          isCloseAllEnabled: hasOpenPdfs,
+          // Use windowManager.close() which triggers onWindowClose() to hide
+          onCloseWindow: () => windowManager.close(),
           child: child!,
         );
       },

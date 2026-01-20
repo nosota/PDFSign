@@ -93,6 +93,30 @@ class AppLocalizationsMs extends AppLocalizations {
   String get menuCloseWindow => 'Tutup tetingkap';
 
   @override
+  String get menuCloseAll => 'Tutup semua';
+
+  @override
+  String get closeAllDialogTitle => 'Simpan perubahan?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Adakah anda ingin menyimpan perubahan dalam $count dokumen sebelum menutup?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Adakah anda ingin menyimpan perubahan dalam 1 dokumen sebelum menutup?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Simpan semua';
+
+  @override
+  String get closeAllDialogDontSave => 'Jangan simpan';
+
+  @override
+  String get closeAllDialogCancel => 'Batal';
+
+  @override
   String get saveChangesTitle => 'Simpan perubahan?';
 
   @override

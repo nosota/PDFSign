@@ -93,6 +93,30 @@ class AppLocalizationsRo extends AppLocalizations {
   String get menuCloseWindow => 'Inchide fereastra';
 
   @override
+  String get menuCloseAll => 'Închide tot';
+
+  @override
+  String get closeAllDialogTitle => 'Salvați modificările?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Doriți să salvați modificările din $count documente înainte de închidere?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Doriți să salvați modificările din 1 document înainte de închidere?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Salvează tot';
+
+  @override
+  String get closeAllDialogDontSave => 'Nu salva';
+
+  @override
+  String get closeAllDialogCancel => 'Anulare';
+
+  @override
   String get saveChangesTitle => 'Salvati modificarile?';
 
   @override

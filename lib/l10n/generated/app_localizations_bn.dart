@@ -93,6 +93,30 @@ class AppLocalizationsBn extends AppLocalizations {
   String get menuCloseWindow => 'Janala bondho korun';
 
   @override
+  String get menuCloseAll => 'সব বন্ধ করুন';
+
+  @override
+  String get closeAllDialogTitle => 'পরিবর্তন সংরক্ষণ করবেন?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'বন্ধ করার আগে $countটি নথিতে পরিবর্তন সংরক্ষণ করতে চান?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'বন্ধ করার আগে 1টি নথিতে পরিবর্তন সংরক্ষণ করতে চান?';
+
+  @override
+  String get closeAllDialogSaveAll => 'সব সংরক্ষণ করুন';
+
+  @override
+  String get closeAllDialogDontSave => 'সংরক্ষণ করবেন না';
+
+  @override
+  String get closeAllDialogCancel => 'বাতিল';
+
+  @override
   String get saveChangesTitle => 'Paribartan sanchhoy korben?';
 
   @override

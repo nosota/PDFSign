@@ -93,6 +93,30 @@ class AppLocalizationsUz extends AppLocalizations {
   String get menuCloseWindow => 'Oynani yopish';
 
   @override
+  String get menuCloseAll => 'Barchasini yopish';
+
+  @override
+  String get closeAllDialogTitle => 'O\'zgarishlarni saqlash?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Yopishdan oldin $count hujjatdagi o\'zgarishlarni saqlamoqchimisiz?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Yopishdan oldin 1 hujjatdagi o\'zgarishlarni saqlamoqchimisiz?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Barchasini saqlash';
+
+  @override
+  String get closeAllDialogDontSave => 'Saqlamaslik';
+
+  @override
+  String get closeAllDialogCancel => 'Bekor qilish';
+
+  @override
   String get saveChangesTitle => 'Oʻzgarishlarni saqlash?';
 
   @override

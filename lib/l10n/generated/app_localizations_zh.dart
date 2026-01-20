@@ -93,6 +93,29 @@ class AppLocalizationsZh extends AppLocalizations {
   String get menuCloseWindow => '关闭窗口';
 
   @override
+  String get menuCloseAll => '全部关闭';
+
+  @override
+  String get closeAllDialogTitle => '保存更改？';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return '关闭前是否要保存对 $count 个文档的更改？';
+  }
+
+  @override
+  String get closeAllDialogMessageOne => '关闭前是否要保存对 1 个文档的更改？';
+
+  @override
+  String get closeAllDialogSaveAll => '全部保存';
+
+  @override
+  String get closeAllDialogDontSave => '不保存';
+
+  @override
+  String get closeAllDialogCancel => '取消';
+
+  @override
   String get saveChangesTitle => '保存更改？';
 
   @override
@@ -270,6 +293,29 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get menuCloseWindow => '关闭窗口';
 
   @override
+  String get menuCloseAll => '全部关闭';
+
+  @override
+  String get closeAllDialogTitle => '保存更改？';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return '关闭前是否要保存对 $count 个文档的更改？';
+  }
+
+  @override
+  String get closeAllDialogMessageOne => '关闭前是否要保存对 1 个文档的更改？';
+
+  @override
+  String get closeAllDialogSaveAll => '全部保存';
+
+  @override
+  String get closeAllDialogDontSave => '不保存';
+
+  @override
+  String get closeAllDialogCancel => '取消';
+
+  @override
   String get saveChangesTitle => '保存更改？';
 
   @override
@@ -445,6 +491,29 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get menuCloseWindow => '關閉視窗';
+
+  @override
+  String get menuCloseAll => '全部關閉';
+
+  @override
+  String get closeAllDialogTitle => '儲存更動？';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return '關閉前是否要儲存對 $count 個文件的更動？';
+  }
+
+  @override
+  String get closeAllDialogMessageOne => '關閉前是否要儲存對 1 個文件的更動？';
+
+  @override
+  String get closeAllDialogSaveAll => '全部儲存';
+
+  @override
+  String get closeAllDialogDontSave => '不儲存';
+
+  @override
+  String get closeAllDialogCancel => '取消';
 
   @override
   String get saveChangesTitle => '儲存更動？';

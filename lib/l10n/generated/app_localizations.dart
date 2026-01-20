@@ -371,6 +371,48 @@ abstract class AppLocalizations {
   /// **'Close Window'**
   String get menuCloseWindow;
 
+  /// Close All menu item - closes all open PDF windows
+  ///
+  /// In en, this message translates to:
+  /// **'Close All'**
+  String get menuCloseAll;
+
+  /// Title for close all dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes?'**
+  String get closeAllDialogTitle;
+
+  /// Message for close all dialog with multiple documents
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to save changes to {count} documents before closing?'**
+  String closeAllDialogMessage(int count);
+
+  /// Message for close all dialog with single document
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to save changes to 1 document before closing?'**
+  String get closeAllDialogMessageOne;
+
+  /// Save All button in close all dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Save All'**
+  String get closeAllDialogSaveAll;
+
+  /// Don't Save button in close all dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t Save'**
+  String get closeAllDialogDontSave;
+
+  /// Cancel button in close all dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get closeAllDialogCancel;
+
   /// Title for save changes dialog
   ///
   /// In en, this message translates to:

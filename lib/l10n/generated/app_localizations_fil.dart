@@ -93,6 +93,30 @@ class AppLocalizationsFil extends AppLocalizations {
   String get menuCloseWindow => 'Isara ang Window';
 
   @override
+  String get menuCloseAll => 'Isara lahat';
+
+  @override
+  String get closeAllDialogTitle => 'I-save ang mga pagbabago?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Gusto mo bang i-save ang mga pagbabago sa $count dokumento bago isara?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Gusto mo bang i-save ang mga pagbabago sa 1 dokumento bago isara?';
+
+  @override
+  String get closeAllDialogSaveAll => 'I-save lahat';
+
+  @override
+  String get closeAllDialogDontSave => 'Huwag i-save';
+
+  @override
+  String get closeAllDialogCancel => 'Kanselahin';
+
+  @override
   String get saveChangesTitle => 'I-save ang mga pagbabago?';
 
   @override

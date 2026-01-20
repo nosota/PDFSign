@@ -111,6 +111,30 @@ class AppLocalizationsIt extends AppLocalizations {
   String get menuCloseWindow => 'Chiudi finestra';
 
   @override
+  String get menuCloseAll => 'Chiudi tutto';
+
+  @override
+  String get closeAllDialogTitle => 'Salvare le modifiche?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Vuoi salvare le modifiche a $count documenti prima di chiudere?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Vuoi salvare le modifiche a 1 documento prima di chiudere?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Salva tutto';
+
+  @override
+  String get closeAllDialogDontSave => 'Non salvare';
+
+  @override
+  String get closeAllDialogCancel => 'Annulla';
+
+  @override
   String get saveChangesTitle => 'Salvare le modifiche?';
 
   @override

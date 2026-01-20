@@ -93,6 +93,30 @@ class AppLocalizationsLv extends AppLocalizations {
   String get menuCloseWindow => 'Aizvert logu';
 
   @override
+  String get menuCloseAll => 'Aizvērt visu';
+
+  @override
+  String get closeAllDialogTitle => 'Saglabāt izmaiņas?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Vai vēlaties saglabāt izmaiņas $count dokumentos pirms aizvēršanas?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Vai vēlaties saglabāt izmaiņas 1 dokumentā pirms aizvēršanas?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Saglabāt visu';
+
+  @override
+  String get closeAllDialogDontSave => 'Nesaglabāt';
+
+  @override
+  String get closeAllDialogCancel => 'Atcelt';
+
+  @override
   String get saveChangesTitle => 'Saglabat izmainas?';
 
   @override

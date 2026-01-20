@@ -93,6 +93,30 @@ class AppLocalizationsEl extends AppLocalizations {
   String get menuCloseWindow => 'Kleisimo parathyrou';
 
   @override
+  String get menuCloseAll => 'Κλείσιμο όλων';
+
+  @override
+  String get closeAllDialogTitle => 'Αποθήκευση αλλαγών;';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Θέλετε να αποθηκεύσετε τις αλλαγές σε $count έγγραφα πριν το κλείσιμο;';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Θέλετε να αποθηκεύσετε τις αλλαγές σε 1 έγγραφο πριν το κλείσιμο;';
+
+  @override
+  String get closeAllDialogSaveAll => 'Αποθήκευση όλων';
+
+  @override
+  String get closeAllDialogDontSave => 'Να μην αποθηκευτεί';
+
+  @override
+  String get closeAllDialogCancel => 'Ακύρωση';
+
+  @override
   String get saveChangesTitle => 'Apothikefsi allagon?';
 
   @override

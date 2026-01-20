@@ -93,6 +93,30 @@ class AppLocalizationsTh extends AppLocalizations {
   String get menuCloseWindow => 'ปิดหน้าต่าง';
 
   @override
+  String get menuCloseAll => 'ปิดทั้งหมด';
+
+  @override
+  String get closeAllDialogTitle => 'บันทึกการเปลี่ยนแปลง?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'คุณต้องการบันทึกการเปลี่ยนแปลงใน $count เอกสารก่อนปิดหรือไม่?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'คุณต้องการบันทึกการเปลี่ยนแปลงใน 1 เอกสารก่อนปิดหรือไม่?';
+
+  @override
+  String get closeAllDialogSaveAll => 'บันทึกทั้งหมด';
+
+  @override
+  String get closeAllDialogDontSave => 'ไม่บันทึก';
+
+  @override
+  String get closeAllDialogCancel => 'ยกเลิก';
+
+  @override
   String get saveChangesTitle => 'บันทึกการเปลี่ยนแปลง?';
 
   @override

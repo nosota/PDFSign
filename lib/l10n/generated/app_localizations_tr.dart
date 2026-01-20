@@ -93,6 +93,30 @@ class AppLocalizationsTr extends AppLocalizations {
   String get menuCloseWindow => 'Pencereyi Kapat';
 
   @override
+  String get menuCloseAll => 'Tümünü Kapat';
+
+  @override
+  String get closeAllDialogTitle => 'Değişiklikler kaydedilsin mi?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Kapatmadan önce $count belgedeki değişiklikleri kaydetmek istiyor musunuz?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Kapatmadan önce 1 belgedeki değişiklikleri kaydetmek istiyor musunuz?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Tümünü Kaydet';
+
+  @override
+  String get closeAllDialogDontSave => 'Kaydetme';
+
+  @override
+  String get closeAllDialogCancel => 'İptal';
+
+  @override
   String get saveChangesTitle => 'Değişiklikler kaydedilsin mi?';
 
   @override

@@ -93,6 +93,30 @@ class AppLocalizationsEt extends AppLocalizations {
   String get menuCloseWindow => 'Sulge aken';
 
   @override
+  String get menuCloseAll => 'Sulge kõik';
+
+  @override
+  String get closeAllDialogTitle => 'Salvesta muudatused?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Kas soovite salvestada muudatused $count dokumendis enne sulgemist?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Kas soovite salvestada muudatused 1 dokumendis enne sulgemist?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Salvesta kõik';
+
+  @override
+  String get closeAllDialogDontSave => 'Ära salvesta';
+
+  @override
+  String get closeAllDialogCancel => 'Tühista';
+
+  @override
   String get saveChangesTitle => 'Salvesta muudatused?';
 
   @override

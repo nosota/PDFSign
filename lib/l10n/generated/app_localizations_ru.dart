@@ -117,6 +117,30 @@ class AppLocalizationsRu extends AppLocalizations {
   String get menuCloseWindow => 'Закрыть окно';
 
   @override
+  String get menuCloseAll => 'Закрыть все';
+
+  @override
+  String get closeAllDialogTitle => 'Сохранить изменения?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Хотите сохранить изменения в $count документах перед закрытием?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Хотите сохранить изменения в 1 документе перед закрытием?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Сохранить все';
+
+  @override
+  String get closeAllDialogDontSave => 'Не сохранять';
+
+  @override
+  String get closeAllDialogCancel => 'Отмена';
+
+  @override
   String get saveChangesTitle => 'Сохранить изменения?';
 
   @override

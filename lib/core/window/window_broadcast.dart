@@ -18,6 +18,8 @@ class WindowBroadcast {
   static VoidCallback? _onUnitChanged;
   static VoidCallback? _onLocaleChanged;
   static VoidCallback? _onSaveAll;
+  static VoidCallback? _onCloseAll;
+  static VoidCallback? _onShowWelcome;
   static DirtyStateCallback? _onDirtyStateChanged;
   static DirtyStateResponseCallback? _onRequestDirtyStates;
   static bool _initialized = false;
@@ -35,6 +37,22 @@ class WindowBroadcast {
   /// Sets callback for when Save All is triggered from another window.
   static void setOnSaveAll(VoidCallback? callback) {
     _onSaveAll = callback;
+  }
+
+  /// Sets callback for when Close All is triggered from another window.
+  ///
+  /// PDF windows should close themselves without showing save dialog
+  /// (the dialog was already shown by the initiating window).
+  static void setOnCloseAll(VoidCallback? callback) {
+    _onCloseAll = callback;
+  }
+
+  /// Sets callback for when Welcome window should be shown.
+  ///
+  /// Called when a sub-window is about to close and there are no other
+  /// visible windows. Prevents macOS from terminating the app.
+  static void setOnShowWelcome(VoidCallback? callback) {
+    _onShowWelcome = callback;
   }
 
   /// Sets callback for when a window's dirty state changes.
@@ -81,6 +99,22 @@ class WindowBroadcast {
   /// Broadcasts Save All command to all windows (including self).
   static Future<void> broadcastSaveAll() async {
     await _broadcastIncludingSelf('saveAll');
+  }
+
+  /// Broadcasts Close All command to all PDF windows (including self).
+  ///
+  /// PDF windows receiving this should close without showing save dialog
+  /// (the save dialog was already shown by the initiating window).
+  static Future<void> broadcastCloseAll() async {
+    await _broadcastIncludingSelf('closeAll');
+  }
+
+  /// Broadcasts Show Welcome command to bring back the Welcome window.
+  ///
+  /// Should be called by sub-windows before they close to ensure
+  /// there's always a visible window (prevents macOS app termination).
+  static Future<void> broadcastShowWelcome() async {
+    await _broadcast('showWelcome');
   }
 
   /// Broadcasts dirty state change to all other windows.
@@ -208,6 +242,12 @@ class WindowBroadcast {
         return null;
       case 'saveAll':
         _onSaveAll?.call();
+        return null;
+      case 'closeAll':
+        _onCloseAll?.call();
+        return null;
+      case 'showWelcome':
+        _onShowWelcome?.call();
         return null;
       case 'dirtyStateChanged':
         final args = call.arguments as Map<dynamic, dynamic>?;

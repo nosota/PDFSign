@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:desktop_multi_window/desktop_multi_window.dart';
+import 'package:flutter/foundation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +11,7 @@ import 'package:window_manager/window_manager.dart';
 import 'package:pdfsign/core/platform/toolbar_channel.dart';
 import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/core/window/window_broadcast.dart';
+import 'package:pdfsign/core/window/window_manager_service.dart';
 import 'package:pdfsign/data/services/pdf_save_service.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
@@ -19,6 +21,7 @@ import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dar
 import 'package:pdfsign/presentation/providers/editor/size_unit_preference_provider.dart';
 import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/editor_screen.dart';
+import 'package:pdfsign/presentation/widgets/dialogs/close_all_dialog.dart';
 import 'package:pdfsign/presentation/widgets/dialogs/save_changes_dialog.dart';
 import 'package:pdfsign/presentation/widgets/menus/app_menu_bar.dart';
 
@@ -106,6 +109,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     WindowBroadcast.setOnUnitChanged(_handleUnitChanged);
     WindowBroadcast.setOnLocaleChanged(_handleLocaleChanged);
     WindowBroadcast.setOnSaveAll(_handleSaveAllBroadcast);
+    WindowBroadcast.setOnCloseAll(_handleCloseAllBroadcast);
     WindowBroadcast.setOnDirtyStateChanged(_handleDirtyStateChanged);
     WindowBroadcast.setOnRequestDirtyStates(_handleRequestDirtyStates);
 
@@ -136,6 +140,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
     WindowBroadcast.setOnSaveAll(null);
+    WindowBroadcast.setOnCloseAll(null);
     WindowBroadcast.setOnDirtyStateChanged(null);
     WindowBroadcast.setOnRequestDirtyStates(null);
 
@@ -178,14 +183,14 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     final isDirty = ref.read(documentDirtyProvider);
 
     if (!isDirty) {
-      await windowManager.destroy();
+      await _destroyWindow();
       return;
     }
 
     // Show save dialog
     final navigatorContext = _navigatorKey.currentContext;
     if (navigatorContext == null) {
-      await windowManager.destroy();
+      await _destroyWindow();
       return;
     }
 
@@ -196,11 +201,47 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
 
     if (result == SaveChangesResult.save) {
       await _handleSave();
-      await windowManager.destroy();
+      await _destroyWindow();
     } else if (result == SaveChangesResult.discard) {
-      await windowManager.destroy();
+      await _destroyWindow();
     }
     // null = dialog dismissed or cancelled, don't close
+  }
+
+  /// Unregisters from global tracker and destroys the window.
+  Future<void> _destroyWindow() async {
+    if (kDebugMode) {
+      print('>>> PDF _destroyWindow() called for $_windowId');
+    }
+
+    // Unregister from PDF window tracker FIRST to get accurate count
+    if (_windowId != null) {
+      WindowManagerService.instance.unregisterWindow(_windowId!);
+    }
+
+    // Check if this is the last visible sub-window
+    // After unregistering, check remaining windows
+    final service = WindowManagerService.instance;
+    final hasOtherPdfs = service.hasOpenWindows;
+    final hasSettings = service.hasSettingsWindow;
+
+    if (!hasOtherPdfs && !hasSettings) {
+      // This is the last sub-window - show Welcome before destroying
+      if (kDebugMode) {
+        print('>>> PDF: Last sub-window, broadcasting showWelcome');
+      }
+      await WindowBroadcast.broadcastShowWelcome();
+      // Small delay to ensure Welcome window shows before we destroy
+      await Future.delayed(const Duration(milliseconds: 50));
+    }
+
+    if (kDebugMode) {
+      print('>>> PDF calling windowManager.destroy()');
+    }
+    await windowManager.destroy();
+    if (kDebugMode) {
+      print('>>> PDF destroy() completed');
+    }
   }
 
   /// Reloads preferences and refreshes UI when window becomes active.
@@ -296,6 +337,53 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
   /// Triggers Save All across all PDF windows.
   Future<void> _handleSaveAll() async {
     await WindowBroadcast.broadcastSaveAll();
+  }
+
+  /// Handles Close All broadcast from another window.
+  ///
+  /// Closes this window WITHOUT showing save dialog
+  /// (the dialog was already shown by the initiating window).
+  void _handleCloseAllBroadcast() {
+    _destroyWindow();
+  }
+
+  /// Handles Close All menu action.
+  ///
+  /// Shows CloseAllDialog if any PDF windows have unsaved changes,
+  /// then broadcasts close to all PDF windows.
+  Future<void> _handleCloseAll() async {
+    final navigatorContext = _navigatorKey.currentContext;
+    if (navigatorContext == null) return;
+
+    final globalState = ref.read(globalDirtyStateProvider);
+    final dirtyCount = globalState.values.where((d) => d).length;
+
+    if (dirtyCount == 0) {
+      // No dirty windows, close all without dialog
+      await WindowBroadcast.broadcastCloseAll();
+      return;
+    }
+
+    // Show close all dialog
+    final result = await CloseAllDialog.show(navigatorContext, dirtyCount);
+
+    switch (result) {
+      case CloseAllResult.saveAll:
+        // Save all dirty windows first, then close all
+        await WindowBroadcast.broadcastSaveAll();
+        // Small delay to ensure saves complete
+        await Future.delayed(const Duration(milliseconds: 100));
+        await WindowBroadcast.broadcastCloseAll();
+        break;
+      case CloseAllResult.discard:
+        // Close all without saving
+        await WindowBroadcast.broadcastCloseAll();
+        break;
+      case CloseAllResult.cancel:
+      case null:
+        // User cancelled, do nothing
+        break;
+    }
   }
 
   Future<void> _handleShare() async {
@@ -497,6 +585,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
               isSaveAllEnabled: menuState.hasAnyDirtyWindow,
               includeShare: true,
               onShare: _handleShare,
+              // Close All - always enabled since there's at least one PDF
+              includeCloseAll: true,
+              onCloseAll: _handleCloseAll,
+              isCloseAllEnabled: true,
               // Use custom close to trigger save confirmation dialog
               onCloseWindow: () => windowManager.close(),
               child: child!,

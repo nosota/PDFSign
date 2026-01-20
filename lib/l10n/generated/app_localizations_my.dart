@@ -93,6 +93,30 @@ class AppLocalizationsMy extends AppLocalizations {
   String get menuCloseWindow => 'Window peit';
 
   @override
+  String get menuCloseAll => 'အားလုံးပိတ်ရန်';
+
+  @override
+  String get closeAllDialogTitle => 'ပြောင်းလဲမှုများသိမ်းမလား?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'မပိတ်မီ စာရွက်စာတမ်း $count ခုတွင် ပြောင်းလဲမှုများကို သိမ်းဆည်းလိုပါသလား?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'မပိတ်မီ စာရွက်စာတမ်း 1 ခုတွင် ပြောင်းလဲမှုများကို သိမ်းဆည်းလိုပါသလား?';
+
+  @override
+  String get closeAllDialogSaveAll => 'အားလုံးသိမ်းရန်';
+
+  @override
+  String get closeAllDialogDontSave => 'မသိမ်းပါ';
+
+  @override
+  String get closeAllDialogCancel => 'ပယ်ဖျက်ရန်';
+
+  @override
   String get saveChangesTitle => 'Pyaunglevmhuu thein malar?';
 
   @override

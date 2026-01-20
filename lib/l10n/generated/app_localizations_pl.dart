@@ -117,6 +117,30 @@ class AppLocalizationsPl extends AppLocalizations {
   String get menuCloseWindow => 'Zamknij okno';
 
   @override
+  String get menuCloseAll => 'Zamknij wszystkie';
+
+  @override
+  String get closeAllDialogTitle => 'Zapisać zmiany?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Czy chcesz zapisać zmiany w $count dokumentach przed zamknięciem?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Czy chcesz zapisać zmiany w 1 dokumencie przed zamknięciem?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Zapisz wszystkie';
+
+  @override
+  String get closeAllDialogDontSave => 'Nie zapisuj';
+
+  @override
+  String get closeAllDialogCancel => 'Anuluj';
+
+  @override
   String get saveChangesTitle => 'Zapisać zmiany?';
 
   @override

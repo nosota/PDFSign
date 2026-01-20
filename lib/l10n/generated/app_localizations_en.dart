@@ -111,6 +111,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuCloseWindow => 'Close Window';
 
   @override
+  String get menuCloseAll => 'Close All';
+
+  @override
+  String get closeAllDialogTitle => 'Save Changes?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Do you want to save changes to $count documents before closing?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Do you want to save changes to 1 document before closing?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Save All';
+
+  @override
+  String get closeAllDialogDontSave => 'Don\'t Save';
+
+  @override
+  String get closeAllDialogCancel => 'Cancel';
+
+  @override
   String get saveChangesTitle => 'Save Changes?';
 
   @override
@@ -304,6 +328,30 @@ class AppLocalizationsEnAu extends AppLocalizationsEn {
 
   @override
   String get menuCloseWindow => 'Close Window';
+
+  @override
+  String get menuCloseAll => 'Close All';
+
+  @override
+  String get closeAllDialogTitle => 'Save Changes?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Do you want to save changes in $count documents before closing?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Do you want to save changes in 1 document before closing?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Save All';
+
+  @override
+  String get closeAllDialogDontSave => 'Don\'t Save';
+
+  @override
+  String get closeAllDialogCancel => 'Cancel';
 
   @override
   String get saveChangesTitle => 'Save Changes?';
@@ -501,6 +549,30 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   String get menuCloseWindow => 'Close Window';
 
   @override
+  String get menuCloseAll => 'Close All';
+
+  @override
+  String get closeAllDialogTitle => 'Save Changes?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Do you want to save changes in $count documents before closing?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Do you want to save changes in 1 document before closing?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Save All';
+
+  @override
+  String get closeAllDialogDontSave => 'Don\'t Save';
+
+  @override
+  String get closeAllDialogCancel => 'Cancel';
+
+  @override
   String get saveChangesTitle => 'Save Changes?';
 
   @override
@@ -696,6 +768,30 @@ class AppLocalizationsEnNz extends AppLocalizationsEn {
   String get menuCloseWindow => 'Close Window';
 
   @override
+  String get menuCloseAll => 'Close All';
+
+  @override
+  String get closeAllDialogTitle => 'Save Changes?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Do you want to save changes in $count documents before closing?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Do you want to save changes in 1 document before closing?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Save All';
+
+  @override
+  String get closeAllDialogDontSave => 'Don\'t Save';
+
+  @override
+  String get closeAllDialogCancel => 'Cancel';
+
+  @override
   String get saveChangesTitle => 'Save Changes?';
 
   @override
@@ -889,6 +985,30 @@ class AppLocalizationsEnUs extends AppLocalizationsEn {
 
   @override
   String get menuCloseWindow => 'Close Window';
+
+  @override
+  String get menuCloseAll => 'Close All';
+
+  @override
+  String get closeAllDialogTitle => 'Save Changes?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Do you want to save changes in $count documents before closing?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Do you want to save changes in 1 document before closing?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Save All';
+
+  @override
+  String get closeAllDialogDontSave => 'Don\'t Save';
+
+  @override
+  String get closeAllDialogCancel => 'Cancel';
 
   @override
   String get saveChangesTitle => 'Save Changes?';

@@ -93,6 +93,30 @@ class AppLocalizationsKa extends AppLocalizations {
   String get menuCloseWindow => 'Panjeris dakhetva';
 
   @override
+  String get menuCloseAll => 'ყველას დახურვა';
+
+  @override
+  String get closeAllDialogTitle => 'ცვლილებების შენახვა?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'გსურთ შეინახოთ ცვლილებები $count დოკუმენტში დახურვამდე?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'გსურთ შეინახოთ ცვლილებები 1 დოკუმენტში დახურვამდე?';
+
+  @override
+  String get closeAllDialogSaveAll => 'ყველას შენახვა';
+
+  @override
+  String get closeAllDialogDontSave => 'არ შეინახო';
+
+  @override
+  String get closeAllDialogCancel => 'გაუქმება';
+
+  @override
   String get saveChangesTitle => 'Cvlilebebis shenakhva?';
 
   @override

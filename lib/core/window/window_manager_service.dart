@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -235,10 +233,16 @@ class WindowManagerService {
   /// Unregisters a window when it closes.
   void unregisterWindow(String windowId) {
     _openWindows.remove(windowId);
+    if (kDebugMode) {
+      print('Unregistered PDF window: $windowId, remaining: $_openWindows');
+    }
   }
 
   /// Checks if there are any open PDF viewer windows.
   bool get hasOpenWindows => _openWindows.isNotEmpty;
+
+  /// Checks if the Settings window is currently open.
+  bool get hasSettingsWindow => _settingsWindowId != null;
 
   /// Closes all open PDF viewer windows.
   Future<void> closeAllWindows() async {
@@ -255,15 +259,11 @@ class WindowManagerService {
   }
 
   /// Closes the current window.
+  ///
+  /// Uses windowManager.close() which triggers onWindowClose() callback,
+  /// allowing each window to handle its own cleanup and close behavior.
   Future<void> closeCurrentWindow() async {
-    final controller = await WindowController.fromCurrentEngine();
-    if (controller.windowId == '0') {
-      // Main window - exit app
-      exit(0);
-    } else {
-      // Sub window - close it properly using the extension method
-      await controller.close();
-    }
+    await windowManager.close();
   }
 
   /// Gets all window controllers.

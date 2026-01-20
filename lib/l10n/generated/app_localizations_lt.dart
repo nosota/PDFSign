@@ -93,6 +93,30 @@ class AppLocalizationsLt extends AppLocalizations {
   String get menuCloseWindow => 'Uzdaryti langa';
 
   @override
+  String get menuCloseAll => 'Uždaryti visus';
+
+  @override
+  String get closeAllDialogTitle => 'Išsaugoti pakeitimus?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Ar norite išsaugoti pakeitimus $count dokumentuose prieš uždarant?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Ar norite išsaugoti pakeitimus 1 dokumente prieš uždarant?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Išsaugoti visus';
+
+  @override
+  String get closeAllDialogDontSave => 'Neišsaugoti';
+
+  @override
+  String get closeAllDialogCancel => 'Atšaukti';
+
+  @override
   String get saveChangesTitle => 'Issaugoti pakeitimus?';
 
   @override

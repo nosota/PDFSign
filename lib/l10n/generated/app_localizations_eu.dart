@@ -93,6 +93,30 @@ class AppLocalizationsEu extends AppLocalizations {
   String get menuCloseWindow => 'Itxi leihoa';
 
   @override
+  String get menuCloseAll => 'Itxi dena';
+
+  @override
+  String get closeAllDialogTitle => 'Aldaketak gorde?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Itxi baino lehen $count dokumentuetako aldaketak gorde nahi dituzu?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Itxi baino lehen dokumentu bateko aldaketak gorde nahi dituzu?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Gorde dena';
+
+  @override
+  String get closeAllDialogDontSave => 'Ez gorde';
+
+  @override
+  String get closeAllDialogCancel => 'Utzi';
+
+  @override
   String get saveChangesTitle => 'Aldaketak gorde?';
 
   @override

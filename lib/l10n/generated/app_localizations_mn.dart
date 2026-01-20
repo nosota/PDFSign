@@ -93,6 +93,30 @@ class AppLocalizationsMn extends AppLocalizations {
   String get menuCloseWindow => 'Tsonkhig khakh';
 
   @override
+  String get menuCloseAll => 'Бүгдийг хаах';
+
+  @override
+  String get closeAllDialogTitle => 'Өөрчлөлтүүдийг хадгалах уу?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Хаахаас өмнө $count баримт бичигт өөрчлөлтүүдийг хадгалах уу?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Хаахаас өмнө 1 баримт бичигт өөрчлөлтүүдийг хадгалах уу?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Бүгдийг хадгалах';
+
+  @override
+  String get closeAllDialogDontSave => 'Хадгалахгүй';
+
+  @override
+  String get closeAllDialogCancel => 'Цуцлах';
+
+  @override
   String get saveChangesTitle => 'Uurchlultiig khadgalakh uu?';
 
   @override

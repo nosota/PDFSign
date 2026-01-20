@@ -93,6 +93,30 @@ class AppLocalizationsKk extends AppLocalizations {
   String get menuCloseWindow => 'Terezeni zhabu';
 
   @override
+  String get menuCloseAll => 'Барлығын жабу';
+
+  @override
+  String get closeAllDialogTitle => 'Өзгерістерді сақтау керек пе?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Жабу алдында $count құжаттағы өзгерістерді сақтағыңыз келе ме?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Жабу алдында 1 құжаттағы өзгерістерді сақтағыңыз келе ме?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Барлығын сақтау';
+
+  @override
+  String get closeAllDialogDontSave => 'Сақтамау';
+
+  @override
+  String get closeAllDialogCancel => 'Болдырмау';
+
+  @override
   String get saveChangesTitle => 'Ozgeristerdi saqtau?';
 
   @override

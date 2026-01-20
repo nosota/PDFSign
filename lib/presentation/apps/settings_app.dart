@@ -8,8 +8,10 @@ import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/core/window/window_broadcast.dart';
 import 'package:pdfsign/core/window/window_manager_service.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
+import 'package:pdfsign/presentation/providers/editor/global_dirty_state_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/size_unit_preference_provider.dart';
 import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
+import 'package:pdfsign/presentation/widgets/dialogs/close_all_dialog.dart';
 import 'package:pdfsign/presentation/widgets/menus/app_menu_bar.dart';
 
 /// Root app widget for the settings window.
@@ -27,6 +29,9 @@ class SettingsApp extends ConsumerStatefulWidget {
 
 class _SettingsAppState extends ConsumerState<SettingsApp>
     with WindowListener {
+  /// Navigator key for showing dialogs.
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
   /// Whether this window currently has focus.
   /// Only focused window renders PlatformMenuBar to avoid conflicts.
   bool _isWindowFocused = true;
@@ -36,8 +41,9 @@ class _SettingsAppState extends ConsumerState<SettingsApp>
     super.initState();
     _initWindowBroadcast();
 
-    // Register window listener for focus tracking
+    // Register window listener for focus tracking and close interception
     windowManager.addListener(this);
+    windowManager.setPreventClose(true);
 
     // DEBUG: Log window ID on startup
     if (kDebugMode) {
@@ -79,7 +85,7 @@ class _SettingsAppState extends ConsumerState<SettingsApp>
 
   /// Handles window close notification.
   @override
-  void onWindowClose() {
+  void onWindowClose() async {
     if (kDebugMode) {
       print('>>> Settings onWindowClose() called - cleaning up');
     }
@@ -88,9 +94,27 @@ class _SettingsAppState extends ConsumerState<SettingsApp>
     WindowManagerService.instance.clearSettingsWindowId();
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
-    if (kDebugMode) {
-      print('>>> Settings cleanup completed');
+
+    // Check if this is the last visible sub-window
+    final service = WindowManagerService.instance;
+    final hasOtherPdfs = service.hasOpenWindows;
+    // Settings ID already cleared, so hasSettingsWindow will be false
+
+    if (!hasOtherPdfs) {
+      // This is the last sub-window - show Welcome before destroying
+      if (kDebugMode) {
+        print('>>> Settings: Last sub-window, broadcasting showWelcome');
+      }
+      await WindowBroadcast.broadcastShowWelcome();
+      // Small delay to ensure Welcome window shows before we destroy
+      await Future.delayed(const Duration(milliseconds: 50));
     }
+
+    if (kDebugMode) {
+      print('>>> Settings cleanup completed, calling destroy()');
+    }
+    // Actually close the window
+    await windowManager.destroy();
   }
 
   @override
@@ -109,6 +133,45 @@ class _SettingsAppState extends ConsumerState<SettingsApp>
     super.dispose();
   }
 
+  /// Handles Close All menu action.
+  ///
+  /// Shows CloseAllDialog if any PDF windows have unsaved changes,
+  /// then broadcasts close to all PDF windows.
+  Future<void> _handleCloseAll() async {
+    final navigatorContext = _navigatorKey.currentContext;
+    if (navigatorContext == null) return;
+
+    final globalState = ref.read(globalDirtyStateProvider);
+    final dirtyCount = globalState.values.where((d) => d).length;
+
+    if (dirtyCount == 0) {
+      // No dirty windows, close all without dialog
+      await WindowBroadcast.broadcastCloseAll();
+      return;
+    }
+
+    // Show close all dialog
+    final result = await CloseAllDialog.show(navigatorContext, dirtyCount);
+
+    switch (result) {
+      case CloseAllResult.saveAll:
+        // Save all dirty windows first, then close all
+        await WindowBroadcast.broadcastSaveAll();
+        // Small delay to ensure saves complete
+        await Future.delayed(const Duration(milliseconds: 100));
+        await WindowBroadcast.broadcastCloseAll();
+        break;
+      case CloseAllResult.discard:
+        // Close all without saving
+        await WindowBroadcast.broadcastCloseAll();
+        break;
+      case CloseAllResult.cancel:
+      case null:
+        // User cancelled, do nothing
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Watch locale preference for live updates
@@ -116,6 +179,7 @@ class _SettingsAppState extends ConsumerState<SettingsApp>
     final locale = ref.watch(localePreferenceProvider.notifier).getLocale();
 
     return MaterialApp(
+      navigatorKey: _navigatorKey,
       title: 'Settings',
       theme: createAppTheme(),
       locale: locale,
@@ -130,18 +194,21 @@ class _SettingsAppState extends ConsumerState<SettingsApp>
         }
 
         final l10n = AppLocalizations.of(context)!;
+        final hasOpenPdfs = WindowManagerService.instance.hasOpenWindows;
         return AppMenuBar(
           localizations: l10n,
+          navigatorKey: _navigatorKey,
           // Settings window: hide Save, Save As, Save All, and Share
           includeSave: false,
           includeSaveAs: false,
           includeSaveAll: false,
           includeShare: false,
-          // Use WindowManagerService to close - it uses proper close method
-          onCloseWindow: () async {
-            WindowManagerService.instance.clearSettingsWindowId();
-            await WindowManagerService.instance.closeCurrentWindow();
-          },
+          // Close All - enabled only if there are PDF windows
+          includeCloseAll: true,
+          onCloseAll: _handleCloseAll,
+          isCloseAllEnabled: hasOpenPdfs,
+          // Use windowManager.close() which triggers onWindowClose() for cleanup
+          onCloseWindow: () => windowManager.close(),
           child: child!,
         );
       },

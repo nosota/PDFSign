@@ -114,6 +114,30 @@ class AppLocalizationsCs extends AppLocalizations {
   String get menuCloseWindow => 'Zavřít okno';
 
   @override
+  String get menuCloseAll => 'Zavřít vše';
+
+  @override
+  String get closeAllDialogTitle => 'Uložit změny?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Chcete uložit změny v $count dokumentech před zavřením?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Chcete uložit změny v 1 dokumentu před zavřením?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Uložit vše';
+
+  @override
+  String get closeAllDialogDontSave => 'Neukládat';
+
+  @override
+  String get closeAllDialogCancel => 'Zrušit';
+
+  @override
   String get saveChangesTitle => 'Uložit změny?';
 
   @override

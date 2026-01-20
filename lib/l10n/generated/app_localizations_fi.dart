@@ -111,6 +111,30 @@ class AppLocalizationsFi extends AppLocalizations {
   String get menuCloseWindow => 'Sulje ikkuna';
 
   @override
+  String get menuCloseAll => 'Sulje kaikki';
+
+  @override
+  String get closeAllDialogTitle => 'Tallenna muutokset?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Haluatko tallentaa muutokset $count asiakirjaan ennen sulkemista?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Haluatko tallentaa muutokset 1 asiakirjaan ennen sulkemista?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Tallenna kaikki';
+
+  @override
+  String get closeAllDialogDontSave => 'Älä tallenna';
+
+  @override
+  String get closeAllDialogCancel => 'Kumoa';
+
+  @override
   String get saveChangesTitle => 'Tallenna muutokset?';
 
   @override

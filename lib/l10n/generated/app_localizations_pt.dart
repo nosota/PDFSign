@@ -111,6 +111,30 @@ class AppLocalizationsPt extends AppLocalizations {
   String get menuCloseWindow => 'Fechar janela';
 
   @override
+  String get menuCloseAll => 'Fechar tudo';
+
+  @override
+  String get closeAllDialogTitle => 'Salvar alterações?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Deseja salvar as alterações em $count documentos antes de fechar?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Deseja salvar as alterações em 1 documento antes de fechar?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Salvar tudo';
+
+  @override
+  String get closeAllDialogDontSave => 'Não salvar';
+
+  @override
+  String get closeAllDialogCancel => 'Cancelar';
+
+  @override
   String get saveChangesTitle => 'Salvar alterações?';
 
   @override
@@ -306,6 +330,30 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get menuCloseWindow => 'Fechar janela';
 
   @override
+  String get menuCloseAll => 'Fechar tudo';
+
+  @override
+  String get closeAllDialogTitle => 'Salvar alterações?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Deseja salvar as alterações em $count documentos antes de fechar?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Deseja salvar as alterações em 1 documento antes de fechar?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Salvar tudo';
+
+  @override
+  String get closeAllDialogDontSave => 'Não salvar';
+
+  @override
+  String get closeAllDialogCancel => 'Cancelar';
+
+  @override
   String get saveChangesTitle => 'Salvar alterações?';
 
   @override
@@ -499,6 +547,30 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get menuCloseWindow => 'Fechar janela';
+
+  @override
+  String get menuCloseAll => 'Fechar tudo';
+
+  @override
+  String get closeAllDialogTitle => 'Guardar alterações?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Deseja guardar as alterações em $count documentos antes de fechar?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Deseja guardar as alterações em 1 documento antes de fechar?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Guardar tudo';
+
+  @override
+  String get closeAllDialogDontSave => 'Não guardar';
+
+  @override
+  String get closeAllDialogCancel => 'Cancelar';
 
   @override
   String get saveChangesTitle => 'Guardar alterações?';

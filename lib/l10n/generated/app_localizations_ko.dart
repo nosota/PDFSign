@@ -93,6 +93,29 @@ class AppLocalizationsKo extends AppLocalizations {
   String get menuCloseWindow => '윈도우 닫기';
 
   @override
+  String get menuCloseAll => '모두 닫기';
+
+  @override
+  String get closeAllDialogTitle => '변경사항을 저장하시겠습니까?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return '닫기 전에 $count개 문서의 변경사항을 저장하시겠습니까?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne => '닫기 전에 1개 문서의 변경사항을 저장하시겠습니까?';
+
+  @override
+  String get closeAllDialogSaveAll => '모두 저장';
+
+  @override
+  String get closeAllDialogDontSave => '저장 안 함';
+
+  @override
+  String get closeAllDialogCancel => '취소';
+
+  @override
   String get saveChangesTitle => '변경사항을 저장하시겠습니까?';
 
   @override

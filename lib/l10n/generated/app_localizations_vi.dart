@@ -93,6 +93,30 @@ class AppLocalizationsVi extends AppLocalizations {
   String get menuCloseWindow => 'Dong cua so';
 
   @override
+  String get menuCloseAll => 'Đóng tất cả';
+
+  @override
+  String get closeAllDialogTitle => 'Lưu thay đổi?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Bạn có muốn lưu thay đổi trong $count tài liệu trước khi đóng không?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Bạn có muốn lưu thay đổi trong 1 tài liệu trước khi đóng không?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Lưu tất cả';
+
+  @override
+  String get closeAllDialogDontSave => 'Không lưu';
+
+  @override
+  String get closeAllDialogCancel => 'Hủy';
+
+  @override
   String get saveChangesTitle => 'Luu thay doi?';
 
   @override

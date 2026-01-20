@@ -93,6 +93,30 @@ class AppLocalizationsHi extends AppLocalizations {
   String get menuCloseWindow => 'Window band karein';
 
   @override
+  String get menuCloseAll => 'सभी बंद करें';
+
+  @override
+  String get closeAllDialogTitle => 'परिवर्तन सहेजें?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'बंद करने से पहले $count दस्तावेजों में परिवर्तन सहेजना चाहते हैं?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'बंद करने से पहले 1 दस्तावेज में परिवर्तन सहेजना चाहते हैं?';
+
+  @override
+  String get closeAllDialogSaveAll => 'सभी सहेजें';
+
+  @override
+  String get closeAllDialogDontSave => 'न सहेजें';
+
+  @override
+  String get closeAllDialogCancel => 'रद्द करें';
+
+  @override
   String get saveChangesTitle => 'Parivartan sahejein?';
 
   @override

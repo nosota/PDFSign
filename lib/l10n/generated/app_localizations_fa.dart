@@ -93,6 +93,30 @@ class AppLocalizationsFa extends AppLocalizations {
   String get menuCloseWindow => 'بستن پنجره';
 
   @override
+  String get menuCloseAll => 'بستن همه';
+
+  @override
+  String get closeAllDialogTitle => 'ذخیره تغییرات؟';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'آیا می‌خواهید تغییرات در $count سند را قبل از بستن ذخیره کنید؟';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'آیا می‌خواهید تغییرات در 1 سند را قبل از بستن ذخیره کنید؟';
+
+  @override
+  String get closeAllDialogSaveAll => 'ذخیره همه';
+
+  @override
+  String get closeAllDialogDontSave => 'ذخیره نکن';
+
+  @override
+  String get closeAllDialogCancel => 'لغو';
+
+  @override
   String get saveChangesTitle => 'ذخیره تغییرات؟';
 
   @override

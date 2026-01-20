@@ -114,6 +114,30 @@ class AppLocalizationsSk extends AppLocalizations {
   String get menuCloseWindow => 'Zavrieť okno';
 
   @override
+  String get menuCloseAll => 'Zavrieť všetko';
+
+  @override
+  String get closeAllDialogTitle => 'Uložiť zmeny?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Chcete uložiť zmeny v $count dokumentoch pred zatvorením?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Chcete uložiť zmeny v 1 dokumente pred zatvorením?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Uložiť všetko';
+
+  @override
+  String get closeAllDialogDontSave => 'Neuložiť';
+
+  @override
+  String get closeAllDialogCancel => 'Zrušiť';
+
+  @override
   String get saveChangesTitle => 'Uložiť zmeny?';
 
   @override

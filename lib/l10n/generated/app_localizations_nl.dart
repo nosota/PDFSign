@@ -111,6 +111,30 @@ class AppLocalizationsNl extends AppLocalizations {
   String get menuCloseWindow => 'Sluit venster';
 
   @override
+  String get menuCloseAll => 'Alles sluiten';
+
+  @override
+  String get closeAllDialogTitle => 'Wijzigingen opslaan?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Wilt u de wijzigingen in $count documenten opslaan voordat u sluit?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Wilt u de wijzigingen in 1 document opslaan voordat u sluit?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Alles opslaan';
+
+  @override
+  String get closeAllDialogDontSave => 'Niet opslaan';
+
+  @override
+  String get closeAllDialogCancel => 'Annuleren';
+
+  @override
   String get saveChangesTitle => 'Wijzigingen bewaren?';
 
   @override

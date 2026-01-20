@@ -93,6 +93,30 @@ class AppLocalizationsCa extends AppLocalizations {
   String get menuCloseWindow => 'Tanca la finestra';
 
   @override
+  String get menuCloseAll => 'Tanca-ho tot';
+
+  @override
+  String get closeAllDialogTitle => 'Desar els canvis?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Vols desar els canvis a $count documents abans de tancar?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Vols desar els canvis a 1 document abans de tancar?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Desa-ho tot';
+
+  @override
+  String get closeAllDialogDontSave => 'No desis';
+
+  @override
+  String get closeAllDialogCancel => 'Cancel·la';
+
+  @override
   String get saveChangesTitle => 'Desar els canvis?';
 
   @override

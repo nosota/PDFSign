@@ -93,6 +93,30 @@ class AppLocalizationsHu extends AppLocalizations {
   String get menuCloseWindow => 'Ablak bezárása';
 
   @override
+  String get menuCloseAll => 'Összes bezárása';
+
+  @override
+  String get closeAllDialogTitle => 'Változások mentése?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Szeretné menteni a változtatásokat $count dokumentumban bezárás előtt?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Szeretné menteni a változtatásokat 1 dokumentumban bezárás előtt?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Összes mentése';
+
+  @override
+  String get closeAllDialogDontSave => 'Ne mentse';
+
+  @override
+  String get closeAllDialogCancel => 'Mégse';
+
+  @override
   String get saveChangesTitle => 'Változások mentése?';
 
   @override

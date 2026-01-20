@@ -111,6 +111,30 @@ class AppLocalizationsDa extends AppLocalizations {
   String get menuCloseWindow => 'Luk vindue';
 
   @override
+  String get menuCloseAll => 'Luk alle';
+
+  @override
+  String get closeAllDialogTitle => 'Gem ændringer?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Vil du gemme ændringerne i $count dokumenter før lukning?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Vil du gemme ændringerne i 1 dokument før lukning?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Gem alle';
+
+  @override
+  String get closeAllDialogDontSave => 'Gem ikke';
+
+  @override
+  String get closeAllDialogCancel => 'Annuller';
+
+  @override
   String get saveChangesTitle => 'Gem ændringer?';
 
   @override

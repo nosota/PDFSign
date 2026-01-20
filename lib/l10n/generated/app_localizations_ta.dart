@@ -93,6 +93,30 @@ class AppLocalizationsTa extends AppLocalizations {
   String get menuCloseWindow => 'Jannal muda';
 
   @override
+  String get menuCloseAll => 'அனைத்தையும் மூடு';
+
+  @override
+  String get closeAllDialogTitle => 'மாற்றங்களை சேமிக்கவா?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'மூடுவதற்கு முன் $count ஆவணங்களில் மாற்றங்களை சேமிக்க விரும்புகிறீர்களா?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'மூடுவதற்கு முன் 1 ஆவணத்தில் மாற்றங்களை சேமிக்க விரும்புகிறீர்களா?';
+
+  @override
+  String get closeAllDialogSaveAll => 'அனைத்தையும் சேமி';
+
+  @override
+  String get closeAllDialogDontSave => 'சேமிக்க வேண்டாம்';
+
+  @override
+  String get closeAllDialogCancel => 'ரத்து செய்';
+
+  @override
   String get saveChangesTitle => 'Marrrangalai semikkava?';
 
   @override

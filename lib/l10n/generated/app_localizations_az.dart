@@ -93,6 +93,30 @@ class AppLocalizationsAz extends AppLocalizations {
   String get menuCloseWindow => 'Pencerani bagla';
 
   @override
+  String get menuCloseAll => 'Hamısını bağla';
+
+  @override
+  String get closeAllDialogTitle => 'Dəyişikliklər saxlanılsın?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Bağlamadan əvvəl $count sənəddəki dəyişiklikləri saxlamaq istəyirsiniz?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Bağlamadan əvvəl 1 sənəddəki dəyişiklikləri saxlamaq istəyirsiniz?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Hamısını saxla';
+
+  @override
+  String get closeAllDialogDontSave => 'Saxlama';
+
+  @override
+  String get closeAllDialogCancel => 'Ləğv et';
+
+  @override
   String get saveChangesTitle => 'Deyisiklikleri yadda saxla?';
 
   @override

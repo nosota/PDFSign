@@ -93,6 +93,30 @@ class AppLocalizationsHy extends AppLocalizations {
   String get menuCloseWindow => 'Pakers patuhan';
 
   @override
+  String get menuCloseAll => 'Pakers bolory';
+
+  @override
+  String get closeAllDialogTitle => 'Pakhpanel pokhutyyunnery?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Uzum eq pakhpanel pokhutyyunnery $count pastatghterum pokheluts araj?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Uzum eq pakhpanel pokhutyyunnery 1 pastatghterum pokheluts araj?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Pakhpanel bolory';
+
+  @override
+  String get closeAllDialogDontSave => 'Chpakhpanel';
+
+  @override
+  String get closeAllDialogCancel => 'Chygarkvel';
+
+  @override
   String get saveChangesTitle => 'Pakhpanel pokhutyyunnery?';
 
   @override

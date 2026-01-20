@@ -93,6 +93,30 @@ class AppLocalizationsEo extends AppLocalizations {
   String get menuCloseWindow => 'Fermi fenestron';
 
   @override
+  String get menuCloseAll => 'Fermi ĉiujn';
+
+  @override
+  String get closeAllDialogTitle => 'Konservi ŝanĝojn?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Ĉu vi volas konservi ŝanĝojn en $count dokumentoj antaŭ fermi?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Ĉu vi volas konservi ŝanĝojn en 1 dokumento antaŭ fermi?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Konservi ĉiujn';
+
+  @override
+  String get closeAllDialogDontSave => 'Ne konservi';
+
+  @override
+  String get closeAllDialogCancel => 'Nuligi';
+
+  @override
   String get saveChangesTitle => 'Konservi sxangxojn?';
 
   @override

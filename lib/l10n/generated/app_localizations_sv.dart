@@ -111,6 +111,30 @@ class AppLocalizationsSv extends AppLocalizations {
   String get menuCloseWindow => 'Stäng fönster';
 
   @override
+  String get menuCloseAll => 'Stäng alla';
+
+  @override
+  String get closeAllDialogTitle => 'Spara ändringar?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Vill du spara ändringar i $count dokument innan du stänger?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Vill du spara ändringar i 1 dokument innan du stänger?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Spara alla';
+
+  @override
+  String get closeAllDialogDontSave => 'Spara inte';
+
+  @override
+  String get closeAllDialogCancel => 'Avbryt';
+
+  @override
   String get saveChangesTitle => 'Spara ändringar?';
 
   @override

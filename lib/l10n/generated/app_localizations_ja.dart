@@ -93,6 +93,29 @@ class AppLocalizationsJa extends AppLocalizations {
   String get menuCloseWindow => 'ウインドウを閉じる';
 
   @override
+  String get menuCloseAll => 'すべて閉じる';
+
+  @override
+  String get closeAllDialogTitle => '変更を保存しますか？';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return '閉じる前に$count個のドキュメントの変更を保存しますか？';
+  }
+
+  @override
+  String get closeAllDialogMessageOne => '閉じる前に1個のドキュメントの変更を保存しますか？';
+
+  @override
+  String get closeAllDialogSaveAll => 'すべて保存';
+
+  @override
+  String get closeAllDialogDontSave => '保存しない';
+
+  @override
+  String get closeAllDialogCancel => 'キャンセル';
+
+  @override
   String get saveChangesTitle => '変更を保存しますか？';
 
   @override

@@ -93,6 +93,30 @@ class AppLocalizationsSq extends AppLocalizations {
   String get menuCloseWindow => 'Mbyll dritaren';
 
   @override
+  String get menuCloseAll => 'Mbyll të gjitha';
+
+  @override
+  String get closeAllDialogTitle => 'Ruaj ndryshimet?';
+
+  @override
+  String closeAllDialogMessage(int count) {
+    return 'Dëshironi të ruani ndryshimet në $count dokumente para se të mbyllni?';
+  }
+
+  @override
+  String get closeAllDialogMessageOne =>
+      'Dëshironi të ruani ndryshimet në 1 dokument para se të mbyllni?';
+
+  @override
+  String get closeAllDialogSaveAll => 'Ruaj të gjitha';
+
+  @override
+  String get closeAllDialogDontSave => 'Mos ruaj';
+
+  @override
+  String get closeAllDialogCancel => 'Anulo';
+
+  @override
   String get saveChangesTitle => 'Ruaj ndryshimet?';
 
   @override
