@@ -5,8 +5,9 @@ import desktop_multi_window
 @main
 class AppDelegate: FlutterAppDelegate {
   override func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-    // Don't auto-terminate; Flutter handles window lifecycle
-    return true
+    // Don't auto-terminate when last window closes
+    // Flutter/Welcome window handles app lifecycle with exit(0)
+    return false
   }
 
   override func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {

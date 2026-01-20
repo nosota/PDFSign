@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -84,36 +86,29 @@ class _SettingsAppState extends ConsumerState<SettingsApp>
   }
 
   /// Handles window close notification.
+  /// If this is the last visible window, terminates the application.
   @override
   void onWindowClose() async {
-    if (kDebugMode) {
-      print('>>> Settings onWindowClose() called - cleaning up');
-    }
+    final service = WindowManagerService.instance;
+
     // Clean up resources BEFORE window closes
     windowManager.removeListener(this);
-    WindowManagerService.instance.clearSettingsWindowId();
+    service.clearSettingsWindowId();
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
 
-    // Check if this is the last visible sub-window
-    final service = WindowManagerService.instance;
-    final hasOtherPdfs = service.hasOpenWindows;
-    // Settings ID already cleared, so hasSettingsWindow will be false
+    // Check if there are other visible windows
+    final hasOpenPdfs = service.hasOpenWindows;
+    final isWelcomeVisible = !service.isWelcomeHidden;
 
-    if (!hasOtherPdfs) {
-      // This is the last sub-window - show Welcome before destroying
-      if (kDebugMode) {
-        print('>>> Settings: Last sub-window, broadcasting showWelcome');
-      }
-      await WindowBroadcast.broadcastShowWelcome();
-      // Small delay to ensure Welcome window shows before we destroy
-      await Future.delayed(const Duration(milliseconds: 50));
+    if (!hasOpenPdfs && !isWelcomeVisible) {
+      // This is the last visible window - terminate the app
+      exit(0);
     }
 
-    if (kDebugMode) {
-      print('>>> Settings cleanup completed, calling destroy()');
-    }
-    // Actually close the window
+    // Other visible windows exist - just close this window
+    // Using windowManager.destroy() is safe now because
+    // applicationShouldTerminateAfterLastWindowClosed = false in AppDelegate
     await windowManager.destroy();
   }
 

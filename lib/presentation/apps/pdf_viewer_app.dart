@@ -208,40 +208,30 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     // null = dialog dismissed or cancelled, don't close
   }
 
-  /// Unregisters from global tracker and destroys the window.
+  /// Unregisters from global tracker and closes the window.
+  /// If this is the last visible window, terminates the application.
   Future<void> _destroyWindow() async {
-    if (kDebugMode) {
-      print('>>> PDF _destroyWindow() called for $_windowId');
-    }
+    final service = WindowManagerService.instance;
 
     // Unregister from PDF window tracker FIRST to get accurate count
     if (_windowId != null) {
-      WindowManagerService.instance.unregisterWindow(_windowId!);
+      service.unregisterWindow(_windowId!);
     }
 
-    // Check if this is the last visible sub-window
-    // After unregistering, check remaining windows
-    final service = WindowManagerService.instance;
+    // Check if there are other visible windows
+    // Welcome is hidden (it hides when first PDF opens), so it doesn't count
     final hasOtherPdfs = service.hasOpenWindows;
     final hasSettings = service.hasSettingsWindow;
 
     if (!hasOtherPdfs && !hasSettings) {
-      // This is the last sub-window - show Welcome before destroying
-      if (kDebugMode) {
-        print('>>> PDF: Last sub-window, broadcasting showWelcome');
-      }
-      await WindowBroadcast.broadcastShowWelcome();
-      // Small delay to ensure Welcome window shows before we destroy
-      await Future.delayed(const Duration(milliseconds: 50));
+      // This is the last visible window - terminate the app
+      exit(0);
     }
 
-    if (kDebugMode) {
-      print('>>> PDF calling windowManager.destroy()');
-    }
+    // Other visible windows exist - just close this window
+    // Using windowManager.destroy() is safe now because
+    // applicationShouldTerminateAfterLastWindowClosed = false in AppDelegate
     await windowManager.destroy();
-    if (kDebugMode) {
-      print('>>> PDF destroy() completed');
-    }
   }
 
   /// Reloads preferences and refreshes UI when window becomes active.

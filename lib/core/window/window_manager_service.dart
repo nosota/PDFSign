@@ -32,6 +32,11 @@ class WindowManagerService {
   /// Flag to prevent race condition when creating Settings window.
   bool _isCreatingSettingsWindow = false;
 
+  /// Tracks whether Welcome window is hidden.
+  /// Once hidden (by opening PDF or closing Welcome while other windows exist),
+  /// Welcome never shows again until app restart.
+  bool _welcomeHidden = false;
+
   /// Gets the set of currently open window IDs.
   Set<String> get openWindows => Set.unmodifiable(_openWindows);
 
@@ -243,6 +248,18 @@ class WindowManagerService {
 
   /// Checks if the Settings window is currently open.
   bool get hasSettingsWindow => _settingsWindowId != null;
+
+  /// Checks if Welcome window is hidden.
+  bool get isWelcomeHidden => _welcomeHidden;
+
+  /// Marks Welcome window as hidden.
+  /// Called when PDF opens or when user closes Welcome while other windows exist.
+  void setWelcomeHidden() {
+    _welcomeHidden = true;
+    if (kDebugMode) {
+      print('Welcome window marked as hidden');
+    }
+  }
 
   /// Closes all open PDF viewer windows.
   Future<void> closeAllWindows() async {

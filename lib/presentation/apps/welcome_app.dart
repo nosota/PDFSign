@@ -47,17 +47,7 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
   /// Initializes window broadcast for receiving preference change notifications.
   Future<void> _initWindowBroadcast() async {
     WindowBroadcast.setOnLocaleChanged(_handleLocaleChanged);
-    WindowBroadcast.setOnShowWelcome(_handleShowWelcome);
     await WindowBroadcast.init();
-  }
-
-  /// Handles showWelcome broadcast from a sub-window that's about to close.
-  ///
-  /// Shows this window to ensure there's always a visible window
-  /// and macOS doesn't terminate the app.
-  void _handleShowWelcome() {
-    windowManager.show();
-    windowManager.focus();
   }
 
   /// Handles locale changed broadcast from another window.
@@ -79,14 +69,15 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
 
   /// Handles window close.
   ///
-  /// If there are other windows (PDF or Settings), hides Welcome Screen.
+  /// If there are other windows (PDF or Settings), hides Welcome Screen permanently.
   /// If Welcome is the only window, quits the application.
   @override
   void onWindowClose() async {
     final hasOtherWindows = _hasOtherOpenWindows();
 
     if (hasOtherWindows) {
-      // Other windows exist - just hide Welcome
+      // Other windows exist - hide Welcome permanently
+      WindowManagerService.instance.setWelcomeHidden();
       await windowManager.hide();
     } else {
       // Welcome is the only window - quit the app
@@ -147,7 +138,6 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
   void dispose() {
     windowManager.removeListener(this);
     WindowBroadcast.setOnLocaleChanged(null);
-    WindowBroadcast.setOnShowWelcome(null);
     super.dispose();
   }
 
@@ -182,7 +172,11 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
           includeSaveAs: false,
           includeSaveAll: false,
           includeShare: false,
-          onFileOpened: () => windowManager.hide(),
+          onFileOpened: () {
+            // Hide Welcome permanently when PDF opens
+            WindowManagerService.instance.setWelcomeHidden();
+            windowManager.hide();
+          },
           // Close All - enabled only if there are PDF windows
           includeCloseAll: true,
           onCloseAll: _handleCloseAll,
