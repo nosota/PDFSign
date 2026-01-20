@@ -19,14 +19,20 @@ class AppDelegate: FlutterAppDelegate {
     FlutterMultiWindowPlugin.setOnWindowCreatedCallback { controller in
       RegisterGeneratedPlugins(registry: controller)
 
+      // Setup window lifecycle channel for sub-windows
+      // This handles window close events and allows Flutter to control closing
+      let windowChannel = FlutterMethodChannel(
+        name: "com.pdfsign/window",
+        binaryMessenger: controller.engine.binaryMessenger
+      )
+
       // Setup method channel for toolbar requests
-      // Toolbar is only added when Flutter explicitly requests it (PDF viewer windows)
-      let channel = FlutterMethodChannel(
+      let toolbarChannel = FlutterMethodChannel(
         name: "com.pdfsign/toolbar",
         binaryMessenger: controller.engine.binaryMessenger
       )
 
-      channel.setMethodCallHandler { [weak controller] call, result in
+      toolbarChannel.setMethodCallHandler { [weak controller] call, result in
         guard let controller = controller else {
           result(nil)
           return
@@ -55,13 +61,75 @@ class AppDelegate: FlutterAppDelegate {
           result(nil)
 
         default:
-          // Let PDFSignToolbarHelper handle other methods (onSharePressed)
           result(FlutterMethodNotImplemented)
         }
       }
 
+      // Setup window channel handler for close/destroy operations
+      windowChannel.setMethodCallHandler { [weak controller] call, result in
+        guard let controller = controller else {
+          result(nil)
+          return
+        }
+
+        DispatchQueue.main.async {
+          switch call.method {
+          case "close":
+            // Close the window (triggers windowShouldClose delegate)
+            controller.view.window?.performClose(nil)
+            result(nil)
+
+          case "destroy":
+            // Force close without asking delegate
+            controller.view.window?.close()
+            result(nil)
+
+          case "hide":
+            // Hide the window
+            controller.view.window?.orderOut(nil)
+            result(nil)
+
+          case "show":
+            // Show and focus the window
+            controller.view.window?.makeKeyAndOrderFront(nil)
+            result(nil)
+
+          case "setPreventClose":
+            // Enable/disable close prevention (sets up delegate)
+            let prevent = call.arguments as? Bool ?? false
+            if let window = controller.view.window {
+              if prevent {
+                let delegate = SubWindowDelegate(
+                  window: window,
+                  channel: windowChannel
+                )
+                window.delegate = delegate
+                // Keep reference
+                objc_setAssociatedObject(
+                  window,
+                  "windowDelegate",
+                  delegate,
+                  .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+                )
+              } else {
+                window.delegate = nil
+                objc_setAssociatedObject(
+                  window,
+                  "windowDelegate",
+                  nil,
+                  .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+                )
+              }
+            }
+            result(nil)
+
+          default:
+            result(FlutterMethodNotImplemented)
+          }
+        }
+      }
+
       // Setup drop target for sub-windows (desktop_drop only handles main window)
-      // This is needed for all sub-windows that accept file drops
       DispatchQueue.main.async {
         if let window = controller.view.window {
           let dropHelper = SubWindowDropTarget(
@@ -80,6 +148,50 @@ class AppDelegate: FlutterAppDelegate {
         }
       }
     }
+  }
+}
+
+/// Delegate for sub-windows to intercept close events and track focus.
+/// Sends events to Flutter: onWindowClose, onWindowFocus, onWindowBlur.
+/// Flutter decides whether to close and calls 'destroy' when ready.
+class SubWindowDelegate: NSObject, NSWindowDelegate {
+  private weak var window: NSWindow?
+  private let channel: FlutterMethodChannel
+  private var preventClose: Bool = true
+
+  init(window: NSWindow, channel: FlutterMethodChannel) {
+    self.window = window
+    self.channel = channel
+    super.init()
+  }
+
+  func setPreventClose(_ prevent: Bool) {
+    preventClose = prevent
+  }
+
+  func windowShouldClose(_ sender: NSWindow) -> Bool {
+    if preventClose {
+      // Notify Flutter about close request
+      channel.invokeMethod("onWindowClose", arguments: nil)
+      // Prevent immediate close - Flutter will call 'destroy' when ready
+      return false
+    }
+    return true
+  }
+
+  func windowWillClose(_ notification: Notification) {
+    // Window is closing, clean up delegate reference
+    window?.delegate = nil
+  }
+
+  func windowDidBecomeKey(_ notification: Notification) {
+    // Window gained focus
+    channel.invokeMethod("onWindowFocus", arguments: nil)
+  }
+
+  func windowDidResignKey(_ notification: Notification) {
+    // Window lost focus
+    channel.invokeMethod("onWindowBlur", arguments: nil)
   }
 }
 

@@ -4,8 +4,8 @@ import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:window_manager/window_manager.dart';
 
+import 'package:pdfsign/core/platform/sub_window_channel.dart';
 import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/core/window/window_broadcast.dart';
 import 'package:pdfsign/core/window/window_manager_service.dart';
@@ -29,8 +29,7 @@ class SettingsApp extends ConsumerStatefulWidget {
   ConsumerState<SettingsApp> createState() => _SettingsAppState();
 }
 
-class _SettingsAppState extends ConsumerState<SettingsApp>
-    with WindowListener {
+class _SettingsAppState extends ConsumerState<SettingsApp> {
   /// Navigator key for showing dialogs.
   final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -42,10 +41,7 @@ class _SettingsAppState extends ConsumerState<SettingsApp>
   void initState() {
     super.initState();
     _initWindowBroadcast();
-
-    // Register window listener for focus tracking and close interception
-    windowManager.addListener(this);
-    windowManager.setPreventClose(true);
+    _initWindowChannel();
 
     // DEBUG: Log window ID on startup
     if (kDebugMode) {
@@ -54,6 +50,14 @@ class _SettingsAppState extends ConsumerState<SettingsApp>
         print('>>> Settings window started with ID: ${controller.windowId}');
       });
     }
+  }
+
+  /// Initializes window channel for close interception and focus tracking.
+  void _initWindowChannel() {
+    SubWindowChannel.setOnWindowClose(_handleWindowClose);
+    SubWindowChannel.setOnWindowFocus(_handleWindowFocus);
+    SubWindowChannel.setOnWindowBlur(_handleWindowBlur);
+    SubWindowChannel.setPreventClose(true);
   }
 
   /// Initializes window broadcast for receiving preference change notifications.
@@ -73,41 +77,52 @@ class _SettingsAppState extends ConsumerState<SettingsApp>
     ref.read(localePreferenceProvider.notifier).reload();
   }
 
-  @override
-  void onWindowFocus() {
+  void _handleWindowFocus() {
     _isWindowFocused = true;
     setState(() {});
   }
 
-  @override
-  void onWindowBlur() {
+  void _handleWindowBlur() {
     _isWindowFocused = false;
     setState(() {});
   }
 
-  /// Handles window close notification.
+  /// Handles window close request (system close button or Cmd+W).
   /// If this is the last visible window, terminates the application.
-  @override
-  void onWindowClose() async {
+  void _handleWindowClose() async {
     final service = WindowManagerService.instance;
 
     // Check state BEFORE cleanup to make correct decision
     final hasOpenPdfs = service.hasOpenWindows;
     final isWelcomeVisible = !service.isWelcomeHidden;
 
-    // Clean up resources AFTER checking state
-    windowManager.removeListener(this);
+    if (kDebugMode) {
+      print('>>> Settings _handleWindowClose:');
+      print('>>>   hasOpenPdfs: $hasOpenPdfs');
+      print('>>>   isWelcomeHidden: ${service.isWelcomeHidden}');
+      print('>>>   isWelcomeVisible: $isWelcomeVisible');
+      print('>>>   openWindows: ${service.openWindows}');
+    }
+
+    // Clean up resources
     service.clearSettingsWindowId();
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
+    SubWindowChannel.dispose();
 
     if (!hasOpenPdfs && !isWelcomeVisible) {
       // This is the last visible window - terminate the app
+      if (kDebugMode) {
+        print('>>> Settings: last visible window, calling exit(0)');
+      }
       exit(0);
     }
 
     // Other visible windows exist - just close this window
-    await windowManager.destroy();
+    if (kDebugMode) {
+      print('>>> Settings: other windows exist, calling destroy()');
+    }
+    await SubWindowChannel.destroy();
   }
 
   @override
@@ -115,14 +130,11 @@ class _SettingsAppState extends ConsumerState<SettingsApp>
     if (kDebugMode) {
       print('>>> Settings dispose() called');
     }
-    // Cleanup already done in onWindowClose(), but do it again just in case
-    // (dispose might be called without onWindowClose in some scenarios)
-    try {
-      windowManager.removeListener(this);
-    } catch (_) {}
+    // Cleanup (may have been done in _handleWindowClose, but do it again for safety)
     WindowManagerService.instance.clearSettingsWindowId();
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
+    SubWindowChannel.dispose();
     super.dispose();
   }
 
@@ -200,8 +212,8 @@ class _SettingsAppState extends ConsumerState<SettingsApp>
           includeCloseAll: true,
           onCloseAll: _handleCloseAll,
           isCloseAllEnabled: hasOpenPdfs,
-          // Use windowManager.close() which triggers onWindowClose() for cleanup
-          onCloseWindow: () => windowManager.close(),
+          // Use SubWindowChannel.close() which triggers _handleWindowClose
+          onCloseWindow: SubWindowChannel.close,
           child: child!,
         );
       },

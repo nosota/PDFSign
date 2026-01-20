@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'package:pdfsign/core/platform/sub_window_channel.dart';
 import 'package:pdfsign/core/platform/toolbar_channel.dart';
 import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/core/window/window_broadcast.dart';
@@ -47,8 +48,7 @@ class PdfViewerApp extends ConsumerStatefulWidget {
   ConsumerState<PdfViewerApp> createState() => _PdfViewerAppState();
 }
 
-class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
-    with WindowListener {
+class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   /// Navigator key for showing dialogs.
   final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -77,20 +77,28 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     ToolbarChannel.setupToolbar(); // Request native toolbar with Share button
     ToolbarChannel.setOnSharePressed(_handleShare);
 
+    // Initialize window channel for close interception and focus tracking
+    _initWindowChannel();
+
     // Initialize window broadcast for inter-window communication
     _initWindowBroadcast();
-
-    // Register window listener for close interception
-    windowManager.addListener(this);
-    windowManager.setPreventClose(true);
 
     // Store original PDF bytes for Save operations
     _initOriginalPdfStorage();
 
     // Set initial window title (just filename, no suffix)
+    // Note: windowManager.setTitle works for sub-windows too
     WidgetsBinding.instance.addPostFrameCallback((_) {
       windowManager.setTitle(widget.fileName);
     });
+  }
+
+  /// Initializes window channel for close interception and focus tracking.
+  void _initWindowChannel() {
+    SubWindowChannel.setOnWindowClose(_handleWindowClose);
+    SubWindowChannel.setOnWindowFocus(_handleWindowFocus);
+    SubWindowChannel.setOnWindowBlur(_handleWindowBlur);
+    SubWindowChannel.setPreventClose(true);
   }
 
   /// Initializes window broadcast for receiving preference change notifications.
@@ -144,8 +152,8 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     WindowBroadcast.setOnDirtyStateChanged(null);
     WindowBroadcast.setOnRequestDirtyStates(null);
 
-    // Remove window listener
-    windowManager.removeListener(this);
+    // Clean up window channel
+    SubWindowChannel.dispose();
     // Clean up original PDF storage
     ref.read(originalPdfStorageProvider).dispose();
     super.dispose();
@@ -177,9 +185,9 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     windowManager.setTitle('${widget.fileName} - $suffix');
   }
 
-  /// Intercepts window close to show save dialog if needed.
-  @override
-  void onWindowClose() async {
+  /// Handles window close request (system close button or Cmd+W).
+  /// Shows save dialog if document has unsaved changes.
+  void _handleWindowClose() async {
     final isDirty = ref.read(documentDirtyProvider);
 
     if (!isDirty) {
@@ -223,23 +231,33 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
     final hasOtherPdfs = service.hasOpenWindows;
     final hasSettings = service.hasSettingsWindow;
 
+    if (kDebugMode) {
+      print('>>> PDF _destroyWindow:');
+      print('>>>   hasOtherPdfs: $hasOtherPdfs');
+      print('>>>   hasSettings: $hasSettings');
+      print('>>>   openWindows: ${service.openWindows}');
+    }
+
     if (!hasOtherPdfs && !hasSettings) {
       // This is the last visible window - terminate the app
+      if (kDebugMode) {
+        print('>>> PDF: last visible window, calling exit(0)');
+      }
       exit(0);
     }
 
     // Other visible windows exist - just close this window
-    // Using windowManager.destroy() is safe now because
-    // applicationShouldTerminateAfterLastWindowClosed = false in AppDelegate
-    await windowManager.destroy();
+    if (kDebugMode) {
+      print('>>> PDF: other windows exist, calling destroy()');
+    }
+    await SubWindowChannel.destroy();
   }
 
   /// Reloads preferences and refreshes UI when window becomes active.
   ///
   /// This syncs settings changed in other windows (e.g., Settings window)
   /// and ensures menu state reflects current dirty state.
-  @override
-  void onWindowFocus() {
+  void _handleWindowFocus() {
     _isWindowFocused = true;
     // Force rebuild to render PlatformMenuBar and update menu state
     setState(() {});
@@ -249,8 +267,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
 
   /// Called when window loses focus.
   /// Stops rendering PlatformMenuBar so focused window can take control.
-  @override
-  void onWindowBlur() {
+  void _handleWindowBlur() {
     _isWindowFocused = false;
     setState(() {});
   }
@@ -579,8 +596,8 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp>
               includeCloseAll: true,
               onCloseAll: _handleCloseAll,
               isCloseAllEnabled: true,
-              // Use custom close to trigger save confirmation dialog
-              onCloseWindow: () => windowManager.close(),
+              // Use SubWindowChannel.close() to trigger save confirmation dialog
+              onCloseWindow: SubWindowChannel.close,
               child: child!,
             );
           },
