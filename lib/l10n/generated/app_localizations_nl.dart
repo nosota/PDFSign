@@ -114,6 +114,9 @@ class AppLocalizationsNl extends AppLocalizations {
   String get menuCloseAll => 'Alles sluiten';
 
   @override
+  String get menuQuit => 'Stop PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Wijzigingen opslaan?';
 
   @override

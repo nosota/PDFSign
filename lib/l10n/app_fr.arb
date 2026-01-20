@@ -27,6 +27,7 @@
   "menuShare": "Partager...",
   "menuCloseWindow": "Fermer la fenêtre",
   "menuCloseAll": "Tout fermer",
+  "menuQuit": "Quitter PDFSign",
   "closeAllDialogTitle": "Enregistrer les modifications ?",
   "closeAllDialogMessage": "Voulez-vous enregistrer les modifications de {count} documents avant de fermer ?",
   "closeAllDialogMessageOne": "Voulez-vous enregistrer les modifications de 1 document avant de fermer ?",

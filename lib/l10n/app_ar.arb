@@ -27,6 +27,7 @@
   "menuShare": "مشاركة...",
   "menuCloseWindow": "إغلاق النافذة",
   "menuCloseAll": "إغلاق الكل",
+  "menuQuit": "إنهاء PDFSign",
   "closeAllDialogTitle": "حفظ التغييرات؟",
   "closeAllDialogMessage": "هل تريد حفظ التغييرات في {count} مستند قبل الإغلاق؟",
   "closeAllDialogMessageOne": "هل تريد حفظ التغييرات في مستند واحد قبل الإغلاق؟",

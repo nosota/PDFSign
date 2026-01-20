@@ -96,6 +96,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get menuCloseAll => 'सभी बंद करें';
 
   @override
+  String get menuQuit => 'PDFSign से बाहर निकलें';
+
+  @override
   String get closeAllDialogTitle => 'परिवर्तन सहेजें?';
 
   @override

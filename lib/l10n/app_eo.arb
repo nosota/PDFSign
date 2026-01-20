@@ -27,6 +27,7 @@
   "menuShare": "Kunhavigi...",
   "menuCloseWindow": "Fermi fenestron",
   "menuCloseAll": "Fermi ĉiujn",
+  "menuQuit": "Eliri PDFSign",
   "closeAllDialogTitle": "Konservi ŝanĝojn?",
   "closeAllDialogMessage": "Ĉu vi volas konservi ŝanĝojn en {count} dokumentoj antaŭ fermi?",
   "closeAllDialogMessageOne": "Ĉu vi volas konservi ŝanĝojn en 1 dokumento antaŭ fermi?",

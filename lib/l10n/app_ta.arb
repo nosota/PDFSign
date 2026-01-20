@@ -27,6 +27,7 @@
   "menuShare": "Pakirvu...",
   "menuCloseWindow": "Jannal muda",
   "menuCloseAll": "அனைத்தையும் மூடு",
+  "menuQuit": "PDFSign-இலிருந்து வெளியேறு",
   "closeAllDialogTitle": "மாற்றங்களை சேமிக்கவா?",
   "closeAllDialogMessage": "மூடுவதற்கு முன் {count} ஆவணங்களில் மாற்றங்களை சேமிக்க விரும்புகிறீர்களா?",
   "closeAllDialogMessageOne": "மூடுவதற்கு முன் 1 ஆவணத்தில் மாற்றங்களை சேமிக்க விரும்புகிறீர்களா?",

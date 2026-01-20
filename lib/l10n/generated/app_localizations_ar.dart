@@ -96,6 +96,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get menuCloseAll => 'إغلاق الكل';
 
   @override
+  String get menuQuit => 'إنهاء PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'حفظ التغييرات؟';
 
   @override

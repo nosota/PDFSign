@@ -96,6 +96,9 @@ class AppLocalizationsBn extends AppLocalizations {
   String get menuCloseAll => 'সব বন্ধ করুন';
 
   @override
+  String get menuQuit => 'PDFSign থেকে প্রস্থান';
+
+  @override
   String get closeAllDialogTitle => 'পরিবর্তন সংরক্ষণ করবেন?';
 
   @override

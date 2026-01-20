@@ -96,6 +96,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get menuCloseAll => 'すべて閉じる';
 
   @override
+  String get menuQuit => 'PDFSignを終了';
+
+  @override
   String get closeAllDialogTitle => '変更を保存しますか？';
 
   @override

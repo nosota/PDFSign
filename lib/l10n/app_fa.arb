@@ -27,6 +27,7 @@
   "menuShare": "اشتراک‌گذاری...",
   "menuCloseWindow": "بستن پنجره",
   "menuCloseAll": "بستن همه",
+  "menuQuit": "خروج از PDFSign",
   "closeAllDialogTitle": "ذخیره تغییرات؟",
   "closeAllDialogMessage": "آیا می‌خواهید تغییرات در {count} سند را قبل از بستن ذخیره کنید؟",
   "closeAllDialogMessageOne": "آیا می‌خواهید تغییرات در 1 سند را قبل از بستن ذخیره کنید؟",

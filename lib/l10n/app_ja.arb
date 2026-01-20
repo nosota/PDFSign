@@ -27,6 +27,7 @@
   "menuShare": "共有...",
   "menuCloseWindow": "ウインドウを閉じる",
   "menuCloseAll": "すべて閉じる",
+  "menuQuit": "PDFSignを終了",
   "closeAllDialogTitle": "変更を保存しますか？",
   "closeAllDialogMessage": "閉じる前に{count}個のドキュメントの変更を保存しますか？",
   "closeAllDialogMessageOne": "閉じる前に1個のドキュメントの変更を保存しますか？",

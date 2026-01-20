@@ -27,6 +27,7 @@
   "menuShare": "Sajha karein...",
   "menuCloseWindow": "Window band karein",
   "menuCloseAll": "सभी बंद करें",
+  "menuQuit": "PDFSign से बाहर निकलें",
   "closeAllDialogTitle": "परिवर्तन सहेजें?",
   "closeAllDialogMessage": "बंद करने से पहले {count} दस्तावेजों में परिवर्तन सहेजना चाहते हैं?",
   "closeAllDialogMessageOne": "बंद करने से पहले 1 दस्तावेज में परिवर्तन सहेजना चाहते हैं?",

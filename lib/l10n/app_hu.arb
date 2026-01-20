@@ -27,6 +27,7 @@
   "menuShare": "Megosztás...",
   "menuCloseWindow": "Ablak bezárása",
   "menuCloseAll": "Összes bezárása",
+  "menuQuit": "PDFSign bezárása",
   "closeAllDialogTitle": "Változások mentése?",
   "closeAllDialogMessage": "Szeretné menteni a változtatásokat {count} dokumentumban bezárás előtt?",
   "closeAllDialogMessageOne": "Szeretné menteni a változtatásokat 1 dokumentumban bezárás előtt?",

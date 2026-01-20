@@ -96,6 +96,9 @@ class AppLocalizationsBe extends AppLocalizations {
   String get menuCloseAll => 'Закрыць усе';
 
   @override
+  String get menuQuit => 'Выхад з PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Захаваць змены?';
 
   @override

@@ -27,6 +27,7 @@
   "menuShare": "Podijeli...",
   "menuCloseWindow": "Zatvori prozor",
   "menuCloseAll": "Zatvori sve",
+  "menuQuit": "Zatvori PDFSign",
   "closeAllDialogTitle": "Spremi promjene?",
   "closeAllDialogMessage": "Želite li spremiti promjene u {count} dokumenata prije zatvaranja?",
   "closeAllDialogMessageOne": "Želite li spremiti promjene u 1 dokumentu prije zatvaranja?",

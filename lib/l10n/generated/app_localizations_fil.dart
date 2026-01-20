@@ -96,6 +96,9 @@ class AppLocalizationsFil extends AppLocalizations {
   String get menuCloseAll => 'Isara lahat';
 
   @override
+  String get menuQuit => 'Lumabas sa PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'I-save ang mga pagbabago?';
 
   @override

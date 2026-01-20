@@ -27,6 +27,7 @@
   "menuShare": "Kongsi...",
   "menuCloseWindow": "Tutup tetingkap",
   "menuCloseAll": "Tutup semua",
+  "menuQuit": "Keluar PDFSign",
   "closeAllDialogTitle": "Simpan perubahan?",
   "closeAllDialogMessage": "Adakah anda ingin menyimpan perubahan dalam {count} dokumen sebelum menutup?",
   "closeAllDialogMessageOne": "Adakah anda ingin menyimpan perubahan dalam 1 dokumen sebelum menutup?",

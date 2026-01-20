@@ -120,6 +120,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get menuCloseAll => 'Закрыть все';
 
   @override
+  String get menuQuit => 'Выход из PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Сохранить изменения?';
 
   @override

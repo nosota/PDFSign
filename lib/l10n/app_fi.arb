@@ -27,6 +27,7 @@
   "menuShare": "Jaa...",
   "menuCloseWindow": "Sulje ikkuna",
   "menuCloseAll": "Sulje kaikki",
+  "menuQuit": "Lopeta PDFSign",
   "closeAllDialogTitle": "Tallenna muutokset?",
   "closeAllDialogMessage": "Haluatko tallentaa muutokset {count} asiakirjaan ennen sulkemista?",
   "closeAllDialogMessageOne": "Haluatko tallentaa muutokset 1 asiakirjaan ennen sulkemista?",

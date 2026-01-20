@@ -96,6 +96,9 @@ class AppLocalizationsKm extends AppLocalizations {
   String get menuCloseAll => 'បិទទាំងអស់';
 
   @override
+  String get menuQuit => 'ចាកចេញពី PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'រក្សាទុកការផ្លាស់ប្តូរ?';
 
   @override

@@ -27,6 +27,7 @@
   "menuShare": "Mhway vway...",
   "menuCloseWindow": "Window peit",
   "menuCloseAll": "အားလုံးပိတ်ရန်",
+  "menuQuit": "PDFSign မှထွက်ရန်",
   "closeAllDialogTitle": "ပြောင်းလဲမှုများသိမ်းမလား?",
   "closeAllDialogMessage": "မပိတ်မီ စာရွက်စာတမ်း {count} ခုတွင် ပြောင်းလဲမှုများကို သိမ်းဆည်းလိုပါသလား?",
   "closeAllDialogMessageOne": "မပိတ်မီ စာရွက်စာတမ်း 1 ခုတွင် ပြောင်းလဲမှုများကို သိမ်းဆည်းလိုပါသလား?",

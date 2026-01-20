@@ -96,6 +96,9 @@ class AppLocalizationsCa extends AppLocalizations {
   String get menuCloseAll => 'Tanca-ho tot';
 
   @override
+  String get menuQuit => 'Sortir de PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Desar els canvis?';
 
   @override

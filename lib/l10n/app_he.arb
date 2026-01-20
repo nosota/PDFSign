@@ -27,6 +27,7 @@
   "menuShare": "שתף...",
   "menuCloseWindow": "סגור חלון",
   "menuCloseAll": "סגור הכל",
+  "menuQuit": "צא מ-PDFSign",
   "closeAllDialogTitle": "לשמור שינויים?",
   "closeAllDialogMessage": "האם ברצונך לשמור את השינויים ב-{count} מסמכים לפני הסגירה?",
   "closeAllDialogMessageOne": "האם ברצונך לשמור את השינויים במסמך אחד לפני הסגירה?",

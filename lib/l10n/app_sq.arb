@@ -27,6 +27,7 @@
   "menuShare": "Ndaj...",
   "menuCloseWindow": "Mbyll dritaren",
   "menuCloseAll": "Mbyll të gjitha",
+  "menuQuit": "Dil nga PDFSign",
   "closeAllDialogTitle": "Ruaj ndryshimet?",
   "closeAllDialogMessage": "Dëshironi të ruani ndryshimet në {count} dokumente para se të mbyllni?",
   "closeAllDialogMessageOne": "Dëshironi të ruani ndryshimet në 1 dokument para se të mbyllni?",

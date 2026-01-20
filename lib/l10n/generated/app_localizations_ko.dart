@@ -96,6 +96,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get menuCloseAll => '모두 닫기';
 
   @override
+  String get menuQuit => 'PDFSign 종료';
+
+  @override
   String get closeAllDialogTitle => '변경사항을 저장하시겠습니까?';
 
   @override

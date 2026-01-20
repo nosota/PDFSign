@@ -27,6 +27,7 @@
   "menuShare": "แชร์...",
   "menuCloseWindow": "ปิดหน้าต่าง",
   "menuCloseAll": "ปิดทั้งหมด",
+  "menuQuit": "ออกจาก PDFSign",
   "closeAllDialogTitle": "บันทึกการเปลี่ยนแปลง?",
   "closeAllDialogMessage": "คุณต้องการบันทึกการเปลี่ยนแปลงใน {count} เอกสารก่อนปิดหรือไม่?",
   "closeAllDialogMessageOne": "คุณต้องการบันทึกการเปลี่ยนแปลงใน 1 เอกสารก่อนปิดหรือไม่?",

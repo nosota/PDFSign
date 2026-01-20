@@ -96,6 +96,9 @@ class AppLocalizationsEo extends AppLocalizations {
   String get menuCloseAll => 'Fermi ĉiujn';
 
   @override
+  String get menuQuit => 'Eliri PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Konservi ŝanĝojn?';
 
   @override

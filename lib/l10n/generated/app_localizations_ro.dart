@@ -96,6 +96,9 @@ class AppLocalizationsRo extends AppLocalizations {
   String get menuCloseAll => 'Închide tot';
 
   @override
+  String get menuQuit => 'Ieșire din PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Salvați modificările?';
 
   @override

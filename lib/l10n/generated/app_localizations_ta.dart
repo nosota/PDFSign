@@ -96,6 +96,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get menuCloseAll => 'அனைத்தையும் மூடு';
 
   @override
+  String get menuQuit => 'PDFSign-இலிருந்து வெளியேறு';
+
+  @override
   String get closeAllDialogTitle => 'மாற்றங்களை சேமிக்கவா?';
 
   @override

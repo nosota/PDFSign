@@ -27,6 +27,7 @@
   "menuShare": "Del...",
   "menuCloseWindow": "Luk vindue",
   "menuCloseAll": "Luk alle",
+  "menuQuit": "Afslut PDFSign",
   "closeAllDialogTitle": "Gem ændringer?",
   "closeAllDialogMessage": "Vil du gemme ændringerne i {count} dokumenter før lukning?",
   "closeAllDialogMessageOne": "Vil du gemme ændringerne i 1 dokument før lukning?",

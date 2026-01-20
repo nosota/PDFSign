@@ -27,6 +27,7 @@
   "menuShare": "Condividi...",
   "menuCloseWindow": "Chiudi finestra",
   "menuCloseAll": "Chiudi tutto",
+  "menuQuit": "Esci da PDFSign",
   "closeAllDialogTitle": "Salvare le modifiche?",
   "closeAllDialogMessage": "Vuoi salvare le modifiche a {count} documenti prima di chiudere?",
   "closeAllDialogMessageOne": "Vuoi salvare le modifiche a 1 documento prima di chiudere?",

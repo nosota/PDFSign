@@ -27,6 +27,7 @@
   "menuShare": "Paylaş...",
   "menuCloseWindow": "Pencereyi Kapat",
   "menuCloseAll": "Tümünü Kapat",
+  "menuQuit": "PDFSign'dan Çık",
   "closeAllDialogTitle": "Değişiklikler kaydedilsin mi?",
   "closeAllDialogMessage": "Kapatmadan önce {count} belgedeki değişiklikleri kaydetmek istiyor musunuz?",
   "closeAllDialogMessageOne": "Kapatmadan önce 1 belgedeki değişiklikleri kaydetmek istiyor musunuz?",

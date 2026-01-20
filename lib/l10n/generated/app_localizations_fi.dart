@@ -114,6 +114,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get menuCloseAll => 'Sulje kaikki';
 
   @override
+  String get menuQuit => 'Lopeta PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Tallenna muutokset?';
 
   @override

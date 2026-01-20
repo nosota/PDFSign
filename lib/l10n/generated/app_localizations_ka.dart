@@ -96,6 +96,9 @@ class AppLocalizationsKa extends AppLocalizations {
   String get menuCloseAll => 'ყველას დახურვა';
 
   @override
+  String get menuQuit => 'გასვლა PDFSign-დან';
+
+  @override
   String get closeAllDialogTitle => 'ცვლილებების შენახვა?';
 
   @override

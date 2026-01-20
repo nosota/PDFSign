@@ -27,6 +27,7 @@
   "menuShare": "Поділитися...",
   "menuCloseWindow": "Закрити вікно",
   "menuCloseAll": "Закрити все",
+  "menuQuit": "Вийти з PDFSign",
   "closeAllDialogTitle": "Зберегти зміни?",
   "closeAllDialogMessage": "Бажаєте зберегти зміни у {count} документах перед закриттям?",
   "closeAllDialogMessageOne": "Бажаєте зберегти зміни у 1 документі перед закриттям?",

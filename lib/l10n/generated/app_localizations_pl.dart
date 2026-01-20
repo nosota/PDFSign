@@ -120,6 +120,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get menuCloseAll => 'Zamknij wszystkie';
 
   @override
+  String get menuQuit => 'Zakończ PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Zapisać zmiany?';
 
   @override

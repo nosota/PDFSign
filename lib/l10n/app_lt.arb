@@ -27,6 +27,7 @@
   "menuShare": "Bendrinti...",
   "menuCloseWindow": "Uzdaryti langa",
   "menuCloseAll": "Uždaryti visus",
+  "menuQuit": "Išeiti iš PDFSign",
   "closeAllDialogTitle": "Išsaugoti pakeitimus?",
   "closeAllDialogMessage": "Ar norite išsaugoti pakeitimus {count} dokumentuose prieš uždarant?",
   "closeAllDialogMessageOne": "Ar norite išsaugoti pakeitimus 1 dokumente prieš uždarant?",

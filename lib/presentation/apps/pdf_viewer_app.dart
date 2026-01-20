@@ -101,7 +101,11 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     SubWindowChannel.setOnWindowClose(_handleWindowClose);
     SubWindowChannel.setOnWindowFocus(_handleWindowFocus);
     SubWindowChannel.setOnWindowBlur(_handleWindowBlur);
-    SubWindowChannel.setPreventClose(true);
+    // Delay setPreventClose to ensure native window is ready
+    // Native side also has retry mechanism as fallback
+    Future.delayed(const Duration(milliseconds: 200), () {
+      SubWindowChannel.setPreventClose(true);
+    });
   }
 
   /// Initializes window broadcast for receiving preference change notifications.
@@ -193,6 +197,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   void _handleWindowClose() async {
     final isDirty = ref.read(documentDirtyProvider);
 
+    if (kDebugMode) {
+      print('>>> _handleWindowClose called, isDirty=$isDirty');
+    }
+
     if (!isDirty) {
       await _destroyWindow();
       return;
@@ -201,14 +209,25 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     // Show save dialog
     final navigatorContext = _navigatorKey.currentContext;
     if (navigatorContext == null) {
+      if (kDebugMode) {
+        print('>>> _handleWindowClose: navigatorContext is null, destroying');
+      }
       await _destroyWindow();
       return;
+    }
+
+    if (kDebugMode) {
+      print('>>> _handleWindowClose: showing SaveChangesDialog');
     }
 
     final result = await SaveChangesDialog.show(
       navigatorContext,
       widget.fileName,
     );
+
+    if (kDebugMode) {
+      print('>>> _handleWindowClose: dialog result=$result');
+    }
 
     if (result == SaveChangesResult.save) {
       await _handleSave();
@@ -387,6 +406,45 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
         // Close all without saving
         await WindowBroadcast.broadcastCloseAll();
         break;
+      case CloseAllResult.cancel:
+      case null:
+        // User cancelled, do nothing
+        break;
+    }
+  }
+
+  /// Handles Quit command (Cmd+Q).
+  ///
+  /// Shows CloseAllDialog if any PDF windows have unsaved changes,
+  /// then quits the application.
+  Future<void> _handleQuit() async {
+    final navigatorContext = _navigatorKey.currentContext;
+    if (navigatorContext == null) {
+      // No context, just exit
+      exit(0);
+    }
+
+    final globalState = ref.read(globalDirtyStateProvider);
+    final dirtyCount = globalState.values.where((d) => d).length;
+
+    if (dirtyCount == 0) {
+      // No dirty windows, quit immediately
+      exit(0);
+    }
+
+    // Show close all dialog
+    final result = await CloseAllDialog.show(navigatorContext, dirtyCount);
+
+    switch (result) {
+      case CloseAllResult.saveAll:
+        // Save all dirty windows first, then quit
+        await WindowBroadcast.broadcastSaveAll();
+        // Small delay to ensure saves complete
+        await Future.delayed(const Duration(milliseconds: 100));
+        exit(0);
+      case CloseAllResult.discard:
+        // Quit without saving
+        exit(0);
       case CloseAllResult.cancel:
       case null:
         // User cancelled, do nothing
@@ -599,6 +657,8 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
               isCloseAllEnabled: true,
               // Use SubWindowChannel.close() to trigger save confirmation dialog
               onCloseWindow: SubWindowChannel.close,
+              // Quit (Cmd+Q) - same as Close All but exits app
+              onQuit: _handleQuit,
               child: child!,
             );
           },

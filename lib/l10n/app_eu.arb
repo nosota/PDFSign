@@ -27,6 +27,7 @@
   "menuShare": "Partekatu...",
   "menuCloseWindow": "Itxi leihoa",
   "menuCloseAll": "Itxi dena",
+  "menuQuit": "Irten PDFSign-etik",
   "closeAllDialogTitle": "Aldaketak gorde?",
   "closeAllDialogMessage": "Itxi baino lehen {count} dokumentuetako aldaketak gorde nahi dituzu?",
   "closeAllDialogMessageOne": "Itxi baino lehen dokumentu bateko aldaketak gorde nahi dituzu?",

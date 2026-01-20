@@ -96,6 +96,9 @@ class AppLocalizationsFa extends AppLocalizations {
   String get menuCloseAll => 'بستن همه';
 
   @override
+  String get menuQuit => 'خروج از PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'ذخیره تغییرات؟';
 
   @override

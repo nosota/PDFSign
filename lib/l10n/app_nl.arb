@@ -27,6 +27,7 @@
   "menuShare": "Deel...",
   "menuCloseWindow": "Sluit venster",
   "menuCloseAll": "Alles sluiten",
+  "menuQuit": "Stop PDFSign",
   "closeAllDialogTitle": "Wijzigingen opslaan?",
   "closeAllDialogMessage": "Wilt u de wijzigingen in {count} documenten opslaan voordat u sluit?",
   "closeAllDialogMessageOne": "Wilt u de wijzigingen in 1 document opslaan voordat u sluit?",

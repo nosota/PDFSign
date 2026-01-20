@@ -96,6 +96,9 @@ class AppLocalizationsKk extends AppLocalizations {
   String get menuCloseAll => 'Барлығын жабу';
 
   @override
+  String get menuQuit => 'PDFSign-нан шығу';
+
+  @override
   String get closeAllDialogTitle => 'Өзгерістерді сақтау керек пе?';
 
   @override

@@ -96,6 +96,9 @@ class AppLocalizationsSq extends AppLocalizations {
   String get menuCloseAll => 'Mbyll të gjitha';
 
   @override
+  String get menuQuit => 'Dil nga PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Ruaj ndryshimet?';
 
   @override

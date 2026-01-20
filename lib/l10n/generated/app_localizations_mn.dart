@@ -96,6 +96,9 @@ class AppLocalizationsMn extends AppLocalizations {
   String get menuCloseAll => 'Бүгдийг хаах';
 
   @override
+  String get menuQuit => 'PDFSign-аас гарах';
+
+  @override
   String get closeAllDialogTitle => 'Өөрчлөлтүүдийг хадгалах уу?';
 
   @override

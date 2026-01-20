@@ -33,6 +33,7 @@ class AppMenuBar extends ConsumerWidget {
     this.includeCloseAll = false,
     this.onCloseAll,
     this.isCloseAllEnabled = false,
+    this.onQuit,
     super.key,
   });
 
@@ -95,6 +96,10 @@ class AppMenuBar extends ConsumerWidget {
   /// Whether Close All menu item is enabled.
   final bool isCloseAllEnabled;
 
+  /// Callback when Quit is selected (Cmd+Q).
+  /// Should check for unsaved changes and show CloseAllDialog if needed.
+  final VoidCallback? onQuit;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final recentFilesAsync = ref.watch(recentFilesProvider);
@@ -120,10 +125,15 @@ class AppMenuBar extends ConsumerWidget {
                 ),
               ],
             ),
-            const PlatformMenuItemGroup(
+            PlatformMenuItemGroup(
               members: [
-                PlatformProvidedMenuItem(
-                  type: PlatformProvidedMenuItemType.quit,
+                PlatformMenuItem(
+                  label: localizations.menuQuit,
+                  shortcut: const SingleActivator(
+                    LogicalKeyboardKey.keyQ,
+                    meta: true,
+                  ),
+                  onSelected: onQuit,
                 ),
               ],
             ),

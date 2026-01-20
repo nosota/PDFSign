@@ -27,6 +27,7 @@
   "menuShare": "Dalieties...",
   "menuCloseWindow": "Aizvert logu",
   "menuCloseAll": "Aizvērt visu",
+  "menuQuit": "Iziet no PDFSign",
   "closeAllDialogTitle": "Saglabāt izmaiņas?",
   "closeAllDialogMessage": "Vai vēlaties saglabāt izmaiņas {count} dokumentos pirms aizvēršanas?",
   "closeAllDialogMessageOne": "Vai vēlaties saglabāt izmaiņas 1 dokumentā pirms aizvēršanas?",

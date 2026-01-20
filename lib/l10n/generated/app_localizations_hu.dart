@@ -96,6 +96,9 @@ class AppLocalizationsHu extends AppLocalizations {
   String get menuCloseAll => 'Összes bezárása';
 
   @override
+  String get menuQuit => 'PDFSign bezárása';
+
+  @override
   String get closeAllDialogTitle => 'Változások mentése?';
 
   @override

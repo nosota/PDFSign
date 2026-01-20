@@ -114,6 +114,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuCloseAll => 'Close All';
 
   @override
+  String get menuQuit => 'Quit PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Save Changes?';
 
   @override
@@ -331,6 +334,9 @@ class AppLocalizationsEnAu extends AppLocalizationsEn {
 
   @override
   String get menuCloseAll => 'Close All';
+
+  @override
+  String get menuQuit => 'Quit PDFSign';
 
   @override
   String get closeAllDialogTitle => 'Save Changes?';
@@ -552,6 +558,9 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   String get menuCloseAll => 'Close All';
 
   @override
+  String get menuQuit => 'Quit PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Save Changes?';
 
   @override
@@ -771,6 +780,9 @@ class AppLocalizationsEnNz extends AppLocalizationsEn {
   String get menuCloseAll => 'Close All';
 
   @override
+  String get menuQuit => 'Quit PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Save Changes?';
 
   @override
@@ -988,6 +1000,9 @@ class AppLocalizationsEnUs extends AppLocalizationsEn {
 
   @override
   String get menuCloseAll => 'Close All';
+
+  @override
+  String get menuQuit => 'Quit PDFSign';
 
   @override
   String get closeAllDialogTitle => 'Save Changes?';

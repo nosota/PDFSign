@@ -96,6 +96,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get menuCloseAll => 'Barchasini yopish';
 
   @override
+  String get menuQuit => 'PDFSign-dan chiqish';
+
+  @override
   String get closeAllDialogTitle => 'O\'zgarishlarni saqlash?';
 
   @override

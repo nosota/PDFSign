@@ -27,6 +27,7 @@
   "menuShare": "Deila...",
   "menuCloseWindow": "Loka glugga",
   "menuCloseAll": "Loka öllu",
+  "menuQuit": "Hætta í PDFSign",
   "closeAllDialogTitle": "Vista breytingar?",
   "closeAllDialogMessage": "Viltu vista breytingar í {count} skjölum áður en lokað er?",
   "closeAllDialogMessageOne": "Viltu vista breytingar í 1 skjali áður en lokað er?",

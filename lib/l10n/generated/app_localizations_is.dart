@@ -96,6 +96,9 @@ class AppLocalizationsIs extends AppLocalizations {
   String get menuCloseAll => 'Loka öllu';
 
   @override
+  String get menuQuit => 'Hætta í PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Vista breytingar?';
 
   @override

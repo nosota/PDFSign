@@ -27,6 +27,7 @@
   "menuShare": "Payla...",
   "menuCloseWindow": "Pencerani bagla",
   "menuCloseAll": "Hamısını bağla",
+  "menuQuit": "PDFSign-dan çıx",
   "closeAllDialogTitle": "Dəyişikliklər saxlanılsın?",
   "closeAllDialogMessage": "Bağlamadan əvvəl {count} sənəddəki dəyişiklikləri saxlamaq istəyirsiniz?",
   "closeAllDialogMessageOne": "Bağlamadan əvvəl 1 sənəddəki dəyişiklikləri saxlamaq istəyirsiniz?",

@@ -96,6 +96,9 @@ class AppLocalizationsEl extends AppLocalizations {
   String get menuCloseAll => 'Κλείσιμο όλων';
 
   @override
+  String get menuQuit => 'Τερματισμός PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Αποθήκευση αλλαγών;';
 
   @override

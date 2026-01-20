@@ -27,6 +27,7 @@
   "menuShare": "Khuvaaltsakh...",
   "menuCloseWindow": "Tsonkhig khakh",
   "menuCloseAll": "Бүгдийг хаах",
+  "menuQuit": "PDFSign-аас гарах",
   "closeAllDialogTitle": "Өөрчлөлтүүдийг хадгалах уу?",
   "closeAllDialogMessage": "Хаахаас өмнө {count} баримт бичигт өөрчлөлтүүдийг хадгалах уу?",
   "closeAllDialogMessageOne": "Хаахаас өмнө 1 баримт бичигт өөрчлөлтүүдийг хадгалах уу?",

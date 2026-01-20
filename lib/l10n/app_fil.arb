@@ -27,6 +27,7 @@
   "menuShare": "Ibahagi...",
   "menuCloseWindow": "Isara ang Window",
   "menuCloseAll": "Isara lahat",
+  "menuQuit": "Lumabas sa PDFSign",
   "closeAllDialogTitle": "I-save ang mga pagbabago?",
   "closeAllDialogMessage": "Gusto mo bang i-save ang mga pagbabago sa {count} dokumento bago isara?",
   "closeAllDialogMessageOne": "Gusto mo bang i-save ang mga pagbabago sa 1 dokumento bago isara?",

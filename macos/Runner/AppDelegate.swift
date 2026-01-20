@@ -136,7 +136,10 @@ class AppDelegate: FlutterAppDelegate {
           case "setPreventClose":
             // Enable/disable close prevention (sets up delegate)
             let prevent = call.arguments as? Bool ?? false
-            if let window = controller.view.window {
+            NSLog("WindowChannel: setPreventClose(%@) called", prevent ? "true" : "false")
+
+            // Helper function to setup delegate
+            func setupDelegate(window: NSWindow) {
               if prevent {
                 let delegate = SubWindowDelegate(
                   window: window,
@@ -150,6 +153,7 @@ class AppDelegate: FlutterAppDelegate {
                   delegate,
                   .OBJC_ASSOCIATION_RETAIN_NONATOMIC
                 )
+                NSLog("WindowChannel: SubWindowDelegate set up successfully")
               } else {
                 window.delegate = nil
                 objc_setAssociatedObject(
@@ -158,6 +162,23 @@ class AppDelegate: FlutterAppDelegate {
                   nil,
                   .OBJC_ASSOCIATION_RETAIN_NONATOMIC
                 )
+                NSLog("WindowChannel: SubWindowDelegate removed")
+              }
+            }
+
+            if let window = controller.view.window {
+              NSLog("WindowChannel: window found, setting up delegate")
+              setupDelegate(window: window)
+            } else {
+              NSLog("WindowChannel: window is NIL! Retrying in 100ms...")
+              // Retry after a short delay - window might not be ready yet
+              DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                if let window = controller.view.window {
+                  NSLog("WindowChannel: retry succeeded, window found")
+                  setupDelegate(window: window)
+                } else {
+                  NSLog("WindowChannel: retry failed, window still nil!")
+                }
               }
             }
             result(nil)
@@ -262,8 +283,10 @@ class SubWindowDelegate: NSObject, NSWindowDelegate {
   }
 
   func windowShouldClose(_ sender: NSWindow) -> Bool {
+    NSLog("SubWindowDelegate: windowShouldClose called, preventClose=%@", preventClose ? "true" : "false")
     if preventClose {
       // Notify Flutter about close request
+      NSLog("SubWindowDelegate: invoking onWindowClose to Flutter")
       channel.invokeMethod("onWindowClose", arguments: nil)
       // Prevent immediate close - Flutter will call 'destroy' when ready
       return false

@@ -27,6 +27,7 @@
   "menuShare": "Share...",
   "menuCloseWindow": "Close Window",
   "menuCloseAll": "Close All",
+  "menuQuit": "Quit PDFSign",
   "closeAllDialogTitle": "Save Changes?",
   "closeAllDialogMessage": "Do you want to save changes in {count} documents before closing?",
   "closeAllDialogMessageOne": "Do you want to save changes in 1 document before closing?",

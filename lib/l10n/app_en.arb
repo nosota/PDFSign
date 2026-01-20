@@ -123,6 +123,10 @@
   "@menuCloseAll": {
     "description": "Close All menu item - closes all open PDF windows"
   },
+  "menuQuit": "Quit PDFSign",
+  "@menuQuit": {
+    "description": "Quit application menu item"
+  },
   "closeAllDialogTitle": "Save Changes?",
   "@closeAllDialogTitle": {
     "description": "Title for close all dialog"

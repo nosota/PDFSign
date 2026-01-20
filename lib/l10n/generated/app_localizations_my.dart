@@ -96,6 +96,9 @@ class AppLocalizationsMy extends AppLocalizations {
   String get menuCloseAll => 'အားလုံးပိတ်ရန်';
 
   @override
+  String get menuQuit => 'PDFSign မှထွက်ရန်';
+
+  @override
   String get closeAllDialogTitle => 'ပြောင်းလဲမှုများသိမ်းမလား?';
 
   @override

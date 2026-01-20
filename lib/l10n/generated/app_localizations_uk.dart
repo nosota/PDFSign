@@ -120,6 +120,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get menuCloseAll => 'Закрити все';
 
   @override
+  String get menuQuit => 'Вийти з PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Зберегти зміни?';
 
   @override

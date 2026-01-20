@@ -96,6 +96,9 @@ class AppLocalizationsSl extends AppLocalizations {
   String get menuCloseAll => 'Zapri vse';
 
   @override
+  String get menuQuit => 'Zapusti PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Shrani spremembe?';
 
   @override

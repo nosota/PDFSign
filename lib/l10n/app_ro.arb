@@ -27,6 +27,7 @@
   "menuShare": "Partajare...",
   "menuCloseWindow": "Inchide fereastra",
   "menuCloseAll": "Închide tot",
+  "menuQuit": "Ieșire din PDFSign",
   "closeAllDialogTitle": "Salvați modificările?",
   "closeAllDialogMessage": "Doriți să salvați modificările din {count} documente înainte de închidere?",
   "closeAllDialogMessageOne": "Doriți să salvați modificările din 1 document înainte de închidere?",

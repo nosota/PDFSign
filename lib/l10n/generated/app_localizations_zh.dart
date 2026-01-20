@@ -96,6 +96,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get menuCloseAll => '全部关闭';
 
   @override
+  String get menuQuit => '退出 PDFSign';
+
+  @override
   String get closeAllDialogTitle => '保存更改？';
 
   @override
@@ -296,6 +299,9 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get menuCloseAll => '全部关闭';
 
   @override
+  String get menuQuit => '退出 PDFSign';
+
+  @override
   String get closeAllDialogTitle => '保存更改？';
 
   @override
@@ -494,6 +500,9 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get menuCloseAll => '全部關閉';
+
+  @override
+  String get menuQuit => '結束 PDFSign';
 
   @override
   String get closeAllDialogTitle => '儲存更動？';

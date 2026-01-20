@@ -27,6 +27,7 @@
   "menuShare": "Share korun...",
   "menuCloseWindow": "Janala bondho korun",
   "menuCloseAll": "সব বন্ধ করুন",
+  "menuQuit": "PDFSign থেকে প্রস্থান",
   "closeAllDialogTitle": "পরিবর্তন সংরক্ষণ করবেন?",
   "closeAllDialogMessage": "বন্ধ করার আগে {count}টি নথিতে পরিবর্তন সংরক্ষণ করতে চান?",
   "closeAllDialogMessageOne": "বন্ধ করার আগে 1টি নথিতে পরিবর্তন সংরক্ষণ করতে চান?",

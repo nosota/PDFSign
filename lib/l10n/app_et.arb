@@ -27,6 +27,7 @@
   "menuShare": "Jaga...",
   "menuCloseWindow": "Sulge aken",
   "menuCloseAll": "Sulge kõik",
+  "menuQuit": "Välju PDFSign",
   "closeAllDialogTitle": "Salvesta muudatused?",
   "closeAllDialogMessage": "Kas soovite salvestada muudatused {count} dokumendis enne sulgemist?",
   "closeAllDialogMessageOne": "Kas soovite salvestada muudatused 1 dokumendis enne sulgemist?",

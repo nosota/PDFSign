@@ -27,6 +27,7 @@
   "menuShare": "Teilen...",
   "menuCloseWindow": "Fenster schließen",
   "menuCloseAll": "Alle schließen",
+  "menuQuit": "PDFSign beenden",
   "closeAllDialogTitle": "Änderungen speichern?",
   "closeAllDialogMessage": "Möchten Sie die Änderungen in {count} Dokumenten vor dem Schließen speichern?",
   "closeAllDialogMessageOne": "Möchten Sie die Änderungen in 1 Dokument vor dem Schließen speichern?",

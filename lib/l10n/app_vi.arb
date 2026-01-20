@@ -27,6 +27,7 @@
   "menuShare": "Chia se...",
   "menuCloseWindow": "Dong cua so",
   "menuCloseAll": "Đóng tất cả",
+  "menuQuit": "Thoát PDFSign",
   "closeAllDialogTitle": "Lưu thay đổi?",
   "closeAllDialogMessage": "Bạn có muốn lưu thay đổi trong {count} tài liệu trước khi đóng không?",
   "closeAllDialogMessageOne": "Bạn có muốn lưu thay đổi trong 1 tài liệu trước khi đóng không?",

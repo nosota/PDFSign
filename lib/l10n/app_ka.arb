@@ -27,6 +27,7 @@
   "menuShare": "Gaziareba...",
   "menuCloseWindow": "Panjeris dakhetva",
   "menuCloseAll": "ყველას დახურვა",
+  "menuQuit": "გასვლა PDFSign-დან",
   "closeAllDialogTitle": "ცვლილებების შენახვა?",
   "closeAllDialogMessage": "გსურთ შეინახოთ ცვლილებები {count} დოკუმენტში დახურვამდე?",
   "closeAllDialogMessageOne": "გსურთ შეინახოთ ცვლილებები 1 დოკუმენტში დახურვამდე?",

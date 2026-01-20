@@ -27,6 +27,7 @@
   "menuShare": "Dela...",
   "menuCloseWindow": "Stäng fönster",
   "menuCloseAll": "Stäng alla",
+  "menuQuit": "Avsluta PDFSign",
   "closeAllDialogTitle": "Spara ändringar?",
   "closeAllDialogMessage": "Vill du spara ändringar i {count} dokument innan du stänger?",
   "closeAllDialogMessageOne": "Vill du spara ändringar i 1 dokument innan du stänger?",

@@ -114,6 +114,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get menuCloseAll => 'Cerrar todo';
 
   @override
+  String get menuQuit => 'Salir de PDFSign';
+
+  @override
   String get closeAllDialogTitle => '¿Guardar cambios?';
 
   @override
@@ -331,6 +334,9 @@ class AppLocalizationsEsAr extends AppLocalizationsEs {
 
   @override
   String get menuCloseAll => 'Cerrar todo';
+
+  @override
+  String get menuQuit => 'Salir de PDFSign';
 
   @override
   String get closeAllDialogTitle => '¿Guardar cambios?';
@@ -552,6 +558,9 @@ class AppLocalizationsEsEs extends AppLocalizationsEs {
   String get menuCloseAll => 'Cerrar todo';
 
   @override
+  String get menuQuit => 'Salir de PDFSign';
+
+  @override
   String get closeAllDialogTitle => '¿Guardar cambios?';
 
   @override
@@ -769,6 +778,9 @@ class AppLocalizationsEsMx extends AppLocalizationsEs {
 
   @override
   String get menuCloseAll => 'Cerrar todo';
+
+  @override
+  String get menuQuit => 'Salir de PDFSign';
 
   @override
   String get closeAllDialogTitle => '¿Guardar cambios?';

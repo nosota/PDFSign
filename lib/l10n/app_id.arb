@@ -27,6 +27,7 @@
   "menuShare": "Bagikan...",
   "menuCloseWindow": "Tutup jendela",
   "menuCloseAll": "Tutup semua",
+  "menuQuit": "Keluar dari PDFSign",
   "closeAllDialogTitle": "Simpan perubahan?",
   "closeAllDialogMessage": "Apakah Anda ingin menyimpan perubahan di {count} dokumen sebelum menutup?",
   "closeAllDialogMessageOne": "Apakah Anda ingin menyimpan perubahan di 1 dokumen sebelum menutup?",

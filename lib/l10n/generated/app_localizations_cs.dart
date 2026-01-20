@@ -117,6 +117,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get menuCloseAll => 'Zavřít vše';
 
   @override
+  String get menuQuit => 'Ukončit PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Uložit změny?';
 
   @override

@@ -27,6 +27,7 @@
   "menuShare": "Zdieľať...",
   "menuCloseWindow": "Zavrieť okno",
   "menuCloseAll": "Zavrieť všetko",
+  "menuQuit": "Ukončiť PDFSign",
   "closeAllDialogTitle": "Uložiť zmeny?",
   "closeAllDialogMessage": "Chcete uložiť zmeny v {count} dokumentoch pred zatvorením?",
   "closeAllDialogMessageOne": "Chcete uložiť zmeny v 1 dokumente pred zatvorením?",

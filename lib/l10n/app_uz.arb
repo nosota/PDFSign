@@ -27,6 +27,7 @@
   "menuShare": "Ulashish...",
   "menuCloseWindow": "Oynani yopish",
   "menuCloseAll": "Barchasini yopish",
+  "menuQuit": "PDFSign-dan chiqish",
   "closeAllDialogTitle": "O'zgarishlarni saqlash?",
   "closeAllDialogMessage": "Yopishdan oldin {count} hujjatdagi o'zgarishlarni saqlamoqchimisiz?",
   "closeAllDialogMessageOne": "Yopishdan oldin 1 hujjatdagi o'zgarishlarni saqlamoqchimisiz?",

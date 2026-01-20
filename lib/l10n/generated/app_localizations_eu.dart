@@ -96,6 +96,9 @@ class AppLocalizationsEu extends AppLocalizations {
   String get menuCloseAll => 'Itxi dena';
 
   @override
+  String get menuQuit => 'Irten PDFSign-etik';
+
+  @override
   String get closeAllDialogTitle => 'Aldaketak gorde?';
 
   @override

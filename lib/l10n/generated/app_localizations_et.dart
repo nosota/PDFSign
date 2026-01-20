@@ -96,6 +96,9 @@ class AppLocalizationsEt extends AppLocalizations {
   String get menuCloseAll => 'Sulge kõik';
 
   @override
+  String get menuQuit => 'Välju PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Salvesta muudatused?';
 
   @override

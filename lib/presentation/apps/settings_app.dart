@@ -58,7 +58,11 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
     SubWindowChannel.setOnWindowClose(_handleWindowClose);
     SubWindowChannel.setOnWindowFocus(_handleWindowFocus);
     SubWindowChannel.setOnWindowBlur(_handleWindowBlur);
-    SubWindowChannel.setPreventClose(true);
+    // Delay setPreventClose to ensure native window is ready
+    // Native side also has retry mechanism as fallback
+    Future.delayed(const Duration(milliseconds: 200), () {
+      SubWindowChannel.setPreventClose(true);
+    });
   }
 
   /// Initializes window broadcast for receiving preference change notifications.
@@ -195,6 +199,45 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
     }
   }
 
+  /// Handles Quit command (Cmd+Q).
+  ///
+  /// Shows CloseAllDialog if any PDF windows have unsaved changes,
+  /// then quits the application.
+  Future<void> _handleQuit() async {
+    final navigatorContext = _navigatorKey.currentContext;
+    if (navigatorContext == null) {
+      // No context, just exit
+      exit(0);
+    }
+
+    final globalState = ref.read(globalDirtyStateProvider);
+    final dirtyCount = globalState.values.where((d) => d).length;
+
+    if (dirtyCount == 0) {
+      // No dirty windows, quit immediately
+      exit(0);
+    }
+
+    // Show close all dialog
+    final result = await CloseAllDialog.show(navigatorContext, dirtyCount);
+
+    switch (result) {
+      case CloseAllResult.saveAll:
+        // Save all dirty windows first, then quit
+        await WindowBroadcast.broadcastSaveAll();
+        // Small delay to ensure saves complete
+        await Future.delayed(const Duration(milliseconds: 100));
+        exit(0);
+      case CloseAllResult.discard:
+        // Quit without saving
+        exit(0);
+      case CloseAllResult.cancel:
+      case null:
+        // User cancelled, do nothing
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Watch locale preference for live updates
@@ -232,6 +275,8 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
           isCloseAllEnabled: hasOpenPdfs,
           // Use SubWindowChannel.close() which triggers _handleWindowClose
           onCloseWindow: SubWindowChannel.close,
+          // Quit (Cmd+Q) - check for unsaved changes and exit
+          onQuit: _handleQuit,
           child: child!,
         );
       },

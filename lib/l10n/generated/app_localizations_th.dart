@@ -96,6 +96,9 @@ class AppLocalizationsTh extends AppLocalizations {
   String get menuCloseAll => 'ปิดทั้งหมด';
 
   @override
+  String get menuQuit => 'ออกจาก PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'บันทึกการเปลี่ยนแปลง?';
 
   @override

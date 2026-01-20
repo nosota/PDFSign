@@ -96,6 +96,9 @@ class AppLocalizationsHe extends AppLocalizations {
   String get menuCloseAll => 'סגור הכל';
 
   @override
+  String get menuQuit => 'צא מ-PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'לשמור שינויים?';
 
   @override

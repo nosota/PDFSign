@@ -377,6 +377,12 @@ abstract class AppLocalizations {
   /// **'Close All'**
   String get menuCloseAll;
 
+  /// Quit application menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Quit PDFSign'**
+  String get menuQuit;
+
   /// Title for close all dialog
   ///
   /// In en, this message translates to:

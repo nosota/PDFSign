@@ -141,6 +141,45 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
     }
   }
 
+  /// Handles Quit command (Cmd+Q).
+  ///
+  /// Shows CloseAllDialog if any PDF windows have unsaved changes,
+  /// then quits the application.
+  Future<void> _handleQuit() async {
+    final navigatorContext = _navigatorKey.currentContext;
+    if (navigatorContext == null) {
+      // No context, just exit
+      exit(0);
+    }
+
+    final globalState = ref.read(globalDirtyStateProvider);
+    final dirtyCount = globalState.values.where((d) => d).length;
+
+    if (dirtyCount == 0) {
+      // No dirty windows, quit immediately
+      exit(0);
+    }
+
+    // Show close all dialog
+    final result = await CloseAllDialog.show(navigatorContext, dirtyCount);
+
+    switch (result) {
+      case CloseAllResult.saveAll:
+        // Save all dirty windows first, then quit
+        await WindowBroadcast.broadcastSaveAll();
+        // Small delay to ensure saves complete
+        await Future.delayed(const Duration(milliseconds: 100));
+        exit(0);
+      case CloseAllResult.discard:
+        // Quit without saving
+        exit(0);
+      case CloseAllResult.cancel:
+      case null:
+        // User cancelled, do nothing
+        break;
+    }
+  }
+
   @override
   void dispose() {
     windowManager.removeListener(this);
@@ -187,6 +226,8 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
           isCloseAllEnabled: hasOpenPdfs,
           // Use windowManager.close() which triggers onWindowClose() to hide
           onCloseWindow: () => windowManager.close(),
+          // Quit (Cmd+Q) - check for unsaved changes and exit
+          onQuit: _handleQuit,
           child: child!,
         );
       },

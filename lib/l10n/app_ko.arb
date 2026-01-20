@@ -27,6 +27,7 @@
   "menuShare": "공유...",
   "menuCloseWindow": "윈도우 닫기",
   "menuCloseAll": "모두 닫기",
+  "menuQuit": "PDFSign 종료",
   "closeAllDialogTitle": "변경사항을 저장하시겠습니까?",
   "closeAllDialogMessage": "닫기 전에 {count}개 문서의 변경사항을 저장하시겠습니까?",
   "closeAllDialogMessageOne": "닫기 전에 1개 문서의 변경사항을 저장하시겠습니까?",

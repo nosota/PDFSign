@@ -96,6 +96,9 @@ class AppLocalizationsMs extends AppLocalizations {
   String get menuCloseAll => 'Tutup semua';
 
   @override
+  String get menuQuit => 'Keluar PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Simpan perubahan?';
 
   @override

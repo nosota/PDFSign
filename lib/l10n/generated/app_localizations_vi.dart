@@ -96,6 +96,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get menuCloseAll => 'Đóng tất cả';
 
   @override
+  String get menuQuit => 'Thoát PDFSign';
+
+  @override
   String get closeAllDialogTitle => 'Lưu thay đổi?';
 
   @override

@@ -27,6 +27,7 @@
   "menuShare": "Comparteix...",
   "menuCloseWindow": "Tanca la finestra",
   "menuCloseAll": "Tanca-ho tot",
+  "menuQuit": "Sortir de PDFSign",
   "closeAllDialogTitle": "Desar els canvis?",
   "closeAllDialogMessage": "Vols desar els canvis a {count} documents abans de tancar?",
   "closeAllDialogMessageOne": "Vols desar els canvis a 1 document abans de tancar?",

@@ -96,6 +96,9 @@ class AppLocalizationsHy extends AppLocalizations {
   String get menuCloseAll => 'Pakers bolory';
 
   @override
+  String get menuQuit => 'Yelk PDFSign-its';
+
+  @override
   String get closeAllDialogTitle => 'Pakhpanel pokhutyyunnery?';
 
   @override
