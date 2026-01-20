@@ -132,6 +132,7 @@ class _PdfDropTargetState extends ConsumerState<PdfDropTarget>
       },
       builder: (context, candidateData, rejectedData) {
         return Stack(
+          fit: StackFit.expand,
           children: [
             widget.child,
             // Drop indicator overlay
