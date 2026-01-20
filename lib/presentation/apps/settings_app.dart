@@ -91,15 +91,15 @@ class _SettingsAppState extends ConsumerState<SettingsApp>
   void onWindowClose() async {
     final service = WindowManagerService.instance;
 
-    // Clean up resources BEFORE window closes
+    // Check state BEFORE cleanup to make correct decision
+    final hasOpenPdfs = service.hasOpenWindows;
+    final isWelcomeVisible = !service.isWelcomeHidden;
+
+    // Clean up resources AFTER checking state
     windowManager.removeListener(this);
     service.clearSettingsWindowId();
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
-
-    // Check if there are other visible windows
-    final hasOpenPdfs = service.hasOpenWindows;
-    final isWelcomeVisible = !service.isWelcomeHidden;
 
     if (!hasOpenPdfs && !isWelcomeVisible) {
       // This is the last visible window - terminate the app
@@ -107,8 +107,6 @@ class _SettingsAppState extends ConsumerState<SettingsApp>
     }
 
     // Other visible windows exist - just close this window
-    // Using windowManager.destroy() is safe now because
-    // applicationShouldTerminateAfterLastWindowClosed = false in AppDelegate
     await windowManager.destroy();
   }
 

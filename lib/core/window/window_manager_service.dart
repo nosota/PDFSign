@@ -9,12 +9,12 @@ import 'window_broadcast.dart';
 
 /// Extension to add close functionality to WindowController.
 /// The desktop_multi_window package doesn't provide a built-in close method.
-extension WindowControllerClose on WindowController {
-  /// Closes this window by invoking the native close method.
-  Future<void> close() {
-    return invokeMethod('window_close');
-  }
-}
+// extension WindowControllerClose on WindowController {
+//   /// Closes this window by invoking the native close method.
+//   Future<void> close() {
+//     return invokeMethod('window_close');
+//   }
+// }
 
 /// Service for managing multiple windows in the application.
 ///
