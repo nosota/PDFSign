@@ -20,6 +20,7 @@ class WindowBroadcast {
   static VoidCallback? _onSaveAll;
   static VoidCallback? _onCloseAll;
   static VoidCallback? _onShowWelcome;
+  static VoidCallback? _onHideWelcome;
   static DirtyStateCallback? _onDirtyStateChanged;
   static DirtyStateResponseCallback? _onRequestDirtyStates;
   static bool _initialized = false;
@@ -53,6 +54,14 @@ class WindowBroadcast {
   /// visible windows. Prevents macOS from terminating the app.
   static void setOnShowWelcome(VoidCallback? callback) {
     _onShowWelcome = callback;
+  }
+
+  /// Sets callback for when Welcome window should be hidden.
+  ///
+  /// Called when a PDF window opens from any window (not just Welcome).
+  /// Welcome hides permanently and never shows again until app restart.
+  static void setOnHideWelcome(VoidCallback? callback) {
+    _onHideWelcome = callback;
   }
 
   /// Sets callback for when a window's dirty state changes.
@@ -115,6 +124,14 @@ class WindowBroadcast {
   /// there's always a visible window (prevents macOS app termination).
   static Future<void> broadcastShowWelcome() async {
     await _broadcast('showWelcome');
+  }
+
+  /// Broadcasts Hide Welcome command to hide the Welcome window permanently.
+  ///
+  /// Called when a PDF window opens from any window. Welcome hides and
+  /// never shows again until app restart.
+  static Future<void> broadcastHideWelcome() async {
+    await _broadcast('hideWelcome');
   }
 
   /// Broadcasts dirty state change to all other windows.
@@ -248,6 +265,9 @@ class WindowBroadcast {
         return null;
       case 'showWelcome':
         _onShowWelcome?.call();
+        return null;
+      case 'hideWelcome':
+        _onHideWelcome?.call();
         return null;
       case 'dirtyStateChanged':
         final args = call.arguments as Map<dynamic, dynamic>?;

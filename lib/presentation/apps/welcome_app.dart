@@ -44,10 +44,17 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
     windowManager.setPreventClose(true);
   }
 
-  /// Initializes window broadcast for receiving preference change notifications.
+  /// Initializes window broadcast for receiving notifications.
   Future<void> _initWindowBroadcast() async {
     WindowBroadcast.setOnLocaleChanged(_handleLocaleChanged);
+    WindowBroadcast.setOnHideWelcome(_handleHideWelcome);
     await WindowBroadcast.init();
+  }
+
+  /// Handles hide welcome broadcast (sent when PDF opens from any window).
+  void _handleHideWelcome() {
+    WindowManagerService.instance.setWelcomeHidden();
+    windowManager.hide();
   }
 
   /// Handles locale changed broadcast from another window.
@@ -138,6 +145,7 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
   void dispose() {
     windowManager.removeListener(this);
     WindowBroadcast.setOnLocaleChanged(null);
+    WindowBroadcast.setOnHideWelcome(null);
     super.dispose();
   }
 
@@ -172,11 +180,7 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
           includeSaveAs: false,
           includeSaveAll: false,
           includeShare: false,
-          onFileOpened: () {
-            // Hide Welcome permanently when PDF opens
-            WindowManagerService.instance.setWelcomeHidden();
-            windowManager.hide();
-          },
+          // Note: Welcome hiding is handled automatically in createPdfWindow()
           // Close All - enabled only if there are PDF windows
           includeCloseAll: true,
           onCloseAll: _handleCloseAll,

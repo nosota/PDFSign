@@ -5,6 +5,7 @@ import 'package:path/path.dart' as path;
 import 'package:window_manager/window_manager.dart';
 
 import 'window_arguments.dart';
+import 'window_broadcast.dart';
 
 /// Extension to add close functionality to WindowController.
 /// The desktop_multi_window package doesn't provide a built-in close method.
@@ -84,6 +85,9 @@ class WindowManagerService {
 
   /// Creates a new window to display a PDF file.
   ///
+  /// When the first PDF window is created, the Welcome window is automatically
+  /// hidden and never shown again until app restart.
+  ///
   /// Returns the window ID if successful, null otherwise.
   Future<String?> createPdfWindow(String filePath) async {
     try {
@@ -103,6 +107,16 @@ class WindowManagerService {
 
       final windowId = window.windowId;
       _openWindows.add(windowId);
+
+      // Hide Welcome window when first PDF opens (from any window)
+      // Uses broadcast to notify Welcome window to hide itself
+      if (!_welcomeHidden) {
+        _welcomeHidden = true;
+        await WindowBroadcast.broadcastHideWelcome();
+        if (kDebugMode) {
+          print('Welcome window hide broadcast sent (first PDF opened)');
+        }
+      }
 
       // Show the window
       await window.show();
