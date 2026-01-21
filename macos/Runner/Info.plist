@@ -28,5 +28,15 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSDesktopFolderUsageDescription</key>
+	<string>PDFSign needs access to open and save PDF files from your Desktop.</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>PDFSign needs access to open and save PDF files from your Documents.</string>
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string>PDFSign needs access to open and save PDF files from your Downloads.</string>
+	<key>NSRemovableVolumesUsageDescription</key>
+	<string>PDFSign needs access to open and save PDF files from external drives.</string>
+	<key>NSNetworkVolumesUsageDescription</key>
+	<string>PDFSign needs access to open and save PDF files from network drives.</string>
 </dict>
 </plist>

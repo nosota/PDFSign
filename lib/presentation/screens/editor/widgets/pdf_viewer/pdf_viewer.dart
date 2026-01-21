@@ -15,6 +15,7 @@ import 'package:pdfsign/presentation/providers/editor/pdf_save_service_provider.
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_viewer_state.dart';
+import 'package:pdfsign/presentation/providers/pdf_viewer/permission_retry_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/go_to_page_dialog.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/page_indicator.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_drop_target.dart';
@@ -639,6 +640,12 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
   }
 
   Widget _buildErrorState(String message) {
+    // If we're retrying due to permission issues, show loading instead of error
+    final isRetrying = ref.watch(permissionRetryProvider);
+    if (isRetrying) {
+      return _buildPermissionWaitingState();
+    }
+
     return Container(
       color: PdfViewerConstants.backgroundColor,
       child: Center(
@@ -662,6 +669,28 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
                     color: Colors.grey,
                   ),
               textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPermissionWaitingState() {
+    return Container(
+      color: PdfViewerConstants.backgroundColor,
+      child: const Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text(
+              'Waiting for folder access permission...',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 16,
+              ),
             ),
           ],
         ),

@@ -1,7 +1,12 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:pdfsign/core/platform/sub_window_channel.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
+import 'package:pdfsign/presentation/providers/pdf_viewer/permission_retry_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_viewer.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/image_sidebar.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/sidebar_resize_handle.dart';
@@ -23,10 +28,31 @@ class EditorScreen extends ConsumerStatefulWidget {
 }
 
 class _EditorScreenState extends ConsumerState<EditorScreen> {
+  /// Timer for permission retry loop.
+  Timer? _permissionRetryTimer;
+
+  /// Current retry attempt count.
+  int _retryCount = 0;
+
+  /// Maximum retry attempts (20 * 1.5s = 30 seconds).
+  static const int _maxRetries = 20;
+
+  /// Interval between retry attempts.
+  static const Duration _retryInterval = Duration(milliseconds: 1500);
+
+  /// Error message indicating file access permission issue.
+  static const String _accessDeniedMessage = 'File access denied';
+
   @override
   void initState() {
     super.initState();
     _loadDocument();
+  }
+
+  @override
+  void dispose() {
+    _cancelRetryTimer();
+    super.dispose();
   }
 
   void _loadDocument() {
@@ -35,8 +61,74 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
       // Schedule the document load after the first frame
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(pdfDocumentProvider.notifier).openDocument(path);
+        // Set up listener for permission retry handling
+        _setupPermissionRetryListener();
       });
     }
+  }
+
+  /// Sets up a listener to handle permission-related errors with retry logic.
+  void _setupPermissionRetryListener() {
+    ref.listenManual<PdfViewerState>(
+      pdfDocumentProvider,
+      (previous, next) {
+        next.maybeMap(
+          error: (errorState) {
+            if (errorState.message == _accessDeniedMessage &&
+                errorState.filePath != null) {
+              _handlePermissionError(errorState.filePath!);
+            } else {
+              // Not a permission error, stop any retry in progress
+              _cancelRetryTimer();
+              ref.read(permissionRetryProvider.notifier).state = false;
+            }
+          },
+          loaded: (_) {
+            // Successfully loaded, stop retry
+            _cancelRetryTimer();
+            ref.read(permissionRetryProvider.notifier).state = false;
+            _retryCount = 0;
+          },
+          orElse: () {},
+        );
+      },
+    );
+  }
+
+  /// Handles permission error by starting retry loop.
+  void _handlePermissionError(String filePath) {
+    if (_retryCount >= _maxRetries) {
+      // Timeout reached, close the window
+      if (kDebugMode) {
+        print('Permission retry timeout, closing window');
+      }
+      _cancelRetryTimer();
+      ref.read(permissionRetryProvider.notifier).state = false;
+      _retryCount = 0;
+      // Close the window
+      SubWindowChannel.close();
+      return;
+    }
+
+    // Start or continue retry
+    _retryCount++;
+    ref.read(permissionRetryProvider.notifier).state = true;
+
+    if (kDebugMode) {
+      print('Permission retry attempt $_retryCount/$_maxRetries');
+    }
+
+    _permissionRetryTimer?.cancel();
+    _permissionRetryTimer = Timer(_retryInterval, () {
+      if (mounted) {
+        ref.read(pdfDocumentProvider.notifier).openDocument(filePath);
+      }
+    });
+  }
+
+  void _cancelRetryTimer() {
+    _permissionRetryTimer?.cancel();
+    _permissionRetryTimer = null;
   }
 
   @override
@@ -44,6 +136,9 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     super.didUpdateWidget(oldWidget);
     final path = widget.filePath;
     if (path != oldWidget.filePath && path != null && path.isNotEmpty) {
+      _cancelRetryTimer();
+      _retryCount = 0;
+      ref.read(permissionRetryProvider.notifier).state = false;
       ref.read(pdfDocumentProvider.notifier).openDocument(path);
     }
   }
