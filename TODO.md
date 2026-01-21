@@ -10,7 +10,6 @@ Claude Code MUST ignore this file!
 * Проверить Share + не сохранненый документ + сохранение во временный файл
 * Открытие одного или нескольких PDF с выбором того, что их нужно октрыть через PDFSign из Finder (Mac) или Explorer (Windows).
 * "Cmd + R" тоже должен спрашивать про сохранение изменений.
-* Ограничить длину списка recent files и сделать ее конфигурируемой
 
 Here is your Essential Studio® suite with a 7-day license key. This key can be used until your community license request is approved. 
 We will send your long-term license key then.
