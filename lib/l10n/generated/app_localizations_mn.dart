@@ -206,4 +206,8 @@ class AppLocalizationsMn extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Эх PDF хадгалагдаагүй';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Хавтас руу нэвтрэх зөвшөөрөл хүлээж байна...';
 }

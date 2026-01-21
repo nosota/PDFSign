@@ -206,4 +206,7 @@ class AppLocalizationsLv extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Nav saglabāts oriģinālais PDF';
+
+  @override
+  String get waitingForFolderPermission => 'Gaida mapes piekļuves atļauju...';
 }

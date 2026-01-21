@@ -61,5 +61,6 @@
   "incorrectPassword": "密码错误",
   "saveFailed": "保存失败",
   "savedTo": "已保存至：{path}",
-  "noOriginalPdfStored": "未存储原始PDF"
+  "noOriginalPdfStored": "未存储原始PDF",
+  "waitingForFolderPermission": "正在等待文件夹访问权限..."
 }

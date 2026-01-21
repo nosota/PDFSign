@@ -205,6 +205,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => '未存储原始PDF';
+
+  @override
+  String get waitingForFolderPermission => '正在等待文件夹访问权限...';
 }
 
 /// The translations for Chinese, as used in China (`zh_CN`).
@@ -408,6 +411,9 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get noOriginalPdfStored => '未存储原始PDF';
+
+  @override
+  String get waitingForFolderPermission => '正在等待文件夹访问权限...';
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
@@ -611,4 +617,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get noOriginalPdfStored => '未儲存原始PDF';
+
+  @override
+  String get waitingForFolderPermission => '正在等待資料夾存取權限...';
 }

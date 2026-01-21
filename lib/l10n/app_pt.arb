@@ -61,5 +61,6 @@
   "incorrectPassword": "Senha incorreta",
   "saveFailed": "Falha ao salvar",
   "savedTo": "Salvo em: {path}",
-  "noOriginalPdfStored": "Nenhum PDF original armazenado"
+  "noOriginalPdfStored": "Nenhum PDF original armazenado",
+  "waitingForFolderPermission": "Aguardando permissão de acesso à pasta..."
 }

@@ -61,5 +61,6 @@
   "incorrectPassword": "Pasahitz okerra",
   "saveFailed": "Gordetzeak huts egin du",
   "savedTo": "Gordeta: {path}",
-  "noOriginalPdfStored": "Ez dago jatorrizko PDF-ik gordetuta"
+  "noOriginalPdfStored": "Ez dago jatorrizko PDF-ik gordetuta",
+  "waitingForFolderPermission": "Karpeta sarbide baimena itxaroten..."
 }

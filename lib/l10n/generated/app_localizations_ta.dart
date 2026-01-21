@@ -206,4 +206,8 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'அசல் PDF சேமிக்கப்படவில்லை';
+
+  @override
+  String get waitingForFolderPermission =>
+      'கோப்புறை அணுகல் அனுமதிக்காக காத்திருக்கிறது...';
 }

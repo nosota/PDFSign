@@ -61,5 +61,6 @@
   "incorrectPassword": "Onjuist wachtwoord",
   "saveFailed": "Opslaan mislukt",
   "savedTo": "Opgeslagen naar: {path}",
-  "noOriginalPdfStored": "Geen originele PDF opgeslagen"
+  "noOriginalPdfStored": "Geen originele PDF opgeslagen",
+  "waitingForFolderPermission": "Wachten op toestemming voor maptoegang..."
 }

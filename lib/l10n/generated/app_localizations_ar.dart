@@ -206,4 +206,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'لا يوجد ملف PDF أصلي محفوظ';
+
+  @override
+  String get waitingForFolderPermission => 'في انتظار إذن الوصول إلى المجلد...';
 }

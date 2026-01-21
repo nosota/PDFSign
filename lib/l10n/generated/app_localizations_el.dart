@@ -206,4 +206,8 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Δεν αποθηκεύτηκε αρχικό PDF';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Αναμονή για άδεια πρόσβασης φακέλου...';
 }

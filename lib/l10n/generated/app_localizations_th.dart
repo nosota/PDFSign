@@ -206,4 +206,7 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'ไม่มี PDF ต้นฉบับถูกจัดเก็บ';
+
+  @override
+  String get waitingForFolderPermission => 'กำลังรอสิทธิ์การเข้าถึงโฟลเดอร์...';
 }

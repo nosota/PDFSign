@@ -206,4 +206,8 @@ class AppLocalizationsKa extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'ორიგინალი PDF არ არის შენახული';
+
+  @override
+  String get waitingForFolderPermission =>
+      'საქაღალდეზე წვდომის ნებართვის მოლოდინი...';
 }

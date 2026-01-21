@@ -61,5 +61,6 @@
   "incorrectPassword": "Malĝusta pasvorto",
   "saveFailed": "Konservado fiaskis",
   "savedTo": "Konservita al: {path}",
-  "noOriginalPdfStored": "Neniu originala PDF konservita"
+  "noOriginalPdfStored": "Neniu originala PDF konservita",
+  "waitingForFolderPermission": "Atendante dosierujan alirpermeson..."
 }

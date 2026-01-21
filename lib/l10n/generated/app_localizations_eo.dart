@@ -206,4 +206,8 @@ class AppLocalizationsEo extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Neniu originala PDF konservita';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Atendante dosierujan alirpermeson...';
 }

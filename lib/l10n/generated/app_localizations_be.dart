@@ -206,4 +206,8 @@ class AppLocalizationsBe extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Арыгінальны PDF не знойдзены';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Чаканне дазволу на доступ да папкі...';
 }

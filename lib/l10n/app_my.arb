@@ -61,5 +61,6 @@
   "incorrectPassword": "စကားဝှက်မှားနေသည်",
   "saveFailed": "သိမ်းဆည်းမှုမအောင်မြင်ပါ",
   "savedTo": "သိမ်းဆည်းပြီး: {path}",
-  "noOriginalPdfStored": "မူရင်း PDF မသိမ်းရသေးပါ"
+  "noOriginalPdfStored": "မူရင်း PDF မသိမ်းရသေးပါ",
+  "waitingForFolderPermission": "ဖိုင်တွဲဝင်ရောက်ခွင့်အတွက်စောင့်ဆိုင်းနေသည်..."
 }

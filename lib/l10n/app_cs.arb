@@ -61,5 +61,6 @@
   "incorrectPassword": "Nesprávné heslo",
   "saveFailed": "Uložení selhalo",
   "savedTo": "Uloženo do: {path}",
-  "noOriginalPdfStored": "Žádné původní PDF není uloženo"
+  "noOriginalPdfStored": "Žádné původní PDF není uloženo",
+  "waitingForFolderPermission": "Čekání na povolení přístupu ke složce..."
 }

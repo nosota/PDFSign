@@ -206,4 +206,8 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'कोई मूल PDF संग्रहीत नहीं';
+
+  @override
+  String get waitingForFolderPermission =>
+      'फ़ोल्डर एक्सेस अनुमति की प्रतीक्षा की जा रही है...';
 }

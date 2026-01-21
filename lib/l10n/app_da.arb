@@ -61,5 +61,6 @@
   "incorrectPassword": "Forkert adgangskode",
   "saveFailed": "Gemning mislykkedes",
   "savedTo": "Gemt til: {path}",
-  "noOriginalPdfStored": "Ingen original PDF gemt"
+  "noOriginalPdfStored": "Ingen original PDF gemt",
+  "waitingForFolderPermission": "Venter på tilladelse til mappeadgang..."
 }

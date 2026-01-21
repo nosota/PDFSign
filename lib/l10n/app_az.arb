@@ -61,5 +61,6 @@
   "incorrectPassword": "Yanlış şifrə",
   "saveFailed": "Saxlama uğursuz",
   "savedTo": "Saxlanıldı: {path}",
-  "noOriginalPdfStored": "Orijinal PDF saxlanılmayıb"
+  "noOriginalPdfStored": "Orijinal PDF saxlanılmayıb",
+  "waitingForFolderPermission": "Qovluğa giriş icazəsi gözlənilir..."
 }

@@ -61,5 +61,6 @@
   "incorrectPassword": "Falsches Passwort",
   "saveFailed": "Speichern fehlgeschlagen",
   "savedTo": "Gespeichert unter: {path}",
-  "noOriginalPdfStored": "Kein Original-PDF gespeichert"
+  "noOriginalPdfStored": "Kein Original-PDF gespeichert",
+  "waitingForFolderPermission": "Warten auf Ordnerzugriffsberechtigung..."
 }

@@ -206,4 +206,8 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Asl PDF saqlanmagan';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Jildga kirish ruxsati kutilmoqda...';
 }

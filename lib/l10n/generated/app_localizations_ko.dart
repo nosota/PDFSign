@@ -205,4 +205,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => '원본 PDF가 저장되지 않음';
+
+  @override
+  String get waitingForFolderPermission => '폴더 접근 권한을 기다리는 중...';
 }

@@ -206,4 +206,8 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Walang nakaimbak na orihinal na PDF';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Naghihintay ng pahintulot sa pag-access sa folder...';
 }

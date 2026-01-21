@@ -206,4 +206,8 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'কোনো মূল PDF সংরক্ষিত নেই';
+
+  @override
+  String get waitingForFolderPermission =>
+      'ফোল্ডার অ্যাক্সেস অনুমতির জন্য অপেক্ষা করা হচ্ছে...';
 }

@@ -206,4 +206,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Không có PDF gốc được lưu';
+
+  @override
+  String get waitingForFolderPermission => 'Đang chờ quyền truy cập thư mục...';
 }

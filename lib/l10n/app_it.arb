@@ -61,5 +61,6 @@
   "incorrectPassword": "Password errata",
   "saveFailed": "Salvataggio fallito",
   "savedTo": "Salvato in: {path}",
-  "noOriginalPdfStored": "Nessun PDF originale memorizzato"
+  "noOriginalPdfStored": "Nessun PDF originale memorizzato",
+  "waitingForFolderPermission": "In attesa dell'autorizzazione di accesso alla cartella..."
 }

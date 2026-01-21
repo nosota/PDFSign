@@ -61,5 +61,6 @@
   "incorrectPassword": "Грешна парола",
   "saveFailed": "Неуспешно запазване",
   "savedTo": "Запазено в: {path}",
-  "noOriginalPdfStored": "Няма запазен оригинален PDF"
+  "noOriginalPdfStored": "Няма запазен оригинален PDF",
+  "waitingForFolderPermission": "Изчакване на разрешение за достъп до папката..."
 }

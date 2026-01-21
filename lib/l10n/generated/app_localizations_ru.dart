@@ -230,4 +230,8 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Исходный PDF не найден';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Ожидание разрешения на доступ к папке...';
 }

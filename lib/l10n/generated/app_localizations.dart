@@ -586,6 +586,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No original PDF stored'**
   String get noOriginalPdfStored;
+
+  /// Message shown while waiting for user to grant folder access permission on macOS
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for folder access permission...'**
+  String get waitingForFolderPermission;
 }
 
 class _AppLocalizationsDelegate

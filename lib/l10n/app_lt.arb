@@ -61,5 +61,6 @@
   "incorrectPassword": "Neteisingas slaptažodis",
   "saveFailed": "Išsaugoti nepavyko",
   "savedTo": "Išsaugota: {path}",
-  "noOriginalPdfStored": "Originalus PDF neišsaugotas"
+  "noOriginalPdfStored": "Originalus PDF neišsaugotas",
+  "waitingForFolderPermission": "Laukiama aplanko prieigos leidimo..."
 }

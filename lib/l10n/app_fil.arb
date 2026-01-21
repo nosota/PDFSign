@@ -61,5 +61,6 @@
   "incorrectPassword": "Maling password",
   "saveFailed": "Hindi ma-save",
   "savedTo": "Na-save sa: {path}",
-  "noOriginalPdfStored": "Walang nakaimbak na orihinal na PDF"
+  "noOriginalPdfStored": "Walang nakaimbak na orihinal na PDF",
+  "waitingForFolderPermission": "Naghihintay ng pahintulot sa pag-access sa folder..."
 }

@@ -61,5 +61,6 @@
   "incorrectPassword": "Parolă incorectă",
   "saveFailed": "Salvare eșuată",
   "savedTo": "Salvat în: {path}",
-  "noOriginalPdfStored": "Niciun PDF original stocat"
+  "noOriginalPdfStored": "Niciun PDF original stocat",
+  "waitingForFolderPermission": "Se așteaptă permisiunea de acces la folder..."
 }

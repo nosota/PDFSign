@@ -277,5 +277,9 @@
   "noOriginalPdfStored": "No original PDF stored",
   "@noOriginalPdfStored": {
     "description": "Error when original PDF data is not available"
+  },
+  "waitingForFolderPermission": "Waiting for folder access permission...",
+  "@waitingForFolderPermission": {
+    "description": "Message shown while waiting for user to grant folder access permission on macOS"
   }
 }

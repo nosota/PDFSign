@@ -224,4 +224,8 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Ingen original PDF gemt';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Venter på tilladelse til mappeadgang...';
 }

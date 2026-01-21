@@ -205,4 +205,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => '元のPDFが保存されていません';
+
+  @override
+  String get waitingForFolderPermission => 'フォルダアクセス許可を待っています...';
 }

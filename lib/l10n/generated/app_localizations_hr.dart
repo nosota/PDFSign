@@ -206,4 +206,7 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Nema pohranjenog izvornog PDF-a';
+
+  @override
+  String get waitingForFolderPermission => 'Čekanje dozvole za pristup mapi...';
 }

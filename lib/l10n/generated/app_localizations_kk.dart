@@ -206,4 +206,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Түпнұсқа PDF сақталмаған';
+
+  @override
+  String get waitingForFolderPermission => 'Қалтаға кіру рұқсатын күтуде...';
 }

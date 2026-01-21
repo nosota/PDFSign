@@ -61,5 +61,6 @@
   "incorrectPassword": "Helytelen jelszó",
   "saveFailed": "Mentés sikertelen",
   "savedTo": "Mentve ide: {path}",
-  "noOriginalPdfStored": "Nincs eredeti PDF tárolva"
+  "noOriginalPdfStored": "Nincs eredeti PDF tárolva",
+  "waitingForFolderPermission": "Várakozás a mappa hozzáférési engedélyére..."
 }

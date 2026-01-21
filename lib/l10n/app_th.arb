@@ -61,5 +61,6 @@
   "incorrectPassword": "รหัสผ่านไม่ถูกต้อง",
   "saveFailed": "บันทึกล้มเหลว",
   "savedTo": "บันทึกที่: {path}",
-  "noOriginalPdfStored": "ไม่มี PDF ต้นฉบับถูกจัดเก็บ"
+  "noOriginalPdfStored": "ไม่มี PDF ต้นฉบับถูกจัดเก็บ",
+  "waitingForFolderPermission": "กำลังรอสิทธิ์การเข้าถึงโฟลเดอร์..."
 }

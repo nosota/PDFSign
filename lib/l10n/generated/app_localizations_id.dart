@@ -206,4 +206,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Tidak ada PDF asli tersimpan';
+
+  @override
+  String get waitingForFolderPermission => 'Menunggu izin akses folder...';
 }

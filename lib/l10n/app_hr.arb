@@ -61,5 +61,6 @@
   "incorrectPassword": "Pogrešna lozinka",
   "saveFailed": "Spremanje nije uspjelo",
   "savedTo": "Spremljeno u: {path}",
-  "noOriginalPdfStored": "Nema pohranjenog izvornog PDF-a"
+  "noOriginalPdfStored": "Nema pohranjenog izvornog PDF-a",
+  "waitingForFolderPermission": "Čekanje dozvole za pristup mapi..."
 }

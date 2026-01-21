@@ -224,6 +224,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Nenhum PDF original armazenado';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Aguardando permissão de acesso à pasta...';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -446,6 +450,10 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get noOriginalPdfStored => 'Nenhum PDF original armazenado';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Aguardando permissão de acesso à pasta...';
 }
 
 /// The translations for Portuguese, as used in Portugal (`pt_PT`).
@@ -668,4 +676,8 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get noOriginalPdfStored => 'Nenhum PDF original armazenado';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Aguardando permissão de acesso à pasta...';
 }

@@ -61,5 +61,6 @@
   "incorrectPassword": "كلمة المرور غير صحيحة",
   "saveFailed": "فشل الحفظ",
   "savedTo": "تم الحفظ في: {path}",
-  "noOriginalPdfStored": "لا يوجد ملف PDF أصلي محفوظ"
+  "noOriginalPdfStored": "لا يوجد ملف PDF أصلي محفوظ",
+  "waitingForFolderPermission": "في انتظار إذن الوصول إلى المجلد..."
 }

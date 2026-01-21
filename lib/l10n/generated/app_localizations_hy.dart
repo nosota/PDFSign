@@ -206,4 +206,8 @@ class AppLocalizationsHy extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Bnatipi PDF-y pakhpanvatso che';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Waiting for folder access permission...';
 }

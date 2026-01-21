@@ -227,4 +227,8 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Žádné původní PDF není uloženo';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Čekání na povolení přístupu ke složce...';
 }

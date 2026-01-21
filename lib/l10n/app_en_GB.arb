@@ -61,5 +61,6 @@
   "incorrectPassword": "Incorrect password",
   "saveFailed": "Save failed",
   "savedTo": "Saved to: {path}",
-  "noOriginalPdfStored": "No original PDF stored"
+  "noOriginalPdfStored": "No original PDF stored",
+  "waitingForFolderPermission": "Waiting for folder access permission..."
 }

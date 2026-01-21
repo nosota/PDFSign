@@ -206,4 +206,8 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Izvirni PDF ni shranjen';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Čakanje na dovoljenje za dostop do mape...';
 }

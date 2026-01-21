@@ -61,5 +61,6 @@
   "incorrectPassword": "Погрешна лозинка",
   "saveFailed": "Чување није успело",
   "savedTo": "Сачувано у: {path}",
-  "noOriginalPdfStored": "Нема сачуваног оригиналног PDF-а"
+  "noOriginalPdfStored": "Нема сачуваног оригиналног PDF-а",
+  "waitingForFolderPermission": "Чекање дозволе за приступ фасцикли..."
 }

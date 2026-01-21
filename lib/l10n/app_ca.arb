@@ -61,5 +61,6 @@
   "incorrectPassword": "Contrasenya incorrecta",
   "saveFailed": "Error en desar",
   "savedTo": "Desat a: {path}",
-  "noOriginalPdfStored": "No hi ha PDF original emmagatzemat"
+  "noOriginalPdfStored": "No hi ha PDF original emmagatzemat",
+  "waitingForFolderPermission": "Esperant permís d'accés a la carpeta..."
 }

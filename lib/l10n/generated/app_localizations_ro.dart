@@ -206,4 +206,8 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Niciun PDF original stocat';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Se așteaptă permisiunea de acces la folder...';
 }

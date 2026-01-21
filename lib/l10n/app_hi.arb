@@ -61,5 +61,6 @@
   "incorrectPassword": "गलत पासवर्ड",
   "saveFailed": "सहेजना विफल",
   "savedTo": "इसमें सहेजा गया: {path}",
-  "noOriginalPdfStored": "कोई मूल PDF संग्रहीत नहीं"
+  "noOriginalPdfStored": "कोई मूल PDF संग्रहीत नहीं",
+  "waitingForFolderPermission": "फ़ोल्डर एक्सेस अनुमति की प्रतीक्षा की जा रही है..."
 }

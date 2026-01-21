@@ -224,4 +224,8 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Kein Original-PDF gespeichert';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Warten auf Ordnerzugriffsberechtigung...';
 }

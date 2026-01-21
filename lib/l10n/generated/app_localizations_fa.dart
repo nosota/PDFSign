@@ -206,4 +206,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'PDF اصلی ذخیره نشده است';
+
+  @override
+  String get waitingForFolderPermission => 'در انتظار اجازه دسترسی به پوشه...';
 }

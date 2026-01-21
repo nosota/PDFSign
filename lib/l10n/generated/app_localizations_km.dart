@@ -206,4 +206,7 @@ class AppLocalizationsKm extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'គ្មាន PDF ដើមត្រូវបានរក្សាទុក';
+
+  @override
+  String get waitingForFolderPermission => 'កំពុងរង់ចាំការអនុញ្ញាតចូលប្រើថត...';
 }

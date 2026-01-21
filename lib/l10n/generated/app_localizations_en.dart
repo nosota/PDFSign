@@ -224,6 +224,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'No original PDF stored';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Waiting for folder access permission...';
 }
 
 /// The translations for English, as used in Australia (`en_AU`).
@@ -446,6 +450,10 @@ class AppLocalizationsEnAu extends AppLocalizationsEn {
 
   @override
   String get noOriginalPdfStored => 'No original PDF stored';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Waiting for folder access permission...';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -668,6 +676,10 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get noOriginalPdfStored => 'No original PDF stored';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Waiting for folder access permission...';
 }
 
 /// The translations for English, as used in New Zealand (`en_NZ`).
@@ -890,6 +902,10 @@ class AppLocalizationsEnNz extends AppLocalizationsEn {
 
   @override
   String get noOriginalPdfStored => 'No original PDF stored';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Waiting for folder access permission...';
 }
 
 /// The translations for English, as used in the United States (`en_US`).
@@ -1112,4 +1128,8 @@ class AppLocalizationsEnUs extends AppLocalizationsEn {
 
   @override
   String get noOriginalPdfStored => 'No original PDF stored';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Waiting for folder access permission...';
 }

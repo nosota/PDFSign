@@ -206,4 +206,8 @@ class AppLocalizationsSq extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Asnjë PDF origjinal i ruajtur';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Duke pritur lejen e qasjes në dosje...';
 }

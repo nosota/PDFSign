@@ -61,5 +61,6 @@
   "incorrectPassword": "ពាក្យសម្ងាត់មិនត្រឹមត្រូវ",
   "saveFailed": "រក្សាទុកបរាជ័យ",
   "savedTo": "បានរក្សាទុកនៅ: {path}",
-  "noOriginalPdfStored": "គ្មាន PDF ដើមត្រូវបានរក្សាទុក"
+  "noOriginalPdfStored": "គ្មាន PDF ដើមត្រូវបានរក្សាទុក",
+  "waitingForFolderPermission": "កំពុងរង់ចាំការអនុញ្ញាតចូលប្រើថត..."
 }

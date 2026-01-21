@@ -61,5 +61,6 @@
   "incorrectPassword": "Contraseña incorrecta",
   "saveFailed": "Error al guardar",
   "savedTo": "Guardado en: {path}",
-  "noOriginalPdfStored": "No hay PDF original almacenado"
+  "noOriginalPdfStored": "No hay PDF original almacenado",
+  "waitingForFolderPermission": "Esperando permiso de acceso a la carpeta..."
 }

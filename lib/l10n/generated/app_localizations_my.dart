@@ -206,4 +206,8 @@ class AppLocalizationsMy extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'မူရင်း PDF မသိမ်းရသေးပါ';
+
+  @override
+  String get waitingForFolderPermission =>
+      'ဖိုင်တွဲဝင်ရောက်ခွင့်အတွက်စောင့်ဆိုင်းနေသည်...';
 }

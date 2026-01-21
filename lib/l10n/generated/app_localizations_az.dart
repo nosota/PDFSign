@@ -206,4 +206,8 @@ class AppLocalizationsAz extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Orijinal PDF saxlanılmayıb';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Qovluğa giriş icazəsi gözlənilir...';
 }

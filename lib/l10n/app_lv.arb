@@ -61,5 +61,6 @@
   "incorrectPassword": "Nepareiza parole",
   "saveFailed": "Saglabāšana neizdevās",
   "savedTo": "Saglabāts: {path}",
-  "noOriginalPdfStored": "Nav saglabāts oriģinālais PDF"
+  "noOriginalPdfStored": "Nav saglabāts oriģinālais PDF",
+  "waitingForFolderPermission": "Gaida mapes piekļuves atļauju..."
 }

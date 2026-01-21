@@ -206,4 +206,7 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Algset PDF-i pole salvestatud';
+
+  @override
+  String get waitingForFolderPermission => 'Kausta juurdepääsu loa ootamine...';
 }

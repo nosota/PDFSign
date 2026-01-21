@@ -206,4 +206,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'לא נשמר PDF מקורי';
+
+  @override
+  String get waitingForFolderPermission => 'ממתין להרשאת גישה לתיקייה...';
 }

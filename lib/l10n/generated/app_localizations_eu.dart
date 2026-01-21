@@ -206,4 +206,8 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Ez dago jatorrizko PDF-ik gordetuta';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Karpeta sarbide baimena itxaroten...';
 }

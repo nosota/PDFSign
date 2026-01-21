@@ -61,5 +61,6 @@
   "incorrectPassword": "Sphal gaghtnabar",
   "saveFailed": "Pakhpanman skhalkutyun",
   "savedTo": "Pakhpanvatso e: {path}",
-  "noOriginalPdfStored": "Bnatipi PDF-y pakhpanvatso che"
+  "noOriginalPdfStored": "Bnatipi PDF-y pakhpanvatso che",
+  "waitingForFolderPermission": "Waiting for folder access permission..."
 }

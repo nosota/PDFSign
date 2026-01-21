@@ -61,5 +61,6 @@
   "incorrectPassword": "Невірний пароль",
   "saveFailed": "Помилка збереження",
   "savedTo": "Збережено: {path}",
-  "noOriginalPdfStored": "Оригінальний PDF не знайдено"
+  "noOriginalPdfStored": "Оригінальний PDF не знайдено",
+  "waitingForFolderPermission": "Очікування дозволу на доступ до папки..."
 }

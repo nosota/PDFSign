@@ -61,5 +61,6 @@
   "incorrectPassword": "Mật khẩu không đúng",
   "saveFailed": "Lưu thất bại",
   "savedTo": "Đã lưu tại: {path}",
-  "noOriginalPdfStored": "Không có PDF gốc được lưu"
+  "noOriginalPdfStored": "Không có PDF gốc được lưu",
+  "waitingForFolderPermission": "Đang chờ quyền truy cập thư mục..."
 }

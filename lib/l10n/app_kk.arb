@@ -61,5 +61,6 @@
   "incorrectPassword": "Құпия сөз қате",
   "saveFailed": "Сақтау сәтсіз",
   "savedTo": "Сақталды: {path}",
-  "noOriginalPdfStored": "Түпнұсқа PDF сақталмаған"
+  "noOriginalPdfStored": "Түпнұсқа PDF сақталмаған",
+  "waitingForFolderPermission": "Қалтаға кіру рұқсатын күтуде..."
 }

@@ -206,4 +206,8 @@ class AppLocalizationsLt extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Originalus PDF neišsaugotas';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Laukiama aplanko prieigos leidimo...';
 }

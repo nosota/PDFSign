@@ -206,4 +206,8 @@ class AppLocalizationsIs extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Ekkert upprunalegt PDF vistað';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Bíð eftir aðgangsheimild fyrir möppu...';
 }

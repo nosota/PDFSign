@@ -61,5 +61,6 @@
   "incorrectPassword": "Vale parool",
   "saveFailed": "Salvestamine ebaõnnestus",
   "savedTo": "Salvestatud: {path}",
-  "noOriginalPdfStored": "Algset PDF-i pole salvestatud"
+  "noOriginalPdfStored": "Algset PDF-i pole salvestatud",
+  "waitingForFolderPermission": "Kausta juurdepääsu loa ootamine..."
 }

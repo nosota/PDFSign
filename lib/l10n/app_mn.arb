@@ -61,5 +61,6 @@
   "incorrectPassword": "Буруу нууц үг",
   "saveFailed": "Хадгалалт амжилтгүй",
   "savedTo": "Хадгалагдсан: {path}",
-  "noOriginalPdfStored": "Эх PDF хадгалагдаагүй"
+  "noOriginalPdfStored": "Эх PDF хадгалагдаагүй",
+  "waitingForFolderPermission": "Хавтас руу нэвтрэх зөвшөөрөл хүлээж байна..."
 }

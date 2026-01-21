@@ -224,4 +224,8 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Geen originele PDF opgeslagen';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Wachten op toestemming voor maptoegang...';
 }

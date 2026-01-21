@@ -61,5 +61,6 @@
   "incorrectPassword": "Napačno geslo",
   "saveFailed": "Shranjevanje ni uspelo",
   "savedTo": "Shranjeno v: {path}",
-  "noOriginalPdfStored": "Izvirni PDF ni shranjen"
+  "noOriginalPdfStored": "Izvirni PDF ni shranjen",
+  "waitingForFolderPermission": "Čakanje na dovoljenje za dostop do mape..."
 }

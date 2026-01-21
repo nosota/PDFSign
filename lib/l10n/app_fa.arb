@@ -61,5 +61,6 @@
   "incorrectPassword": "رمز عبور نادرست",
   "saveFailed": "ذخیره ناموفق",
   "savedTo": "ذخیره شده در: {path}",
-  "noOriginalPdfStored": "PDF اصلی ذخیره نشده است"
+  "noOriginalPdfStored": "PDF اصلی ذخیره نشده است",
+  "waitingForFolderPermission": "در انتظار اجازه دسترسی به پوشه..."
 }

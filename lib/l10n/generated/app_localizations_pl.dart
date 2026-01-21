@@ -230,4 +230,8 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Brak oryginalnego PDF';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Oczekiwanie na uprawnienia dostępu do folderu...';
 }

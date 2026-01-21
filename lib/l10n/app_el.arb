@@ -61,5 +61,6 @@
   "incorrectPassword": "Λάθος κωδικός",
   "saveFailed": "Αποτυχία αποθήκευσης",
   "savedTo": "Αποθηκεύτηκε σε: {path}",
-  "noOriginalPdfStored": "Δεν αποθηκεύτηκε αρχικό PDF"
+  "noOriginalPdfStored": "Δεν αποθηκεύτηκε αρχικό PDF",
+  "waitingForFolderPermission": "Αναμονή για άδεια πρόσβασης φακέλου..."
 }

@@ -13,6 +13,7 @@ import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.
 import 'package:pdfsign/presentation/providers/editor/original_pdf_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/pdf_save_service_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
+import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_viewer_state.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/permission_retry_provider.dart';
@@ -677,17 +678,18 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
   }
 
   Widget _buildPermissionWaitingState() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       color: PdfViewerConstants.backgroundColor,
-      child: const Center(
+      child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
+            const CircularProgressIndicator(),
+            const SizedBox(height: 16),
             Text(
-              'Waiting for folder access permission...',
-              style: TextStyle(
+              l10n.waitingForFolderPermission,
+              style: const TextStyle(
                 color: Colors.grey,
                 fontSize: 16,
               ),

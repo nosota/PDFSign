@@ -61,5 +61,6 @@
   "incorrectPassword": "Rangt lykilorð",
   "saveFailed": "Vistun mistókst",
   "savedTo": "Vistað í: {path}",
-  "noOriginalPdfStored": "Ekkert upprunalegt PDF vistað"
+  "noOriginalPdfStored": "Ekkert upprunalegt PDF vistað",
+  "waitingForFolderPermission": "Bíð eftir aðgangsheimild fyrir möppu..."
 }

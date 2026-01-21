@@ -61,5 +61,6 @@
   "incorrectPassword": "Feil passord",
   "saveFailed": "Lagring mislyktes",
   "savedTo": "Lagret til: {path}",
-  "noOriginalPdfStored": "Ingen original PDF lagret"
+  "noOriginalPdfStored": "Ingen original PDF lagret",
+  "waitingForFolderPermission": "Venter på tillatelse til mappeadgang..."
 }

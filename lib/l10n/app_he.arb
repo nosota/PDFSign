@@ -61,5 +61,6 @@
   "incorrectPassword": "סיסמה שגויה",
   "saveFailed": "השמירה נכשלה",
   "savedTo": "נשמר ב: {path}",
-  "noOriginalPdfStored": "לא נשמר PDF מקורי"
+  "noOriginalPdfStored": "לא נשמר PDF מקורי",
+  "waitingForFolderPermission": "ממתין להרשאת גישה לתיקייה..."
 }

@@ -206,4 +206,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Orijinal PDF kaydedilmedi';
+
+  @override
+  String get waitingForFolderPermission => 'Klasör erişim izni bekleniyor...';
 }

@@ -227,4 +227,8 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Žiadne pôvodné PDF nie je uložené';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Čakanie na povolenie prístupu k priečinku...';
 }

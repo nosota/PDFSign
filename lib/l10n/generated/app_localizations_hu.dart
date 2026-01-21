@@ -206,4 +206,8 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Nincs eredeti PDF tárolva';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Várakozás a mappa hozzáférési engedélyére...';
 }

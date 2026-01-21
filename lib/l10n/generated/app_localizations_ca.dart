@@ -206,4 +206,8 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'No hi ha PDF original emmagatzemat';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Esperant permís d\'accés a la carpeta...';
 }

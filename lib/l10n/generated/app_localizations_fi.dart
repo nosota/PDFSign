@@ -224,4 +224,8 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get noOriginalPdfStored => 'Alkuperäistä PDF:ää ei tallennettu';
+
+  @override
+  String get waitingForFolderPermission =>
+      'Odotetaan kansion käyttöoikeutta...';
 }

@@ -61,5 +61,6 @@
   "incorrectPassword": "Kata sandi salah",
   "saveFailed": "Gagal menyimpan",
   "savedTo": "Disimpan ke: {path}",
-  "noOriginalPdfStored": "Tidak ada PDF asli tersimpan"
+  "noOriginalPdfStored": "Tidak ada PDF asli tersimpan",
+  "waitingForFolderPermission": "Menunggu izin akses folder..."
 }
