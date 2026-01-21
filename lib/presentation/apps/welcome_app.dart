@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'package:pdfsign/core/platform/file_open_handler.dart';
 import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/core/window/window_broadcast.dart';
 import 'package:pdfsign/core/window/window_manager_service.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/global_dirty_state_provider.dart';
 import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
+import 'package:pdfsign/presentation/providers/recent_files_provider.dart';
 import 'package:pdfsign/presentation/screens/welcome/welcome_screen.dart';
 import 'package:pdfsign/presentation/widgets/dialogs/close_all_dialog.dart';
 import 'package:pdfsign/presentation/widgets/menus/app_menu_bar.dart';
@@ -38,10 +40,19 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
   void initState() {
     super.initState();
     _initWindowBroadcast();
+    _initFileOpenHandler();
 
     // Register window listener for focus tracking and close interception
     windowManager.addListener(this);
     windowManager.setPreventClose(true);
+  }
+
+  /// Initializes file open handler for Finder integration.
+  void _initFileOpenHandler() {
+    FileOpenHandler.init(
+      addRecentFile: (file) =>
+          ref.read(recentFilesProvider.notifier).addFile(file),
+    );
   }
 
   /// Initializes window broadcast for receiving notifications.

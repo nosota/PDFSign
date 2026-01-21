@@ -12,6 +12,15 @@ class AppDelegate: FlutterAppDelegate {
   /// Used to prevent opening the same file twice.
   static var openPdfFiles: [String: String] = [:]
 
+  /// Channel for sending file paths to Flutter (main window).
+  private var fileHandlerChannel: FlutterMethodChannel?
+
+  /// Files received before Flutter engine is ready.
+  private var pendingFiles: [String] = []
+
+  /// Whether Flutter has signaled it's ready to receive files.
+  private var isFlutterReady = false
+
   override func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
     // Don't auto-terminate when last window closes
     // Flutter/Welcome window handles app lifecycle with exit(0)
@@ -27,6 +36,23 @@ class AppDelegate: FlutterAppDelegate {
     if let mainController = mainFlutterWindow?.contentViewController as? FlutterViewController {
       setupSettingsSingletonChannel(binaryMessenger: mainController.engine.binaryMessenger)
       setupOpenPdfFilesChannel(binaryMessenger: mainController.engine.binaryMessenger)
+
+      // Setup file handler channel for Finder integration
+      fileHandlerChannel = FlutterMethodChannel(
+        name: "com.pdfsign/file_handler",
+        binaryMessenger: mainController.engine.binaryMessenger
+      )
+
+      fileHandlerChannel?.setMethodCallHandler { [weak self] call, result in
+        if call.method == "ready" {
+          NSLog("FileHandlerChannel: Flutter signaled ready")
+          self?.isFlutterReady = true
+          self?.sendPendingFiles()
+          result(nil)
+        } else {
+          result(FlutterMethodNotImplemented)
+        }
+      }
     }
     // Register plugin callback for new windows created by desktop_multi_window
     FlutterMultiWindowPlugin.setOnWindowCreatedCallback { controller in
@@ -214,6 +240,41 @@ class AppDelegate: FlutterAppDelegate {
         }
       }
     }
+  }
+
+  /// Called by macOS when user opens files via Finder (Open With, double-click, drag to Dock).
+  override func application(_ sender: NSApplication, openFiles filenames: [String]) {
+    let pdfFiles = filenames.filter { $0.lowercased().hasSuffix(".pdf") }
+
+    guard !pdfFiles.isEmpty else {
+      sender.reply(toOpenOrPrint: .failure)
+      return
+    }
+
+    NSLog("AppDelegate: openFiles called with %d PDF files", pdfFiles.count)
+
+    if isFlutterReady {
+      for file in pdfFiles {
+        fileHandlerChannel?.invokeMethod("openFile", arguments: file)
+      }
+    } else {
+      // Flutter not ready yet, queue files for later
+      pendingFiles.append(contentsOf: pdfFiles)
+      NSLog("AppDelegate: queued %d files, Flutter not ready yet", pdfFiles.count)
+    }
+
+    sender.reply(toOpenOrPrint: .success)
+  }
+
+  /// Sends queued files to Flutter once it's ready.
+  private func sendPendingFiles() {
+    guard isFlutterReady, !pendingFiles.isEmpty else { return }
+
+    NSLog("AppDelegate: sending %d pending files to Flutter", pendingFiles.count)
+    for file in pendingFiles {
+      fileHandlerChannel?.invokeMethod("openFile", arguments: file)
+    }
+    pendingFiles.removeAll()
   }
 }
 

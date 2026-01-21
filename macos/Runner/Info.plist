@@ -38,5 +38,20 @@
 	<string>PDFSign needs access to open and save PDF files from external drives.</string>
 	<key>NSNetworkVolumesUsageDescription</key>
 	<string>PDFSign needs access to open and save PDF files from network drives.</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>PDF Document</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adobe.pdf</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
