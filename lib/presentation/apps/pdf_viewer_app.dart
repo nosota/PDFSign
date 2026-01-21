@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'package:pdfsign/core/platform/open_pdf_files_channel.dart';
 import 'package:pdfsign/core/platform/sub_window_channel.dart';
 import 'package:pdfsign/core/platform/toolbar_channel.dart';
 import 'package:pdfsign/core/theme/app_theme.dart';
@@ -241,6 +242,9 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   /// Unregisters from global tracker and closes the window.
   /// If this is the last visible window, terminates the application.
   Future<void> _destroyWindow() async {
+    // Unregister this file from open files tracker
+    await OpenPdfFilesChannel.unregisterPdfFile(widget.filePath);
+
     // Get all windows from native to check if there are other visible windows.
     // We can't rely on local _openWindows because each sub-window runs in
     // its own Flutter engine with its own WindowManagerService instance.

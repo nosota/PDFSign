@@ -8,6 +8,10 @@ class AppDelegate: FlutterAppDelegate {
   /// Used to enforce singleton pattern for Settings window.
   static var settingsWindowId: String?
 
+  /// Global map of open PDF files: filePath -> windowId.
+  /// Used to prevent opening the same file twice.
+  static var openPdfFiles: [String: String] = [:]
+
   override func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
     // Don't auto-terminate when last window closes
     // Flutter/Welcome window handles app lifecycle with exit(0)
@@ -19,16 +23,18 @@ class AppDelegate: FlutterAppDelegate {
   }
 
   override func applicationDidFinishLaunching(_ notification: Notification) {
-    // Setup Settings singleton channel for main window
+    // Setup channels for main window
     if let mainController = mainFlutterWindow?.contentViewController as? FlutterViewController {
       setupSettingsSingletonChannel(binaryMessenger: mainController.engine.binaryMessenger)
+      setupOpenPdfFilesChannel(binaryMessenger: mainController.engine.binaryMessenger)
     }
     // Register plugin callback for new windows created by desktop_multi_window
     FlutterMultiWindowPlugin.setOnWindowCreatedCallback { controller in
       RegisterGeneratedPlugins(registry: controller)
 
-      // Setup Settings singleton channel for sub-windows
+      // Setup channels for sub-windows
       setupSettingsSingletonChannel(binaryMessenger: controller.engine.binaryMessenger)
+      setupOpenPdfFilesChannel(binaryMessenger: controller.engine.binaryMessenger)
 
       // Setup window lifecycle channel for sub-windows
       // This handles window close events and allows Flutter to control closing
@@ -256,6 +262,80 @@ func setupSettingsSingletonChannel(binaryMessenger: FlutterBinaryMessenger) {
       }
       // If we have an ID but couldn't find the window, it was closed
       AppDelegate.settingsWindowId = nil
+      result(false)
+
+    default:
+      result(FlutterMethodNotImplemented)
+    }
+  }
+}
+
+/// Sets up the open PDF files channel for a Flutter engine.
+/// This channel tracks which PDF files are currently open to prevent duplicates.
+func setupOpenPdfFilesChannel(binaryMessenger: FlutterBinaryMessenger) {
+  let channel = FlutterMethodChannel(
+    name: "com.pdfsign/open_pdf_files",
+    binaryMessenger: binaryMessenger
+  )
+
+  channel.setMethodCallHandler { call, result in
+    switch call.method {
+    case "getWindowIdForFile":
+      // Return the window ID for a file path (or nil if not open)
+      guard let filePath = call.arguments as? String else {
+        result(nil)
+        return
+      }
+      result(AppDelegate.openPdfFiles[filePath])
+
+    case "registerPdfFile":
+      // Register a file as open with its window ID
+      guard let args = call.arguments as? [String: String],
+            let filePath = args["filePath"],
+            let windowId = args["windowId"] else {
+        result(nil)
+        return
+      }
+      AppDelegate.openPdfFiles[filePath] = windowId
+      NSLog("OpenPdfFilesChannel: registered %@ -> %@", filePath, windowId)
+      result(nil)
+
+    case "unregisterPdfFile":
+      // Unregister a file when its window closes
+      guard let filePath = call.arguments as? String else {
+        result(nil)
+        return
+      }
+      AppDelegate.openPdfFiles.removeValue(forKey: filePath)
+      NSLog("OpenPdfFilesChannel: unregistered %@", filePath)
+      result(nil)
+
+    case "focusPdfWindow":
+      // Try to bring the window for a file to front
+      guard let filePath = call.arguments as? String,
+            AppDelegate.openPdfFiles[filePath] != nil else {
+        result(false)
+        return
+      }
+
+      // Find the window by checking all Flutter windows
+      for window in NSApplication.shared.windows {
+        if window.contentViewController is FlutterViewController {
+          // Check if this window's title contains the file name
+          let fileName = (filePath as NSString).lastPathComponent
+          if window.title.contains(fileName) {
+            window.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            NSLog("OpenPdfFilesChannel: focused window for %@", filePath)
+            result(true)
+            return
+          }
+        }
+      }
+
+      // Window not found, might be closed - clean up the entry
+      AppDelegate.openPdfFiles.removeValue(forKey: filePath)
+      NSLog("OpenPdfFilesChannel: window for %@ not found, cleaned up", filePath)
       result(false)
 
     default:

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:window_manager/window_manager.dart';
 
+import '../platform/open_pdf_files_channel.dart';
 import '../platform/settings_singleton_channel.dart';
 import 'window_arguments.dart';
 import 'window_broadcast.dart';
@@ -105,12 +106,34 @@ class WindowManagerService {
 
   /// Creates a new window to display a PDF file.
   ///
+  /// If the file is already open in another window, focuses that window instead.
   /// When the first PDF window is created, the Welcome window is automatically
   /// hidden and never shown again until app restart.
   ///
   /// Returns the window ID if successful, null otherwise.
   Future<String?> createPdfWindow(String filePath) async {
     try {
+      // Check if this file is already open
+      final existingWindowId =
+          await OpenPdfFilesChannel.getWindowIdForFile(filePath);
+
+      if (existingWindowId != null) {
+        // File is already open - try to focus the existing window
+        final focused = await OpenPdfFilesChannel.focusPdfWindow(filePath);
+
+        if (focused) {
+          if (kDebugMode) {
+            print('File already open, focused existing window: $filePath');
+          }
+          return existingWindowId;
+        }
+
+        // Window not found (might have been closed) - continue to create new
+        if (kDebugMode) {
+          print('Existing window not found, creating new: $filePath');
+        }
+      }
+
       final fileName = path.basename(filePath);
 
       final arguments = WindowArguments.pdfViewer(
@@ -127,6 +150,9 @@ class WindowManagerService {
 
       final windowId = window.windowId;
       _openWindows.add(windowId);
+
+      // Register the file as open with native storage
+      await OpenPdfFilesChannel.registerPdfFile(filePath, windowId);
 
       // Hide Welcome window when first PDF opens (from any window)
       // Uses broadcast to notify Welcome window to hide itself
