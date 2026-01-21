@@ -15,7 +15,7 @@ class ImageStorageService {
   /// Gets the images directory inside app support folder.
   ///
   /// Creates the directory if it doesn't exist.
-  /// - macOS: ~/Library/Application Support/com.example.pdfsign/images/
+  /// - macOS: ~/Library/Application Support/com.ivanvaganov.pdfsign/images/
   /// - Windows: C:\Users\<user>\AppData\Roaming\pdfsign\images\
   Future<Directory> getImagesDirectory() async {
     final appSupport = await getApplicationSupportDirectory();
