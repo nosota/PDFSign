@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:pdfsign/core/constants/spacing.dart';
+import 'package:pdfsign/core/theme/app_colors.dart';
+import 'package:pdfsign/core/theme/app_typography.dart';
 import 'package:pdfsign/core/window/window_manager_service.dart';
 import 'package:pdfsign/domain/entities/recent_file.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
@@ -28,41 +30,90 @@ class _DesktopWelcomeViewState extends ConsumerState<DesktopWelcomeView> {
     final l10n = AppLocalizations.of(context)!;
     final recentFilesAsync = ref.watch(recentFilesProvider);
 
-    return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(Spacing.spacing32),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 400),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const AppLogo(),
-              const SizedBox(height: Spacing.spacing48),
-              OpenPdfButton(
-                label: l10n.openPdf,
-                isLoading: _isLoading,
-                onPressed: () => _handleOpenPdf(context),
-              ),
-              const SizedBox(height: Spacing.spacing48),
-              recentFilesAsync.when(
-                data: (files) => files.isEmpty
-                    ? const SizedBox.shrink()
-                    : RecentFilesList(
-                        files: files,
-                        onFileTap: (file) => _handleOpenRecentFile(file),
-                        onFileRemove: (file) => _handleRemoveRecentFile(file),
-                      ),
-                loading: () => const SizedBox(
-                  height: 100,
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
+    return Padding(
+      padding: const EdgeInsets.all(Spacing.spacing32),
+      child: Column(
+        children: [
+          // Flexible top space - provides vertical centering effect
+          const Spacer(),
+
+          // Fixed header section: logo + button (doesn't scroll)
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const AppLogo(),
+                const SizedBox(height: Spacing.spacing48),
+                OpenPdfButton(
+                  label: l10n.openPdf,
+                  isLoading: _isLoading,
+                  onPressed: () => _handleOpenPdf(context),
                 ),
-                error: (_, __) => const SizedBox.shrink(),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+
+          // Recent files section (header fixed, list scrolls)
+          recentFilesAsync.when(
+            data: (files) => files.isEmpty
+                ? const SizedBox(height: Spacing.spacing48)
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: Spacing.spacing48),
+                      // Fixed header: "Recent Files" (doesn't scroll)
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 400),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            l10n.recentFiles,
+                            style: AppTypography.labelLarge.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: Spacing.spacing12),
+                    ],
+                  ),
+            loading: () => const SizedBox(height: Spacing.spacing48),
+            error: (_, __) => const SizedBox(height: Spacing.spacing48),
+          ),
+
+          // Scrollable list section - only the file list scrolls
+          Expanded(
+            flex: 2,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: recentFilesAsync.when(
+                  data: (files) => files.isEmpty
+                      ? const SizedBox.shrink()
+                      : SingleChildScrollView(
+                          child: RecentFilesList(
+                            files: files,
+                            showHeader: false,
+                            onFileTap: (file) => _handleOpenRecentFile(file),
+                            onFileRemove: (file) => _handleRemoveRecentFile(file),
+                          ),
+                        ),
+                  loading: () => const SizedBox(
+                    height: 100,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  error: (_, __) => const SizedBox.shrink(),
+                ),
+              ),
+            ),
+          ),
+
+          // Flexible bottom space
+          const Spacer(),
+        ],
       ),
     );
   }

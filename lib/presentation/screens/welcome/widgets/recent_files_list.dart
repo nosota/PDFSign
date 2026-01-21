@@ -13,12 +13,17 @@ class RecentFilesList extends StatelessWidget {
     required this.files,
     required this.onFileTap,
     required this.onFileRemove,
+    this.showHeader = true,
     super.key,
   });
 
   final List<RecentFile> files;
   final void Function(RecentFile) onFileTap;
   final void Function(RecentFile) onFileRemove;
+
+  /// Whether to show the "Recent Files" header.
+  /// Set to false when header is shown externally (e.g., in fixed area).
+  final bool showHeader;
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +33,15 @@ class RecentFilesList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          l10n.recentFiles,
-          style: AppTypography.labelLarge.copyWith(
-            color: AppColors.textSecondary,
+        if (showHeader) ...[
+          Text(
+            l10n.recentFiles,
+            style: AppTypography.labelLarge.copyWith(
+              color: AppColors.textSecondary,
+            ),
           ),
-        ),
-        const SizedBox(height: Spacing.spacing12),
+          const SizedBox(height: Spacing.spacing12),
+        ],
         DecoratedBox(
           decoration: BoxDecoration(
             color: AppColors.surface,
