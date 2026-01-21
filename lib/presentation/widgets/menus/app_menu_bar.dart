@@ -12,7 +12,10 @@ import 'package:pdfsign/presentation/providers/recent_files_provider.dart';
 ///
 /// Provides Open, Open Recent, Save, Save As, Share, and Close Window functionality.
 /// All menu labels are localized via AppLocalizations.
-class AppMenuBar extends ConsumerWidget {
+///
+/// Uses ConsumerStatefulWidget to safely handle async operations that may
+/// outlive the widget lifecycle (e.g., file picker dialogs).
+class AppMenuBar extends ConsumerStatefulWidget {
   const AppMenuBar({
     required this.child,
     required this.localizations,
@@ -101,7 +104,12 @@ class AppMenuBar extends ConsumerWidget {
   final VoidCallback? onQuit;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AppMenuBar> createState() => _AppMenuBarState();
+}
+
+class _AppMenuBarState extends ConsumerState<AppMenuBar> {
+  @override
+  Widget build(BuildContext context) {
     final recentFilesAsync = ref.watch(recentFilesProvider);
 
     return PlatformMenuBar(
@@ -116,7 +124,7 @@ class AppMenuBar extends ConsumerWidget {
             PlatformMenuItemGroup(
               members: [
                 PlatformMenuItem(
-                  label: localizations.menuSettings,
+                  label: widget.localizations.menuSettings,
                   shortcut: const SingleActivator(
                     LogicalKeyboardKey.comma,
                     meta: true,
@@ -128,12 +136,12 @@ class AppMenuBar extends ConsumerWidget {
             PlatformMenuItemGroup(
               members: [
                 PlatformMenuItem(
-                  label: localizations.menuQuit,
+                  label: widget.localizations.menuQuit,
                   shortcut: const SingleActivator(
                     LogicalKeyboardKey.keyQ,
                     meta: true,
                   ),
-                  onSelected: onQuit,
+                  onSelected: widget.onQuit,
                 ),
               ],
             ),
@@ -141,17 +149,16 @@ class AppMenuBar extends ConsumerWidget {
         ),
         // File menu
         PlatformMenu(
-          label: localizations.menuFile,
-          menus: _buildFileMenuItems(context, ref, recentFilesAsync),
+          label: widget.localizations.menuFile,
+          menus: _buildFileMenuItems(context, recentFilesAsync),
         ),
       ],
-      child: child,
+      child: widget.child,
     );
   }
 
   List<PlatformMenuItem> _buildFileMenuItems(
     BuildContext context,
-    WidgetRef ref,
     AsyncValue<List<RecentFile>> recentFilesAsync,
   ) {
     final items = <PlatformMenuItem>[
@@ -159,60 +166,60 @@ class AppMenuBar extends ConsumerWidget {
       PlatformMenuItemGroup(
         members: [
           PlatformMenuItem(
-            label: localizations.menuOpen,
+            label: widget.localizations.menuOpen,
             shortcut: const SingleActivator(
               LogicalKeyboardKey.keyO,
               meta: true,
             ),
-            onSelected: () => _handleOpen(ref, onFileOpened),
+            onSelected: () => _handleOpen(widget.onFileOpened),
           ),
         ],
       ),
       // Group 2: Open Recent submenu
       PlatformMenuItemGroup(
         members: [
-          _buildOpenRecentMenu(ref, recentFilesAsync, onFileOpened),
+          _buildOpenRecentMenu(recentFilesAsync, widget.onFileOpened),
         ],
       ),
     ];
 
     // Group 3: Save, Save As, Save All (conditionally shown via include* flags)
     final saveMembers = <PlatformMenuItem>[];
-    if (includeSave) {
+    if (widget.includeSave) {
       saveMembers.add(
         PlatformMenuItem(
-          label: localizations.menuSave,
+          label: widget.localizations.menuSave,
           shortcut: const SingleActivator(
             LogicalKeyboardKey.keyS,
             meta: true,
           ),
-          onSelected: isSaveEnabled ? onSave : null,
+          onSelected: widget.isSaveEnabled ? widget.onSave : null,
         ),
       );
     }
-    if (includeSaveAs) {
+    if (widget.includeSaveAs) {
       saveMembers.add(
         PlatformMenuItem(
-          label: localizations.menuSaveAs,
+          label: widget.localizations.menuSaveAs,
           shortcut: const SingleActivator(
             LogicalKeyboardKey.keyS,
             meta: true,
             shift: true,
           ),
-          onSelected: isSaveAsEnabled ? onSaveAs : null,
+          onSelected: widget.isSaveAsEnabled ? widget.onSaveAs : null,
         ),
       );
     }
-    if (includeSaveAll) {
+    if (widget.includeSaveAll) {
       saveMembers.add(
         PlatformMenuItem(
-          label: localizations.menuSaveAll,
+          label: widget.localizations.menuSaveAll,
           shortcut: const SingleActivator(
             LogicalKeyboardKey.keyS,
             meta: true,
             alt: true,
           ),
-          onSelected: isSaveAllEnabled ? onSaveAll : null,
+          onSelected: widget.isSaveAllEnabled ? widget.onSaveAll : null,
         ),
       );
     }
@@ -221,13 +228,13 @@ class AppMenuBar extends ConsumerWidget {
     }
 
     // Group 4: Share (optional)
-    if (includeShare) {
+    if (widget.includeShare) {
       items.add(
         PlatformMenuItemGroup(
           members: [
             PlatformMenuItem(
-              label: localizations.menuShare,
-              onSelected: onShare,
+              label: widget.localizations.menuShare,
+              onSelected: widget.onShare,
             ),
           ],
         ),
@@ -237,28 +244,28 @@ class AppMenuBar extends ConsumerWidget {
     // Group 5: Close All (optional) and Close Window
     final closeItems = <PlatformMenuItem>[];
 
-    if (includeCloseAll) {
+    if (widget.includeCloseAll) {
       closeItems.add(
         PlatformMenuItem(
-          label: localizations.menuCloseAll,
+          label: widget.localizations.menuCloseAll,
           shortcut: const SingleActivator(
             LogicalKeyboardKey.keyW,
             meta: true,
             alt: true,
           ),
-          onSelected: isCloseAllEnabled ? onCloseAll : null,
+          onSelected: widget.isCloseAllEnabled ? widget.onCloseAll : null,
         ),
       );
     }
 
     closeItems.add(
       PlatformMenuItem(
-        label: localizations.menuCloseWindow,
+        label: widget.localizations.menuCloseWindow,
         shortcut: const SingleActivator(
           LogicalKeyboardKey.keyW,
           meta: true,
         ),
-        onSelected: onCloseWindow ?? () => _handleCloseWindow(),
+        onSelected: widget.onCloseWindow ?? () => _handleCloseWindow(),
       ),
     );
 
@@ -270,7 +277,6 @@ class AppMenuBar extends ConsumerWidget {
   }
 
   PlatformMenu _buildOpenRecentMenu(
-    WidgetRef ref,
     AsyncValue<List<RecentFile>> recentFilesAsync,
     VoidCallback? onFileOpened,
   ) {
@@ -285,7 +291,7 @@ class AppMenuBar extends ConsumerWidget {
         recentFileItems.add(
           PlatformMenuItem(
             label: file.fileName,
-            onSelected: () => _handleOpenRecent(ref, file.path, onFileOpened),
+            onSelected: () => _handleOpenRecent(file.path, onFileOpened),
           ),
         );
       }
@@ -298,9 +304,8 @@ class AppMenuBar extends ConsumerWidget {
         PlatformMenuItemGroup(
           members: [
             PlatformMenuItem(
-              label: localizations.menuClearMenu,
-              onSelected: () =>
-                  ref.read(recentFilesProvider.notifier).clearAll(),
+              label: widget.localizations.menuClearMenu,
+              onSelected: () => _handleClearRecentFiles(),
             ),
           ],
         ),
@@ -311,7 +316,7 @@ class AppMenuBar extends ConsumerWidget {
         PlatformMenuItemGroup(
           members: [
             PlatformMenuItem(
-              label: localizations.menuNoRecentFiles,
+              label: widget.localizations.menuNoRecentFiles,
               onSelected: null,
             ),
           ],
@@ -320,59 +325,84 @@ class AppMenuBar extends ConsumerWidget {
     }
 
     return PlatformMenu(
-      label: localizations.menuOpenRecent,
+      label: widget.localizations.menuOpenRecent,
       menus: menuItems,
     );
   }
 
-  Future<void> _handleOpen(WidgetRef ref, VoidCallback? onFileOpened) async {
+  /// Handles Open menu action.
+  ///
+  /// IMPORTANT: Captures provider notifiers BEFORE any await to avoid
+  /// "ref after dispose" errors when widget is disposed during file picker.
+  Future<void> _handleOpen(VoidCallback? onFileOpened) async {
+    // Capture notifiers synchronously BEFORE any await.
+    // These references remain valid even if widget is disposed.
     final filePicker = ref.read(pdfFilePickerProvider.notifier);
+    final recentFilesNotifier = ref.read(recentFilesProvider.notifier);
+
+    // Show file picker - widget may be disposed while this is open
     final path = await filePicker.pickPdf();
 
+    // After await: use captured notifiers (valid), check mounted for UI callbacks
     if (path != null) {
       final fileName = path.split('/').last;
 
-      // Add to recent files
-      await ref.read(recentFilesProvider.notifier).addFile(
-            RecentFile(
-              path: path,
-              fileName: fileName,
-              lastOpened: DateTime.now(),
-              pageCount: 0,
-              isPasswordProtected: false,
-            ),
-          );
+      // Add to recent files using captured notifier (doesn't need mounted check)
+      await recentFilesNotifier.addFile(
+        RecentFile(
+          path: path,
+          fileName: fileName,
+          lastOpened: DateTime.now(),
+          pageCount: 0,
+          isPasswordProtected: false,
+        ),
+      );
 
-      // Open in new window
-      final windowId = await WindowManagerService.instance.createPdfWindow(path);
-      if (windowId != null) {
+      // Open in new window (WindowManagerService is singleton, no ref needed)
+      final windowId =
+          await WindowManagerService.instance.createPdfWindow(path);
+
+      // Only call UI callback if widget is still mounted
+      if (windowId != null && mounted) {
         onFileOpened?.call();
       }
     }
   }
 
+  /// Handles Open Recent menu action.
+  ///
+  /// IMPORTANT: Captures provider notifiers BEFORE any await.
   Future<void> _handleOpenRecent(
-    WidgetRef ref,
     String path,
     VoidCallback? onFileOpened,
   ) async {
+    // Capture notifier synchronously BEFORE any await
+    final recentFilesNotifier = ref.read(recentFilesProvider.notifier);
+
     // Update last opened time
     final fileName = path.split('/').last;
-    await ref.read(recentFilesProvider.notifier).addFile(
-          RecentFile(
-            path: path,
-            fileName: fileName,
-            lastOpened: DateTime.now(),
-            pageCount: 0,
-            isPasswordProtected: false,
-          ),
-        );
+    await recentFilesNotifier.addFile(
+      RecentFile(
+        path: path,
+        fileName: fileName,
+        lastOpened: DateTime.now(),
+        pageCount: 0,
+        isPasswordProtected: false,
+      ),
+    );
 
     // Open in new window
     final windowId = await WindowManagerService.instance.createPdfWindow(path);
-    if (windowId != null) {
+
+    // Only call UI callback if widget is still mounted
+    if (windowId != null && mounted) {
       onFileOpened?.call();
     }
+  }
+
+  /// Handles Clear Menu action for recent files.
+  void _handleClearRecentFiles() {
+    ref.read(recentFilesProvider.notifier).clearAll();
   }
 
   Future<void> _handleCloseWindow() async {
