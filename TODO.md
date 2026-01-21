@@ -13,8 +13,6 @@ Claude Code MUST ignore this file!
 * Save All
 * Close All
 * Ctrl + Q зарквает окна и не спрашивает сохранить или нет изменения, должен вначале вызывать Close All
-* Open не добавялет файлы в историю открытых файлов на Welcoome Screen и в меню File -> Open Recent.
-* >>>> Нельзя было открыть два одних и тех же файла одновременно.
 * Ограничить длину списка recent files и сделать ее конфигурируемой
 
 Here is your Essential Studio® suite with a 7-day license key. This key can be used until your community license request is approved. 
