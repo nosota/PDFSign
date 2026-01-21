@@ -69,7 +69,11 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
   Future<void> _initWindowBroadcast() async {
     WindowBroadcast.setOnUnitChanged(_handleUnitChanged);
     WindowBroadcast.setOnLocaleChanged(_handleLocaleChanged);
+    WindowBroadcast.setOnDirtyStateChanged(_handleDirtyStateChanged);
     await WindowBroadcast.init();
+
+    // Request dirty states from all PDF windows to populate globalDirtyStateProvider
+    await WindowBroadcast.broadcastRequestDirtyStates();
   }
 
   /// Handles unit changed broadcast from another window.
@@ -80,6 +84,11 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
   /// Handles locale changed broadcast from another window.
   void _handleLocaleChanged() {
     ref.read(localePreferenceProvider.notifier).reload();
+  }
+
+  /// Handles dirty state changed broadcast from PDF windows.
+  void _handleDirtyStateChanged(String windowId, bool isDirty) {
+    ref.read(globalDirtyStateProvider.notifier).updateWindowState(windowId, isDirty);
   }
 
   void _handleWindowFocus() {
@@ -130,6 +139,7 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
     service.clearSettingsWindowId();
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
+    WindowBroadcast.setOnDirtyStateChanged(null);
     SubWindowChannel.dispose();
 
     if (otherVisibleWindows.isEmpty) {
@@ -156,6 +166,7 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
     WindowManagerService.instance.clearSettingsWindowId();
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
+    WindowBroadcast.setOnDirtyStateChanged(null);
     SubWindowChannel.dispose();
     super.dispose();
   }
