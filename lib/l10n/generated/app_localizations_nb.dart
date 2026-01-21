@@ -138,6 +138,17 @@ class AppLocalizationsNb extends AppLocalizations {
   String get closeAllDialogCancel => 'Avbryt';
 
   @override
+  String get saveFailedDialogTitle => 'Lagring mislyktes';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Kunne ikke lagre $count dokument(er). Lukke likevel?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Lukk likevel';
+
+  @override
   String get saveChangesTitle => 'Lagre endringer?';
 
   @override

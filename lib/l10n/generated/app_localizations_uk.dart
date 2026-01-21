@@ -144,6 +144,17 @@ class AppLocalizationsUk extends AppLocalizations {
   String get closeAllDialogCancel => 'Скасувати';
 
   @override
+  String get saveFailedDialogTitle => 'Помилка збереження';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Не вдалося зберегти $count документ(ів). Все одно закрити?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Все одно закрити';
+
+  @override
   String get saveChangesTitle => 'Зберегти зміни?';
 
   @override

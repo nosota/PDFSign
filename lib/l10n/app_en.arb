@@ -156,6 +156,23 @@
   "@closeAllDialogCancel": {
     "description": "Cancel button in close all dialog"
   },
+  "saveFailedDialogTitle": "Save Failed",
+  "@saveFailedDialogTitle": {
+    "description": "Title for save failed dialog"
+  },
+  "saveFailedDialogMessage": "Failed to save {count} {count, plural, one{document} other{documents}}. Close anyway?",
+  "@saveFailedDialogMessage": {
+    "description": "Message for save failed dialog",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "saveFailedDialogClose": "Close Anyway",
+  "@saveFailedDialogClose": {
+    "description": "Close anyway button in save failed dialog"
+  },
   "saveChangesTitle": "Save Changes?",
   "@saveChangesTitle": {
     "description": "Title for save changes dialog"

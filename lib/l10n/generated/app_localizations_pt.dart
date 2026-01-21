@@ -138,6 +138,17 @@ class AppLocalizationsPt extends AppLocalizations {
   String get closeAllDialogCancel => 'Cancelar';
 
   @override
+  String get saveFailedDialogTitle => 'Falha ao salvar';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Falha ao salvar $count documento(s). Fechar mesmo assim?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Fechar mesmo assim';
+
+  @override
   String get saveChangesTitle => 'Salvar alterações?';
 
   @override
@@ -364,6 +375,17 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get closeAllDialogCancel => 'Cancelar';
 
   @override
+  String get saveFailedDialogTitle => 'Falha ao salvar';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Falha ao salvar $count documento(s). Fechar mesmo assim?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Fechar mesmo assim';
+
+  @override
   String get saveChangesTitle => 'Salvar alterações?';
 
   @override
@@ -588,6 +610,17 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get closeAllDialogCancel => 'Cancelar';
+
+  @override
+  String get saveFailedDialogTitle => 'Falha ao salvar';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Falha ao salvar $count documento(s). Fechar mesmo assim?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Fechar mesmo assim';
 
   @override
   String get saveChangesTitle => 'Guardar alterações?';

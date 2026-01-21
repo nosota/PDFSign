@@ -120,6 +120,17 @@ class AppLocalizationsHi extends AppLocalizations {
   String get closeAllDialogCancel => 'रद्द करें';
 
   @override
+  String get saveFailedDialogTitle => 'सहेजना विफल';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '$count दस्तावेज़ सहेजने में विफल। फिर भी बंद करें?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'फिर भी बंद करें';
+
+  @override
   String get saveChangesTitle => 'Parivartan sahejein?';
 
   @override

@@ -120,6 +120,17 @@ class AppLocalizationsKm extends AppLocalizations {
   String get closeAllDialogCancel => 'បោះបង់';
 
   @override
+  String get saveFailedDialogTitle => 'រក្សាទុកបរាជ័យ';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'បរាជ័យក្នុងការរក្សាទុក $count ឯកសារ។ បិទទោះយ៉ាងណា?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'បិទទោះយ៉ាងណា';
+
+  @override
   String get saveChangesTitle => 'Tuktuk kar phlash phder?';
 
   @override

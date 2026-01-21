@@ -120,6 +120,17 @@ class AppLocalizationsAz extends AppLocalizations {
   String get closeAllDialogCancel => 'Ləğv et';
 
   @override
+  String get saveFailedDialogTitle => 'Saxlama uğursuz oldu';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '$count sənədi saxlamaq alınmadı. Yenə də bağlansın?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Yenə də bağla';
+
+  @override
   String get saveChangesTitle => 'Deyisiklikleri yadda saxla?';
 
   @override

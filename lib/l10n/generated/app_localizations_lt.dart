@@ -120,6 +120,17 @@ class AppLocalizationsLt extends AppLocalizations {
   String get closeAllDialogCancel => 'Atšaukti';
 
   @override
+  String get saveFailedDialogTitle => 'Išsaugoti nepavyko';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Nepavyko išsaugoti $count dokumentų. Vis tiek uždaryti?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Vis tiek uždaryti';
+
+  @override
   String get saveChangesTitle => 'Issaugoti pakeitimus?';
 
   @override

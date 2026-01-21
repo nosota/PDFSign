@@ -120,6 +120,17 @@ class AppLocalizationsFil extends AppLocalizations {
   String get closeAllDialogCancel => 'Kanselahin';
 
   @override
+  String get saveFailedDialogTitle => 'Nabigo ang Pag-save';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Nabigong i-save ang $count dokumento. Isara pa rin?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Isara Pa Rin';
+
+  @override
   String get saveChangesTitle => 'I-save ang mga pagbabago?';
 
   @override

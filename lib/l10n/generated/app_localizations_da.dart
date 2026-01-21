@@ -138,6 +138,17 @@ class AppLocalizationsDa extends AppLocalizations {
   String get closeAllDialogCancel => 'Annuller';
 
   @override
+  String get saveFailedDialogTitle => 'Gem mislykkedes';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Kunne ikke gemme $count dokument(er). Luk alligevel?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Luk alligevel';
+
+  @override
   String get saveChangesTitle => 'Gem ændringer?';
 
   @override

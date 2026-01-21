@@ -120,6 +120,17 @@ class AppLocalizationsRo extends AppLocalizations {
   String get closeAllDialogCancel => 'Anulare';
 
   @override
+  String get saveFailedDialogTitle => 'Salvarea a eșuat';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Nu s-au putut salva $count document(e). Închideți oricum?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Închide oricum';
+
+  @override
   String get saveChangesTitle => 'Salvati modificarile?';
 
   @override

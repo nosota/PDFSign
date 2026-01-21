@@ -120,6 +120,17 @@ class AppLocalizationsTa extends AppLocalizations {
   String get closeAllDialogCancel => 'ரத்து செய்';
 
   @override
+  String get saveFailedDialogTitle => 'சேமிப்பு தோல்வி';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '$count ஆவணங்களைச் சேமிக்க முடியவில்லை. எப்படியும் மூடவா?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'எப்படியும் மூடு';
+
+  @override
   String get saveChangesTitle => 'Marrrangalai semikkava?';
 
   @override

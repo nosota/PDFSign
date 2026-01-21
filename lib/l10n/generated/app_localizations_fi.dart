@@ -138,6 +138,17 @@ class AppLocalizationsFi extends AppLocalizations {
   String get closeAllDialogCancel => 'Kumoa';
 
   @override
+  String get saveFailedDialogTitle => 'Tallennus epäonnistui';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '$count asiakirjan tallennus epäonnistui. Suljetaanko silti?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Sulje silti';
+
+  @override
   String get saveChangesTitle => 'Tallenna muutokset?';
 
   @override

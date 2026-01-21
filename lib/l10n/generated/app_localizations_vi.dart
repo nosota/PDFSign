@@ -120,6 +120,17 @@ class AppLocalizationsVi extends AppLocalizations {
   String get closeAllDialogCancel => 'Hủy';
 
   @override
+  String get saveFailedDialogTitle => 'Lưu thất bại';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Không thể lưu $count tài liệu. Vẫn đóng?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Vẫn Đóng';
+
+  @override
   String get saveChangesTitle => 'Luu thay doi?';
 
   @override

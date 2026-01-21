@@ -138,6 +138,17 @@ class AppLocalizationsNl extends AppLocalizations {
   String get closeAllDialogCancel => 'Annuleren';
 
   @override
+  String get saveFailedDialogTitle => 'Opslaan mislukt';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Kon $count document(en) niet opslaan. Toch sluiten?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Toch sluiten';
+
+  @override
   String get saveChangesTitle => 'Wijzigingen bewaren?';
 
   @override

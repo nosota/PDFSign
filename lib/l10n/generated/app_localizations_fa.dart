@@ -120,6 +120,17 @@ class AppLocalizationsFa extends AppLocalizations {
   String get closeAllDialogCancel => 'لغو';
 
   @override
+  String get saveFailedDialogTitle => 'ذخیره ناموفق';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'ذخیره $count سند ناموفق بود. به هر حال ببندید؟';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'به هر حال ببند';
+
+  @override
   String get saveChangesTitle => 'ذخیره تغییرات؟';
 
   @override

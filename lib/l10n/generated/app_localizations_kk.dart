@@ -120,6 +120,17 @@ class AppLocalizationsKk extends AppLocalizations {
   String get closeAllDialogCancel => 'Болдырмау';
 
   @override
+  String get saveFailedDialogTitle => 'Сақтау сәтсіз аяқталды';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '$count құжатты сақтау сәтсіз. Бәрібір жабу керек пе?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Бәрібір жабу';
+
+  @override
   String get saveChangesTitle => 'Ozgeristerdi saqtau?';
 
   @override

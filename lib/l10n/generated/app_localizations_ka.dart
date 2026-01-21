@@ -120,6 +120,17 @@ class AppLocalizationsKa extends AppLocalizations {
   String get closeAllDialogCancel => 'გაუქმება';
 
   @override
+  String get saveFailedDialogTitle => 'შენახვა ვერ მოხერხდა';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'ვერ მოხერხდა $count დოკუმენტის შენახვა. მაინც დაიხუროს?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'მაინც დახურვა';
+
+  @override
   String get saveChangesTitle => 'Cvlilebebis shenakhva?';
 
   @override

@@ -120,6 +120,17 @@ class AppLocalizationsId extends AppLocalizations {
   String get closeAllDialogCancel => 'Batal';
 
   @override
+  String get saveFailedDialogTitle => 'Penyimpanan Gagal';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Gagal menyimpan $count dokumen. Tetap tutup?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Tetap Tutup';
+
+  @override
   String get saveChangesTitle => 'Simpan perubahan?';
 
   @override

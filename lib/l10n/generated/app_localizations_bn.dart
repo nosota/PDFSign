@@ -120,6 +120,17 @@ class AppLocalizationsBn extends AppLocalizations {
   String get closeAllDialogCancel => 'বাতিল';
 
   @override
+  String get saveFailedDialogTitle => 'সংরক্ষণ ব্যর্থ';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '$countটি নথি সংরক্ষণ করতে ব্যর্থ। যাইহোক বন্ধ করবেন?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'যাইহোক বন্ধ করুন';
+
+  @override
   String get saveChangesTitle => 'Paribartan sanchhoy korben?';
 
   @override

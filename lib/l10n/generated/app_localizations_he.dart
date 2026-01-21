@@ -120,6 +120,17 @@ class AppLocalizationsHe extends AppLocalizations {
   String get closeAllDialogCancel => 'ביטול';
 
   @override
+  String get saveFailedDialogTitle => 'השמירה נכשלה';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'השמירה של $count מסמכים נכשלה. לסגור בכל זאת?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'סגור בכל זאת';
+
+  @override
   String get saveChangesTitle => 'לשמור שינויים?';
 
   @override

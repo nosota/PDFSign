@@ -138,6 +138,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get closeAllDialogCancel => 'Annuler';
 
   @override
+  String get saveFailedDialogTitle => 'Échec de l\'enregistrement';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Échec de l\'enregistrement de $count document(s). Fermer quand même ?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Fermer quand même';
+
+  @override
   String get saveChangesTitle => 'Enregistrer les modifications?';
 
   @override

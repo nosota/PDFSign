@@ -141,6 +141,17 @@ class AppLocalizationsCs extends AppLocalizations {
   String get closeAllDialogCancel => 'Zrušit';
 
   @override
+  String get saveFailedDialogTitle => 'Uložení se nezdařilo';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Nepodařilo se uložit $count dokument(ů). Přesto zavřít?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Přesto zavřít';
+
+  @override
   String get saveChangesTitle => 'Uložit změny?';
 
   @override

@@ -120,6 +120,17 @@ class AppLocalizationsHr extends AppLocalizations {
   String get closeAllDialogCancel => 'Odustani';
 
   @override
+  String get saveFailedDialogTitle => 'Spremanje nije uspjelo';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Spremanje $count dokumenta nije uspjelo. Svejedno zatvoriti?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Svejedno zatvori';
+
+  @override
   String get saveChangesTitle => 'Spremi promjene?';
 
   @override

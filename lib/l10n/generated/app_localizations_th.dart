@@ -120,6 +120,17 @@ class AppLocalizationsTh extends AppLocalizations {
   String get closeAllDialogCancel => 'ยกเลิก';
 
   @override
+  String get saveFailedDialogTitle => 'บันทึกล้มเหลว';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'บันทึก $count เอกสารไม่สำเร็จ ปิดต่อไปหรือไม่?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'ปิดต่อไป';
+
+  @override
   String get saveChangesTitle => 'บันทึกการเปลี่ยนแปลง?';
 
   @override

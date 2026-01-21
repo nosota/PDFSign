@@ -419,6 +419,24 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get closeAllDialogCancel;
 
+  /// Title for save failed dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Save Failed'**
+  String get saveFailedDialogTitle;
+
+  /// Message for save failed dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save {count} {count, plural, one{document} other{documents}}. Close anyway?'**
+  String saveFailedDialogMessage(int count);
+
+  /// Close anyway button in save failed dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Close Anyway'**
+  String get saveFailedDialogClose;
+
   /// Title for save changes dialog
   ///
   /// In en, this message translates to:

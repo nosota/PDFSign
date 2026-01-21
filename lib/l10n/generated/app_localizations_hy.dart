@@ -120,6 +120,17 @@ class AppLocalizationsHy extends AppLocalizations {
   String get closeAllDialogCancel => 'Chygarkvel';
 
   @override
+  String get saveFailedDialogTitle => 'Save Failed';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Failed to save $count document(s). Close anyway?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Close Anyway';
+
+  @override
   String get saveChangesTitle => 'Pakhpanel pokhutyyunnery?';
 
   @override

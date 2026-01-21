@@ -119,6 +119,17 @@ class AppLocalizationsJa extends AppLocalizations {
   String get closeAllDialogCancel => 'キャンセル';
 
   @override
+  String get saveFailedDialogTitle => '保存に失敗しました';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '$count件のドキュメントの保存に失敗しました。それでも閉じますか？';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'それでも閉じる';
+
+  @override
   String get saveChangesTitle => '変更を保存しますか？';
 
   @override

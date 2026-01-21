@@ -120,6 +120,17 @@ class AppLocalizationsMy extends AppLocalizations {
   String get closeAllDialogCancel => 'ပယ်ဖျက်ရန်';
 
   @override
+  String get saveFailedDialogTitle => 'သိမ်းဆည်းခြင်း မအောင်မြင်ပါ';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '$count စာရွက်စာတမ်း သိမ်းဆည်းခြင်း မအောင်မြင်ပါ။ ဘာပဲဖြစ်ဖြစ် ပိတ်မလား?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'ဘာပဲဖြစ်ဖြစ် ပိတ်ပါ';
+
+  @override
   String get saveChangesTitle => 'Pyaunglevmhuu thein malar?';
 
   @override

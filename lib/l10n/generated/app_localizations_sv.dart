@@ -138,6 +138,17 @@ class AppLocalizationsSv extends AppLocalizations {
   String get closeAllDialogCancel => 'Avbryt';
 
   @override
+  String get saveFailedDialogTitle => 'Sparandet misslyckades';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Det gick inte att spara $count dokument. Stäng ändå?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Stäng ändå';
+
+  @override
   String get saveChangesTitle => 'Spara ändringar?';
 
   @override

@@ -120,6 +120,17 @@ class AppLocalizationsBe extends AppLocalizations {
   String get closeAllDialogCancel => 'Скасаваць';
 
   @override
+  String get saveFailedDialogTitle => 'Памылка захавання';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Не ўдалося захаваць $count дакумент(аў). Усё роўна закрыць?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Усё роўна закрыць';
+
+  @override
   String get saveChangesTitle => 'Захаваць змены?';
 
   @override

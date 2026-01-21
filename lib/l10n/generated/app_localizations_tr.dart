@@ -120,6 +120,17 @@ class AppLocalizationsTr extends AppLocalizations {
   String get closeAllDialogCancel => 'İptal';
 
   @override
+  String get saveFailedDialogTitle => 'Kaydetme başarısız';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '$count belge kaydedilemedi. Yine de kapatılsın mı?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Yine de Kapat';
+
+  @override
   String get saveChangesTitle => 'Değişiklikler kaydedilsin mi?';
 
   @override

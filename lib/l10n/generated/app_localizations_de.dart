@@ -138,6 +138,17 @@ class AppLocalizationsDe extends AppLocalizations {
   String get closeAllDialogCancel => 'Abbrechen';
 
   @override
+  String get saveFailedDialogTitle => 'Speichern fehlgeschlagen';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '$count Dokument(e) konnten nicht gespeichert werden. Trotzdem schließen?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Trotzdem schließen';
+
+  @override
   String get saveChangesTitle => 'Änderungen sichern?';
 
   @override

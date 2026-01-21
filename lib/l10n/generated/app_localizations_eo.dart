@@ -120,6 +120,17 @@ class AppLocalizationsEo extends AppLocalizations {
   String get closeAllDialogCancel => 'Nuligi';
 
   @override
+  String get saveFailedDialogTitle => 'Konservo malsukcesis';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Malsukcesis konservi $count dokumenton(jn). Ĉu fermi tamen?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Fermi tamen';
+
+  @override
   String get saveChangesTitle => 'Konservi sxangxojn?';
 
   @override

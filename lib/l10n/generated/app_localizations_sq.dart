@@ -120,6 +120,17 @@ class AppLocalizationsSq extends AppLocalizations {
   String get closeAllDialogCancel => 'Anulo';
 
   @override
+  String get saveFailedDialogTitle => 'Ruajtja dështoi';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Dështoi ruajtja e $count dokumenteve. Mbyll gjithsesi?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Mbyll Gjithsesi';
+
+  @override
   String get saveChangesTitle => 'Ruaj ndryshimet?';
 
   @override

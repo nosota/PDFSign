@@ -120,6 +120,17 @@ class AppLocalizationsSr extends AppLocalizations {
   String get closeAllDialogCancel => 'Откажи';
 
   @override
+  String get saveFailedDialogTitle => 'Чување није успело';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Није успело чување $count документа. Ипак затворити?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Ипак затвори';
+
+  @override
   String get saveChangesTitle => 'Сачувај измене?';
 
   @override

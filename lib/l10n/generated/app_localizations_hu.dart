@@ -120,6 +120,17 @@ class AppLocalizationsHu extends AppLocalizations {
   String get closeAllDialogCancel => 'Mégse';
 
   @override
+  String get saveFailedDialogTitle => 'Mentés sikertelen';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '$count dokumentum mentése sikertelen. Mégis bezárja?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Mégis bezár';
+
+  @override
   String get saveChangesTitle => 'Változások mentése?';
 
   @override

@@ -120,6 +120,17 @@ class AppLocalizationsBg extends AppLocalizations {
   String get closeAllDialogCancel => 'Отказ';
 
   @override
+  String get saveFailedDialogTitle => 'Неуспешно запазване';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Неуспешно запазване на $count документ(а). Да се затвори въпреки това?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Затвори въпреки това';
+
+  @override
   String get saveChangesTitle => 'Запази промените?';
 
   @override

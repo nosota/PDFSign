@@ -120,6 +120,17 @@ class AppLocalizationsUz extends AppLocalizations {
   String get closeAllDialogCancel => 'Bekor qilish';
 
   @override
+  String get saveFailedDialogTitle => 'Saqlash muvaffaqiyatsiz';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '$count ta hujjatni saqlash muvaffaqiyatsiz. Baribir yopilsinmi?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Baribir yopish';
+
+  @override
   String get saveChangesTitle => 'Oʻzgarishlarni saqlash?';
 
   @override

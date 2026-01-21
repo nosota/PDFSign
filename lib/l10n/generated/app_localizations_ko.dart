@@ -119,6 +119,17 @@ class AppLocalizationsKo extends AppLocalizations {
   String get closeAllDialogCancel => '취소';
 
   @override
+  String get saveFailedDialogTitle => '저장 실패';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '$count개 문서를 저장하지 못했습니다. 그래도 닫으시겠습니까?';
+  }
+
+  @override
+  String get saveFailedDialogClose => '그래도 닫기';
+
+  @override
   String get saveChangesTitle => '변경사항을 저장하시겠습니까?';
 
   @override

@@ -120,6 +120,17 @@ class AppLocalizationsLv extends AppLocalizations {
   String get closeAllDialogCancel => 'Atcelt';
 
   @override
+  String get saveFailedDialogTitle => 'Saglabāšana neizdevās';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Neizdevās saglabāt $count dokumentu(s). Aizvērt tik un tā?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Aizvērt tik un tā';
+
+  @override
   String get saveChangesTitle => 'Saglabat izmainas?';
 
   @override

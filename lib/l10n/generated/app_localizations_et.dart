@@ -120,6 +120,17 @@ class AppLocalizationsEt extends AppLocalizations {
   String get closeAllDialogCancel => 'Tühista';
 
   @override
+  String get saveFailedDialogTitle => 'Salvestamine ebaõnnestus';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '$count dokumendi salvestamine ebaõnnestus. Kas sulgeda siiski?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Sulge siiski';
+
+  @override
   String get saveChangesTitle => 'Salvesta muudatused?';
 
   @override

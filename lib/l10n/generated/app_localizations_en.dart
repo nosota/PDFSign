@@ -138,6 +138,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get closeAllDialogCancel => 'Cancel';
 
   @override
+  String get saveFailedDialogTitle => 'Save Failed';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'documents',
+      one: 'document',
+    );
+    return 'Failed to save $count $_temp0. Close anyway?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Close Anyway';
+
+  @override
   String get saveChangesTitle => 'Save Changes?';
 
   @override
@@ -362,6 +379,17 @@ class AppLocalizationsEnAu extends AppLocalizationsEn {
 
   @override
   String get closeAllDialogCancel => 'Cancel';
+
+  @override
+  String get saveFailedDialogTitle => 'Save Failed';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Failed to save $count document(s). Close anyway?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Close Anyway';
 
   @override
   String get saveChangesTitle => 'Save Changes?';
@@ -590,6 +618,17 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   String get closeAllDialogCancel => 'Cancel';
 
   @override
+  String get saveFailedDialogTitle => 'Save Failed';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Failed to save $count document(s). Close anyway?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Close Anyway';
+
+  @override
   String get saveChangesTitle => 'Save Changes?';
 
   @override
@@ -816,6 +855,17 @@ class AppLocalizationsEnNz extends AppLocalizationsEn {
   String get closeAllDialogCancel => 'Cancel';
 
   @override
+  String get saveFailedDialogTitle => 'Save Failed';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Failed to save $count document(s). Close anyway?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Close Anyway';
+
+  @override
   String get saveChangesTitle => 'Save Changes?';
 
   @override
@@ -1040,6 +1090,17 @@ class AppLocalizationsEnUs extends AppLocalizationsEn {
 
   @override
   String get closeAllDialogCancel => 'Cancel';
+
+  @override
+  String get saveFailedDialogTitle => 'Save Failed';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Failed to save $count document(s). Close anyway?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Close Anyway';
 
   @override
   String get saveChangesTitle => 'Save Changes?';

@@ -120,6 +120,17 @@ class AppLocalizationsEl extends AppLocalizations {
   String get closeAllDialogCancel => 'Ακύρωση';
 
   @override
+  String get saveFailedDialogTitle => 'Αποτυχία αποθήκευσης';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Αποτυχία αποθήκευσης $count εγγράφου(ων). Κλείσιμο ούτως ή άλλως;';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Κλείσιμο ούτως ή άλλως';
+
+  @override
   String get saveChangesTitle => 'Apothikefsi allagon?';
 
   @override

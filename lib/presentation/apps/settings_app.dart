@@ -193,10 +193,28 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
 
     switch (result) {
       case CloseAllResult.saveAll:
-        // Save all dirty windows first, then close all
+        // Save all dirty windows first
         await WindowBroadcast.broadcastSaveAll();
-        // Small delay to ensure saves complete
-        await Future.delayed(const Duration(milliseconds: 100));
+        // Wait for saves to complete (5 seconds timeout)
+        await Future.delayed(const Duration(seconds: 5));
+
+        // Check if any windows still have unsaved changes (save failed)
+        final stillDirty = ref.read(globalDirtyStateProvider);
+        final failedCount = stillDirty.values.where((d) => d).length;
+
+        if (failedCount > 0) {
+          // Some saves failed, ask user what to do
+          final l10n = AppLocalizations.of(navigatorContext);
+          if (l10n != null) {
+            final closeAnyway = await _showSaveFailedDialog(
+              navigatorContext,
+              l10n,
+              failedCount,
+            );
+            if (!closeAnyway) return; // User cancelled
+          }
+        }
+
         await WindowBroadcast.broadcastCloseAll();
         break;
       case CloseAllResult.discard:
@@ -208,6 +226,34 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
         // User cancelled, do nothing
         break;
     }
+  }
+
+  /// Shows dialog when save failed for some documents.
+  /// Returns true if user wants to close anyway, false to cancel.
+  Future<bool> _showSaveFailedDialog(
+    BuildContext context,
+    AppLocalizations l10n,
+    int failedCount,
+  ) async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.saveFailedDialogTitle),
+        content: Text(l10n.saveFailedDialogMessage(failedCount)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.closeAllDialogCancel),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l10n.saveFailedDialogClose),
+          ),
+        ],
+      ),
+    );
+    return result ?? false;
   }
 
   /// Handles Quit command (Cmd+Q).
@@ -234,10 +280,28 @@ class _SettingsAppState extends ConsumerState<SettingsApp> {
 
     switch (result) {
       case CloseAllResult.saveAll:
-        // Save all dirty windows first, then quit
+        // Save all dirty windows first
         await WindowBroadcast.broadcastSaveAll();
-        // Small delay to ensure saves complete
-        await Future.delayed(const Duration(milliseconds: 100));
+        // Wait for saves to complete (5 seconds timeout)
+        await Future.delayed(const Duration(seconds: 5));
+
+        // Check if any windows still have unsaved changes (save failed)
+        final stillDirty = ref.read(globalDirtyStateProvider);
+        final failedCount = stillDirty.values.where((d) => d).length;
+
+        if (failedCount > 0) {
+          // Some saves failed, ask user what to do
+          final l10n = AppLocalizations.of(navigatorContext);
+          if (l10n != null) {
+            final closeAnyway = await _showSaveFailedDialog(
+              navigatorContext,
+              l10n,
+              failedCount,
+            );
+            if (!closeAnyway) return; // User cancelled
+          }
+        }
+
         exit(0);
       case CloseAllResult.discard:
         // Quit without saving

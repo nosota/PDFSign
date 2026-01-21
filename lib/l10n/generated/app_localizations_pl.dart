@@ -144,6 +144,17 @@ class AppLocalizationsPl extends AppLocalizations {
   String get closeAllDialogCancel => 'Anuluj';
 
   @override
+  String get saveFailedDialogTitle => 'Zapisywanie nie powiodło się';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Nie udało się zapisać $count dokumentu(ów). Zamknąć mimo to?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Zamknij mimo to';
+
+  @override
   String get saveChangesTitle => 'Zapisać zmiany?';
 
   @override

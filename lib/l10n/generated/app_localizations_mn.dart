@@ -120,6 +120,17 @@ class AppLocalizationsMn extends AppLocalizations {
   String get closeAllDialogCancel => 'Цуцлах';
 
   @override
+  String get saveFailedDialogTitle => 'Хадгалах амжилтгүй';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '$count баримт бичгийг хадгалж чадсангүй. Гэсэн хэдий ч хаах уу?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Гэсэн хэдий ч хаах';
+
+  @override
   String get saveChangesTitle => 'Uurchlultiig khadgalakh uu?';
 
   @override

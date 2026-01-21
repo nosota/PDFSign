@@ -120,6 +120,17 @@ class AppLocalizationsEu extends AppLocalizations {
   String get closeAllDialogCancel => 'Utzi';
 
   @override
+  String get saveFailedDialogTitle => 'Gordetzeak huts egin du';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Ezin izan dira $count dokumentu gorde. Itxi hala ere?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Itxi hala ere';
+
+  @override
   String get saveChangesTitle => 'Aldaketak gorde?';
 
   @override

@@ -138,6 +138,17 @@ class AppLocalizationsEs extends AppLocalizations {
   String get closeAllDialogCancel => 'Cancelar';
 
   @override
+  String get saveFailedDialogTitle => 'Error al guardar';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'No se pudieron guardar $count documento(s). ¿Cerrar de todos modos?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Cerrar de todos modos';
+
+  @override
   String get saveChangesTitle => '¿Guardar cambios?';
 
   @override
@@ -362,6 +373,17 @@ class AppLocalizationsEsAr extends AppLocalizationsEs {
 
   @override
   String get closeAllDialogCancel => 'Cancelar';
+
+  @override
+  String get saveFailedDialogTitle => 'Error al guardar';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'No se pudieron guardar $count documento(s). ¿Cerrar de todos modos?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Cerrar de todos modos';
 
   @override
   String get saveChangesTitle => '¿Guardar cambios?';
@@ -590,6 +612,17 @@ class AppLocalizationsEsEs extends AppLocalizationsEs {
   String get closeAllDialogCancel => 'Cancelar';
 
   @override
+  String get saveFailedDialogTitle => 'Error al guardar';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'No se pudieron guardar $count documento(s). ¿Cerrar de todos modos?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Cerrar de todos modos';
+
+  @override
   String get saveChangesTitle => '¿Guardar cambios?';
 
   @override
@@ -814,6 +847,17 @@ class AppLocalizationsEsMx extends AppLocalizationsEs {
 
   @override
   String get closeAllDialogCancel => 'Cancelar';
+
+  @override
+  String get saveFailedDialogTitle => 'Error al guardar';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'No se pudieron guardar $count documento(s). ¿Cerrar de todos modos?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Cerrar de todos modos';
 
   @override
   String get saveChangesTitle => '¿Guardar cambios?';

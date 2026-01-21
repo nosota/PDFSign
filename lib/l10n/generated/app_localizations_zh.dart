@@ -119,6 +119,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get closeAllDialogCancel => '取消';
 
   @override
+  String get saveFailedDialogTitle => '保存失败';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '无法保存 $count 个文档。仍然关闭？';
+  }
+
+  @override
+  String get saveFailedDialogClose => '仍然关闭';
+
+  @override
   String get saveChangesTitle => '保存更改？';
 
   @override
@@ -325,6 +336,17 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get closeAllDialogCancel => '取消';
 
   @override
+  String get saveFailedDialogTitle => '保存失败';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '无法保存 $count 个文档。仍然关闭？';
+  }
+
+  @override
+  String get saveFailedDialogClose => '仍然关闭';
+
+  @override
   String get saveChangesTitle => '保存更改？';
 
   @override
@@ -529,6 +551,17 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get closeAllDialogCancel => '取消';
+
+  @override
+  String get saveFailedDialogTitle => '儲存失敗';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return '無法儲存 $count 個文件。仍然關閉？';
+  }
+
+  @override
+  String get saveFailedDialogClose => '仍然關閉';
 
   @override
   String get saveChangesTitle => '儲存更動？';

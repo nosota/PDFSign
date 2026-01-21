@@ -120,6 +120,17 @@ class AppLocalizationsIs extends AppLocalizations {
   String get closeAllDialogCancel => 'Hætta við';
 
   @override
+  String get saveFailedDialogTitle => 'Vista mistókst';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'Mistókst að vista $count skjal. Loka samt?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Loka samt';
+
+  @override
   String get saveChangesTitle => 'Vista breytingar?';
 
   @override

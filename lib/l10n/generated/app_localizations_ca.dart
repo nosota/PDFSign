@@ -120,6 +120,17 @@ class AppLocalizationsCa extends AppLocalizations {
   String get closeAllDialogCancel => 'Cancel·la';
 
   @override
+  String get saveFailedDialogTitle => 'Error en desar';
+
+  @override
+  String saveFailedDialogMessage(int count) {
+    return 'No s\'han pogut desar $count document(s). Tancar igualment?';
+  }
+
+  @override
+  String get saveFailedDialogClose => 'Tanca igualment';
+
+  @override
   String get saveChangesTitle => 'Desar els canvis?';
 
   @override
