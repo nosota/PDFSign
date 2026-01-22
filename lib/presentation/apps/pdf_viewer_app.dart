@@ -22,6 +22,8 @@ import 'package:pdfsign/presentation/providers/editor/original_pdf_provider.dart
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/size_unit_preference_provider.dart';
 import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
+import 'package:pdfsign/presentation/providers/recent_files_provider.dart';
+import 'package:pdfsign/presentation/providers/shared_preferences_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/editor_screen.dart';
 import 'package:pdfsign/presentation/widgets/dialogs/close_all_dialog.dart';
 import 'package:pdfsign/presentation/widgets/dialogs/save_changes_dialog.dart';
@@ -280,12 +282,19 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   ///
   /// This syncs settings changed in other windows (e.g., Settings window)
   /// and ensures menu state reflects current dirty state.
-  void _handleWindowFocus() {
+  void _handleWindowFocus() async {
     _isWindowFocused = true;
     // Force rebuild to render PlatformMenuBar and update menu state
     setState(() {});
     // Reload size unit preference to sync with changes from Settings
     ref.read(sizeUnitPreferenceProvider.notifier).reload();
+
+    // Reload SharedPreferences from disk to get latest recent files
+    // (other windows may have added files while this window was in background)
+    final prefs = ref.read(sharedPreferencesProvider);
+    await prefs.reload();
+    // Invalidate provider to re-read from the now-updated cache
+    ref.invalidate(recentFilesProvider);
   }
 
   /// Called when window loses focus.
