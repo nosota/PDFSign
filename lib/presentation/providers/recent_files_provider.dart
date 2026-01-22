@@ -7,15 +7,30 @@ part 'recent_files_provider.g.dart';
 /// Provider for managing recent files state.
 ///
 /// Handles loading, adding, removing, and clearing recent files.
-@riverpod
+/// Uses keepAlive to prevent auto-dispose which can cause state loss
+/// between operations and race conditions with SharedPreferences.
+@Riverpod(keepAlive: true)
 class RecentFiles extends _$RecentFiles {
+  /// Whether initial cleanup has been performed.
+  bool _initialCleanupDone = false;
+
   @override
   Future<List<RecentFile>> build() async {
     final repository = ref.watch(recentFilesRepositoryProvider);
 
-    // Cleanup invalid files on initial load
-    final result = await repository.cleanupInvalidFiles();
+    // Only cleanup invalid files on first load, not on every rebuild.
+    // This prevents race conditions where cleanup overwrites newly added files.
+    if (!_initialCleanupDone) {
+      _initialCleanupDone = true;
+      final result = await repository.cleanupInvalidFiles();
+      return result.fold(
+        (failure) => throw Exception(failure.message),
+        (files) => files,
+      );
+    }
 
+    // On subsequent rebuilds, just read current files
+    final result = await repository.getRecentFiles();
     return result.fold(
       (failure) => throw Exception(failure.message),
       (files) => files,

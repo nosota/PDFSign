@@ -101,46 +101,47 @@ class FileOpenHandler {
       return;
     }
 
-    // Hide Welcome window explicitly (same pattern as desktop_welcome_view.dart)
-    // The broadcast in createPdfWindow doesn't reach Welcome because it excludes self
+    // Add to recent files BEFORE hiding Welcome window.
+    // This ensures the SharedPreferences write completes while Welcome
+    // is still active. Writing after hide() can fail silently.
+    final fileName = filePath.split('/').last;
+    if (_recentFilesRepository != null) {
+      final result = await _recentFilesRepository!.addRecentFile(
+        RecentFile(
+          path: filePath,
+          fileName: fileName,
+          lastOpened: DateTime.now(),
+          pageCount: 0,
+          isPasswordProtected: false,
+        ),
+      );
+
+      result.fold(
+        (failure) {
+          if (kDebugMode) {
+            print('FileOpenHandler: failed to add to recent files: '
+                '${failure.message}');
+          }
+        },
+        (_) {
+          if (kDebugMode) {
+            print('FileOpenHandler: added to recent files: $fileName');
+          }
+        },
+      );
+    } else {
+      if (kDebugMode) {
+        print('FileOpenHandler: warning - repository is null, '
+            'cannot add to recent files');
+      }
+    }
+
+    // Hide Welcome window AFTER adding to recent files.
+    // The broadcast in createPdfWindow doesn't reach Welcome because it excludes self.
     WindowManagerService.instance.setWelcomeHidden();
     await windowManager.hide();
     if (kDebugMode) {
       print('FileOpenHandler: Welcome window hidden');
     }
-
-    // Add to recent files AFTER successful window open
-    final fileName = filePath.split('/').last;
-    if (_recentFilesRepository == null) {
-      if (kDebugMode) {
-        print('FileOpenHandler: warning - repository is null, '
-            'cannot add to recent files');
-      }
-      return;
-    }
-
-    final result = await _recentFilesRepository!.addRecentFile(
-      RecentFile(
-        path: filePath,
-        fileName: fileName,
-        lastOpened: DateTime.now(),
-        pageCount: 0,
-        isPasswordProtected: false,
-      ),
-    );
-
-    result.fold(
-      (failure) {
-        if (kDebugMode) {
-          print('FileOpenHandler: failed to add to recent files: '
-              '${failure.message}');
-        }
-      },
-      (_) {
-        if (kDebugMode) {
-          print('FileOpenHandler: added to recent files: $fileName');
-        }
-      },
-    );
   }
 }

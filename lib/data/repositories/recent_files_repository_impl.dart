@@ -113,12 +113,16 @@ class RecentFilesRepositoryImpl implements RecentFilesRepository {
 
   @override
   Future<Either<Failure, Unit>> clearAllRecentFiles() async {
-    try {
-      await _localDataSource.clearRecentFiles();
-      return const Right(unit);
-    } catch (e) {
-      return Left(StorageFailure(message: 'Failed to clear recent files: $e'));
-    }
+    // Use lock to prevent race conditions with addRecentFile/removeRecentFile.
+    // Without lock, clear could run concurrently and overwrite newly added files.
+    return _lock.synchronized(() async {
+      try {
+        await _localDataSource.clearRecentFiles();
+        return const Right(unit);
+      } catch (e) {
+        return Left(StorageFailure(message: 'Failed to clear recent files: $e'));
+      }
+    });
   }
 
   @override

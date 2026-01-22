@@ -45,7 +45,10 @@ class RecentFilesLocalDataSourceImpl implements RecentFilesLocalDataSource {
   Future<void> saveRecentFiles(List<RecentFileModel> files) async {
     final jsonList = files.map((f) => f.toJson()).toList();
     final jsonString = jsonEncode(jsonList);
-    await _prefs.setString(AppConstants.recentFilesKey, jsonString);
+    final success = await _prefs.setString(AppConstants.recentFilesKey, jsonString);
+    if (!success) {
+      throw Exception('SharedPreferences.setString returned false');
+    }
   }
 
   @override
