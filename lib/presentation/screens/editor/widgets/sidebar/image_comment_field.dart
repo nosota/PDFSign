@@ -139,6 +139,10 @@ class _ImageCommentFieldState extends State<ImageCommentField> {
       offset: _controller.text.length,
     );
     setState(() => _isEditing = true);
+    // Request focus after TextField appears in the widget tree
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
   }
 
   void _saveAndClose(String value) {

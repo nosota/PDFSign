@@ -11,6 +11,7 @@ Claude Code MUST ignore this file!
 * Проверить Share + не сохранненый документ + сохранение во временный файл
 * Сайт для проекта
 * "Cmd + R" - Rote all pages left on 90 degrees including all images dragged to the PDF page from the right panel. Old version of the command must be deleted.
+* Копирование объекъета с одного PDF на другой с учтом размера и угла поворота.
 
 Here is your Essential Studio® suite with a 7-day license key. This key can be used until your community license request is approved. 
 We will send your long-term license key then.

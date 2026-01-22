@@ -487,6 +487,15 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
   Widget build(BuildContext context) {
     final viewerState = ref.watch(pdfDocumentProvider);
 
+    // Request focus when an object is selected on PDF
+    // This ensures keyboard shortcuts (Delete/Backspace) work after
+    // focus was elsewhere (e.g., editing comment in sidebar)
+    ref.listen(editorSelectionProvider, (prev, next) {
+      if (next != null && prev != next) {
+        _focusNode.requestFocus();
+      }
+    });
+
     return Focus(
       focusNode: _focusNode,
       autofocus: true,
