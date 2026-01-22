@@ -2,14 +2,23 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:pdfsign/core/platform/sub_window_channel.dart';
+import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/permission_retry_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_viewer.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/image_sidebar.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/sidebar_resize_handle.dart';
+
+/// Intent for deleting the currently selected image.
+class DeleteSelectedImageIntent extends Intent {
+  const DeleteSelectedImageIntent();
+}
 
 /// PDF Editor screen with PDF viewing capabilities.
 ///
@@ -143,26 +152,52 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     }
   }
 
+  /// Deletes the currently selected image if any.
+  void _deleteSelectedImage() {
+    final selectedId = ref.read(editorSelectionProvider);
+    if (selectedId != null) {
+      ref.read(placedImagesProvider.notifier).removeImage(selectedId);
+      ref.read(editorSelectionProvider.notifier).clear();
+      ref.read(documentDirtyProvider.notifier).markDirty();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // Force LTR layout direction to keep panels in place for RTL languages.
-      // Text inside widgets will still be RTL as it inherits from MaterialApp.
-      body: Directionality(
-        textDirection: TextDirection.ltr,
-        child: Row(
-          children: const [
-            // PDF viewer (expands to fill remaining space)
-            Expanded(
-              child: PdfViewer(),
+    return Shortcuts(
+      shortcuts: const {
+        SingleActivator(LogicalKeyboardKey.delete): DeleteSelectedImageIntent(),
+        SingleActivator(LogicalKeyboardKey.backspace): DeleteSelectedImageIntent(),
+      },
+      child: Actions(
+        actions: {
+          DeleteSelectedImageIntent: CallbackAction<DeleteSelectedImageIntent>(
+            onInvoke: (_) {
+              _deleteSelectedImage();
+              return null;
+            },
+          ),
+        },
+        child: Scaffold(
+          // Force LTR layout direction to keep panels in place for RTL languages.
+          // Text inside widgets will still be RTL as it inherits from MaterialApp.
+          body: Directionality(
+            textDirection: TextDirection.ltr,
+            child: Row(
+              children: const [
+                // PDF viewer (expands to fill remaining space)
+                Expanded(
+                  child: PdfViewer(),
+                ),
+
+                // Resize handle
+                SidebarResizeHandle(),
+
+                // Right sidebar with images
+                ImageSidebar(),
+              ],
             ),
-
-            // Resize handle
-            SidebarResizeHandle(),
-
-            // Right sidebar with images
-            ImageSidebar(),
-          ],
+          ),
         ),
       ),
     );

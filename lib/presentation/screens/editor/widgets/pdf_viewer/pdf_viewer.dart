@@ -181,12 +181,8 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
     final isCmd = HardwareKeyboard.instance.isMetaPressed;
     final logicalKey = event.logicalKey;
 
-    // Delete/Backspace: Delete selected image
-    if (logicalKey == LogicalKeyboardKey.delete ||
-        logicalKey == LogicalKeyboardKey.backspace) {
-      _deleteSelectedImage();
-      return KeyEventResult.handled;
-    }
+    // Note: Delete/Backspace is handled at EditorScreen level via Shortcuts/Actions
+    // to work independently of focus state.
 
     // Cmd+C: Copy selected image
     if (isCmd && logicalKey == LogicalKeyboardKey.keyC) {
@@ -294,15 +290,6 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
     }
 
     return KeyEventResult.ignored;
-  }
-
-  void _deleteSelectedImage() {
-    final selectedId = ref.read(editorSelectionProvider);
-    if (selectedId != null) {
-      ref.read(placedImagesProvider.notifier).removeImage(selectedId);
-      ref.read(editorSelectionProvider.notifier).clear();
-      ref.read(documentDirtyProvider.notifier).markDirty();
-    }
   }
 
   void _copySelectedImage() {
