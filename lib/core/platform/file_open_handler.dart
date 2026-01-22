@@ -27,34 +27,41 @@ class FileOpenHandler {
   static Future<void> init({
     required AddRecentFileCallback addRecentFile,
   }) async {
-    if (_initialized) return;
+    print('>>> FileOpenHandler.init() called, _initialized: $_initialized');
+    if (_initialized) {
+      print('>>> FileOpenHandler.init() - already initialized, returning');
+      return;
+    }
     _initialized = true;
     _addRecentFileCallback = addRecentFile;
 
     // Set up handler for incoming file open requests from macOS
+    print('>>> FileOpenHandler.init() - setting up method call handler');
     _channel.setMethodCallHandler(_handleMethodCall);
 
     // Signal to macOS that Flutter is ready to receive files
+    print('>>> FileOpenHandler.init() - sending ready signal to macOS');
     try {
       await _channel.invokeMethod('ready');
-      if (kDebugMode) {
-        print('FileOpenHandler: signaled ready to macOS');
-      }
+      print('>>> FileOpenHandler.init() - ready signal sent successfully');
     } catch (e) {
-      if (kDebugMode) {
-        print('FileOpenHandler: failed to signal ready: $e');
-      }
+      print('>>> FileOpenHandler.init() - failed to signal ready: $e');
     }
   }
 
   static Future<dynamic> _handleMethodCall(MethodCall call) async {
+    print('>>> FileOpenHandler._handleMethodCall: ${call.method}');
+    print('>>> Arguments: ${call.arguments}');
+
     switch (call.method) {
       case 'openFile':
         final filePath = call.arguments as String;
+        print('>>> FileOpenHandler: received openFile for: $filePath');
         await _openFile(filePath);
         return null;
 
       default:
+        print('>>> FileOpenHandler: unknown method ${call.method}');
         throw PlatformException(
           code: 'UNSUPPORTED',
           message: 'Method ${call.method} not supported',
@@ -63,29 +70,26 @@ class FileOpenHandler {
   }
 
   static Future<void> _openFile(String filePath) async {
-    if (kDebugMode) {
-      print('FileOpenHandler: opening file: $filePath');
-    }
+    print('>>> FileOpenHandler._openFile: $filePath');
 
     // Validate file exists
     final file = File(filePath);
-    if (!await file.exists()) {
-      if (kDebugMode) {
-        print('FileOpenHandler: file does not exist: $filePath');
-      }
+    final exists = await file.exists();
+    print('>>> File exists: $exists');
+    if (!exists) {
+      print('>>> FileOpenHandler: file does not exist, returning');
       return;
     }
 
     // Validate it's a PDF
     if (!filePath.toLowerCase().endsWith('.pdf')) {
-      if (kDebugMode) {
-        print('FileOpenHandler: not a PDF file: $filePath');
-      }
+      print('>>> FileOpenHandler: not a PDF file, returning');
       return;
     }
 
     // Add to recent files
     final fileName = filePath.split('/').last;
+    print('>>> FileOpenHandler: adding to recent files: $fileName');
     if (_addRecentFileCallback != null) {
       try {
         await _addRecentFileCallback!(
@@ -97,14 +101,17 @@ class FileOpenHandler {
             isPasswordProtected: false,
           ),
         );
+        print('>>> FileOpenHandler: added to recent files successfully');
       } catch (e) {
-        if (kDebugMode) {
-          print('FileOpenHandler: failed to add to recent files: $e');
-        }
+        print('>>> FileOpenHandler: failed to add to recent files: $e');
       }
+    } else {
+      print('>>> FileOpenHandler: _addRecentFileCallback is null!');
     }
 
     // Open in new window (or focus existing if already open)
+    print('>>> FileOpenHandler: calling createPdfWindow');
     await WindowManagerService.instance.createPdfWindow(filePath);
+    print('>>> FileOpenHandler: createPdfWindow completed');
   }
 }

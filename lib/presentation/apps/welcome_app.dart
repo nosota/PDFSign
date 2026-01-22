@@ -49,6 +49,7 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
 
   /// Initializes file open handler for Finder integration.
   void _initFileOpenHandler() {
+    print('>>> WelcomeApp._initFileOpenHandler() called');
     FileOpenHandler.init(
       addRecentFile: (file) =>
           ref.read(recentFilesProvider.notifier).addFile(file),

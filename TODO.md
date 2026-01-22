@@ -14,3 +14,8 @@ Claude Code MUST ignore this file!
 Here is your Essential Studio® suite with a 7-day license key. This key can be used until your community license request is approved. 
 We will send your long-term license key then.
 Syncfusion Community License: Ngo9BigBOggjHTQxAR8/V1JGaF5cXGpCf0x0RHxbf1x2ZFBMYFRbRHNPMyBoS35RcEViWHtedXRdRmVbUk1xVEF
+
+
+flutter clean
+flutter build macos
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f /Users/ivanvaganov/Projects/PDFSign/build/macos/Build/Products/Release/PDFSign.app
