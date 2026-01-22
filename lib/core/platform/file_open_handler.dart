@@ -56,6 +56,7 @@ class FileOpenHandler {
           }
           return null;
         }
+        // Repository handles its own synchronization via internal lock
         await _openFile(filePath);
         return null;
 

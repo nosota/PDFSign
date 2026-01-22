@@ -102,11 +102,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     SubWindowChannel.setOnWindowClose(_handleWindowClose);
     SubWindowChannel.setOnWindowFocus(_handleWindowFocus);
     SubWindowChannel.setOnWindowBlur(_handleWindowBlur);
-    // Delay setPreventClose to ensure native window is ready
-    // Native side also has retry mechanism as fallback
-    Future.delayed(const Duration(milliseconds: 200), () {
-      SubWindowChannel.setPreventClose(true);
-    });
+    // Enable close prevention immediately - native side has retry mechanism
+    // if window is not ready yet. This ensures focus/blur events are captured
+    // even when multiple windows are created rapidly (e.g., opening 4 PDFs).
+    SubWindowChannel.setPreventClose(true);
   }
 
   /// Initializes window broadcast for receiving preference change notifications.

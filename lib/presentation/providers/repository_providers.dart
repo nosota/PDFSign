@@ -20,7 +20,11 @@ ImageStorageService imageStorageService(ImageStorageServiceRef ref) {
 }
 
 /// Provider for [RecentFilesRepository].
-@riverpod
+///
+/// Uses keepAlive to ensure the repository instance persists for the
+/// entire app lifecycle. This is important because FileOpenHandler
+/// captures a reference to the repository at init time.
+@Riverpod(keepAlive: true)
 RecentFilesRepository recentFilesRepository(RecentFilesRepositoryRef ref) {
   final dataSource = ref.watch(recentFilesLocalDataSourceProvider);
   return RecentFilesRepositoryImpl(dataSource);

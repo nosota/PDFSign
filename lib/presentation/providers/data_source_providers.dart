@@ -21,7 +21,10 @@ Isar isar(IsarRef ref) {
 }
 
 /// Provider for [RecentFilesLocalDataSource].
-@riverpod
+///
+/// Uses keepAlive to ensure the data source persists for the entire
+/// app lifecycle, matching the repository's lifecycle.
+@Riverpod(keepAlive: true)
 RecentFilesLocalDataSource recentFilesLocalDataSource(
   RecentFilesLocalDataSourceRef ref,
 ) {
