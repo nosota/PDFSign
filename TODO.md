@@ -3,15 +3,21 @@
 Claude Code MUST NOT use the file TODO.md! It is not a list of features to implement. It is not a software requirements!
 Claude Code MUST ignore this file!
 
+V.1.0
 * Z порядок: наверх, вниз, на самый верх и в самый низ.
-* Заменить белый цвет на прозрачность (помощь пользователю, чтобы сделать фон прозрачным)
-* Сфоткать через камеру лист бумаги и сделать из этого подпись с прозрачностью. 
-* Добавить Undo / Redo + соотв кнопки на заголовке окна 
-* Поддержка PDF запароленных (save с паролем, save as с паролем, share с паролем)
-* Проверить Share + не сохранненый документ + сохранение во временный файл
 * Сайт для проекта
-* "Cmd + R" - Rote all pages left on 90 degrees including all images dragged to the PDF page from the right panel. Old version of the command must be deleted.
-* Копирование объекъета с одного PDF на другой с учтом размера и угла поворота.
+* Запоминать в File->Open предыдущий используемый диреткорий и если возможно, то октрывать его, если нет, то директорй по умолчанию ~/Documents.
+* Если вытащить объекты на PDF, а потом все удалить, то признак dirty должен сниматься.
+* Поддержка PDF запароленных (save с оригинальным паролем, save as с оригинальным паролем, share с оригинальным паролем)
+
+V.1.1
+* Добавить Undo / Redo + соотв кнопки на заголовке окна.
+* "Cmd + R" - Rote all pages left on 90 degrees including all images dragged to the PDF page from the right panel. Old version of the command must be deleted. Кнопка на заголовке окна.
+* Копирование объекъета с одного PDF на другой с учетом размера и угла поворота.
+
+Future Releases
+* Заменить белый цвет на прозрачность (помощь пользователю, чтобы сделать фон прозрачным)
+* Сфоткать через камеру лист бумаги и сделать из этого подпись с прозрачностью.
 
 Here is your Essential Studio® suite with a 7-day license key. This key can be used until your community license request is approved. 
 We will send your long-term license key then.
