@@ -11,7 +11,7 @@ import 'package:pdfsign/core/window/window_manager_service.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/global_dirty_state_provider.dart';
 import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
-import 'package:pdfsign/presentation/providers/recent_files_provider.dart';
+import 'package:pdfsign/presentation/providers/repository_providers.dart';
 import 'package:pdfsign/presentation/screens/welcome/welcome_screen.dart';
 import 'package:pdfsign/presentation/widgets/dialogs/close_all_dialog.dart';
 import 'package:pdfsign/presentation/widgets/menus/app_menu_bar.dart';
@@ -49,11 +49,8 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
 
   /// Initializes file open handler for Finder integration.
   void _initFileOpenHandler() {
-    print('>>> WelcomeApp._initFileOpenHandler() called');
-    FileOpenHandler.init(
-      addRecentFile: (file) =>
-          ref.read(recentFilesProvider.notifier).addFile(file),
-    );
+    final repository = ref.read(recentFilesRepositoryProvider);
+    FileOpenHandler.init(recentFilesRepository: repository);
   }
 
   /// Initializes window broadcast for receiving notifications.

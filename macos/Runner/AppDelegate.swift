@@ -2,23 +2,6 @@ import Cocoa
 import FlutterMacOS
 import desktop_multi_window
 
-/// Debug logger that writes to ~/Desktop/pdfsign_debug.log
-func debugLog(_ message: String) {
-  let timestamp = ISO8601DateFormatter().string(from: Date())
-  let logMessage = "[\(timestamp)] \(message)\n"
-
-  NSLog("%@", message)  // Also log to system log
-
-  let logPath = NSHomeDirectory() + "/Desktop/pdfsign_debug.log"
-  if let handle = FileHandle(forWritingAtPath: logPath) {
-    handle.seekToEndOfFile()
-    handle.write(logMessage.data(using: .utf8)!)
-    handle.closeFile()
-  } else {
-    FileManager.default.createFile(atPath: logPath, contents: logMessage.data(using: .utf8), attributes: nil)
-  }
-}
-
 @main
 class AppDelegate: FlutterAppDelegate {
   /// Global Settings window ID, shared across all Flutter engines.
@@ -41,20 +24,14 @@ class AppDelegate: FlutterAppDelegate {
   /// Sets up the file handler channel for Finder integration.
   /// Called asynchronously after app launch to ensure Flutter is ready.
   private func setupFileHandlerChannel() {
-    debugLog(">>> setupFileHandlerChannel called")
-    debugLog(">>> mainFlutterWindow: \(String(describing: mainFlutterWindow))")
-
     guard let mainController = mainFlutterWindow?.contentViewController as? FlutterViewController else {
-      debugLog(">>> ERROR: mainFlutterWindow or contentViewController is nil!")
-      // Retry after a short delay
+      // Retry after a short delay if Flutter window not ready yet
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-        debugLog(">>> Retrying setupFileHandlerChannel...")
         self?.setupFileHandlerChannel()
       }
       return
     }
 
-    debugLog(">>> mainFlutterWindow found, setting up channels")
     setupSettingsSingletonChannel(binaryMessenger: mainController.engine.binaryMessenger)
     setupOpenPdfFilesChannel(binaryMessenger: mainController.engine.binaryMessenger)
 
@@ -63,12 +40,9 @@ class AppDelegate: FlutterAppDelegate {
       name: "com.pdfsign/file_handler",
       binaryMessenger: mainController.engine.binaryMessenger
     )
-    debugLog(">>> MethodChannel created: \(fileHandlerChannel != nil)")
 
     fileHandlerChannel?.setMethodCallHandler { [weak self] call, result in
-      debugLog(">>> FileHandlerChannel received method: \(call.method)")
       if call.method == "ready" {
-        debugLog(">>> FileHandlerChannel: Flutter signaled ready, pendingFiles count: \(self?.pendingFiles.count ?? -1)")
         self?.isFlutterReady = true
         self?.sendPendingFiles()
         result(nil)
@@ -89,8 +63,6 @@ class AppDelegate: FlutterAppDelegate {
   }
 
   override func applicationDidFinishLaunching(_ notification: Notification) {
-    debugLog(">>> AppDelegate.applicationDidFinishLaunching called")
-
     // Delay channel setup to next run loop iteration
     // This ensures Flutter engine is fully initialized
     DispatchQueue.main.async { [weak self] in
@@ -286,30 +258,22 @@ class AppDelegate: FlutterAppDelegate {
 
   /// Called by macOS when user opens files via Finder (Open With, double-click, drag to Dock).
   override func application(_ sender: NSApplication, openFiles filenames: [String]) {
-    debugLog(">>> AppDelegate.openFiles called")
-    debugLog(">>> Received files: \(filenames)")
-    debugLog(">>> isFlutterReady: \(isFlutterReady)")
-    debugLog(">>> fileHandlerChannel exists: \(fileHandlerChannel != nil)")
-
-    let pdfFiles = filenames.filter { $0.lowercased().hasSuffix(".pdf") }
-    debugLog(">>> PDF files after filter: \(pdfFiles)")
+    let pdfFiles = filenames
+      .filter { $0.lowercased().hasSuffix(".pdf") }
+      .filter { FileManager.default.fileExists(atPath: $0) }
 
     guard !pdfFiles.isEmpty else {
-      debugLog(">>> No PDF files, returning failure")
       sender.reply(toOpenOrPrint: .failure)
       return
     }
 
     if isFlutterReady {
-      debugLog(">>> Flutter is ready, sending files immediately")
       for file in pdfFiles {
-        debugLog(">>> Invoking openFile for: \(file)")
         fileHandlerChannel?.invokeMethod("openFile", arguments: file)
       }
     } else {
       // Flutter not ready yet, queue files for later
       pendingFiles.append(contentsOf: pdfFiles)
-      debugLog(">>> Flutter NOT ready, queued files. Total pending: \(pendingFiles.count)")
     }
 
     sender.reply(toOpenOrPrint: .success)
@@ -318,24 +282,15 @@ class AppDelegate: FlutterAppDelegate {
   /// Alternative method for opening URLs (macOS 10.13+).
   /// Some versions of macOS may call this instead of openFiles.
   override func application(_ application: NSApplication, open urls: [URL]) {
-    debugLog(">>> AppDelegate.open(urls:) called")
-    debugLog(">>> Received URLs: \(urls)")
-
     let pdfPaths = urls
       .filter { $0.pathExtension.lowercased() == "pdf" }
       .map { $0.path }
+      .filter { FileManager.default.fileExists(atPath: $0) }
 
-    debugLog(">>> PDF paths: \(pdfPaths)")
-
-    guard !pdfPaths.isEmpty else {
-      debugLog(">>> No PDF URLs")
-      return
-    }
+    guard !pdfPaths.isEmpty else { return }
 
     if isFlutterReady {
-      debugLog(">>> Flutter is ready, sending files from URLs")
       for path in pdfPaths {
-        debugLog(">>> Invoking openFile for URL path: \(path)")
         fileHandlerChannel?.invokeMethod("openFile", arguments: path)
       }
     } else {
@@ -343,28 +298,20 @@ class AppDelegate: FlutterAppDelegate {
       let newPaths = pdfPaths.filter { !pendingFiles.contains($0) }
       if !newPaths.isEmpty {
         pendingFiles.append(contentsOf: newPaths)
-        debugLog(">>> Flutter NOT ready, queued \(newPaths.count) new files. Total pending: \(pendingFiles.count)")
-      } else {
-        debugLog(">>> All files already in queue, skipping duplicates")
       }
     }
   }
 
   /// Sends queued files to Flutter once it's ready.
   private func sendPendingFiles() {
-    debugLog(">>> sendPendingFiles called, isFlutterReady: \(isFlutterReady), pendingFiles: \(pendingFiles.count)")
-    guard isFlutterReady, !pendingFiles.isEmpty else {
-      debugLog(">>> sendPendingFiles: guard failed, returning")
-      return
-    }
+    guard isFlutterReady,
+          !pendingFiles.isEmpty,
+          let channel = fileHandlerChannel else { return }
 
-    debugLog(">>> Sending \(pendingFiles.count) pending files to Flutter")
     for file in pendingFiles {
-      debugLog(">>> Invoking openFile for pending: \(file)")
-      fileHandlerChannel?.invokeMethod("openFile", arguments: file)
+      channel.invokeMethod("openFile", arguments: file)
     }
     pendingFiles.removeAll()
-    debugLog(">>> sendPendingFiles complete, cleared queue")
   }
 }
 

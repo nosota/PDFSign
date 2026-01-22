@@ -2,12 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'package:pdfsign/core/window/window_manager_service.dart';
 import 'package:pdfsign/domain/entities/recent_file.dart';
-
-/// Callback for adding a file to recent files.
-typedef AddRecentFileCallback = Future<void> Function(RecentFile file);
+import 'package:pdfsign/domain/repositories/recent_files_repository.dart';
 
 /// Handles file open requests from macOS Finder.
 ///
@@ -18,50 +17,49 @@ class FileOpenHandler {
 
   static const _channel = MethodChannel('com.pdfsign/file_handler');
   static bool _initialized = false;
-  static AddRecentFileCallback? _addRecentFileCallback;
+  static RecentFilesRepository? _recentFilesRepository;
 
   /// Initializes the file open handler.
   ///
   /// Call this once from WelcomeApp.initState() after Flutter is ready.
-  /// [addRecentFile] callback is used to add opened files to recent files list.
+  /// [recentFilesRepository] is used to add opened files to recent files list.
   static Future<void> init({
-    required AddRecentFileCallback addRecentFile,
+    required RecentFilesRepository recentFilesRepository,
   }) async {
-    print('>>> FileOpenHandler.init() called, _initialized: $_initialized');
-    if (_initialized) {
-      print('>>> FileOpenHandler.init() - already initialized, returning');
-      return;
-    }
+    if (_initialized) return;
     _initialized = true;
-    _addRecentFileCallback = addRecentFile;
+    _recentFilesRepository = recentFilesRepository;
 
     // Set up handler for incoming file open requests from macOS
-    print('>>> FileOpenHandler.init() - setting up method call handler');
     _channel.setMethodCallHandler(_handleMethodCall);
 
     // Signal to macOS that Flutter is ready to receive files
-    print('>>> FileOpenHandler.init() - sending ready signal to macOS');
     try {
       await _channel.invokeMethod('ready');
-      print('>>> FileOpenHandler.init() - ready signal sent successfully');
+      if (kDebugMode) {
+        print('FileOpenHandler: signaled ready to macOS');
+      }
     } catch (e) {
-      print('>>> FileOpenHandler.init() - failed to signal ready: $e');
+      if (kDebugMode) {
+        print('FileOpenHandler: failed to signal ready: $e');
+      }
     }
   }
 
   static Future<dynamic> _handleMethodCall(MethodCall call) async {
-    print('>>> FileOpenHandler._handleMethodCall: ${call.method}');
-    print('>>> Arguments: ${call.arguments}');
-
     switch (call.method) {
       case 'openFile':
-        final filePath = call.arguments as String;
-        print('>>> FileOpenHandler: received openFile for: $filePath');
+        final filePath = call.arguments as String?;
+        if (filePath == null || filePath.isEmpty) {
+          if (kDebugMode) {
+            print('FileOpenHandler: received null or empty file path');
+          }
+          return null;
+        }
         await _openFile(filePath);
         return null;
 
       default:
-        print('>>> FileOpenHandler: unknown method ${call.method}');
         throw PlatformException(
           code: 'UNSUPPORTED',
           message: 'Method ${call.method} not supported',
@@ -70,48 +68,78 @@ class FileOpenHandler {
   }
 
   static Future<void> _openFile(String filePath) async {
-    print('>>> FileOpenHandler._openFile: $filePath');
+    if (kDebugMode) {
+      print('FileOpenHandler: opening file: $filePath');
+    }
 
     // Validate file exists
     final file = File(filePath);
-    final exists = await file.exists();
-    print('>>> File exists: $exists');
-    if (!exists) {
-      print('>>> FileOpenHandler: file does not exist, returning');
+    if (!await file.exists()) {
+      if (kDebugMode) {
+        print('FileOpenHandler: file does not exist: $filePath');
+      }
       return;
     }
 
     // Validate it's a PDF
     if (!filePath.toLowerCase().endsWith('.pdf')) {
-      print('>>> FileOpenHandler: not a PDF file, returning');
+      if (kDebugMode) {
+        print('FileOpenHandler: not a PDF file: $filePath');
+      }
       return;
     }
 
-    // Add to recent files
-    final fileName = filePath.split('/').last;
-    print('>>> FileOpenHandler: adding to recent files: $fileName');
-    if (_addRecentFileCallback != null) {
-      try {
-        await _addRecentFileCallback!(
-          RecentFile(
-            path: filePath,
-            fileName: fileName,
-            lastOpened: DateTime.now(),
-            pageCount: 0,
-            isPasswordProtected: false,
-          ),
-        );
-        print('>>> FileOpenHandler: added to recent files successfully');
-      } catch (e) {
-        print('>>> FileOpenHandler: failed to add to recent files: $e');
+    // Open in new window (or focus existing if already open)
+    final windowId =
+        await WindowManagerService.instance.createPdfWindow(filePath);
+
+    if (windowId == null) {
+      if (kDebugMode) {
+        print('FileOpenHandler: failed to create window for: $filePath');
       }
-    } else {
-      print('>>> FileOpenHandler: _addRecentFileCallback is null!');
+      return;
     }
 
-    // Open in new window (or focus existing if already open)
-    print('>>> FileOpenHandler: calling createPdfWindow');
-    await WindowManagerService.instance.createPdfWindow(filePath);
-    print('>>> FileOpenHandler: createPdfWindow completed');
+    // Hide Welcome window explicitly (same pattern as desktop_welcome_view.dart)
+    // The broadcast in createPdfWindow doesn't reach Welcome because it excludes self
+    WindowManagerService.instance.setWelcomeHidden();
+    await windowManager.hide();
+    if (kDebugMode) {
+      print('FileOpenHandler: Welcome window hidden');
+    }
+
+    // Add to recent files AFTER successful window open
+    final fileName = filePath.split('/').last;
+    if (_recentFilesRepository == null) {
+      if (kDebugMode) {
+        print('FileOpenHandler: warning - repository is null, '
+            'cannot add to recent files');
+      }
+      return;
+    }
+
+    final result = await _recentFilesRepository!.addRecentFile(
+      RecentFile(
+        path: filePath,
+        fileName: fileName,
+        lastOpened: DateTime.now(),
+        pageCount: 0,
+        isPasswordProtected: false,
+      ),
+    );
+
+    result.fold(
+      (failure) {
+        if (kDebugMode) {
+          print('FileOpenHandler: failed to add to recent files: '
+              '${failure.message}');
+        }
+      },
+      (_) {
+        if (kDebugMode) {
+          print('FileOpenHandler: added to recent files: $fileName');
+        }
+      },
+    );
   }
 }
