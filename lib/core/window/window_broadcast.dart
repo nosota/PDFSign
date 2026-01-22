@@ -147,8 +147,11 @@ class WindowBroadcast {
   ///
   /// Called when a PDF window opens from any window. Welcome hides and
   /// never shows again until app restart.
+  ///
+  /// Uses _broadcastIncludingSelf because the Welcome Screen itself may
+  /// trigger this (via File→Open menu) and needs to receive the notification.
   static Future<void> broadcastHideWelcome() async {
-    await _broadcast('hideWelcome');
+    await _broadcastIncludingSelf('hideWelcome');
   }
 
   /// Broadcasts dirty state change to all other windows.
