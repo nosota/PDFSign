@@ -172,6 +172,18 @@ class AppLocalizationsFi extends AppLocalizations {
   String get menuSettings => 'Asetukset...';
 
   @override
+  String get menuWindow => 'Ikkuna';
+
+  @override
+  String get menuMinimize => 'Pienennä';
+
+  @override
+  String get menuZoom => 'Zoomaa';
+
+  @override
+  String get menuBringAllToFront => 'Tuo kaikki eteen';
+
+  @override
   String get settingsTitle => 'Asetukset';
 
   @override

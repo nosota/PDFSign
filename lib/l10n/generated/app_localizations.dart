@@ -479,6 +479,30 @@ abstract class AppLocalizations {
   /// **'Settings...'**
   String get menuSettings;
 
+  /// Window menu label
+  ///
+  /// In en, this message translates to:
+  /// **'Window'**
+  String get menuWindow;
+
+  /// Minimize window menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Minimize'**
+  String get menuMinimize;
+
+  /// Zoom (maximize/restore) window menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom'**
+  String get menuZoom;
+
+  /// Bring all windows to front menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Bring All to Front'**
+  String get menuBringAllToFront;
+
   /// Settings dialog title
   ///
   /// In en, this message translates to:

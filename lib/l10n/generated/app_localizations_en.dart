@@ -178,6 +178,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuSettings => 'Settings...';
 
   @override
+  String get menuWindow => 'Window';
+
+  @override
+  String get menuMinimize => 'Minimize';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Bring All to Front';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override
@@ -413,6 +425,18 @@ class AppLocalizationsEnAu extends AppLocalizationsEn {
 
   @override
   String get menuSettings => 'Settings...';
+
+  @override
+  String get menuWindow => 'Window';
+
+  @override
+  String get menuMinimize => 'Minimise';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Bring All to Front';
 
   @override
   String get settingsTitle => 'Settings';
@@ -652,6 +676,18 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   String get menuSettings => 'Settings...';
 
   @override
+  String get menuWindow => 'Window';
+
+  @override
+  String get menuMinimize => 'Minimise';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Bring All to Front';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override
@@ -889,6 +925,18 @@ class AppLocalizationsEnNz extends AppLocalizationsEn {
   String get menuSettings => 'Settings...';
 
   @override
+  String get menuWindow => 'Window';
+
+  @override
+  String get menuMinimize => 'Minimise';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Bring All to Front';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override
@@ -1124,6 +1172,18 @@ class AppLocalizationsEnUs extends AppLocalizationsEn {
 
   @override
   String get menuSettings => 'Settings...';
+
+  @override
+  String get menuWindow => 'Window';
+
+  @override
+  String get menuMinimize => 'Minimize';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Bring All to Front';
 
   @override
   String get settingsTitle => 'Settings';

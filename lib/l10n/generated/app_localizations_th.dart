@@ -154,6 +154,18 @@ class AppLocalizationsTh extends AppLocalizations {
   String get menuSettings => 'การตั้งค่า...';
 
   @override
+  String get menuWindow => 'หน้าต่าง';
+
+  @override
+  String get menuMinimize => 'ย่อเล็กสุด';
+
+  @override
+  String get menuZoom => 'ซูม';
+
+  @override
+  String get menuBringAllToFront => 'นำทั้งหมดมาข้างหน้า';
+
+  @override
   String get settingsTitle => 'การตั้งค่า';
 
   @override

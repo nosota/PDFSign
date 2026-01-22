@@ -154,6 +154,18 @@ class AppLocalizationsVi extends AppLocalizations {
   String get menuSettings => 'Cai dat...';
 
   @override
+  String get menuWindow => 'Cửa sổ';
+
+  @override
+  String get menuMinimize => 'Thu nhỏ';
+
+  @override
+  String get menuZoom => 'Phóng to';
+
+  @override
+  String get menuBringAllToFront => 'Đưa tất cả ra phía trước';
+
+  @override
   String get settingsTitle => 'Cai dat';
 
   @override

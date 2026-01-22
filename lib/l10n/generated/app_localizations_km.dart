@@ -154,6 +154,18 @@ class AppLocalizationsKm extends AppLocalizations {
   String get menuSettings => 'Kar kat tong...';
 
   @override
+  String get menuWindow => 'បង្អួច';
+
+  @override
+  String get menuMinimize => 'បង្រួម';
+
+  @override
+  String get menuZoom => 'ពង្រីក';
+
+  @override
+  String get menuBringAllToFront => 'នាំទាំងអស់មកមុខ';
+
+  @override
   String get settingsTitle => 'Kar kat tong';
 
   @override

@@ -178,6 +178,18 @@ class AppLocalizationsRu extends AppLocalizations {
   String get menuSettings => 'Настройки...';
 
   @override
+  String get menuWindow => 'Окно';
+
+  @override
+  String get menuMinimize => 'Свернуть';
+
+  @override
+  String get menuZoom => 'Изменить масштаб';
+
+  @override
+  String get menuBringAllToFront => 'Все окна — на передний план';
+
+  @override
   String get settingsTitle => 'Настройки';
 
   @override

@@ -154,6 +154,18 @@ class AppLocalizationsBg extends AppLocalizations {
   String get menuSettings => 'Настройки...';
 
   @override
+  String get menuWindow => 'Прозорец';
+
+  @override
+  String get menuMinimize => 'Минимизирай';
+
+  @override
+  String get menuZoom => 'Увеличи';
+
+  @override
+  String get menuBringAllToFront => 'Покажи всички отпред';
+
+  @override
   String get settingsTitle => 'Настройки';
 
   @override

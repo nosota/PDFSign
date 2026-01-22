@@ -154,6 +154,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String get menuSettings => 'Ayarlar...';
 
   @override
+  String get menuWindow => 'Pencere';
+
+  @override
+  String get menuMinimize => 'Simge Durumuna Küçült';
+
+  @override
+  String get menuZoom => 'Büyüt/Küçült';
+
+  @override
+  String get menuBringAllToFront => 'Tümünü Öne Getir';
+
+  @override
   String get settingsTitle => 'Ayarlar';
 
   @override

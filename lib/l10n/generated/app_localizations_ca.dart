@@ -154,6 +154,18 @@ class AppLocalizationsCa extends AppLocalizations {
   String get menuSettings => 'Configuracio...';
 
   @override
+  String get menuWindow => 'Finestra';
+
+  @override
+  String get menuMinimize => 'Minimitza';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Porta-ho tot al davant';
+
+  @override
   String get settingsTitle => 'Configuracio';
 
   @override

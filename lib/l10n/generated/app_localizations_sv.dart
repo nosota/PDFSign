@@ -172,6 +172,18 @@ class AppLocalizationsSv extends AppLocalizations {
   String get menuSettings => 'Inställningar...';
 
   @override
+  String get menuWindow => 'Fönster';
+
+  @override
+  String get menuMinimize => 'Minimera';
+
+  @override
+  String get menuZoom => 'Zooma';
+
+  @override
+  String get menuBringAllToFront => 'För alla framåt';
+
+  @override
   String get settingsTitle => 'Inställningar';
 
   @override

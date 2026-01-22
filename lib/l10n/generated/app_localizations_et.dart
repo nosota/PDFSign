@@ -154,6 +154,18 @@ class AppLocalizationsEt extends AppLocalizations {
   String get menuSettings => 'Seaded...';
 
   @override
+  String get menuWindow => 'Aken';
+
+  @override
+  String get menuMinimize => 'Minimeeri';
+
+  @override
+  String get menuZoom => 'Suumi';
+
+  @override
+  String get menuBringAllToFront => 'Too kõik ette';
+
+  @override
   String get settingsTitle => 'Seaded';
 
   @override

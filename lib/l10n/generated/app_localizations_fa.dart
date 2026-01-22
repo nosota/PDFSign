@@ -154,6 +154,18 @@ class AppLocalizationsFa extends AppLocalizations {
   String get menuSettings => 'تنظیمات...';
 
   @override
+  String get menuWindow => 'پنجره';
+
+  @override
+  String get menuMinimize => 'کوچک‌سازی';
+
+  @override
+  String get menuZoom => 'بزرگ‌نمایی';
+
+  @override
+  String get menuBringAllToFront => 'همه را جلو بیاور';
+
+  @override
   String get settingsTitle => 'تنظیمات';
 
   @override

@@ -154,6 +154,18 @@ class AppLocalizationsBe extends AppLocalizations {
   String get menuSettings => 'Налады...';
 
   @override
+  String get menuWindow => 'Акно';
+
+  @override
+  String get menuMinimize => 'Згарнуць';
+
+  @override
+  String get menuZoom => 'Маштабаванне';
+
+  @override
+  String get menuBringAllToFront => 'Усе акны наперад';
+
+  @override
   String get settingsTitle => 'Налады';
 
   @override

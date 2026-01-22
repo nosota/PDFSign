@@ -154,6 +154,18 @@ class AppLocalizationsSq extends AppLocalizations {
   String get menuSettings => 'Cilesimet...';
 
   @override
+  String get menuWindow => 'Dritare';
+
+  @override
+  String get menuMinimize => 'Minimizo';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Sill Të Gjitha Para';
+
+  @override
   String get settingsTitle => 'Cilesimet';
 
   @override

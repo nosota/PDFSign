@@ -154,6 +154,18 @@ class AppLocalizationsUz extends AppLocalizations {
   String get menuSettings => 'Sozlamalar...';
 
   @override
+  String get menuWindow => 'Oyna';
+
+  @override
+  String get menuMinimize => 'Kichiklashtirish';
+
+  @override
+  String get menuZoom => 'Masshtab';
+
+  @override
+  String get menuBringAllToFront => 'Barchasini oldinga olib kelish';
+
+  @override
   String get settingsTitle => 'Sozlamalar';
 
   @override

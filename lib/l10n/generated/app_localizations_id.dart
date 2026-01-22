@@ -154,6 +154,18 @@ class AppLocalizationsId extends AppLocalizations {
   String get menuSettings => 'Pengaturan...';
 
   @override
+  String get menuWindow => 'Jendela';
+
+  @override
+  String get menuMinimize => 'Perkecil';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Bawa Semua ke Depan';
+
+  @override
   String get settingsTitle => 'Pengaturan';
 
   @override

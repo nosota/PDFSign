@@ -206,6 +206,22 @@
   "@menuSettings": {
     "description": "Settings menu item"
   },
+  "menuWindow": "Window",
+  "@menuWindow": {
+    "description": "Window menu label"
+  },
+  "menuMinimize": "Minimize",
+  "@menuMinimize": {
+    "description": "Minimize window menu item"
+  },
+  "menuZoom": "Zoom",
+  "@menuZoom": {
+    "description": "Zoom (maximize/restore) window menu item"
+  },
+  "menuBringAllToFront": "Bring All to Front",
+  "@menuBringAllToFront": {
+    "description": "Bring all windows to front menu item"
+  },
   "settingsTitle": "Settings",
   "@settingsTitle": {
     "description": "Settings dialog title"

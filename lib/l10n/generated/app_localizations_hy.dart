@@ -154,6 +154,18 @@ class AppLocalizationsHy extends AppLocalizations {
   String get menuSettings => 'Kargavorumner...';
 
   @override
+  String get menuWindow => 'Patuhan';
+
+  @override
+  String get menuMinimize => 'Pokratsnel';
+
+  @override
+  String get menuZoom => 'Masshtab';
+
+  @override
+  String get menuBringAllToFront => 'Bolory araj berel';
+
+  @override
   String get settingsTitle => 'Kargavorumner';
 
   @override

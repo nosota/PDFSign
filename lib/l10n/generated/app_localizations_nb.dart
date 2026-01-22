@@ -172,6 +172,18 @@ class AppLocalizationsNb extends AppLocalizations {
   String get menuSettings => 'Innstillinger...';
 
   @override
+  String get menuWindow => 'Vindu';
+
+  @override
+  String get menuMinimize => 'Minimer';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Vis alle foran';
+
+  @override
   String get settingsTitle => 'Innstillinger';
 
   @override

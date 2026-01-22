@@ -154,6 +154,18 @@ class AppLocalizationsEo extends AppLocalizations {
   String get menuSettings => 'Agordoj...';
 
   @override
+  String get menuWindow => 'Fenestro';
+
+  @override
+  String get menuMinimize => 'Minimumigi';
+
+  @override
+  String get menuZoom => 'Zomi';
+
+  @override
+  String get menuBringAllToFront => 'Ĉiujn antaŭen';
+
+  @override
   String get settingsTitle => 'Agordoj';
 
   @override

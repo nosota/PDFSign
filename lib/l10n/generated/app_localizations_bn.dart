@@ -154,6 +154,18 @@ class AppLocalizationsBn extends AppLocalizations {
   String get menuSettings => 'Settingsh...';
 
   @override
+  String get menuWindow => 'উইন্ডো';
+
+  @override
+  String get menuMinimize => 'ছোট করুন';
+
+  @override
+  String get menuZoom => 'জুম';
+
+  @override
+  String get menuBringAllToFront => 'সব সামনে আনুন';
+
+  @override
   String get settingsTitle => 'Settingsh';
 
   @override

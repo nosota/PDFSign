@@ -154,6 +154,18 @@ class AppLocalizationsLt extends AppLocalizations {
   String get menuSettings => 'Nustatymai...';
 
   @override
+  String get menuWindow => 'Langas';
+
+  @override
+  String get menuMinimize => 'Sumažinti';
+
+  @override
+  String get menuZoom => 'Mastelis';
+
+  @override
+  String get menuBringAllToFront => 'Visus į priekį';
+
+  @override
   String get settingsTitle => 'Nustatymai';
 
   @override

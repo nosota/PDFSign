@@ -154,6 +154,18 @@ class AppLocalizationsRo extends AppLocalizations {
   String get menuSettings => 'Setari...';
 
   @override
+  String get menuWindow => 'Fereastră';
+
+  @override
+  String get menuMinimize => 'Minimizare';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Adu Toate în Față';
+
+  @override
   String get settingsTitle => 'Setari';
 
   @override

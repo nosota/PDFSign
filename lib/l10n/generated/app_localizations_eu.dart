@@ -154,6 +154,18 @@ class AppLocalizationsEu extends AppLocalizations {
   String get menuSettings => 'Ezarpenak...';
 
   @override
+  String get menuWindow => 'Leihoa';
+
+  @override
+  String get menuMinimize => 'Minimizatu';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Ekarri dena aurrera';
+
+  @override
   String get settingsTitle => 'Ezarpenak';
 
   @override

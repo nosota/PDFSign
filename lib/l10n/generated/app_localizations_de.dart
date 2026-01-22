@@ -172,6 +172,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get menuSettings => 'Einstellungen...';
 
   @override
+  String get menuWindow => 'Fenster';
+
+  @override
+  String get menuMinimize => 'Minimieren';
+
+  @override
+  String get menuZoom => 'Zoomen';
+
+  @override
+  String get menuBringAllToFront => 'Alle nach vorne bringen';
+
+  @override
   String get settingsTitle => 'Einstellungen';
 
   @override

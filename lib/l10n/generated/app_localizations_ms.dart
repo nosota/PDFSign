@@ -154,6 +154,18 @@ class AppLocalizationsMs extends AppLocalizations {
   String get menuSettings => 'Tetapan...';
 
   @override
+  String get menuWindow => 'Tetingkap';
+
+  @override
+  String get menuMinimize => 'Kecilkan';
+
+  @override
+  String get menuZoom => 'Zum';
+
+  @override
+  String get menuBringAllToFront => 'Bawa Semua ke Hadapan';
+
+  @override
   String get settingsTitle => 'Tetapan';
 
   @override

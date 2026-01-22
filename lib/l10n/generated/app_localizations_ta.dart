@@ -154,6 +154,18 @@ class AppLocalizationsTa extends AppLocalizations {
   String get menuSettings => 'Amaikpugal...';
 
   @override
+  String get menuWindow => 'சாளரம்';
+
+  @override
+  String get menuMinimize => 'சிறியதாக்கு';
+
+  @override
+  String get menuZoom => 'பெரிதாக்கு';
+
+  @override
+  String get menuBringAllToFront => 'அனைத்தையும் முன்னே கொண்டுவா';
+
+  @override
   String get settingsTitle => 'Amaikpugal';
 
   @override

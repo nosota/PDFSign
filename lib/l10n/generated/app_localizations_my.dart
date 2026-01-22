@@ -154,6 +154,18 @@ class AppLocalizationsMy extends AppLocalizations {
   String get menuSettings => 'Setting myar...';
 
   @override
+  String get menuWindow => 'ဝင်းဒိုး';
+
+  @override
+  String get menuMinimize => 'ချုံ့ရန်';
+
+  @override
+  String get menuZoom => 'ချဲ့ရန်';
+
+  @override
+  String get menuBringAllToFront => 'အားလုံးကိုရှေ့သို့ယူလာရန်';
+
+  @override
   String get settingsTitle => 'Setting myar';
 
   @override

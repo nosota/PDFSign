@@ -154,6 +154,18 @@ class AppLocalizationsFil extends AppLocalizations {
   String get menuSettings => 'Mga Setting...';
 
   @override
+  String get menuWindow => 'Window';
+
+  @override
+  String get menuMinimize => 'I-minimize';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Dalhin Lahat sa Harap';
+
+  @override
   String get settingsTitle => 'Mga Setting';
 
   @override

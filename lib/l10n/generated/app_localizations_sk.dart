@@ -175,6 +175,18 @@ class AppLocalizationsSk extends AppLocalizations {
   String get menuSettings => 'Nastavenia...';
 
   @override
+  String get menuWindow => 'Okno';
+
+  @override
+  String get menuMinimize => 'Minimalizovať';
+
+  @override
+  String get menuZoom => 'Zväčšiť';
+
+  @override
+  String get menuBringAllToFront => 'Preniesť všetko dopredu';
+
+  @override
   String get settingsTitle => 'Nastavenia';
 
   @override

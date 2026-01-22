@@ -172,6 +172,18 @@ class AppLocalizationsPt extends AppLocalizations {
   String get menuSettings => 'Configurações...';
 
   @override
+  String get menuWindow => 'Janela';
+
+  @override
+  String get menuMinimize => 'Minimizar';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Trazer Tudo para a Frente';
+
+  @override
   String get settingsTitle => 'Configurações';
 
   @override
@@ -409,6 +421,18 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get menuSettings => 'Configurações...';
 
   @override
+  String get menuWindow => 'Janela';
+
+  @override
+  String get menuMinimize => 'Minimizar';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Trazer Tudo para a Frente';
+
+  @override
   String get settingsTitle => 'Configurações';
 
   @override
@@ -644,6 +668,18 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get menuSettings => 'Definições...';
+
+  @override
+  String get menuWindow => 'Janela';
+
+  @override
+  String get menuMinimize => 'Minimizar';
+
+  @override
+  String get menuZoom => 'Ampliação';
+
+  @override
+  String get menuBringAllToFront => 'Trazer Tudo para a Frente';
 
   @override
   String get settingsTitle => 'Definições';

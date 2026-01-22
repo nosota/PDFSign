@@ -154,6 +154,18 @@ class AppLocalizationsHi extends AppLocalizations {
   String get menuSettings => 'Settings...';
 
   @override
+  String get menuWindow => 'विंडो';
+
+  @override
+  String get menuMinimize => 'छोटा करें';
+
+  @override
+  String get menuZoom => 'ज़ूम';
+
+  @override
+  String get menuBringAllToFront => 'सभी को आगे लाएं';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override

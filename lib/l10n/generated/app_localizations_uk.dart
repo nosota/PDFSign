@@ -178,6 +178,18 @@ class AppLocalizationsUk extends AppLocalizations {
   String get menuSettings => 'Налаштування...';
 
   @override
+  String get menuWindow => 'Вікно';
+
+  @override
+  String get menuMinimize => 'Згорнути';
+
+  @override
+  String get menuZoom => 'Масштаб';
+
+  @override
+  String get menuBringAllToFront => 'Усі вікна наперед';
+
+  @override
   String get settingsTitle => 'Налаштування';
 
   @override

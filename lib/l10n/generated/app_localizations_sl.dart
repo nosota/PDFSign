@@ -154,6 +154,18 @@ class AppLocalizationsSl extends AppLocalizations {
   String get menuSettings => 'Nastavitve...';
 
   @override
+  String get menuWindow => 'Okno';
+
+  @override
+  String get menuMinimize => 'Minimiraj';
+
+  @override
+  String get menuZoom => 'Povečaj';
+
+  @override
+  String get menuBringAllToFront => 'Prinesi vse v ospredje';
+
+  @override
   String get settingsTitle => 'Nastavitve';
 
   @override

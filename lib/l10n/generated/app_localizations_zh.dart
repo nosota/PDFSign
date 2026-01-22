@@ -153,6 +153,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get menuSettings => '设置...';
 
   @override
+  String get menuWindow => '窗口';
+
+  @override
+  String get menuMinimize => '最小化';
+
+  @override
+  String get menuZoom => '缩放';
+
+  @override
+  String get menuBringAllToFront => '前置全部窗口';
+
+  @override
   String get settingsTitle => '设置';
 
   @override
@@ -370,6 +382,18 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get menuSettings => '设置...';
 
   @override
+  String get menuWindow => '窗口';
+
+  @override
+  String get menuMinimize => '最小化';
+
+  @override
+  String get menuZoom => '缩放';
+
+  @override
+  String get menuBringAllToFront => '前置全部窗口';
+
+  @override
   String get settingsTitle => '设置';
 
   @override
@@ -585,6 +609,18 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get menuSettings => '設定...';
+
+  @override
+  String get menuWindow => '視窗';
+
+  @override
+  String get menuMinimize => '縮小';
+
+  @override
+  String get menuZoom => '縮放';
+
+  @override
+  String get menuBringAllToFront => '將所有視窗移至最前';
 
   @override
   String get settingsTitle => '設定';

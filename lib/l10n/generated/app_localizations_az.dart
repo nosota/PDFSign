@@ -154,6 +154,18 @@ class AppLocalizationsAz extends AppLocalizations {
   String get menuSettings => 'Parametrler...';
 
   @override
+  String get menuWindow => 'Pəncərə';
+
+  @override
+  String get menuMinimize => 'Kiçilt';
+
+  @override
+  String get menuZoom => 'Böyüt/Kiçilt';
+
+  @override
+  String get menuBringAllToFront => 'Hamısını öndə göstər';
+
+  @override
   String get settingsTitle => 'Parametrler';
 
   @override

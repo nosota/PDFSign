@@ -154,6 +154,18 @@ class AppLocalizationsIs extends AppLocalizations {
   String get menuSettings => 'Stillingar...';
 
   @override
+  String get menuWindow => 'Gluggi';
+
+  @override
+  String get menuMinimize => 'Lágmarka';
+
+  @override
+  String get menuZoom => 'Stækka';
+
+  @override
+  String get menuBringAllToFront => 'Færa allt fremst';
+
+  @override
   String get settingsTitle => 'Stillingar';
 
   @override

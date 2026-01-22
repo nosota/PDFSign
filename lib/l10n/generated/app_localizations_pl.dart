@@ -178,6 +178,18 @@ class AppLocalizationsPl extends AppLocalizations {
   String get menuSettings => 'Ustawienia...';
 
   @override
+  String get menuWindow => 'Okno';
+
+  @override
+  String get menuMinimize => 'Minimalizuj';
+
+  @override
+  String get menuZoom => 'Powiększ';
+
+  @override
+  String get menuBringAllToFront => 'Przenieś wszystkie na wierzch';
+
+  @override
   String get settingsTitle => 'Ustawienia';
 
   @override

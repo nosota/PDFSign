@@ -154,6 +154,18 @@ class AppLocalizationsLv extends AppLocalizations {
   String get menuSettings => 'Iestatijumi...';
 
   @override
+  String get menuWindow => 'Logs';
+
+  @override
+  String get menuMinimize => 'Minimizēt';
+
+  @override
+  String get menuZoom => 'Tālummaiņa';
+
+  @override
+  String get menuBringAllToFront => 'Pārvietot visu priekšplānā';
+
+  @override
   String get settingsTitle => 'Iestatijumi';
 
   @override

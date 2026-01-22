@@ -153,6 +153,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get menuSettings => '設定...';
 
   @override
+  String get menuWindow => 'ウインドウ';
+
+  @override
+  String get menuMinimize => 'しまう';
+
+  @override
+  String get menuZoom => '拡大/縮小';
+
+  @override
+  String get menuBringAllToFront => 'すべてを手前に移動';
+
+  @override
   String get settingsTitle => '設定';
 
   @override

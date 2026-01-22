@@ -153,6 +153,18 @@ class AppLocalizationsKo extends AppLocalizations {
   String get menuSettings => '설정...';
 
   @override
+  String get menuWindow => '윈도우';
+
+  @override
+  String get menuMinimize => '최소화';
+
+  @override
+  String get menuZoom => '확대/축소';
+
+  @override
+  String get menuBringAllToFront => '모두 앞으로 가져오기';
+
+  @override
   String get settingsTitle => '설정';
 
   @override

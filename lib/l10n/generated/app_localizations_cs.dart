@@ -175,6 +175,18 @@ class AppLocalizationsCs extends AppLocalizations {
   String get menuSettings => 'Nastavení...';
 
   @override
+  String get menuWindow => 'Okno';
+
+  @override
+  String get menuMinimize => 'Minimalizovat';
+
+  @override
+  String get menuZoom => 'Zvětšit';
+
+  @override
+  String get menuBringAllToFront => 'Přenést vše dopředu';
+
+  @override
   String get settingsTitle => 'Nastavení';
 
   @override

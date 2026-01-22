@@ -172,6 +172,18 @@ class AppLocalizationsFr extends AppLocalizations {
   String get menuSettings => 'Réglages...';
 
   @override
+  String get menuWindow => 'Fenêtre';
+
+  @override
+  String get menuMinimize => 'Réduire';
+
+  @override
+  String get menuZoom => 'Réduire/agrandir';
+
+  @override
+  String get menuBringAllToFront => 'Tout ramener au premier plan';
+
+  @override
   String get settingsTitle => 'Réglages';
 
   @override

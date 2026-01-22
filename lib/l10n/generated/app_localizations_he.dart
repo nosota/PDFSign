@@ -154,6 +154,18 @@ class AppLocalizationsHe extends AppLocalizations {
   String get menuSettings => 'הגדרות...';
 
   @override
+  String get menuWindow => 'חלון';
+
+  @override
+  String get menuMinimize => 'מזער';
+
+  @override
+  String get menuZoom => 'הגדל/הקטן';
+
+  @override
+  String get menuBringAllToFront => 'הבא הכל לחזית';
+
+  @override
   String get settingsTitle => 'הגדרות';
 
   @override

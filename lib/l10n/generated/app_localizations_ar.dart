@@ -154,6 +154,18 @@ class AppLocalizationsAr extends AppLocalizations {
   String get menuSettings => 'الإعدادات...';
 
   @override
+  String get menuWindow => 'نافذة';
+
+  @override
+  String get menuMinimize => 'تصغير';
+
+  @override
+  String get menuZoom => 'تكبير/تصغير';
+
+  @override
+  String get menuBringAllToFront => 'إظهار الكل في المقدمة';
+
+  @override
   String get settingsTitle => 'الإعدادات';
 
   @override

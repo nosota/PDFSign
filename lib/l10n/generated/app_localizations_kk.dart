@@ -154,6 +154,18 @@ class AppLocalizationsKk extends AppLocalizations {
   String get menuSettings => 'Parametrler...';
 
   @override
+  String get menuWindow => 'Терезе';
+
+  @override
+  String get menuMinimize => 'Кішірейту';
+
+  @override
+  String get menuZoom => 'Масштаб';
+
+  @override
+  String get menuBringAllToFront => 'Барлығын алдыға әкелу';
+
+  @override
   String get settingsTitle => 'Parametrler';
 
   @override

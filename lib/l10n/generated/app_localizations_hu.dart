@@ -154,6 +154,18 @@ class AppLocalizationsHu extends AppLocalizations {
   String get menuSettings => 'Beállítások...';
 
   @override
+  String get menuWindow => 'Ablak';
+
+  @override
+  String get menuMinimize => 'Kis méret';
+
+  @override
+  String get menuZoom => 'Nagyítás';
+
+  @override
+  String get menuBringAllToFront => 'Összes előtérbe hozása';
+
+  @override
   String get settingsTitle => 'Beállítások';
 
   @override

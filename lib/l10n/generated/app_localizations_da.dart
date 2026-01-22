@@ -172,6 +172,18 @@ class AppLocalizationsDa extends AppLocalizations {
   String get menuSettings => 'Indstillinger...';
 
   @override
+  String get menuWindow => 'Vindue';
+
+  @override
+  String get menuMinimize => 'Minimer';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Bring alle forrest';
+
+  @override
   String get settingsTitle => 'Indstillinger';
 
   @override

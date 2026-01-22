@@ -172,6 +172,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get menuSettings => 'Configuración...';
 
   @override
+  String get menuWindow => 'Ventana';
+
+  @override
+  String get menuMinimize => 'Minimizar';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Traer todo al frente';
+
+  @override
   String get settingsTitle => 'Configuración';
 
   @override
@@ -407,6 +419,18 @@ class AppLocalizationsEsAr extends AppLocalizationsEs {
 
   @override
   String get menuSettings => 'Configuración...';
+
+  @override
+  String get menuWindow => 'Ventana';
+
+  @override
+  String get menuMinimize => 'Minimizar';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Traer todo al frente';
 
   @override
   String get settingsTitle => 'Configuración';
@@ -646,6 +670,18 @@ class AppLocalizationsEsEs extends AppLocalizationsEs {
   String get menuSettings => 'Ajustes...';
 
   @override
+  String get menuWindow => 'Ventana';
+
+  @override
+  String get menuMinimize => 'Minimizar';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Traer todo al frente';
+
+  @override
   String get settingsTitle => 'Ajustes';
 
   @override
@@ -881,6 +917,18 @@ class AppLocalizationsEsMx extends AppLocalizationsEs {
 
   @override
   String get menuSettings => 'Configuración...';
+
+  @override
+  String get menuWindow => 'Ventana';
+
+  @override
+  String get menuMinimize => 'Minimizar';
+
+  @override
+  String get menuZoom => 'Zoom';
+
+  @override
+  String get menuBringAllToFront => 'Traer todo al frente';
 
   @override
   String get settingsTitle => 'Configuración';

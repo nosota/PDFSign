@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:pdfsign/core/platform/window_list_channel.dart';
 import 'package:pdfsign/core/window/window_manager_service.dart';
 import 'package:pdfsign/domain/entities/recent_file.dart';
+import 'package:pdfsign/domain/entities/window_info.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/file_picker_provider.dart';
 import 'package:pdfsign/presentation/providers/recent_files_provider.dart';
@@ -110,6 +112,32 @@ class AppMenuBar extends ConsumerStatefulWidget {
 }
 
 class _AppMenuBarState extends ConsumerState<AppMenuBar> {
+  /// Cached list of open windows for the Window menu.
+  List<WindowInfo> _windowList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshWindowList();
+  }
+
+  @override
+  void didUpdateWidget(covariant AppMenuBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Refresh window list when widget updates (e.g., focus changed)
+    _refreshWindowList();
+  }
+
+  /// Fetches the current window list from native.
+  Future<void> _refreshWindowList() async {
+    final windows = await WindowListChannel.getWindowList();
+    if (mounted) {
+      setState(() {
+        _windowList = windows;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final recentFilesAsync = ref.watch(recentFilesProvider);
@@ -153,6 +181,11 @@ class _AppMenuBarState extends ConsumerState<AppMenuBar> {
         PlatformMenu(
           label: widget.localizations.menuFile,
           menus: _buildFileMenuItems(context, recentFilesAsync),
+        ),
+        // Window menu
+        PlatformMenu(
+          label: widget.localizations.menuWindow,
+          menus: _buildWindowMenuItems(),
         ),
       ],
       child: widget.child,
@@ -330,6 +363,55 @@ class _AppMenuBarState extends ConsumerState<AppMenuBar> {
       label: widget.localizations.menuOpenRecent,
       menus: menuItems,
     );
+  }
+
+  /// Builds the Window menu items.
+  ///
+  /// Includes Minimize, Zoom, Bring All to Front, and list of open windows.
+  /// The currently focused window is marked with a checkmark.
+  List<PlatformMenuItem> _buildWindowMenuItems() {
+    return [
+      // Group 1: Minimize and Zoom
+      PlatformMenuItemGroup(
+        members: [
+          PlatformMenuItem(
+            label: widget.localizations.menuMinimize,
+            shortcut: const SingleActivator(
+              LogicalKeyboardKey.keyM,
+              meta: true,
+            ),
+            onSelected: () => WindowListChannel.minimizeWindow(),
+          ),
+          PlatformMenuItem(
+            label: widget.localizations.menuZoom,
+            onSelected: () => WindowListChannel.zoomWindow(),
+          ),
+        ],
+      ),
+      // Group 2: Bring All to Front
+      PlatformMenuItemGroup(
+        members: [
+          PlatformMenuItem(
+            label: widget.localizations.menuBringAllToFront,
+            onSelected: () => WindowListChannel.bringAllToFront(),
+          ),
+        ],
+      ),
+      // Group 3: Window list
+      if (_windowList.isNotEmpty)
+        PlatformMenuItemGroup(
+          members: [
+            for (final window in _windowList)
+              PlatformMenuItem(
+                // Use checkmark prefix for key (focused) window
+                label: window.isKey
+                    ? '\u2713 ${window.title}'
+                    : '    ${window.title}',
+                onSelected: () => WindowListChannel.focusWindow(window.windowId),
+              ),
+          ],
+        ),
+    ];
   }
 
   /// Handles Open menu action.

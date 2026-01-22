@@ -154,6 +154,18 @@ class AppLocalizationsMn extends AppLocalizations {
   String get menuSettings => 'Tohirgoo...';
 
   @override
+  String get menuWindow => 'Цонх';
+
+  @override
+  String get menuMinimize => 'Багасгах';
+
+  @override
+  String get menuZoom => 'Масштаб';
+
+  @override
+  String get menuBringAllToFront => 'Бүгдийг урд авчрах';
+
+  @override
   String get settingsTitle => 'Tohirgoo';
 
   @override

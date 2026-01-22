@@ -154,6 +154,18 @@ class AppLocalizationsKa extends AppLocalizations {
   String get menuSettings => 'Parametrebi...';
 
   @override
+  String get menuWindow => 'ფანჯარა';
+
+  @override
+  String get menuMinimize => 'შემცირება';
+
+  @override
+  String get menuZoom => 'მასშტაბირება';
+
+  @override
+  String get menuBringAllToFront => 'ყველას წინ მოტანა';
+
+  @override
   String get settingsTitle => 'Parametrebi';
 
   @override

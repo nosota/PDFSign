@@ -154,6 +154,18 @@ class AppLocalizationsEl extends AppLocalizations {
   String get menuSettings => 'Rythmiseis...';
 
   @override
+  String get menuWindow => 'Παράθυρο';
+
+  @override
+  String get menuMinimize => 'Ελαχιστοποίηση';
+
+  @override
+  String get menuZoom => 'Ζουμ';
+
+  @override
+  String get menuBringAllToFront => 'Όλα στο προσκήνιο';
+
+  @override
   String get settingsTitle => 'Rythmiseis';
 
   @override

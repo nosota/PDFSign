@@ -154,6 +154,18 @@ class AppLocalizationsHr extends AppLocalizations {
   String get menuSettings => 'Postavke...';
 
   @override
+  String get menuWindow => 'Prozor';
+
+  @override
+  String get menuMinimize => 'Minimiziraj';
+
+  @override
+  String get menuZoom => 'Zumiraj';
+
+  @override
+  String get menuBringAllToFront => 'Dovedi sve naprijed';
+
+  @override
   String get settingsTitle => 'Postavke';
 
   @override

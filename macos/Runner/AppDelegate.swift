@@ -34,6 +34,7 @@ class AppDelegate: FlutterAppDelegate {
 
     setupSettingsSingletonChannel(binaryMessenger: mainController.engine.binaryMessenger)
     setupOpenPdfFilesChannel(binaryMessenger: mainController.engine.binaryMessenger)
+    setupWindowListChannel(binaryMessenger: mainController.engine.binaryMessenger)
 
     // Setup file handler channel for Finder integration
     fileHandlerChannel = FlutterMethodChannel(
@@ -75,6 +76,7 @@ class AppDelegate: FlutterAppDelegate {
       // Setup channels for sub-windows
       setupSettingsSingletonChannel(binaryMessenger: controller.engine.binaryMessenger)
       setupOpenPdfFilesChannel(binaryMessenger: controller.engine.binaryMessenger)
+      setupWindowListChannel(binaryMessenger: controller.engine.binaryMessenger)
 
       // Setup window lifecycle channel for sub-windows
       // This handles window close events and allows Flutter to control closing
@@ -447,6 +449,143 @@ func setupOpenPdfFilesChannel(binaryMessenger: FlutterBinaryMessenger) {
       AppDelegate.openPdfFiles.removeValue(forKey: filePath)
       NSLog("OpenPdfFilesChannel: window for %@ not found, cleaned up", filePath)
       result(false)
+
+    default:
+      result(FlutterMethodNotImplemented)
+    }
+  }
+}
+
+/// Sets up the window list channel for a Flutter engine.
+/// This channel provides the list of all visible windows for the Window menu.
+func setupWindowListChannel(binaryMessenger: FlutterBinaryMessenger) {
+  let channel = FlutterMethodChannel(
+    name: "com.pdfsign/window_list",
+    binaryMessenger: binaryMessenger
+  )
+
+  channel.setMethodCallHandler { call, result in
+    switch call.method {
+    case "getWindowList":
+      // Return list of all visible Flutter windows with metadata
+      var windowList: [[String: Any]] = []
+
+      for window in NSApplication.shared.windows {
+        // Only include Flutter windows (have FlutterViewController)
+        guard window.contentViewController is FlutterViewController else {
+          continue
+        }
+
+        // Skip hidden windows
+        guard window.isVisible else {
+          continue
+        }
+
+        // Determine window type based on title and window number
+        // Main window (Welcome) has window number matching main window
+        let isMainWindow = window == NSApp.windows.first { $0.contentViewController is FlutterViewController && $0.isMainWindow }
+        let title = window.title
+
+        var windowType = "pdf"
+        if isMainWindow || title == "PDFSign" {
+          windowType = "welcome"
+        } else if title == "Settings" || title == "Настройки" {
+          windowType = "settings"
+        }
+
+        // Get window ID - use window number as string ID
+        // For desktop_multi_window, the window number corresponds to the ID
+        let windowId = String(window.windowNumber)
+
+        // For Welcome window, use "0" as the conventional ID
+        let finalWindowId = windowType == "welcome" ? "0" : windowId
+
+        let windowInfo: [String: Any] = [
+          "windowId": finalWindowId,
+          "title": title,
+          "type": windowType,
+          "isKey": window.isKeyWindow,
+          "filePath": NSNull()  // Not tracking file paths in native side
+        ]
+
+        windowList.append(windowInfo)
+      }
+
+      // Sort: PDFs first (by window number/open order), then Settings, then Welcome
+      windowList.sort { (a, b) -> Bool in
+        let typeA = a["type"] as? String ?? "pdf"
+        let typeB = b["type"] as? String ?? "pdf"
+
+        // Define sort order: pdf=0, settings=1, welcome=2
+        let orderA = typeA == "pdf" ? 0 : (typeA == "settings" ? 1 : 2)
+        let orderB = typeB == "pdf" ? 0 : (typeB == "settings" ? 1 : 2)
+
+        if orderA != orderB {
+          return orderA < orderB
+        }
+
+        // Within same type, sort by window ID (open order)
+        let idA = a["windowId"] as? String ?? ""
+        let idB = b["windowId"] as? String ?? ""
+        return idA < idB
+      }
+
+      result(windowList)
+
+    case "focusWindow":
+      // Bring window to front by ID
+      guard let windowId = call.arguments as? String else {
+        result(false)
+        return
+      }
+
+      // Special case for Welcome window (ID "0")
+      if windowId == "0" {
+        for window in NSApplication.shared.windows {
+          if window.contentViewController is FlutterViewController {
+            if window.title == "PDFSign" || window == NSApp.mainWindow {
+              window.makeKeyAndOrderFront(nil)
+              NSApp.activate(ignoringOtherApps: true)
+              result(true)
+              return
+            }
+          }
+        }
+      }
+
+      // Find window by window number
+      if let windowNumber = Int(windowId) {
+        for window in NSApplication.shared.windows {
+          if window.windowNumber == windowNumber {
+            window.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            result(true)
+            return
+          }
+        }
+      }
+
+      result(false)
+
+    case "minimizeWindow":
+      // Minimize the key window
+      NSApp.keyWindow?.miniaturize(nil)
+      result(nil)
+
+    case "zoomWindow":
+      // Zoom (maximize/restore) the key window
+      NSApp.keyWindow?.zoom(nil)
+      result(nil)
+
+    case "bringAllToFront":
+      // Bring all app windows to front
+      NSApp.activate(ignoringOtherApps: true)
+      for window in NSApplication.shared.windows {
+        if window.contentViewController is FlutterViewController && window.isVisible {
+          window.orderFront(nil)
+        }
+      }
+      result(nil)
 
     default:
       result(FlutterMethodNotImplemented)
