@@ -52,7 +52,10 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
   /// Initializes file open handler for Finder integration.
   void _initFileOpenHandler() {
     final repository = ref.read(recentFilesRepositoryProvider);
-    FileOpenHandler.init(recentFilesRepository: repository);
+    FileOpenHandler.init(
+      recentFilesRepository: repository,
+      onHideWelcome: _handleHideWelcome,
+    );
   }
 
   /// Initializes window broadcast for receiving notifications.
@@ -64,6 +67,11 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
 
   /// Handles hide welcome broadcast (sent when PDF opens from any window).
   void _handleHideWelcome() {
+    // Stop rendering menu before hiding - otherwise Welcome's menu
+    // will conflict with PDF window's menu on first launch from Finder.
+    _isWindowFocused = false;
+    setState(() {});
+
     WindowManagerService.instance.setWelcomeHidden();
     windowManager.hide();
   }

@@ -18,17 +18,22 @@ class FileOpenHandler {
   static const _channel = MethodChannel('com.pdfsign/file_handler');
   static bool _initialized = false;
   static RecentFilesRepository? _recentFilesRepository;
+  static VoidCallback? _onHideWelcome;
 
   /// Initializes the file open handler.
   ///
   /// Call this once from WelcomeApp.initState() after Flutter is ready.
   /// [recentFilesRepository] is used to add opened files to recent files list.
+  /// [onHideWelcome] is called when Welcome window should be hidden - this
+  /// allows WelcomeApp to update its focus state and stop rendering menu.
   static Future<void> init({
     required RecentFilesRepository recentFilesRepository,
+    VoidCallback? onHideWelcome,
   }) async {
     if (_initialized) return;
     _initialized = true;
     _recentFilesRepository = recentFilesRepository;
+    _onHideWelcome = onHideWelcome;
 
     // Set up handler for incoming file open requests from macOS
     _channel.setMethodCallHandler(_handleMethodCall);
@@ -137,9 +142,15 @@ class FileOpenHandler {
     }
 
     // Hide Welcome window AFTER adding to recent files.
+    // Use callback to update WelcomeApp's focus state (stops menu rendering).
     // The broadcast in createPdfWindow doesn't reach Welcome because it excludes self.
-    WindowManagerService.instance.setWelcomeHidden();
-    await windowManager.hide();
+    if (_onHideWelcome != null) {
+      _onHideWelcome!();
+    } else {
+      // Fallback if callback not set
+      WindowManagerService.instance.setWelcomeHidden();
+      await windowManager.hide();
+    }
     if (kDebugMode) {
       print('FileOpenHandler: Welcome window hidden');
     }

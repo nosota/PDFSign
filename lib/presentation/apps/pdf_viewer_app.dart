@@ -70,7 +70,9 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
 
   /// Whether this window currently has focus.
   /// Only focused window renders PlatformMenuBar to avoid conflicts.
-  bool _isWindowFocused = true;
+  /// Starts as false - we wait for native onWindowFocus event to enable menu.
+  /// This prevents menu rendering issues when SubWindowDelegate setup is delayed.
+  bool _isWindowFocused = false;
 
   @override
   void initState() {

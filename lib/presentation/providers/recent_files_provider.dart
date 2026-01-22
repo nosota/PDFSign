@@ -11,25 +11,17 @@ part 'recent_files_provider.g.dart';
 /// between operations and race conditions with SharedPreferences.
 @Riverpod(keepAlive: true)
 class RecentFiles extends _$RecentFiles {
-  /// Whether initial cleanup has been performed.
-  bool _initialCleanupDone = false;
-
   @override
   Future<List<RecentFile>> build() async {
     final repository = ref.watch(recentFilesRepositoryProvider);
 
-    // Only cleanup invalid files on first load, not on every rebuild.
-    // This prevents race conditions where cleanup overwrites newly added files.
-    if (!_initialCleanupDone) {
-      _initialCleanupDone = true;
-      final result = await repository.cleanupInvalidFiles();
-      return result.fold(
-        (failure) => throw Exception(failure.message),
-        (files) => files,
-      );
-    }
-
-    // On subsequent rebuilds, just read current files
+    // IMPORTANT: Never call cleanupInvalidFiles() during build().
+    // Each Flutter engine (Welcome, PDF windows) is a separate process.
+    // The static lock doesn't work across processes, so concurrent
+    // cleanupInvalidFiles() and addRecentFile() will race and corrupt data.
+    //
+    // Just read the current files. Cleanup of invalid files happens
+    // lazily when user tries to open a file that no longer exists.
     final result = await repository.getRecentFiles();
     return result.fold(
       (failure) => throw Exception(failure.message),

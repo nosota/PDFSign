@@ -200,6 +200,18 @@ class AppDelegate: FlutterAppDelegate {
                   .OBJC_ASSOCIATION_RETAIN_NONATOMIC
                 )
                 NSLog("WindowChannel: SubWindowDelegate set up successfully")
+
+                // Send current focus state to Flutter immediately after delegate setup.
+                // This ensures Flutter knows the correct state even if the initial
+                // windowDidBecomeKey/windowDidResignKey event was missed (e.g., when
+                // delegate setup was delayed by 100ms retry).
+                if window.isKeyWindow {
+                  NSLog("WindowChannel: Window is key, sending onWindowFocus")
+                  windowChannel.invokeMethod("onWindowFocus", arguments: nil)
+                } else {
+                  NSLog("WindowChannel: Window is not key, sending onWindowBlur")
+                  windowChannel.invokeMethod("onWindowBlur", arguments: nil)
+                }
               } else {
                 window.delegate = nil
                 objc_setAssociatedObject(

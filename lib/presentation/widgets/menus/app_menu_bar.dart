@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -378,6 +380,35 @@ class _AppMenuBarState extends ConsumerState<AppMenuBar> {
   ) async {
     // Capture notifier synchronously BEFORE any await
     final recentFilesNotifier = ref.read(recentFilesProvider.notifier);
+
+    // Check if file still exists
+    final file = File(path);
+    if (!await file.exists()) {
+      // Remove from recent files
+      await recentFilesNotifier.removeFile(path);
+
+      // Show alert dialog
+      final navigatorContext = widget.navigatorKey?.currentContext;
+      if (navigatorContext != null && mounted) {
+        final l10n = AppLocalizations.of(navigatorContext);
+        if (l10n != null) {
+          await showDialog<void>(
+            context: navigatorContext,
+            builder: (context) => AlertDialog(
+              title: Text(l10n.fileNotFound),
+              content: Text(path.split('/').last),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
+      }
+      return;
+    }
 
     // Update last opened time
     final fileName = path.split('/').last;
