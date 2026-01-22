@@ -9,6 +9,7 @@ class ImageCommentField extends StatefulWidget {
   const ImageCommentField({
     required this.comment,
     required this.onCommentChanged,
+    this.onEditingStarted,
     super.key,
   });
 
@@ -17,6 +18,10 @@ class ImageCommentField extends StatefulWidget {
 
   /// Called when the comment changes.
   final void Function(String?) onCommentChanged;
+
+  /// Called when editing starts (user taps to edit).
+  /// Use this to clear other selections or prepare UI.
+  final VoidCallback? onEditingStarted;
 
   @override
   State<ImageCommentField> createState() => _ImageCommentFieldState();
@@ -128,6 +133,7 @@ class _ImageCommentFieldState extends State<ImageCommentField> {
   }
 
   void _startEditing() {
+    widget.onEditingStarted?.call();
     _controller.text = widget.comment ?? '';
     _controller.selection = TextSelection.collapsed(
       offset: _controller.text.length,

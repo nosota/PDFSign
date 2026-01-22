@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:pdfsign/domain/entities/sidebar_image.dart';
+import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
 import 'package:pdfsign/presentation/providers/sidebar/sidebar_images_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/image_comment_field.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/image_thumbnail_card.dart';
@@ -107,6 +108,10 @@ class DraggableImageCard extends ConsumerWidget {
                       ref
                           .read(sidebarImagesProvider.notifier)
                           .updateComment(image.id, comment);
+                    },
+                    onEditingStarted: () {
+                      // Clear PDF object selection when editing sidebar comment
+                      ref.read(editorSelectionProvider.notifier).clear();
                     },
                   ),
                 ),

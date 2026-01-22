@@ -7,7 +7,7 @@ Claude Code MUST ignore this file!
 * Заменить белый цвет на прозрачность (помощь пользователю, чтобы сделать фон прозрачным)
 * Сфоткать через камеру лист бумаги и сделать из этого подпись с прозрачностью. 
 * Добавить Undo / Redo + соотв кнопки на заголовке окна 
-* Поддержка PDF запароленных
+* Поддержка PDF запароленных (save с паролем, save as с паролем, share с паролем)
 * Проверить Share + не сохранненый документ + сохранение во временный файл
 * Сайт для проекта
 * "Cmd + R" - Rote all pages left on 90 degrees including all images dragged to the PDF page from the right panel. Old version of the command must be deleted.

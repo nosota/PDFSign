@@ -20,6 +20,45 @@ class DeleteSelectedImageIntent extends Intent {
   const DeleteSelectedImageIntent();
 }
 
+/// Action for deleting selected image that respects text input focus.
+///
+/// When a text input (EditableText) has focus, this action is disabled
+/// to allow normal text editing (Delete/Backspace work in TextField).
+class DeleteSelectedImageAction extends Action<DeleteSelectedImageIntent> {
+  DeleteSelectedImageAction(this.onDelete);
+
+  final VoidCallback onDelete;
+
+  @override
+  bool isEnabled(DeleteSelectedImageIntent intent) {
+    // Check if focus is on a text input widget
+    final primaryFocus = FocusManager.instance.primaryFocus;
+    if (primaryFocus == null) return true;
+
+    final context = primaryFocus.context;
+    if (context == null) return true;
+
+    // Walk up the widget tree to find EditableText
+    bool isTextInput = false;
+    context.visitAncestorElements((element) {
+      if (element.widget is EditableText) {
+        isTextInput = true;
+        return false; // Stop visiting
+      }
+      return true; // Continue visiting
+    });
+
+    // Disable action if text input has focus (let TextField handle the key)
+    return !isTextInput;
+  }
+
+  @override
+  Object? invoke(DeleteSelectedImageIntent intent) {
+    onDelete();
+    return null;
+  }
+}
+
 /// PDF Editor screen with PDF viewing capabilities.
 ///
 /// Displays a single PDF document in its own window.
@@ -171,11 +210,8 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
       },
       child: Actions(
         actions: {
-          DeleteSelectedImageIntent: CallbackAction<DeleteSelectedImageIntent>(
-            onInvoke: (_) {
-              _deleteSelectedImage();
-              return null;
-            },
+          DeleteSelectedImageIntent: DeleteSelectedImageAction(
+            _deleteSelectedImage,
           ),
         },
         child: Scaffold(
