@@ -38,3 +38,4 @@ Syncfusion Community License: Ngo9BigBOggjHTQxAR8/V1JGaF5cXGpCf0x0RHxbf1x2ZFBMYF
 flutter clean
 flutter build macos
 /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f /Users/ivanvaganov/Projects/PDFSign/build/macos/Build/Products/Release/PDFSign.app
+open macos/Runner.xcworkspace
