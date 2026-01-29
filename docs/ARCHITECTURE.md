@@ -1,147 +1,177 @@
-# PDFSign Architecture
+# Architecture Overview
 
-This document describes the high-level architecture of the PDFSign application.
+PDFSign follows Clean Architecture with Riverpod for state management.
 
-## Overview
-
-PDFSign is a macOS application for signing and stamping PDF documents. It follows **Clean Architecture** principles with clear separation between layers.
-
-## Layer Structure
+## Project Structure
 
 ```
 lib/
-├── core/           # Shared kernel (errors, utils, constants, platform)
-├── domain/         # Business logic (entities, repositories interfaces)
-├── data/           # Data sources and repository implementations
-├── presentation/   # UI layer (screens, widgets, providers)
-└── main.dart       # Application entry point
+├── core/                  # Shared utilities
+│   ├── constants/         # App constants
+│   ├── errors/            # Failure types
+│   ├── platform/          # Platform channels
+│   └── window/            # Window management
+├── domain/                # Business logic (pure Dart)
+│   ├── entities/          # Domain entities
+│   └── repositories/      # Repository interfaces
+├── data/                  # Data layer
+│   ├── datasources/       # Data sources (Isar, SharedPreferences)
+│   ├── models/            # Data models (serialization)
+│   ├── repositories/      # Repository implementations
+│   └── services/          # Business services
+├── presentation/          # UI layer
+│   ├── apps/              # App widgets (Welcome, PDF Viewer, Settings)
+│   ├── providers/         # Riverpod providers
+│   ├── screens/           # Screen widgets
+│   └── widgets/           # Reusable widgets
+└── main.dart              # Entry point
 ```
 
-## Dependency Flow
+## Layer Dependencies
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                  Presentation Layer                  │
-│         (Screens, Widgets, Providers)               │
-└─────────────────────┬───────────────────────────────┘
-                      │ depends on
-                      ▼
-┌─────────────────────────────────────────────────────┐
-│                   Domain Layer                       │
-│        (Entities, Repository Interfaces)            │
-└─────────────────────┬───────────────────────────────┘
-                      │ implemented by
-                      ▼
-┌─────────────────────────────────────────────────────┐
-│                    Data Layer                        │
-│    (Repository Implementations, Data Sources)       │
-└─────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────┐
+│           Presentation Layer            │
+│  (screens, widgets, providers)          │
+└─────────────────┬───────────────────────┘
+                  │ depends on
+                  ▼
+┌─────────────────────────────────────────┐
+│             Domain Layer                │
+│  (entities, repository interfaces)      │
+└─────────────────┬───────────────────────┘
+                  │ implemented by
+                  ▼
+┌─────────────────────────────────────────┐
+│              Data Layer                 │
+│  (implementations, services, models)    │
+└─────────────────────────────────────────┘
 ```
 
-## Core Layer (`lib/core/`)
+**Rules:**
+- Domain layer has NO external dependencies (pure Dart)
+- Data layer depends ONLY on Domain
+- Presentation layer depends ONLY on Domain
+- Core utilities can be used by all layers
 
-Shared utilities available to all layers:
+## State Management
 
-| Directory | Purpose |
+PDFSign uses **Riverpod** with code generation (`riverpod_annotation`).
+
+### Provider Types Used
+
+| Type | Usage |
+|------|-------|
+| `@Riverpod(keepAlive: true)` | Persistent state (document, placed images) |
+| `@riverpod` | Ephemeral state (selection, UI state) |
+| `StreamNotifier` | Real-time sync (sidebar images) |
+| `FutureProvider` | Async loading (recent files) |
+| `Provider` | Computed values, services |
+
+### Key Providers
+
+- **PdfDocument** — PDF viewing state and navigation
+- **PlacedImages** — Images placed on PDF pages
+- **SidebarImages** — Image library with multi-window sync
+- **EditorSelection** — Selected placed image
+- **DocumentDirty** — Unsaved changes tracking
+
+See [PROVIDERS.md](PROVIDERS.md) for complete documentation.
+
+## Multi-Window Architecture
+
+PDFSign supports multiple windows using `desktop_multi_window`:
+
+- **Welcome Window** (ID "0") — Main window, shows on launch
+- **PDF Viewer Windows** — One per open document
+- **Settings Window** — Singleton, one instance max
+
+Each window runs in a separate Flutter engine with isolated Dart memory.
+
+### Inter-Window Communication
+
+| Mechanism | Purpose |
 |-----------|---------|
-| `constants/` | App-wide constants (spacing, radii, sidebar) |
-| `errors/` | Failure classes for error handling |
-| `platform/` | Native platform channels (macOS integration) |
-| `theme/` | App theming (colors, typography, shadows) |
-| `utils/` | Utility functions (date formatting, platform utils) |
-| `window/` | Multi-window management |
-| `router/` | Navigation with go_router |
+| **WindowBroadcast** | Preferences sync, Save All, Close All |
+| **Isar Stream** | Sidebar images real-time sync |
+| **Native Storage** | Settings singleton, open files tracking |
 
-## Domain Layer (`lib/domain/`)
+See [PLATFORM_CHANNELS.md](PLATFORM_CHANNELS.md) for native integration details.
 
-Pure Dart business logic with no Flutter dependencies:
+## Data Storage
 
-| Directory | Purpose |
+| Data | Storage | Location |
+|------|---------|----------|
+| Sidebar images | Isar database | `~/Library/Application Support/.../isar/` |
+| Image files | File system | `~/Library/Application Support/.../images/` |
+| Recent files | SharedPreferences | UserDefaults |
+| Preferences | SharedPreferences | UserDefaults |
+
+## PDF Processing
+
+| Operation | Library |
 |-----------|---------|
-| `entities/` | Business objects (PlacedImage, SidebarImage, RecentFile) |
-| `repositories/` | Abstract repository interfaces |
+| Viewing/Rendering | pdfx |
+| Saving with images | Syncfusion PDF |
 
-## Data Layer (`lib/data/`)
+### Rendering Pipeline
 
-Implementation of data operations:
+1. **Lazy Loading** — Only visible pages + 2 buffer pages rendered
+2. **LRU Cache** — 10 pages cached, scale quantized to 2 decimals
+3. **Render Cancellation** — Pages scrolled out of view cancelled
 
-| Directory | Purpose |
-|-----------|---------|
-| `datasources/` | Local and remote data sources |
-| `models/` | Data transfer objects with serialization |
-| `repositories/` | Repository implementations |
-| `services/` | Business services (PDF save, image storage) |
+### Save Pipeline
 
-## Presentation Layer (`lib/presentation/`)
+1. Read original PDF bytes (from OriginalPdfStorage)
+2. Open with Syncfusion PDF
+3. For each page with images, draw images using `graphics.drawImage()`
+4. Save to output path
+5. Images are permanently embedded (not metadata)
 
-UI and state management:
+## Documentation
 
-| Directory | Purpose |
-|-----------|---------|
-| `apps/` | Root app widgets (WelcomeApp, PdfViewerApp, SettingsApp) |
-| `screens/` | Screen widgets organized by feature |
-| `widgets/` | Shared widgets (menus, dialogs) |
-| `providers/` | Riverpod state management |
+| Document | Description |
+|----------|-------------|
+| [PROVIDERS.md](PROVIDERS.md) | All Riverpod providers with methods |
+| [SERVICES.md](SERVICES.md) | Business services documentation |
+| [REPOSITORIES.md](REPOSITORIES.md) | Repository interfaces and implementations |
+| [ENTITIES.md](ENTITIES.md) | Domain entities |
+| [PLATFORM_CHANNELS.md](PLATFORM_CHANNELS.md) | Native macOS integration |
+| [USER_GUIDE_RU.md](USER_GUIDE_RU.md) | User documentation (Russian) |
 
-## Key Components
+## Key Design Decisions
 
-### Multi-Window System
+### 1. Images Copied to App Storage
 
-PDFSign uses `desktop_multi_window` for multi-window support:
-- **Welcome Window** (main) - File picker and recent files
-- **PDF Viewer Windows** (sub) - One per open document
-- **Settings Window** (sub, singleton) - App preferences
+When adding image to sidebar, it's copied to app storage folder. This ensures:
+- Images work even if original file is moved/deleted
+- Consistent paths across sessions
+- Independence from external file changes
 
-See [MULTI_WINDOW.md](./MULTI_WINDOW.md) for details.
+### 2. Original PDF Caching
 
-### Platform Channels
+Original PDF bytes are cached (in memory or temp file) when opening. This allows:
+- Multiple Save operations without accumulating embedded images
+- Always starting from clean original
+- Memory-efficient handling of large files (>50MB → temp file)
 
-Native macOS integration via method channels:
-- Toolbar with Share button
-- File open handling from Finder
-- Window lifecycle management
+### 3. No Cascade Deletion
 
-See [PLATFORM_CHANNELS.md](./PLATFORM_CHANNELS.md) for details.
+Deleting sidebar image does NOT delete placed images. This is intentional:
+- Placed images are independent copies
+- User might want to keep placed images
+- Less surprising behavior
 
-### State Management
+### 4. Dirty State Tracking
 
-Riverpod is used for all state management:
-- `StateNotifierProvider` for complex state
-- `StateProvider` for simple UI state
-- `FutureProvider` for async operations
+Only add/duplicate/delete operations mark document as dirty:
+- Move, resize, rotate do NOT trigger dirty flag
+- Intentional design decision for user experience
+- Can be changed if needed
 
-## Data Flow Example: Opening a PDF
+### 5. Window Singleton via Native Storage
 
-```
-1. User clicks file in Welcome Screen
-   │
-2. WelcomeScreen calls WindowManagerService.createPdfWindow(path)
-   │
-3. WindowManagerService creates new Flutter window
-   │
-4. PdfViewerApp initializes with file path
-   │
-5. pdfDocumentProvider loads PDF via PdfDocumentRepository
-   │
-6. PdfViewer renders pages from pdfPageCacheProvider
-   │
-7. User can drag images from sidebar to PDF
-   │
-8. placedImagesProvider tracks placed images
-   │
-9. User saves → PdfSaveService creates modified PDF
-```
-
-## Testing Strategy
-
-| Test Type | Location | Coverage Target |
-|-----------|----------|-----------------|
-| Unit tests | `test/` | Domain, Data layers (80%+) |
-| Widget tests | `test/` | All public widgets |
-| Integration tests | `integration_test/` | Critical user flows |
-
-## Related Documentation
-
-- [MULTI_WINDOW.md](./MULTI_WINDOW.md) - Multi-window architecture
-- [PLATFORM_CHANNELS.md](./PLATFORM_CHANNELS.md) - Native integration
-- [adr/](./adr/) - Architecture Decision Records
+Settings window singleton uses native UserDefaults storage:
+- Each Flutter engine has isolated Dart memory
+- Native storage is shared across all engines
+- Provides single source of truth for window ID

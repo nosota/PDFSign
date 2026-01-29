@@ -1,272 +1,380 @@
 # Platform Channels
 
-PDFSign uses Flutter platform channels to integrate with native macOS functionality.
+Native macOS integration via Flutter platform channels.
 
-## Channel Overview
+## Overview
 
-| Channel Name | Dart Class | Purpose |
-|--------------|------------|---------|
-| `com.pdfsign/toolbar` | `ToolbarChannel` | Toolbar button callbacks |
-| `com.pdfsign/window` | `SubWindowChannel` | Window lifecycle management |
-| `com.pdfsign/file_handler` | `FileOpenHandler` | Finder file open integration |
-| `com.pdfsign/settings_singleton` | `SettingsSingletonChannel` | Settings window singleton |
-| `com.pdfsign/open_pdf_files` | `OpenPdfFilesChannel` | Track open PDF files |
-| `com.pdfsign/window_list` | `WindowListChannel` | Window menu support |
+PDFSign uses platform channels for features that require native macOS APIs:
 
-## Toolbar Channel
-
-**File:** `lib/core/platform/toolbar_channel.dart`
-
-Handles native toolbar in PDF viewer windows.
-
-### Flutter → Native
-
-| Method | Arguments | Description |
-|--------|-----------|-------------|
-| `setupToolbar` | none | Request toolbar setup for current window |
-
-### Native → Flutter
-
-| Method | Arguments | Description |
-|--------|-----------|-------------|
-| `onSharePressed` | none | Share button was clicked |
-
-### Usage
-
-```dart
-// In PdfViewerApp.initState()
-ToolbarChannel.init();
-ToolbarChannel.setOnSharePressed(_handleShare);
-ToolbarChannel.setupToolbar();
-
-// Cleanup in dispose()
-ToolbarChannel.setOnSharePressed(null);
+```
+lib/core/platform/
+├── sub_window_channel.dart         # Sub-window lifecycle
+├── settings_singleton_channel.dart # Settings window singleton
+├── open_pdf_files_channel.dart     # Open file tracking
+├── window_list_channel.dart        # Window menu operations
+├── toolbar_channel.dart            # Native toolbar
+└── file_open_handler.dart          # Finder file open requests
 ```
 
-## Window Channel
+Native implementations are in `macos/Runner/AppDelegate.swift`.
+
+---
+
+## SubWindowChannel
 
 **File:** `lib/core/platform/sub_window_channel.dart`
+**Channel:** `com.pdfsign/window`
 
-Manages sub-window lifecycle.
+Manages sub-window lifecycle (PDF Viewer, Settings). Provides close prevention, focus events, and window destruction.
 
-### Flutter → Native
+### Dart → Native Methods
+
+| Method | Arguments | Returns | Description |
+|--------|-----------|---------|-------------|
+| `setPreventClose` | `bool` | - | Enable/disable close prevention |
+| `close` | - | - | Request close (triggers delegate if prevented) |
+| `destroy` | - | - | Force close without delegate |
+| `hide` | - | - | Hide window |
+| `show` | - | - | Show and focus window |
+
+### Native → Dart Methods
 
 | Method | Arguments | Description |
 |--------|-----------|-------------|
-| `close` | none | Request window close (triggers delegate) |
-| `destroy` | none | Force close without delegate |
-| `hide` | none | Hide window |
-| `show` | none | Show and focus window |
-| `setPreventClose` | `bool` | Enable/disable close interception |
+| `onWindowClose` | - | User clicked close button or Cmd+W |
+| `onWindowFocus` | - | Window became focused |
+| `onWindowBlur` | - | Window lost focus |
 
-### Native → Flutter
-
-| Method | Arguments | Description |
-|--------|-----------|-------------|
-| `onWindowClose` | none | User attempted to close window |
-| `onWindowFocus` | none | Window gained focus |
-| `onWindowBlur` | none | Window lost focus |
-
-### Usage
+### Callback Setters
 
 ```dart
-// Prevent immediate close, handle in Flutter
+SubWindowChannel.setOnWindowClose(VoidCallback? callback);
+SubWindowChannel.setOnWindowFocus(VoidCallback? callback);
+SubWindowChannel.setOnWindowBlur(VoidCallback? callback);
+```
+
+### Usage Example
+
+```dart
+// In initState
 SubWindowChannel.setPreventClose(true);
-SubWindowChannel.setOnWindowClose(() async {
+SubWindowChannel.setOnWindowClose(_handleWindowClose);
+SubWindowChannel.setOnWindowFocus(_handleFocus);
+SubWindowChannel.setOnWindowBlur(_handleBlur);
+
+// Handle close with save dialog
+Future<void> _handleWindowClose() async {
   if (isDirty) {
-    final result = await showSaveDialog();
-    if (result == SaveResult.cancel) return;
+    final shouldClose = await showSaveDialog();
+    if (!shouldClose) return;
   }
-  SubWindowChannel.destroy(); // Actually close
-});
+  await SubWindowChannel.destroy();
+}
+
+// In dispose
+SubWindowChannel.dispose();
 ```
 
-## File Handler Channel
+---
 
-**File:** `lib/core/platform/file_open_handler.dart`
-
-Handles files opened via Finder (double-click, "Open With").
-
-### Flutter → Native
-
-| Method | Arguments | Description |
-|--------|-----------|-------------|
-| `ready` | none | Signal Flutter is ready to receive files |
-
-### Native → Flutter
-
-| Method | Arguments | Description |
-|--------|-----------|-------------|
-| `openFile` | `String` path | Open file from Finder |
-
-### Flow
-
-```
-1. User double-clicks PDF in Finder
-   │
-2. macOS calls AppDelegate.application(_:openFiles:)
-   │
-3. If Flutter ready:
-   │   └─► fileHandlerChannel.invokeMethod("openFile", path)
-   │
-4. If Flutter not ready:
-       └─► Queue file, send when ready
-```
-
-## Settings Singleton Channel
+## SettingsSingletonChannel
 
 **File:** `lib/core/platform/settings_singleton_channel.dart`
+**Channel:** `com.pdfsign/settings_singleton`
 
-Enforces single Settings window across all Flutter engines.
+Ensures only one Settings window exists across all Flutter engines. Uses native-side storage (UserDefaults) as source of truth.
 
-### Methods
+### Dart → Native Methods
 
 | Method | Arguments | Returns | Description |
 |--------|-----------|---------|-------------|
-| `getSettingsWindowId` | none | `String?` | Get current Settings window ID |
-| `setSettingsWindowId` | `String` | void | Register Settings window |
-| `clearSettingsWindowId` | none | void | Unregister Settings window |
-| `focusSettingsWindow` | none | `bool` | Focus existing Settings window |
+| `getSettingsWindowId` | - | `String?` | Get current Settings window ID |
+| `setSettingsWindowId` | `String` | - | Store Settings window ID |
+| `clearSettingsWindowId` | - | - | Clear Settings window ID |
+| `focusSettingsWindow` | - | `bool` | Focus existing Settings window |
 
-### Usage
+### Usage Example
 
 ```dart
-Future<void> openSettings() async {
-  // Check if Settings already open
-  final existingId = await SettingsSingletonChannel.getSettingsWindowId();
-  if (existingId != null) {
-    // Focus existing window
-    await SettingsSingletonChannel.focusSettingsWindow();
-    return;
-  }
-
-  // Create new Settings window
-  final windowId = await WindowController.create(...);
-  await SettingsSingletonChannel.setSettingsWindowId(windowId);
+// Check if Settings already exists
+final existingId = await SettingsSingletonChannel.getSettingsWindowId();
+if (existingId != null) {
+  // Try to focus existing window
+  final focused = await SettingsSingletonChannel.focusExistingSettings();
+  if (focused) return existingId;
 }
+
+// Create new Settings window
+final window = await WindowController.create(configuration);
+await SettingsSingletonChannel.setSettingsWindowId(window.windowId);
+
+// On Settings close
+await SettingsSingletonChannel.clearSettingsWindowId();
 ```
 
-## Open PDF Files Channel
+### Why Native Storage?
+
+Each window runs in a separate Flutter engine with isolated Dart memory. Native storage (UserDefaults) is shared across all engines, providing a single source of truth for the Settings window ID.
+
+---
+
+## OpenPdfFilesChannel
 
 **File:** `lib/core/platform/open_pdf_files_channel.dart`
+**Channel:** `com.pdfsign/open_pdf_files`
 
-Tracks which PDFs are currently open to prevent duplicates.
+Tracks open PDF files to prevent duplicate windows. When user tries to open an already-open file, focuses existing window instead of creating duplicate.
 
-### Methods
+### Dart → Native Methods
 
 | Method | Arguments | Returns | Description |
 |--------|-----------|---------|-------------|
-| `getWindowIdForFile` | `String` path | `String?` | Get window ID for file |
-| `registerPdfFile` | path, windowId | void | Register file as open |
-| `unregisterPdfFile` | `String` path | void | Unregister closed file |
-| `focusPdfWindow` | `String` path | `bool` | Focus window for file |
+| `getWindowIdForFile` | `String` (filePath) | `String?` | Get window ID for file if open |
+| `registerPdfFile` | `{filePath, windowId}` | - | Register file as open |
+| `unregisterPdfFile` | `String` (filePath) | - | Unregister when window closes |
+| `focusPdfWindow` | `String` (filePath) | `bool` | Focus window displaying file |
 
-### Native Storage
+### Usage Example
 
-The native side maintains a dictionary:
-```swift
-static var openPdfFiles: [String: String] = [:] // filePath -> windowId
+```dart
+// Before creating window, check if file already open
+final existingWindowId = await OpenPdfFilesChannel.getWindowIdForFile(filePath);
+if (existingWindowId != null) {
+  await OpenPdfFilesChannel.focusPdfWindow(filePath);
+  return existingWindowId;
+}
+
+// Create new window and register
+final window = await WindowController.create(configuration);
+await OpenPdfFilesChannel.registerPdfFile(filePath, window.windowId);
+
+// On window close
+await OpenPdfFilesChannel.unregisterPdfFile(filePath);
 ```
 
-## Window List Channel
+---
+
+## WindowListChannel
 
 **File:** `lib/core/platform/window_list_channel.dart`
+**Channel:** `com.pdfsign/window_list`
 
-Provides window list for Window menu.
+Provides Window menu functionality: listing windows, focusing, minimizing, zooming.
 
-### Methods
+### Dart → Native Methods
 
 | Method | Arguments | Returns | Description |
 |--------|-----------|---------|-------------|
-| `getWindowList` | none | `List<WindowInfo>` | Get all visible windows |
-| `focusWindow` | `String` windowId | `bool` | Focus window by ID |
-| `minimizeWindow` | none | void | Minimize current window |
-| `zoomWindow` | none | void | Zoom current window |
-| `bringAllToFront` | none | void | Bring all windows to front |
+| `getWindowList` | - | `List<WindowInfo>` | Get all visible windows |
+| `focusWindow` | `String` (windowId) | `bool` | Bring window to front |
+| `minimizeWindow` | - | - | Minimize current window to Dock |
+| `zoomWindow` | - | - | Toggle maximize current window |
+| `bringAllToFront` | - | - | Bring all app windows to front |
 
 ### WindowInfo Structure
 
 ```dart
-class WindowInfo {
-  final String windowId;
-  final String title;
-  final String type;  // "welcome", "pdf", "settings"
-  final bool isKey;   // Is currently focused
+WindowInfo {
+  windowId: String,    // Window ID
+  title: String,       // Display title
+  type: WindowType,    // welcome, pdf, settings
+  isKey: bool,         // Is currently focused
+  filePath: String?,   // PDF path (for PDF windows)
 }
 ```
 
-## Native Implementation
+### Usage Example
 
-All channels are set up in `AppDelegate.swift`:
+```dart
+// Build Window menu
+final windows = await WindowListChannel.getWindowList();
 
-### Main Window (Welcome)
+for (final window in windows) {
+  final label = window.isKey ? '✓ ${window.title}' : '   ${window.title}';
+
+  menuItems.add(PlatformMenuItem(
+    label: label,
+    onSelected: () => WindowListChannel.focusWindow(window.windowId),
+  ));
+}
+
+// Standard window actions
+PlatformMenuItem(
+  label: 'Minimize',
+  shortcut: SingleActivator(LogicalKeyboardKey.keyM, meta: true),
+  onSelected: () => WindowListChannel.minimizeWindow(),
+),
+```
+
+---
+
+## ToolbarChannel
+
+**File:** `lib/core/platform/toolbar_channel.dart`
+**Channel:** `com.pdfsign/toolbar`
+
+Handles native macOS toolbar in PDF viewer windows.
+
+### Dart → Native Methods
+
+| Method | Arguments | Returns | Description |
+|--------|-----------|---------|-------------|
+| `setupToolbar` | - | - | Request toolbar setup for current window |
+
+### Native → Dart Methods
+
+| Method | Arguments | Description |
+|--------|-----------|-------------|
+| `onSharePressed` | - | Share toolbar button was clicked |
+
+### Callback Setter
+
+```dart
+ToolbarChannel.setOnSharePressed(VoidCallback? callback);
+```
+
+### Usage Example
+
+```dart
+// Initialize once at app startup
+ToolbarChannel.init();
+
+// In PDF viewer window
+@override
+void initState() {
+  super.initState();
+  ToolbarChannel.setupToolbar();
+  ToolbarChannel.setOnSharePressed(_handleShare);
+}
+
+void _handleShare() {
+  // Create temp PDF with images and share
+}
+```
+
+### Notes
+
+- Only PDF viewer windows should call `setupToolbar()`
+- Settings and Welcome windows do not have toolbar
+- `init()` should be called once from main app
+
+---
+
+## FileOpenHandler
+
+**File:** `lib/core/platform/file_open_handler.dart`
+**Channel:** `com.pdfsign/file_handler`
+
+Handles file open requests from macOS Finder (double-click, "Open With", drag to Dock icon).
+
+### Dart → Native Methods
+
+| Method | Arguments | Returns | Description |
+|--------|-----------|---------|-------------|
+| `ready` | - | - | Signal that Flutter is ready to receive files |
+
+### Native → Dart Methods
+
+| Method | Arguments | Description |
+|--------|-----------|-------------|
+| `openFile` | `String` (filePath) | Open PDF file from Finder |
+
+### Initialization
+
+```dart
+await FileOpenHandler.init(
+  recentFilesRepository: ref.read(recentFilesRepositoryProvider),
+  onHideWelcome: _handleHideWelcome,
+);
+```
+
+### File Open Flow
+
+1. User double-clicks PDF in Finder
+2. macOS sends `application:openFile:` to AppDelegate
+3. If Flutter not ready, file path is queued
+4. When `ready` is called, queued files are sent via channel
+5. `openFile` method receives path and:
+   - Validates file exists and is PDF
+   - Opens in new window (or focuses existing)
+   - Adds to recent files
+   - Hides Welcome window
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `recentFilesRepository` | `RecentFilesRepository` | For adding to recent files |
+| `onHideWelcome` | `VoidCallback?` | Called when Welcome should hide |
+
+---
+
+## Native Implementation (Swift)
+
+All channels are implemented in `macos/Runner/AppDelegate.swift`.
+
+### Channel Registration
 
 ```swift
-func setupFileHandlerChannel() {
-  fileHandlerChannel = FlutterMethodChannel(
-    name: "com.pdfsign/file_handler",
-    binaryMessenger: mainController.engine.binaryMessenger
-  )
-  // ... handler setup
+func applicationDidFinishLaunching(_ notification: Notification) {
+    // Register channels with main Flutter view controller
+    if let controller = mainFlutterWindow?.contentViewController as? FlutterViewController {
+        setupWindowChannel(binaryMessenger: controller.engine.binaryMessenger)
+        setupSettingsChannel(binaryMessenger: controller.engine.binaryMessenger)
+        setupOpenPdfFilesChannel(binaryMessenger: controller.engine.binaryMessenger)
+        setupWindowListChannel(binaryMessenger: controller.engine.binaryMessenger)
+        setupToolbarChannel(binaryMessenger: controller.engine.binaryMessenger)
+        setupFileHandlerChannel(binaryMessenger: controller.engine.binaryMessenger)
+    }
 }
 ```
 
-### Sub Windows (PDF, Settings)
+### Native Storage Keys
 
-```swift
-FlutterMultiWindowPlugin.setOnWindowCreatedCallback { controller in
-  // Setup all channels for this window's engine
-  setupSettingsSingletonChannel(binaryMessenger: controller.engine.binaryMessenger)
-  setupOpenPdfFilesChannel(binaryMessenger: controller.engine.binaryMessenger)
-  setupWindowListChannel(binaryMessenger: controller.engine.binaryMessenger)
+| Key | Storage | Description |
+|-----|---------|-------------|
+| `settingsWindowId` | UserDefaults | Settings window ID |
+| `openPdfFiles` | Dictionary | File path → Window ID mapping |
 
-  let toolbarChannel = FlutterMethodChannel(
-    name: "com.pdfsign/toolbar",
-    binaryMessenger: controller.engine.binaryMessenger
-  )
-  // ... handler setup
+---
 
-  let windowChannel = FlutterMethodChannel(
-    name: "com.pdfsign/window",
-    binaryMessenger: controller.engine.binaryMessenger
-  )
-  // ... handler setup
-}
-```
+## Inter-Window Communication
+
+For communication between Flutter engines (windows), use `WindowBroadcast` instead of platform channels. See [SERVICES.md](SERVICES.md#windowbroadcast).
+
+Platform channels communicate between Dart and native code within the same window. WindowBroadcast uses `desktop_multi_window`'s inter-engine communication.
+
+---
 
 ## Error Handling
 
-All channel methods should handle errors gracefully:
+All channel methods catch exceptions and return safe defaults:
 
 ```dart
-static Future<void> someMethod() async {
+static Future<String?> getWindowIdForFile(String filePath) async {
   try {
-    await _channel.invokeMethod('someMethod');
+    final result = await _channel.invokeMethod<String?>(...);
+    return result;
   } catch (e) {
     if (kDebugMode) {
-      print('Channel error: $e');
+      print('OpenPdfFilesChannel.getWindowIdForFile ERROR: $e');
     }
-    // Graceful fallback
+    return null;  // Safe default
   }
 }
 ```
 
-## Debugging
+This prevents channel errors from crashing the app while maintaining functionality.
 
-Enable logging on both sides:
+---
 
-**Dart:**
-```dart
-if (kDebugMode) {
-  print('ToolbarChannel: calling setupToolbar...');
-}
-```
+## Channel Summary
 
-**Swift:**
-```swift
-NSLog("ToolbarChannel: setupToolbar called")
-```
-
-View logs:
-- Flutter: Terminal output
-- Native: Console.app or Xcode console
+| Channel | Purpose | Direction |
+|---------|---------|-----------|
+| `com.pdfsign/window` | Sub-window lifecycle | Bidirectional |
+| `com.pdfsign/settings_singleton` | Settings window singleton | Dart → Native |
+| `com.pdfsign/open_pdf_files` | Track open files | Dart → Native |
+| `com.pdfsign/window_list` | Window menu | Dart → Native |
+| `com.pdfsign/toolbar` | Native toolbar | Bidirectional |
+| `com.pdfsign/file_handler` | Finder file open | Bidirectional |
