@@ -44,7 +44,7 @@ class EditorSelection extends _$EditorSelection {
 /// This is a coordinating function that works across multiple providers:
 /// - Removes the image from [placedImagesProvider]
 /// - Clears the selection in [editorSelectionProvider]
-/// - Marks the document as dirty in [documentDirtyProvider]
+/// - Updates dirty state: marks dirty if images remain, clean if all removed
 ///
 /// Does nothing if no image is selected.
 void deleteSelectedImage(WidgetRef ref) {
@@ -53,5 +53,12 @@ void deleteSelectedImage(WidgetRef ref) {
 
   ref.read(placedImagesProvider.notifier).removeImage(selectedId);
   ref.read(editorSelectionProvider.notifier).clear();
-  ref.read(documentDirtyProvider.notifier).markDirty();
+
+  // If all images are removed, document is back to original state
+  final remainingImages = ref.read(placedImagesProvider);
+  if (remainingImages.isEmpty) {
+    ref.read(documentDirtyProvider.notifier).markClean();
+  } else {
+    ref.read(documentDirtyProvider.notifier).markDirty();
+  }
 }
