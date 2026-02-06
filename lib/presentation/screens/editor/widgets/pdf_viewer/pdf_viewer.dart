@@ -496,6 +496,28 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
       }
     });
 
+    // Scroll to restored page after document loads (for Save As)
+    ref.listen<PdfViewerState>(pdfDocumentProvider, (previous, next) {
+      final wasLoading = previous?.maybeMap(
+        loading: (_) => true,
+        orElse: () => false,
+      ) ?? false;
+
+      final loadedPage = next.maybeMap(
+        loaded: (s) => s.currentPage,
+        orElse: () => null,
+      );
+
+      // If transitioning from loading to loaded with page > 1, scroll to it
+      if (wasLoading && loadedPage != null && loadedPage > 1) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            _pageListKey.currentState?.scrollToPage(loadedPage, animate: false);
+          }
+        });
+      }
+    });
+
     return Focus(
       focusNode: _focusNode,
       autofocus: true,

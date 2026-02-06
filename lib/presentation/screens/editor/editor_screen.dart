@@ -64,10 +64,15 @@ class DeleteSelectedImageAction extends Action<DeleteSelectedImageIntent> {
 class EditorScreen extends ConsumerStatefulWidget {
   const EditorScreen({
     required this.filePath,
+    this.initialPage,
     super.key,
   });
 
   final String? filePath;
+
+  /// Initial page to display when loading the document.
+  /// Used to restore page position after Save As.
+  final int? initialPage;
 
   @override
   ConsumerState<EditorScreen> createState() => _EditorScreenState();
@@ -184,12 +189,17 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     if (path != oldWidget.filePath && path != null && path.isNotEmpty) {
       _cancelRetryTimer();
       _retryCount = 0;
+      // Capture initialPage before the callback (widget may change)
+      final initialPage = widget.initialPage;
       // Defer provider modifications until after widget tree is built
       // to avoid "Tried to modify a provider while building" error.
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         ref.read(permissionRetryProvider.notifier).state = false;
-        ref.read(pdfDocumentProvider.notifier).openDocument(path);
+        ref.read(pdfDocumentProvider.notifier).openDocument(
+              path,
+              initialPage: initialPage,
+            );
       });
     }
   }

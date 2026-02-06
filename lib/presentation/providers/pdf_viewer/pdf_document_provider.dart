@@ -21,7 +21,14 @@ class PdfDocument extends _$PdfDocument {
   }
 
   /// Opens a PDF document from the given file path.
-  Future<void> openDocument(String filePath) async {
+  ///
+  /// If [initialPage] is provided, the document will open at that page
+  /// (clamped to valid range). Otherwise opens at page 1.
+  Future<void> openDocument(String filePath, {int? initialPage}) async {
+    // Clear page cache before loading new document
+    // (old renders may be stale, especially after Save As)
+    ref.read(pdfPageCacheProvider).clear();
+
     state = PdfViewerState.loading(filePath: filePath);
 
     final repository = ref.read(pdfDocumentRepositoryProvider);
@@ -39,12 +46,17 @@ class PdfDocument extends _$PdfDocument {
         }
       },
       (document) {
+        // Use initialPage if provided, otherwise default to 1
+        final page = initialPage != null
+            ? initialPage.clamp(1, document.pageCount)
+            : 1;
+
         state = PdfViewerState.loaded(
           document: document,
           scale: 1.0,
           isFitWidth: true,
           fitWidthScale: 1.0,
-          currentPage: 1,
+          currentPage: page,
           viewportWidth: 0,
           viewportHeight: 0,
         );

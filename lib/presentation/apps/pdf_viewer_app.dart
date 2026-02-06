@@ -22,6 +22,7 @@ import 'package:pdfsign/presentation/providers/editor/global_dirty_state_provide
 import 'package:pdfsign/presentation/providers/editor/original_pdf_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/size_unit_preference_provider.dart';
+import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
 import 'package:pdfsign/presentation/providers/recent_files_provider.dart';
 import 'package:pdfsign/presentation/providers/shared_preferences_provider.dart';
@@ -61,6 +62,9 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
 
   /// Current file name (can change after Save As).
   late String _currentFileName;
+
+  /// Page to restore after Save As (null means no restoration needed).
+  int? _pageToRestore;
 
   /// Whether the document has been modified at least once.
   /// Used to determine if status suffix should be shown in title.
@@ -703,6 +707,13 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
 
     if (outputPath == null) return;
 
+    // Save current page before the save operation to restore after reload
+    final pdfState = ref.read(pdfDocumentProvider);
+    final currentPage = pdfState.maybeMap(
+      loaded: (state) => state.currentPage,
+      orElse: () => 1,
+    );
+
     final placedImages = ref.read(placedImagesProvider);
     final storage = ref.read(originalPdfStorageProvider);
 
@@ -732,10 +743,11 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
           await OpenPdfFilesChannel.registerPdfFile(savedPath, _windowId!);
         }
 
-        // Update current file path and name
+        // Update current file path, name, and page to restore
         setState(() {
           _currentFilePath = savedPath;
           _currentFileName = newFileName;
+          _pageToRestore = currentPage;
         });
 
         // Update original PDF storage to point to the new file
@@ -828,7 +840,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
           },
         );
       },
-      home: EditorScreen(filePath: _currentFilePath),
+      home: EditorScreen(
+        filePath: _currentFilePath,
+        initialPage: _pageToRestore,
+      ),
     );
   }
 }
