@@ -20,9 +20,11 @@ class SelectionHandleConstants {
   static const double cornerHitSize = 24.0;
   static const double sideHitSize = 20.0;
 
-  // Rotate zones (невидимые, снаружи углов)
-  static const double rotateZoneOffset = 4.0;
-  static const double rotateZoneSize = 20.0;
+  // Rotation handle (один сверху по центру)
+  static const double rotationHandleSize = 24.0;
+  static const double rotationHandleHitSize = 32.0;
+  static const double rotationHandleStemLength = 20.0;
+  static const double rotationStemWidth = 2.0;
 
   // Ограничения
   static const double minObjectSize = 20.0;
@@ -232,14 +234,14 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
     final scaledWidth = image.size.width * scale;
     final scaledHeight = image.size.height * scale;
 
-    // Padding must accommodate object at any rotation angle
-    // Max extent from center = half diagonal of the rectangle
+    // Padding must accommodate object at any rotation angle plus rotation handle
+    // Max extent from center = half diagonal of the rectangle + stem + handle
     final halfDiagonal = math.sqrt(
       scaledWidth * scaledWidth + scaledHeight * scaledHeight,
     ) / 2;
     final padding = halfDiagonal +
-        SelectionHandleConstants.rotateZoneOffset +
-        SelectionHandleConstants.rotateZoneSize;
+        SelectionHandleConstants.rotationHandleStemLength +
+        SelectionHandleConstants.rotationHandleHitSize;
 
     // Center of object in screen coordinates (relative to page)
     final centerScreen = Offset(
@@ -256,9 +258,18 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
     final sidePositions =
         _computeSidePositions(centerLocal, scaledWidth, scaledHeight, image.rotation);
 
+    // Compute rotation handle position (top center, outside the object)
+    final rotationHandleInfo = _computeRotationHandlePosition(
+      centerLocal,
+      scaledWidth,
+      scaledHeight,
+      image.rotation,
+    );
+
     // Hit area half sizes for positioning (center of hit area at handle position)
     const halfCornerHit = SelectionHandleConstants.cornerHitSize / 2;
     const halfSideHit = SelectionHandleConstants.sideHitSize / 2;
+    const halfRotationHit = SelectionHandleConstants.rotationHandleHitSize / 2;
 
     return Positioned(
       left: centerScreen.dx - padding,
@@ -317,12 +328,33 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
               ),
             ),
 
-            // [2] Rotate zones (OUTSIDE corners, rendered first = below in z-order)
+            // [2] Rotation handle stem (line from top edge to handle)
             if (widget.isSelected)
-              for (final quadrant in ['topLeft', 'topRight', 'bottomLeft', 'bottomRight'])
-                _buildRotateZone(quadrant, cornerPositions[quadrant]!, image.rotation),
+              CustomPaint(
+                size: Size(padding * 2, padding * 2),
+                painter: _StemPainter(
+                  start: rotationHandleInfo.topEdge,
+                  end: rotationHandleInfo.handleCenter,
+                  color: _isRotating
+                      ? SelectionHandleConstants.handleBorderColor
+                      : SelectionHandleConstants.handleBorderColor.withOpacity(0.5),
+                ),
+              ),
 
-            // [3] Corner handles (OUTSIDE rotation, in screen coords)
+            // [3] Rotation handle (circle at top center)
+            if (widget.isSelected)
+              Positioned(
+                left: rotationHandleInfo.handleCenter.dx - halfRotationHit,
+                top: rotationHandleInfo.handleCenter.dy - halfRotationHit,
+                child: _RotationHandle(
+                  onDragStart: _handleRotateDragStart,
+                  onDrag: _handleRotateDrag,
+                  onDragEnd: _handleRotateDragEnd,
+                  isRotating: _isRotating,
+                ),
+              ),
+
+            // [4] Corner handles (OUTSIDE rotation, in screen coords)
             if (widget.isSelected)
               for (final corner in ['topLeft', 'topRight', 'bottomLeft', 'bottomRight'])
                 Positioned(
@@ -336,7 +368,7 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
                   ),
                 ),
 
-            // [4] Side handles (OUTSIDE rotation, in screen coords)
+            // [5] Side handles (OUTSIDE rotation, in screen coords)
             if (widget.isSelected)
               for (final side in ['top', 'bottom', 'left', 'right'])
                 Positioned(
@@ -350,7 +382,7 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
                   ),
                 ),
 
-            // [5] Size label (positioned at visually bottom edge)
+            // [6] Size label (positioned at visually bottom edge)
             if (widget.isSelected)
               Builder(
                 builder: (context) {
@@ -403,43 +435,30 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
     );
   }
 
-  Widget _buildRotateZone(String quadrant, Offset cornerPos, double rotation) {
-    const offset = SelectionHandleConstants.rotateZoneOffset;
-    const size = SelectionHandleConstants.rotateZoneSize;
+  /// Computes the rotation handle position (top center with stem).
+  ({Offset topEdge, Offset handleCenter}) _computeRotationHandlePosition(
+    Offset center,
+    double scaledWidth,
+    double scaledHeight,
+    double rotation,
+  ) {
+    final halfH = scaledHeight / 2;
 
-    // Local direction "outward" from corner (before rotation)
-    Offset localDirection;
-    switch (quadrant) {
-      case 'topLeft':
-        localDirection = const Offset(-1, -1);
-      case 'topRight':
-        localDirection = const Offset(1, -1);
-      case 'bottomLeft':
-        localDirection = const Offset(-1, 1);
-      case 'bottomRight':
-        localDirection = const Offset(1, 1);
-      default:
-        localDirection = Offset.zero;
-    }
+    // Top edge center in local coords (before rotation)
+    final topEdgeLocal = Offset(0, -halfH);
 
-    // Normalize and apply rotation
-    final normalizedDir = localDirection / localDirection.distance;
-    final rotatedDir = _rotatePoint(normalizedDir, rotation);
+    // Rotate to get screen position
+    final topEdgeScreen = center + _rotatePoint(topEdgeLocal, rotation);
 
-    // Position zone center at offset distance from corner in rotated direction
-    final zoneCenter = cornerPos + rotatedDir * (offset + size / 2);
+    // Direction "up" from top edge (outward, perpendicular to top edge)
+    final upDirection = _rotatePoint(const Offset(0, -1), rotation);
 
-    return Positioned(
-      left: zoneCenter.dx - size / 2,
-      top: zoneCenter.dy - size / 2,
-      child: _RotateZone(
-        quadrant: quadrant,
-        rotation: rotation,
-        onDragStart: _handleRotateDragStart,
-        onDrag: _handleRotateDrag,
-        onDragEnd: _handleRotateDragEnd,
-      ),
-    );
+    // Handle center position (stem length + half handle size from top edge)
+    const stemLength = SelectionHandleConstants.rotationHandleStemLength;
+    const handleSize = SelectionHandleConstants.rotationHandleSize;
+    final handleCenter = topEdgeScreen + upDirection * (stemLength + handleSize / 2);
+
+    return (topEdge: topEdgeScreen, handleCenter: handleCenter);
   }
 
   void _handleTap() {
@@ -591,7 +610,7 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
   }
 
   // ==========================================================================
-  // ROTATION (from rotate zones)
+  // ROTATION (from rotation handle)
   // ==========================================================================
 
   void _handleRotateDragStart() {
@@ -609,14 +628,16 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
     final localPos = renderBox.globalToLocal(globalPosition);
 
     // Compute center position in widget's local coordinates
-    final padding = SelectionHandleConstants.rotateZoneOffset +
-        SelectionHandleConstants.rotateZoneSize;
+    // Must match the padding calculation in build()
     final scaledWidth = image.size.width * widget.scale;
     final scaledHeight = image.size.height * widget.scale;
-    final centerLocal = Offset(
-      padding + scaledWidth / 2,
-      padding + scaledHeight / 2,
-    );
+    final halfDiagonal = math.sqrt(
+      scaledWidth * scaledWidth + scaledHeight * scaledHeight,
+    ) / 2;
+    final padding = halfDiagonal +
+        SelectionHandleConstants.rotationHandleStemLength +
+        SelectionHandleConstants.rotationHandleHitSize;
+    final centerLocal = Offset(padding, padding);
 
     final currentAngle = (localPos - centerLocal).direction;
 
@@ -866,33 +887,37 @@ class _SideHandleState extends State<_SideHandle> {
   }
 }
 
-/// Rotate zone widget with curved arrow icon.
-class _RotateZone extends StatefulWidget {
-  const _RotateZone({
-    required this.quadrant,
-    required this.rotation,
+/// Rotation handle widget (circular, positioned at top center).
+class _RotationHandle extends StatefulWidget {
+  const _RotationHandle({
     required this.onDragStart,
     required this.onDrag,
     required this.onDragEnd,
+    this.isRotating = false,
   });
 
-  final String quadrant;
-  final double rotation;
   final VoidCallback onDragStart;
   final void Function(Offset globalPosition) onDrag;
   final VoidCallback onDragEnd;
+  final bool isRotating;
 
   @override
-  State<_RotateZone> createState() => _RotateZoneState();
+  State<_RotationHandle> createState() => _RotationHandleState();
 }
 
-class _RotateZoneState extends State<_RotateZone> {
+class _RotationHandleState extends State<_RotationHandle> {
   bool _isDragging = false;
   bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
-    const size = SelectionHandleConstants.rotateZoneSize;
+    const hitSize = SelectionHandleConstants.rotationHandleHitSize;
+    const visualSize = SelectionHandleConstants.rotationHandleSize;
+
+    final isActive = _isDragging || _isHovered || widget.isRotating;
+    final borderColor = isActive
+        ? SelectionHandleConstants.handleBorderColor
+        : SelectionHandleConstants.handleBorderColor.withOpacity(0.5);
 
     return MouseRegion(
       cursor: _isDragging ? SystemMouseCursors.grabbing : SystemMouseCursors.grab,
@@ -912,15 +937,25 @@ class _RotateZoneState extends State<_RotateZone> {
           widget.onDragEnd();
         },
         child: SizedBox(
-          width: size,
-          height: size,
-          child: CustomPaint(
-            painter: _RotateIconPainter(
-              quadrant: widget.quadrant,
-              rotation: widget.rotation,
-              color: _isHovered || _isDragging
-                  ? SelectionHandleConstants.handleBorderColor
-                  : SelectionHandleConstants.handleBorderColor.withOpacity(0.5),
+          width: hitSize,
+          height: hitSize,
+          child: Center(
+            child: Container(
+              width: visualSize,
+              height: visualSize,
+              decoration: BoxDecoration(
+                color: SelectionHandleConstants.handleFillColor,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: borderColor,
+                  width: SelectionHandleConstants.handleBorderWidth,
+                ),
+              ),
+              child: Icon(
+                Icons.refresh,
+                size: visualSize * 0.6,
+                color: borderColor,
+              ),
             ),
           ),
         ),
@@ -929,142 +964,33 @@ class _RotateZoneState extends State<_RotateZone> {
   }
 }
 
-/// Paints a 90° arc with filled arrow heads on both ends.
-class _RotateIconPainter extends CustomPainter {
-  _RotateIconPainter({
-    required this.quadrant,
-    required this.rotation,
+/// Paints the stem line from top edge to rotation handle.
+class _StemPainter extends CustomPainter {
+  const _StemPainter({
+    required this.start,
+    required this.end,
     required this.color,
   });
 
-  final String quadrant;
-  final double rotation;
+  final Offset start;
+  final Offset end;
   final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final strokePaint = Paint()
+    final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0
+      ..strokeWidth = SelectionHandleConstants.rotationStemWidth
       ..strokeCap = StrokeCap.round;
 
-    final fillPaint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill;
-
-    final widgetCenter = Offset(size.width / 2, size.height / 2);
-
-    // Направление от угла объекта наружу (диагональ)
-    // Это направление должно указывать на середину дуги
-    Offset diagonalDir;
-    switch (quadrant) {
-      case 'topLeft':
-        diagonalDir = const Offset(-1, -1);
-      case 'topRight':
-        diagonalDir = const Offset(1, -1);
-      case 'bottomLeft':
-        diagonalDir = const Offset(-1, 1);
-      case 'bottomRight':
-        diagonalDir = const Offset(1, 1);
-      default:
-        diagonalDir = const Offset(1, 1);
-    }
-
-    // Нормализуем
-    final normalizedDiag = diagonalDir / diagonalDir.distance;
-
-    // Поворачиваем диагональ вместе с объектом
-    final rotatedDiag = Offset(
-      normalizedDiag.dx * math.cos(rotation) - normalizedDiag.dy * math.sin(rotation),
-      normalizedDiag.dx * math.sin(rotation) + normalizedDiag.dy * math.cos(rotation),
-    );
-
-    // Угол направления диагонали (середина дуги будет здесь)
-    final diagAngle = math.atan2(rotatedDiag.dy, rotatedDiag.dx);
-
-    // Большой радиус — дуга почти прямая
-    const radius = 15.0;
-
-    // Центр окружности смещён от виджета по диагонали внутрь (к углу объекта)
-    // чтобы дуга проходила через виджет
-    final center = widgetCenter - rotatedDiag * (radius - size.width * 0.35);
-
-    // Дуга симметрична относительно диагонали
-    // sweepAngle / 2 в каждую сторону от diagAngle
-    const sweepAngle = math.pi / 4; // 60° — достаточно для видимого изгиба
-    final startAngle = diagAngle - sweepAngle / 2;
-    final endAngle = diagAngle + sweepAngle / 2;
-
-    // Рисуем дугу
-    final rect = Rect.fromCircle(center: center, radius: radius);
-    canvas.drawArc(rect, startAngle, sweepAngle, false, strokePaint);
-
-    // Позиции концов дуги (здесь основания стрелок)
-    final arc1End = Offset(
-      center.dx + radius * math.cos(startAngle),
-      center.dy + radius * math.sin(startAngle),
-    );
-    final arc2End = Offset(
-      center.dx + radius * math.cos(endAngle),
-      center.dy + radius * math.sin(endAngle),
-    );
-
-    // Направления стрелок: касательная + отклонение наружу
-    const outwardAngle = 0.2;
-    final arrow1Dir = startAngle - math.pi / 2 + outwardAngle;
-    final arrow2Dir = endAngle + math.pi / 2 - outwardAngle;
-
-    // Размеры стрелки
-    const arrowLength = 10.0;
-    const arrowWidth = 8.0;
-
-    // Tip смещён вперёд от конца дуги
-    final arrow1Tip = Offset(
-      arc1End.dx + arrowLength * math.cos(arrow1Dir),
-      arc1End.dy + arrowLength * math.sin(arrow1Dir),
-    );
-    final arrow2Tip = Offset(
-      arc2End.dx + arrowLength * math.cos(arrow2Dir),
-      arc2End.dy + arrowLength * math.sin(arrow2Dir),
-    );
-
-    // Рисуем стрелки
-    _drawArrowHead(canvas, arrow1Tip, arc1End, arrow1Dir, arrowWidth, fillPaint);
-    _drawArrowHead(canvas, arrow2Tip, arc2End, arrow2Dir, arrowWidth, fillPaint);
-  }
-
-  void _drawArrowHead(
-    Canvas canvas,
-    Offset tip,
-    Offset baseCenter,
-    double direction,
-    double arrowWidth,
-    Paint paint,
-  ) {
-    final perpendicular = direction + math.pi / 2;
-    final baseLeft = Offset(
-      baseCenter.dx + arrowWidth / 2 * math.cos(perpendicular),
-      baseCenter.dy + arrowWidth / 2 * math.sin(perpendicular),
-    );
-    final baseRight = Offset(
-      baseCenter.dx - arrowWidth / 2 * math.cos(perpendicular),
-      baseCenter.dy - arrowWidth / 2 * math.sin(perpendicular),
-    );
-
-    final path = Path()
-      ..moveTo(tip.dx, tip.dy)
-      ..lineTo(baseLeft.dx, baseLeft.dy)
-      ..lineTo(baseRight.dx, baseRight.dy)
-      ..close();
-
-    canvas.drawPath(path, paint);
+    canvas.drawLine(start, end, paint);
   }
 
   @override
-  bool shouldRepaint(_RotateIconPainter oldDelegate) {
-    return oldDelegate.quadrant != quadrant ||
-        oldDelegate.rotation != rotation ||
+  bool shouldRepaint(_StemPainter oldDelegate) {
+    return oldDelegate.start != start ||
+        oldDelegate.end != end ||
         oldDelegate.color != color;
   }
 }
