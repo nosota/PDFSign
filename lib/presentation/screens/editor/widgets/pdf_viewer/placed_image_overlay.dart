@@ -329,15 +329,18 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
             ),
 
             // [2] Rotation handle stem (line from top edge to handle)
+            // IgnorePointer prevents stem from blocking mouse events on the image
             if (widget.isSelected)
-              CustomPaint(
-                size: Size(padding * 2, padding * 2),
-                painter: _StemPainter(
-                  start: rotationHandleInfo.topEdge,
-                  end: rotationHandleInfo.handleCenter,
-                  color: _isRotating
-                      ? SelectionHandleConstants.handleBorderColor
-                      : SelectionHandleConstants.handleBorderColor.withOpacity(0.5),
+              IgnorePointer(
+                child: CustomPaint(
+                  size: Size(padding * 2, padding * 2),
+                  painter: _StemPainter(
+                    start: rotationHandleInfo.topEdge,
+                    end: rotationHandleInfo.handleCenter,
+                    color: _isRotating
+                        ? SelectionHandleConstants.handleBorderColor
+                        : SelectionHandleConstants.handleBorderColor.withOpacity(0.5),
+                  ),
                 ),
               ),
 
