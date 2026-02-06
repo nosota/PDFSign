@@ -10,6 +10,7 @@ import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/permission_retry_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_viewer.dart';
+import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_viewer_constants.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/image_sidebar.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/sidebar_resize_handle.dart';
 
@@ -227,18 +228,46 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
           // Text inside widgets will still be RTL as it inherits from MaterialApp.
           body: Directionality(
             textDirection: TextDirection.ltr,
-            child: Row(
-              children: const [
-                // PDF viewer (expands to fill remaining space)
-                Expanded(
-                  child: PdfViewer(),
+            child: Stack(
+              children: [
+                // Main content
+                const Row(
+                  children: [
+                    // PDF viewer (expands to fill remaining space)
+                    Expanded(
+                      child: PdfViewer(),
+                    ),
+
+                    // Resize handle
+                    SidebarResizeHandle(),
+
+                    // Right sidebar with images
+                    ImageSidebar(),
+                  ],
                 ),
 
-                // Resize handle
-                SidebarResizeHandle(),
-
-                // Right sidebar with images
-                ImageSidebar(),
+                // Gradient fade under title bar (like Claude Desktop)
+                // Creates "fog" effect where content fades into title bar
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: IgnorePointer(
+                    child: Container(
+                      height: 20,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            PdfViewerConstants.backgroundColor,
+                            Color(0x00E5E5E5), // Same color with 0 opacity
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
