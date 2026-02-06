@@ -96,6 +96,12 @@ class AppLocalizationsMy extends AppLocalizations {
   String get menuCloseAll => 'အားလုံးပိတ်ရန်';
 
   @override
+  String get menuEdit => 'တည်းဖြတ်';
+
+  @override
+  String get menuDelete => 'ဖျက်';
+
+  @override
   String get menuQuit => 'PDFSign မှထွက်ရန်';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsMy extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'ဖိုင်တွဲဝင်ရောက်ခွင့်အတွက်စောင့်ဆိုင်းနေသည်...';
+
+  @override
+  String get deleteButtonLabel => 'ဖျက်ရန်';
+
+  @override
+  String get deleteButtonTooltip => 'ရွေးချယ်ထားသော အရာဝတ္ထုကို ဖျက်ရန်';
 }

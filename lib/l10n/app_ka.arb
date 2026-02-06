@@ -69,5 +69,15 @@
   "saveFailed": "შენახვა ვერ მოხერხდა",
   "savedTo": "შენახულია: {path}",
   "noOriginalPdfStored": "ორიგინალი PDF არ არის შენახული",
-  "waitingForFolderPermission": "საქაღალდეზე წვდომის ნებართვის მოლოდინი..."
+  "waitingForFolderPermission": "საქაღალდეზე წვდომის ნებართვის მოლოდინი...",
+  "deleteButtonLabel": "წაშლა",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "არჩეული ობიექტის წაშლა",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "რედაქტირება",
+  "menuDelete": "წაშლა"
 }

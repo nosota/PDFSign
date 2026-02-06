@@ -96,6 +96,12 @@ class AppLocalizationsEo extends AppLocalizations {
   String get menuCloseAll => 'Fermi ĉiujn';
 
   @override
+  String get menuEdit => 'Redakti';
+
+  @override
+  String get menuDelete => 'Forigi';
+
+  @override
   String get menuQuit => 'Eliri PDFSign';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsEo extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Atendante dosierujan alirpermeson...';
+
+  @override
+  String get deleteButtonLabel => 'Forigi';
+
+  @override
+  String get deleteButtonTooltip => 'Forigi elektitan objekton';
 }

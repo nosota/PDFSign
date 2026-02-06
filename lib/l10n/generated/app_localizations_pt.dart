@@ -114,6 +114,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get menuCloseAll => 'Fechar tudo';
 
   @override
+  String get menuEdit => 'Editar';
+
+  @override
+  String get menuDelete => 'Apagar';
+
+  @override
   String get menuQuit => 'Sair do PDFSign';
 
   @override
@@ -251,6 +257,12 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Aguardando permissão de acesso à pasta...';
+
+  @override
+  String get deleteButtonLabel => 'Excluir';
+
+  @override
+  String get deleteButtonTooltip => 'Excluir objeto selecionado';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -363,6 +375,12 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get menuCloseAll => 'Fechar tudo';
 
   @override
+  String get menuEdit => 'Editar';
+
+  @override
+  String get menuDelete => 'Excluir';
+
+  @override
   String get menuQuit => 'Sair do PDFSign';
 
   @override
@@ -500,6 +518,12 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get waitingForFolderPermission =>
       'Aguardando permissão de acesso à pasta...';
+
+  @override
+  String get deleteButtonLabel => 'Excluir';
+
+  @override
+  String get deleteButtonTooltip => 'Excluir objeto selecionado';
 }
 
 /// The translations for Portuguese, as used in Portugal (`pt_PT`).
@@ -610,6 +634,12 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get menuCloseAll => 'Fechar tudo';
+
+  @override
+  String get menuEdit => 'Editar';
+
+  @override
+  String get menuDelete => 'Apagar';
 
   @override
   String get menuQuit => 'Sair do PDFSign';
@@ -749,4 +779,10 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
   @override
   String get waitingForFolderPermission =>
       'Aguardando permissão de acesso à pasta...';
+
+  @override
+  String get deleteButtonLabel => 'Eliminar';
+
+  @override
+  String get deleteButtonTooltip => 'Eliminar objeto selecionado';
 }

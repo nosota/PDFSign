@@ -114,6 +114,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuCloseAll => 'Close All';
 
   @override
+  String get menuEdit => 'Edit';
+
+  @override
+  String get menuDelete => 'Delete';
+
+  @override
   String get menuQuit => 'Quit PDFSign';
 
   @override
@@ -257,6 +263,12 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Waiting for folder access permission...';
+
+  @override
+  String get deleteButtonLabel => 'Delete';
+
+  @override
+  String get deleteButtonTooltip => 'Delete selected object';
 }
 
 /// The translations for English, as used in Australia (`en_AU`).
@@ -369,6 +381,12 @@ class AppLocalizationsEnAu extends AppLocalizationsEn {
   String get menuCloseAll => 'Close All';
 
   @override
+  String get menuEdit => 'Edit';
+
+  @override
+  String get menuDelete => 'Delete';
+
+  @override
   String get menuQuit => 'Quit PDFSign';
 
   @override
@@ -506,6 +524,12 @@ class AppLocalizationsEnAu extends AppLocalizationsEn {
   @override
   String get waitingForFolderPermission =>
       'Waiting for folder access permission...';
+
+  @override
+  String get deleteButtonLabel => 'Delete';
+
+  @override
+  String get deleteButtonTooltip => 'Delete selected object';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -618,6 +642,12 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   String get menuCloseAll => 'Close All';
 
   @override
+  String get menuEdit => 'Edit';
+
+  @override
+  String get menuDelete => 'Delete';
+
+  @override
   String get menuQuit => 'Quit PDFSign';
 
   @override
@@ -755,6 +785,12 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   @override
   String get waitingForFolderPermission =>
       'Waiting for folder access permission...';
+
+  @override
+  String get deleteButtonLabel => 'Delete';
+
+  @override
+  String get deleteButtonTooltip => 'Delete selected object';
 }
 
 /// The translations for English, as used in New Zealand (`en_NZ`).
@@ -867,6 +903,12 @@ class AppLocalizationsEnNz extends AppLocalizationsEn {
   String get menuCloseAll => 'Close All';
 
   @override
+  String get menuEdit => 'Edit';
+
+  @override
+  String get menuDelete => 'Delete';
+
+  @override
   String get menuQuit => 'Quit PDFSign';
 
   @override
@@ -1004,6 +1046,12 @@ class AppLocalizationsEnNz extends AppLocalizationsEn {
   @override
   String get waitingForFolderPermission =>
       'Waiting for folder access permission...';
+
+  @override
+  String get deleteButtonLabel => 'Delete';
+
+  @override
+  String get deleteButtonTooltip => 'Delete selected object';
 }
 
 /// The translations for English, as used in the United States (`en_US`).
@@ -1114,6 +1162,12 @@ class AppLocalizationsEnUs extends AppLocalizationsEn {
 
   @override
   String get menuCloseAll => 'Close All';
+
+  @override
+  String get menuEdit => 'Edit';
+
+  @override
+  String get menuDelete => 'Delete';
 
   @override
   String get menuQuit => 'Quit PDFSign';
@@ -1253,4 +1307,10 @@ class AppLocalizationsEnUs extends AppLocalizationsEn {
   @override
   String get waitingForFolderPermission =>
       'Waiting for folder access permission...';
+
+  @override
+  String get deleteButtonLabel => 'Delete';
+
+  @override
+  String get deleteButtonTooltip => 'Delete selected object';
 }

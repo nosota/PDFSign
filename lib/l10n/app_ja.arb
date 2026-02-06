@@ -69,5 +69,15 @@
   "saveFailed": "保存に失敗しました",
   "savedTo": "保存先: {path}",
   "noOriginalPdfStored": "元のPDFが保存されていません",
-  "waitingForFolderPermission": "フォルダアクセス許可を待っています..."
+  "waitingForFolderPermission": "フォルダアクセス許可を待っています...",
+  "deleteButtonLabel": "削除",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "選択したオブジェクトを削除",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "編集",
+  "menuDelete": "削除"
 }

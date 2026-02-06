@@ -69,5 +69,15 @@
   "saveFailed": "Хадгалалт амжилтгүй",
   "savedTo": "Хадгалагдсан: {path}",
   "noOriginalPdfStored": "Эх PDF хадгалагдаагүй",
-  "waitingForFolderPermission": "Хавтас руу нэвтрэх зөвшөөрөл хүлээж байна..."
+  "waitingForFolderPermission": "Хавтас руу нэвтрэх зөвшөөрөл хүлээж байна...",
+  "deleteButtonLabel": "Устгах",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Сонгосон объектыг устгах",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Засварлах",
+  "menuDelete": "Устгах"
 }

@@ -69,5 +69,15 @@
   "saveFailed": "Vistun mistókst",
   "savedTo": "Vistað í: {path}",
   "noOriginalPdfStored": "Ekkert upprunalegt PDF vistað",
-  "waitingForFolderPermission": "Bíð eftir aðgangsheimild fyrir möppu..."
+  "waitingForFolderPermission": "Bíð eftir aðgangsheimild fyrir möppu...",
+  "deleteButtonLabel": "Eyða",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Eyða völdum hlut",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Breyta",
+  "menuDelete": "Eyða"
 }

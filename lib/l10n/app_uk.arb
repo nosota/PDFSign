@@ -69,5 +69,15 @@
   "saveFailed": "Помилка збереження",
   "savedTo": "Збережено: {path}",
   "noOriginalPdfStored": "Оригінальний PDF не знайдено",
-  "waitingForFolderPermission": "Очікування дозволу на доступ до папки..."
+  "waitingForFolderPermission": "Очікування дозволу на доступ до папки...",
+  "deleteButtonLabel": "Видалити",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Видалити вибраний об'єкт",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Редагування",
+  "menuDelete": "Видалити"
 }

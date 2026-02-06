@@ -114,6 +114,12 @@ class AppLocalizationsNl extends AppLocalizations {
   String get menuCloseAll => 'Alles sluiten';
 
   @override
+  String get menuEdit => 'Bewerken';
+
+  @override
+  String get menuDelete => 'Verwijderen';
+
+  @override
   String get menuQuit => 'Stop PDFSign';
 
   @override
@@ -251,4 +257,10 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Wachten op toestemming voor maptoegang...';
+
+  @override
+  String get deleteButtonLabel => 'Verwijderen';
+
+  @override
+  String get deleteButtonTooltip => 'Geselecteerd object verwijderen';
 }

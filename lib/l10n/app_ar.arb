@@ -69,5 +69,15 @@
   "saveFailed": "فشل الحفظ",
   "savedTo": "تم الحفظ في: {path}",
   "noOriginalPdfStored": "لا يوجد ملف PDF أصلي محفوظ",
-  "waitingForFolderPermission": "في انتظار إذن الوصول إلى المجلد..."
+  "waitingForFolderPermission": "في انتظار إذن الوصول إلى المجلد...",
+  "deleteButtonLabel": "حذف",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "حذف العنصر المحدد",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "تحرير",
+  "menuDelete": "حذف"
 }

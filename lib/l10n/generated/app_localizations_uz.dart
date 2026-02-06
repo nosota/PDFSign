@@ -96,6 +96,12 @@ class AppLocalizationsUz extends AppLocalizations {
   String get menuCloseAll => 'Barchasini yopish';
 
   @override
+  String get menuEdit => 'Tahrirlash';
+
+  @override
+  String get menuDelete => 'O\'chirish';
+
+  @override
   String get menuQuit => 'PDFSign-dan chiqish';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsUz extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Jildga kirish ruxsati kutilmoqda...';
+
+  @override
+  String get deleteButtonLabel => 'O\'chirish';
+
+  @override
+  String get deleteButtonTooltip => 'Tanlangan obyektni o\'chirish';
 }

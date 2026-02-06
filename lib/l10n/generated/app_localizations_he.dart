@@ -96,6 +96,12 @@ class AppLocalizationsHe extends AppLocalizations {
   String get menuCloseAll => 'סגור הכל';
 
   @override
+  String get menuEdit => 'עריכה';
+
+  @override
+  String get menuDelete => 'מחק';
+
+  @override
   String get menuQuit => 'צא מ-PDFSign';
 
   @override
@@ -232,4 +238,10 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get waitingForFolderPermission => 'ממתין להרשאת גישה לתיקייה...';
+
+  @override
+  String get deleteButtonLabel => 'מחק';
+
+  @override
+  String get deleteButtonTooltip => 'מחק אובייקט נבחר';
 }

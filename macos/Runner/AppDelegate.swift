@@ -92,9 +92,7 @@ class AppDelegate: FlutterAppDelegate {
       )
 
       toolbarChannel.setMethodCallHandler { [weak controller] call, result in
-        NSLog("ToolbarChannel: received method call '%@'", call.method)
         guard let controller = controller else {
-          NSLog("ToolbarChannel: controller is nil!")
           result(nil)
           return
         }
@@ -102,46 +100,45 @@ class AppDelegate: FlutterAppDelegate {
         switch call.method {
         case "setupToolbar":
           // Setup toolbar when Flutter explicitly requests it
-          NSLog("ToolbarChannel: setupToolbar called")
           DispatchQueue.main.async {
-            NSLog("ToolbarChannel: in main queue, checking window...")
             if let window = controller.view.window {
-              NSLog("ToolbarChannel: window found, creating toolbar helper")
               let toolbarHelper = PDFSignToolbarHelper(
                 window: window,
                 binaryMessenger: controller.engine.binaryMessenger
               )
               toolbarHelper.setupToolbar()
 
-              // Keep reference to prevent deallocation
-              objc_setAssociatedObject(
-                window,
-                "toolbarHelper",
-                toolbarHelper,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-              )
-              NSLog("ToolbarChannel: toolbar setup complete")
+              // Store reference in static dictionary
+              let windowId = ObjectIdentifier(window)
+              toolbarHelpers[windowId] = toolbarHelper
             } else {
-              NSLog("ToolbarChannel: window is NIL! Retrying in 100ms...")
-              // Retry after a short delay
+              // Retry after a short delay if window not ready
               DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 if let window = controller.view.window {
-                  NSLog("ToolbarChannel: retry succeeded, window found")
                   let toolbarHelper = PDFSignToolbarHelper(
                     window: window,
                     binaryMessenger: controller.engine.binaryMessenger
                   )
                   toolbarHelper.setupToolbar()
-                  objc_setAssociatedObject(
-                    window,
-                    "toolbarHelper",
-                    toolbarHelper,
-                    .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-                  )
-                  NSLog("ToolbarChannel: retry toolbar setup complete")
-                } else {
-                  NSLog("ToolbarChannel: retry failed, window still nil!")
+                  let windowId = ObjectIdentifier(window)
+                  toolbarHelpers[windowId] = toolbarHelper
                 }
+              }
+            }
+          }
+          result(nil)
+
+        case "setDeleteButtonVisible":
+          // Show or hide the delete button based on selection state
+          let args = call.arguments as? [String: Any] ?? [:]
+          let visible = args["visible"] as? Bool ?? false
+          let label = args["label"] as? String
+          let tooltip = args["tooltip"] as? String
+          DispatchQueue.main.async {
+            if let window = controller.view.window {
+              let windowId = ObjectIdentifier(window)
+              if let toolbarHelper = toolbarHelpers[windowId] {
+                toolbarHelper.setDeleteButtonVisible(visible, label: label, tooltip: tooltip)
               }
             }
           }
@@ -639,11 +636,19 @@ class SubWindowDelegate: NSObject, NSWindowDelegate {
   }
 }
 
+/// Static dictionary to store toolbar helpers by window.
+/// Using ObjectIdentifier as key to properly track window instances.
+private var toolbarHelpers: [ObjectIdentifier: PDFSignToolbarHelper] = [:]
+
 /// Helper class to manage NSToolbar for PDF viewer windows.
 class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation {
   private weak var window: NSWindow?
   private var methodChannel: FlutterMethodChannel?
   private let shareItemIdentifier = NSToolbarItem.Identifier("ShareItem")
+  private let deleteItemIdentifier = NSToolbarItem.Identifier("DeleteItem")
+  private var deleteButtonVisible = false
+  private var deleteLabel: String = "Delete"
+  private var deleteTooltip: String = "Delete selected object"
 
   init(window: NSWindow, binaryMessenger: FlutterBinaryMessenger) {
     self.window = window
@@ -655,27 +660,61 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
   }
 
   func setupToolbar() {
-    guard let window = window else {
-      NSLog("PDFSignToolbarHelper: window is nil")
-      return
-    }
+    guard let window = window else { return }
 
-    NSLog("PDFSignToolbarHelper: setting up toolbar for window %@", window.title)
     let toolbar = NSToolbar(identifier: "PDFSignToolbar")
     toolbar.delegate = self
     toolbar.displayMode = .iconOnly
     toolbar.allowsUserCustomization = false
     window.toolbar = toolbar
-    NSLog("PDFSignToolbarHelper: toolbar set up successfully")
+  }
+
+  /// Shows or hides the Delete button in the toolbar.
+  func setDeleteButtonVisible(_ visible: Bool, label: String?, tooltip: String?) {
+    // Update localized texts if provided
+    if let label = label {
+      deleteLabel = label
+    }
+    if let tooltip = tooltip {
+      deleteTooltip = tooltip
+    }
+
+    // Update existing item's texts if visible
+    if deleteButtonVisible, let toolbar = window?.toolbar,
+       let item = toolbar.items.first(where: { $0.itemIdentifier == deleteItemIdentifier }) {
+      item.label = deleteLabel
+      item.paletteLabel = deleteLabel
+      item.toolTip = deleteTooltip
+    }
+
+    guard visible != deleteButtonVisible else { return }
+    deleteButtonVisible = visible
+
+    guard let toolbar = window?.toolbar else { return }
+
+    if visible {
+      // Insert delete button before share button
+      let insertIndex = max(0, toolbar.items.count - 1)
+      toolbar.insertItem(withItemIdentifier: deleteItemIdentifier, at: insertIndex)
+    } else {
+      // Remove delete button
+      if let index = toolbar.items.firstIndex(where: { $0.itemIdentifier == deleteItemIdentifier }) {
+        toolbar.removeItem(at: index)
+      }
+    }
+
+    // Force toolbar to refresh its display
+    toolbar.validateVisibleItems()
   }
 
   // MARK: - NSToolbarDelegate
 
   func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-    return [shareItemIdentifier, .flexibleSpace]
+    return [deleteItemIdentifier, shareItemIdentifier, .flexibleSpace]
   }
 
   func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+    // Delete button is added dynamically, not by default
     return [.flexibleSpace, shareItemIdentifier]
   }
 
@@ -684,30 +723,53 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
     itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
     willBeInsertedIntoToolbar flag: Bool
   ) -> NSToolbarItem? {
-    NSLog("PDFSignToolbarHelper: toolbar item requested: %@", itemIdentifier.rawValue)
     if itemIdentifier == shareItemIdentifier {
       let item = NSToolbarItem(itemIdentifier: itemIdentifier)
       item.label = "Share"
       item.paletteLabel = "Share"
       item.toolTip = "Share this document"
 
-      // Use SF Symbol on macOS 11+, fallback to named image on older versions
       if #available(macOS 11.0, *) {
         if let image = NSImage(systemSymbolName: "square.and.arrow.up", accessibilityDescription: "Share") {
           item.image = image
         }
       } else {
-        // Fallback for macOS 10.15
         item.image = NSImage(named: NSImage.actionTemplateName)
       }
 
       item.action = #selector(shareButtonClicked)
       item.target = self
       item.isEnabled = true
-      item.autovalidates = false  // Disable auto-validation
-      NSLog("PDFSignToolbarHelper: Share item created, isEnabled=%d", item.isEnabled ? 1 : 0)
+      item.autovalidates = false
       return item
     }
+
+    if itemIdentifier == deleteItemIdentifier {
+      let item = NSToolbarItem(itemIdentifier: itemIdentifier)
+      item.label = deleteLabel
+      item.paletteLabel = deleteLabel
+      item.toolTip = deleteTooltip
+
+      if #available(macOS 12.0, *) {
+        if let image = NSImage(systemSymbolName: "trash", accessibilityDescription: deleteLabel) {
+          let config = NSImage.SymbolConfiguration(paletteColors: [.systemRed])
+          item.image = image.withSymbolConfiguration(config)
+        }
+      } else if #available(macOS 11.0, *) {
+        if let image = NSImage(systemSymbolName: "trash", accessibilityDescription: deleteLabel) {
+          item.image = image
+        }
+      } else {
+        item.image = NSImage(named: NSImage.stopProgressTemplateName)
+      }
+
+      item.action = #selector(deleteButtonClicked)
+      item.target = self
+      item.isEnabled = true
+      item.autovalidates = false
+      return item
+    }
+
     return nil
   }
 
@@ -715,11 +777,14 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
     methodChannel?.invokeMethod("onSharePressed", arguments: nil)
   }
 
+  @objc func deleteButtonClicked() {
+    methodChannel?.invokeMethod("onDeletePressed", arguments: nil)
+  }
+
   // MARK: - NSToolbarItemValidation
 
-  /// Always enable the Share toolbar item.
+  /// Always enable toolbar items (visibility is controlled by show/hide).
   @objc func validateToolbarItem(_ item: NSToolbarItem) -> Bool {
-    NSLog("PDFSignToolbarHelper: validateToolbarItem called for %@, returning true", item.itemIdentifier.rawValue)
     return true
   }
 }

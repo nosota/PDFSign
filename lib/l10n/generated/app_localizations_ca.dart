@@ -96,6 +96,12 @@ class AppLocalizationsCa extends AppLocalizations {
   String get menuCloseAll => 'Tanca-ho tot';
 
   @override
+  String get menuEdit => 'Edita';
+
+  @override
+  String get menuDelete => 'Suprimeix';
+
+  @override
   String get menuQuit => 'Sortir de PDFSign';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsCa extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Esperant permís d\'accés a la carpeta...';
+
+  @override
+  String get deleteButtonLabel => 'Eliminar';
+
+  @override
+  String get deleteButtonTooltip => 'Eliminar l\'objecte seleccionat';
 }

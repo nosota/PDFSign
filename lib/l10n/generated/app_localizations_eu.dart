@@ -96,6 +96,12 @@ class AppLocalizationsEu extends AppLocalizations {
   String get menuCloseAll => 'Itxi dena';
 
   @override
+  String get menuEdit => 'Editatu';
+
+  @override
+  String get menuDelete => 'Ezabatu';
+
+  @override
   String get menuQuit => 'Irten PDFSign-etik';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsEu extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Karpeta sarbide baimena itxaroten...';
+
+  @override
+  String get deleteButtonLabel => 'Ezabatu';
+
+  @override
+  String get deleteButtonTooltip => 'Ezabatu hautatutako objektua';
 }

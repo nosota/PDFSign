@@ -120,6 +120,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get menuCloseAll => 'Закрыть все';
 
   @override
+  String get menuEdit => 'Редактирование';
+
+  @override
+  String get menuDelete => 'Удалить';
+
+  @override
   String get menuQuit => 'Выход из PDFSign';
 
   @override
@@ -257,4 +263,10 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Ожидание разрешения на доступ к папке...';
+
+  @override
+  String get deleteButtonLabel => 'Удалить';
+
+  @override
+  String get deleteButtonTooltip => 'Удалить выбранный объект';
 }

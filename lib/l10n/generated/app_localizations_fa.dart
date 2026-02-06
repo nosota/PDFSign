@@ -96,6 +96,12 @@ class AppLocalizationsFa extends AppLocalizations {
   String get menuCloseAll => 'بستن همه';
 
   @override
+  String get menuEdit => 'ویرایش';
+
+  @override
+  String get menuDelete => 'حذف';
+
+  @override
   String get menuQuit => 'خروج از PDFSign';
 
   @override
@@ -232,4 +238,10 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get waitingForFolderPermission => 'در انتظار اجازه دسترسی به پوشه...';
+
+  @override
+  String get deleteButtonLabel => 'حذف';
+
+  @override
+  String get deleteButtonTooltip => 'حذف شیء انتخاب شده';
 }

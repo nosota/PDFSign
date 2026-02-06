@@ -96,6 +96,12 @@ class AppLocalizationsHi extends AppLocalizations {
   String get menuCloseAll => 'सभी बंद करें';
 
   @override
+  String get menuEdit => 'संपादित करें';
+
+  @override
+  String get menuDelete => 'हटाएं';
+
+  @override
   String get menuQuit => 'PDFSign से बाहर निकलें';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'फ़ोल्डर एक्सेस अनुमति की प्रतीक्षा की जा रही है...';
+
+  @override
+  String get deleteButtonLabel => 'हटाएं';
+
+  @override
+  String get deleteButtonTooltip => 'चयनित ऑब्जेक्ट हटाएं';
 }

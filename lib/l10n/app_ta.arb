@@ -69,5 +69,15 @@
   "saveFailed": "சேமிப்பு தோல்வி",
   "savedTo": "சேமிக்கப்பட்டது: {path}",
   "noOriginalPdfStored": "அசல் PDF சேமிக்கப்படவில்லை",
-  "waitingForFolderPermission": "கோப்புறை அணுகல் அனுமதிக்காக காத்திருக்கிறது..."
+  "waitingForFolderPermission": "கோப்புறை அணுகல் அனுமதிக்காக காத்திருக்கிறது...",
+  "deleteButtonLabel": "நீக்கு",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "தேர்ந்தெடுக்கப்பட்ட பொருளை நீக்கு",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "திருத்து",
+  "menuDelete": "நீக்கு"
 }

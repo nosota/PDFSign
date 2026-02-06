@@ -114,6 +114,12 @@ class AppLocalizationsSv extends AppLocalizations {
   String get menuCloseAll => 'Stäng alla';
 
   @override
+  String get menuEdit => 'Redigera';
+
+  @override
+  String get menuDelete => 'Radera';
+
+  @override
   String get menuQuit => 'Avsluta PDFSign';
 
   @override
@@ -251,4 +257,10 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Väntar på åtkomstbehörighet för mapp...';
+
+  @override
+  String get deleteButtonLabel => 'Radera';
+
+  @override
+  String get deleteButtonTooltip => 'Radera valt objekt';
 }

@@ -69,5 +69,15 @@
   "saveFailed": "Konservado fiaskis",
   "savedTo": "Konservita al: {path}",
   "noOriginalPdfStored": "Neniu originala PDF konservita",
-  "waitingForFolderPermission": "Atendante dosierujan alirpermeson..."
+  "waitingForFolderPermission": "Atendante dosierujan alirpermeson...",
+  "deleteButtonLabel": "Forigi",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Forigi elektitan objekton",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Redakti",
+  "menuDelete": "Forigi"
 }

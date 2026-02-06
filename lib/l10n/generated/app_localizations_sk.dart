@@ -117,6 +117,12 @@ class AppLocalizationsSk extends AppLocalizations {
   String get menuCloseAll => 'Zavrieť všetko';
 
   @override
+  String get menuEdit => 'Upraviť';
+
+  @override
+  String get menuDelete => 'Odstrániť';
+
+  @override
   String get menuQuit => 'Ukončiť PDFSign';
 
   @override
@@ -254,4 +260,10 @@ class AppLocalizationsSk extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Čakanie na povolenie prístupu k priečinku...';
+
+  @override
+  String get deleteButtonLabel => 'Odstrániť';
+
+  @override
+  String get deleteButtonTooltip => 'Odstrániť vybraný objekt';
 }

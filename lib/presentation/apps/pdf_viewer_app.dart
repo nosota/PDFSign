@@ -17,6 +17,7 @@ import 'package:pdfsign/core/window/window_manager_service.dart';
 import 'package:pdfsign/data/services/pdf_save_service.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/global_dirty_state_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/original_pdf_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
@@ -62,10 +63,13 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   /// Current window ID for dirty state tracking.
   String? _windowId;
 
+  /// Subscription for selection changes (to update Delete button visibility).
+  ProviderSubscription<String?>? _selectionSubscription;
+
   /// Notifier for menu state updates.
   /// Used to bypass MaterialApp.builder caching issues.
   final _menuStateNotifier = ValueNotifier<_MenuState>(
-    const _MenuState(isDirty: false, hasAnyDirtyWindow: false),
+    const _MenuState(isDirty: false, hasAnyDirtyWindow: false, hasSelection: false),
   );
 
   /// Whether this window currently has focus.
@@ -80,10 +84,14 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     // Initialize toolbar channel for native toolbar
     ToolbarChannel.init();
     ToolbarChannel.setOnSharePressed(_handleShare);
+    ToolbarChannel.setOnDeletePressed(_handleDeleteSelected);
     // Delay toolbar setup to ensure native window is fully ready
     Future.delayed(const Duration(milliseconds: 200), () {
       ToolbarChannel.setupToolbar(); // Request native toolbar with Share button
     });
+
+    // Listen for selection changes to update Delete button visibility
+    _setupSelectionListener();
 
     // Initialize window channel for close interception and focus tracking
     _initWindowChannel();
@@ -149,6 +157,9 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     // Dispose menu state notifier
     _menuStateNotifier.dispose();
 
+    // Close selection subscription to prevent memory leak
+    _selectionSubscription?.close();
+
     // Remove this window from global dirty state tracker
     if (_windowId != null) {
       ref.read(globalDirtyStateProvider.notifier).removeWindow(_windowId!);
@@ -156,6 +167,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
 
     // Unregister callbacks
     ToolbarChannel.setOnSharePressed(null);
+    ToolbarChannel.setOnDeletePressed(null);
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
     WindowBroadcast.setOnSaveAll(null);
@@ -358,10 +370,12 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     final isDirty = ref.read(documentDirtyProvider);
     final globalState = ref.read(globalDirtyStateProvider);
     final hasAnyDirty = globalState.values.any((d) => d);
+    final hasSelection = ref.read(editorSelectionProvider) != null;
 
     _menuStateNotifier.value = _MenuState(
       isDirty: isDirty,
       hasAnyDirtyWindow: hasAnyDirty,
+      hasSelection: hasSelection,
     );
   }
 
@@ -528,6 +542,44 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
         // User cancelled, do nothing
         break;
     }
+  }
+
+  /// Sets up listener for selection changes to update Delete button visibility.
+  void _setupSelectionListener() {
+    // Use addPostFrameCallback to ensure ref is available
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Check if widget is still mounted before using ref
+      if (!mounted) return;
+
+      _selectionSubscription = ref.listenManual(
+        editorSelectionProvider,
+        (previous, next) {
+          final hasSelection = next != null;
+
+          // Get localized strings for Delete button
+          final navigatorContext = _navigatorKey.currentContext;
+          final l10n = navigatorContext != null
+              ? AppLocalizations.of(navigatorContext)
+              : null;
+
+          // Update toolbar Delete button visibility
+          ToolbarChannel.setDeleteButtonVisible(
+            hasSelection,
+            label: l10n?.deleteButtonLabel,
+            tooltip: l10n?.deleteButtonTooltip,
+          );
+
+          // Update menu state for Edit > Delete
+          _updateMenuState();
+        },
+        fireImmediately: true,
+      );
+    });
+  }
+
+  /// Handles Delete button press from native toolbar.
+  void _handleDeleteSelected() {
+    deleteSelectedImage(ref);
   }
 
   Future<void> _handleShare() async {
@@ -737,6 +789,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
               onCloseWindow: SubWindowChannel.close,
               // Quit (Cmd+Q) - same as Close All but exits app
               onQuit: _handleQuit,
+              // Edit menu with Delete (only for PDF viewer windows)
+              includeEditMenu: true,
+              isDeleteEnabled: menuState.hasSelection,
+              onDelete: _handleDeleteSelected,
               child: child!,
             );
           },
@@ -755,18 +811,21 @@ class _MenuState {
   const _MenuState({
     required this.isDirty,
     required this.hasAnyDirtyWindow,
+    required this.hasSelection,
   });
 
   final bool isDirty;
   final bool hasAnyDirtyWindow;
+  final bool hasSelection;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is _MenuState &&
           isDirty == other.isDirty &&
-          hasAnyDirtyWindow == other.hasAnyDirtyWindow;
+          hasAnyDirtyWindow == other.hasAnyDirtyWindow &&
+          hasSelection == other.hasSelection;
 
   @override
-  int get hashCode => Object.hash(isDirty, hasAnyDirtyWindow);
+  int get hashCode => Object.hash(isDirty, hasAnyDirtyWindow, hasSelection);
 }

@@ -69,5 +69,15 @@
   "saveFailed": "Sparandet misslyckades",
   "savedTo": "Sparat till: {path}",
   "noOriginalPdfStored": "Ingen original-PDF sparad",
-  "waitingForFolderPermission": "Väntar på åtkomstbehörighet för mapp..."
+  "waitingForFolderPermission": "Väntar på åtkomstbehörighet för mapp...",
+  "deleteButtonLabel": "Radera",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Radera valt objekt",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Redigera",
+  "menuDelete": "Radera"
 }

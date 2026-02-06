@@ -69,5 +69,15 @@
   "saveFailed": "Lưu thất bại",
   "savedTo": "Đã lưu tại: {path}",
   "noOriginalPdfStored": "Không có PDF gốc được lưu",
-  "waitingForFolderPermission": "Đang chờ quyền truy cập thư mục..."
+  "waitingForFolderPermission": "Đang chờ quyền truy cập thư mục...",
+  "deleteButtonLabel": "Xóa",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Xóa đối tượng đã chọn",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Chỉnh sửa",
+  "menuDelete": "Xóa"
 }

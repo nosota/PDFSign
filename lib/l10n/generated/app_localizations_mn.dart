@@ -96,6 +96,12 @@ class AppLocalizationsMn extends AppLocalizations {
   String get menuCloseAll => 'Бүгдийг хаах';
 
   @override
+  String get menuEdit => 'Засварлах';
+
+  @override
+  String get menuDelete => 'Устгах';
+
+  @override
   String get menuQuit => 'PDFSign-аас гарах';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsMn extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Хавтас руу нэвтрэх зөвшөөрөл хүлээж байна...';
+
+  @override
+  String get deleteButtonLabel => 'Устгах';
+
+  @override
+  String get deleteButtonTooltip => 'Сонгосон объектыг устгах';
 }

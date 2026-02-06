@@ -69,5 +69,15 @@
   "saveFailed": "Сақтау сәтсіз",
   "savedTo": "Сақталды: {path}",
   "noOriginalPdfStored": "Түпнұсқа PDF сақталмаған",
-  "waitingForFolderPermission": "Қалтаға кіру рұқсатын күтуде..."
+  "waitingForFolderPermission": "Қалтаға кіру рұқсатын күтуде...",
+  "deleteButtonLabel": "Жою",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Таңдалған нысанды жою",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Өңдеу",
+  "menuDelete": "Жою"
 }

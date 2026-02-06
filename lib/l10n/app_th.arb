@@ -69,5 +69,15 @@
   "saveFailed": "บันทึกล้มเหลว",
   "savedTo": "บันทึกที่: {path}",
   "noOriginalPdfStored": "ไม่มี PDF ต้นฉบับถูกจัดเก็บ",
-  "waitingForFolderPermission": "กำลังรอสิทธิ์การเข้าถึงโฟลเดอร์..."
+  "waitingForFolderPermission": "กำลังรอสิทธิ์การเข้าถึงโฟลเดอร์...",
+  "deleteButtonLabel": "ลบ",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "ลบวัตถุที่เลือก",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "แก้ไข",
+  "menuDelete": "ลบ"
 }

@@ -69,5 +69,15 @@
   "saveFailed": "Falha ao guardar",
   "savedTo": "Guardado em: {path}",
   "noOriginalPdfStored": "Nenhum PDF original armazenado",
-  "waitingForFolderPermission": "Aguardando permissão de acesso à pasta..."
+  "waitingForFolderPermission": "Aguardando permissão de acesso à pasta...",
+  "deleteButtonLabel": "Eliminar",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Eliminar objeto selecionado",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Editar",
+  "menuDelete": "Apagar"
 }

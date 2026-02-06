@@ -1,4 +1,8 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 
 part 'editor_selection_provider.g.dart';
 
@@ -33,4 +37,21 @@ class EditorSelection extends _$EditorSelection {
 
   /// Checks if a specific image is selected.
   bool isSelected(String id) => state == id;
+}
+
+/// Deletes the currently selected image and clears selection.
+///
+/// This is a coordinating function that works across multiple providers:
+/// - Removes the image from [placedImagesProvider]
+/// - Clears the selection in [editorSelectionProvider]
+/// - Marks the document as dirty in [documentDirtyProvider]
+///
+/// Does nothing if no image is selected.
+void deleteSelectedImage(WidgetRef ref) {
+  final selectedId = ref.read(editorSelectionProvider);
+  if (selectedId == null) return;
+
+  ref.read(placedImagesProvider.notifier).removeImage(selectedId);
+  ref.read(editorSelectionProvider.notifier).clear();
+  ref.read(documentDirtyProvider.notifier).markDirty();
 }

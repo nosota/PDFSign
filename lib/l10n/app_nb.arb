@@ -69,5 +69,15 @@
   "saveFailed": "Lagring mislyktes",
   "savedTo": "Lagret til: {path}",
   "noOriginalPdfStored": "Ingen original PDF lagret",
-  "waitingForFolderPermission": "Venter på tillatelse til mappeadgang..."
+  "waitingForFolderPermission": "Venter på tillatelse til mappeadgang...",
+  "deleteButtonLabel": "Slett",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Slett valgt objekt",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Rediger",
+  "menuDelete": "Slett"
 }

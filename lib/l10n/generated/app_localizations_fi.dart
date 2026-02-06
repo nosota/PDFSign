@@ -114,6 +114,12 @@ class AppLocalizationsFi extends AppLocalizations {
   String get menuCloseAll => 'Sulje kaikki';
 
   @override
+  String get menuEdit => 'Muokkaa';
+
+  @override
+  String get menuDelete => 'Poista';
+
+  @override
   String get menuQuit => 'Lopeta PDFSign';
 
   @override
@@ -251,4 +257,10 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Odotetaan kansion käyttöoikeutta...';
+
+  @override
+  String get deleteButtonLabel => 'Poista';
+
+  @override
+  String get deleteButtonTooltip => 'Poista valittu kohde';
 }

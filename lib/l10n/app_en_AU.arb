@@ -69,5 +69,15 @@
   "saveFailed": "Save failed",
   "savedTo": "Saved to: {path}",
   "noOriginalPdfStored": "No original PDF stored",
-  "waitingForFolderPermission": "Waiting for folder access permission..."
+  "waitingForFolderPermission": "Waiting for folder access permission...",
+  "deleteButtonLabel": "Delete",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Delete selected object",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Edit",
+  "menuDelete": "Delete"
 }

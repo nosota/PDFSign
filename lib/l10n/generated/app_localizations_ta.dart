@@ -96,6 +96,12 @@ class AppLocalizationsTa extends AppLocalizations {
   String get menuCloseAll => 'அனைத்தையும் மூடு';
 
   @override
+  String get menuEdit => 'திருத்து';
+
+  @override
+  String get menuDelete => 'நீக்கு';
+
+  @override
   String get menuQuit => 'PDFSign-இலிருந்து வெளியேறு';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'கோப்புறை அணுகல் அனுமதிக்காக காத்திருக்கிறது...';
+
+  @override
+  String get deleteButtonLabel => 'நீக்கு';
+
+  @override
+  String get deleteButtonTooltip => 'தேர்ந்தெடுக்கப்பட்ட பொருளை நீக்கு';
 }

@@ -96,6 +96,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get menuCloseAll => '全部关闭';
 
   @override
+  String get menuEdit => '编辑';
+
+  @override
+  String get menuDelete => '删除';
+
+  @override
   String get menuQuit => '退出 PDFSign';
 
   @override
@@ -231,6 +237,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get waitingForFolderPermission => '正在等待文件夹访问权限...';
+
+  @override
+  String get deleteButtonLabel => '删除';
+
+  @override
+  String get deleteButtonTooltip => '删除所选对象';
 }
 
 /// The translations for Chinese, as used in China (`zh_CN`).
@@ -325,6 +337,12 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get menuCloseAll => '全部关闭';
 
   @override
+  String get menuEdit => '编辑';
+
+  @override
+  String get menuDelete => '删除';
+
+  @override
   String get menuQuit => '退出 PDFSign';
 
   @override
@@ -460,6 +478,12 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get waitingForFolderPermission => '正在等待文件夹访问权限...';
+
+  @override
+  String get deleteButtonLabel => '删除';
+
+  @override
+  String get deleteButtonTooltip => '删除所选对象';
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
@@ -552,6 +576,12 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get menuCloseAll => '全部關閉';
+
+  @override
+  String get menuEdit => '編輯';
+
+  @override
+  String get menuDelete => '刪除';
 
   @override
   String get menuQuit => '結束 PDFSign';
@@ -689,4 +719,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get waitingForFolderPermission => '正在等待資料夾存取權限...';
+
+  @override
+  String get deleteButtonLabel => '刪除';
+
+  @override
+  String get deleteButtonTooltip => '刪除所選物件';
 }

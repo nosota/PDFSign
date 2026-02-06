@@ -96,6 +96,12 @@ class AppLocalizationsAz extends AppLocalizations {
   String get menuCloseAll => 'Hamısını bağla';
 
   @override
+  String get menuEdit => 'Redaktə';
+
+  @override
+  String get menuDelete => 'Sil';
+
+  @override
   String get menuQuit => 'PDFSign-dan çıx';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsAz extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Qovluğa giriş icazəsi gözlənilir...';
+
+  @override
+  String get deleteButtonLabel => 'Sil';
+
+  @override
+  String get deleteButtonTooltip => 'Seçilmiş obyekti sil';
 }

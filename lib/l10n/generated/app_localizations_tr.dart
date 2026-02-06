@@ -96,6 +96,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get menuCloseAll => 'Tümünü Kapat';
 
   @override
+  String get menuEdit => 'Düzenle';
+
+  @override
+  String get menuDelete => 'Sil';
+
+  @override
   String get menuQuit => 'PDFSign\'dan Çık';
 
   @override
@@ -232,4 +238,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get waitingForFolderPermission => 'Klasör erişim izni bekleniyor...';
+
+  @override
+  String get deleteButtonLabel => 'Sil';
+
+  @override
+  String get deleteButtonTooltip => 'Seçili nesneyi sil';
 }

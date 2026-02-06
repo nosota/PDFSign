@@ -96,6 +96,12 @@ class AppLocalizationsMs extends AppLocalizations {
   String get menuCloseAll => 'Tutup semua';
 
   @override
+  String get menuEdit => 'Edit';
+
+  @override
+  String get menuDelete => 'Padam';
+
+  @override
   String get menuQuit => 'Keluar PDFSign';
 
   @override
@@ -232,4 +238,10 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get waitingForFolderPermission => 'Menunggu kebenaran akses folder...';
+
+  @override
+  String get deleteButtonLabel => 'Padam';
+
+  @override
+  String get deleteButtonTooltip => 'Padam objek yang dipilih';
 }

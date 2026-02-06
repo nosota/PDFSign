@@ -69,5 +69,15 @@
   "saveFailed": "Saglabāšana neizdevās",
   "savedTo": "Saglabāts: {path}",
   "noOriginalPdfStored": "Nav saglabāts oriģinālais PDF",
-  "waitingForFolderPermission": "Gaida mapes piekļuves atļauju..."
+  "waitingForFolderPermission": "Gaida mapes piekļuves atļauju...",
+  "deleteButtonLabel": "Dzēst",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Dzēst atlasīto objektu",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Rediģēt",
+  "menuDelete": "Dzēst"
 }

@@ -69,5 +69,15 @@
   "saveFailed": "Чување није успело",
   "savedTo": "Сачувано у: {path}",
   "noOriginalPdfStored": "Нема сачуваног оригиналног PDF-а",
-  "waitingForFolderPermission": "Чекање дозволе за приступ фасцикли..."
+  "waitingForFolderPermission": "Чекање дозволе за приступ фасцикли...",
+  "deleteButtonLabel": "Обриши",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Обриши изабрани објекат",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Уређивање",
+  "menuDelete": "Обриши"
 }

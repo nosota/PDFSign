@@ -6,9 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:pdfsign/core/platform/sub_window_channel.dart';
-import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
-import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/permission_retry_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_viewer.dart';
@@ -193,12 +191,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
 
   /// Deletes the currently selected image if any.
   void _deleteSelectedImage() {
-    final selectedId = ref.read(editorSelectionProvider);
-    if (selectedId != null) {
-      ref.read(placedImagesProvider.notifier).removeImage(selectedId);
-      ref.read(editorSelectionProvider.notifier).clear();
-      ref.read(documentDirtyProvider.notifier).markDirty();
-    }
+    deleteSelectedImage(ref);
   }
 
   @override

@@ -69,5 +69,15 @@
   "saveFailed": "儲存失敗",
   "savedTo": "已儲存至：{path}",
   "noOriginalPdfStored": "未儲存原始PDF",
-  "waitingForFolderPermission": "正在等待資料夾存取權限..."
+  "waitingForFolderPermission": "正在等待資料夾存取權限...",
+  "deleteButtonLabel": "刪除",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "刪除所選物件",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "編輯",
+  "menuDelete": "刪除"
 }

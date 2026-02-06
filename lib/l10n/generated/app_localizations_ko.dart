@@ -96,6 +96,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get menuCloseAll => '모두 닫기';
 
   @override
+  String get menuEdit => '편집';
+
+  @override
+  String get menuDelete => '삭제';
+
+  @override
   String get menuQuit => 'PDFSign 종료';
 
   @override
@@ -231,4 +237,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get waitingForFolderPermission => '폴더 접근 권한을 기다리는 중...';
+
+  @override
+  String get deleteButtonLabel => '삭제';
+
+  @override
+  String get deleteButtonTooltip => '선택한 개체 삭제';
 }

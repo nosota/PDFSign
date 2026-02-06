@@ -69,5 +69,15 @@
   "saveFailed": "Mentés sikertelen",
   "savedTo": "Mentve ide: {path}",
   "noOriginalPdfStored": "Nincs eredeti PDF tárolva",
-  "waitingForFolderPermission": "Várakozás a mappa hozzáférési engedélyére..."
+  "waitingForFolderPermission": "Várakozás a mappa hozzáférési engedélyére...",
+  "deleteButtonLabel": "Törlés",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Kijelölt objektum törlése",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Szerkesztés",
+  "menuDelete": "Törlés"
 }

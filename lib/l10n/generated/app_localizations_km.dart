@@ -96,6 +96,12 @@ class AppLocalizationsKm extends AppLocalizations {
   String get menuCloseAll => 'បិទទាំងអស់';
 
   @override
+  String get menuEdit => 'កែសម្រួល';
+
+  @override
+  String get menuDelete => 'លុប';
+
+  @override
   String get menuQuit => 'ចាកចេញពី PDFSign';
 
   @override
@@ -232,4 +238,10 @@ class AppLocalizationsKm extends AppLocalizations {
 
   @override
   String get waitingForFolderPermission => 'កំពុងរង់ចាំការអនុញ្ញាតចូលប្រើថត...';
+
+  @override
+  String get deleteButtonLabel => 'លុប';
+
+  @override
+  String get deleteButtonTooltip => 'លុបវត្ថុដែលបានជ្រើសរើស';
 }

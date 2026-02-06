@@ -69,5 +69,15 @@
   "saveFailed": "ذخیره ناموفق",
   "savedTo": "ذخیره شده در: {path}",
   "noOriginalPdfStored": "PDF اصلی ذخیره نشده است",
-  "waitingForFolderPermission": "در انتظار اجازه دسترسی به پوشه..."
+  "waitingForFolderPermission": "در انتظار اجازه دسترسی به پوشه...",
+  "deleteButtonLabel": "حذف",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "حذف شیء انتخاب شده",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "ویرایش",
+  "menuDelete": "حذف"
 }

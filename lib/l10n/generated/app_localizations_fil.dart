@@ -96,6 +96,12 @@ class AppLocalizationsFil extends AppLocalizations {
   String get menuCloseAll => 'Isara lahat';
 
   @override
+  String get menuEdit => 'I-edit';
+
+  @override
+  String get menuDelete => 'Tanggalin';
+
+  @override
   String get menuQuit => 'Lumabas sa PDFSign';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Naghihintay ng pahintulot sa pag-access sa folder...';
+
+  @override
+  String get deleteButtonLabel => 'Tanggalin';
+
+  @override
+  String get deleteButtonTooltip => 'Tanggalin ang napiling bagay';
 }

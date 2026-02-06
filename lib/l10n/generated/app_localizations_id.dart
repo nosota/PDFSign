@@ -96,6 +96,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get menuCloseAll => 'Tutup semua';
 
   @override
+  String get menuEdit => 'Edit';
+
+  @override
+  String get menuDelete => 'Hapus';
+
+  @override
   String get menuQuit => 'Keluar dari PDFSign';
 
   @override
@@ -232,4 +238,10 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get waitingForFolderPermission => 'Menunggu izin akses folder...';
+
+  @override
+  String get deleteButtonLabel => 'Hapus';
+
+  @override
+  String get deleteButtonTooltip => 'Hapus objek yang dipilih';
 }

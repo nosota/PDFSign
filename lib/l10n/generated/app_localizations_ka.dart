@@ -96,6 +96,12 @@ class AppLocalizationsKa extends AppLocalizations {
   String get menuCloseAll => 'ყველას დახურვა';
 
   @override
+  String get menuEdit => 'რედაქტირება';
+
+  @override
+  String get menuDelete => 'წაშლა';
+
+  @override
   String get menuQuit => 'გასვლა PDFSign-დან';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsKa extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'საქაღალდეზე წვდომის ნებართვის მოლოდინი...';
+
+  @override
+  String get deleteButtonLabel => 'წაშლა';
+
+  @override
+  String get deleteButtonTooltip => 'არჩეული ობიექტის წაშლა';
 }

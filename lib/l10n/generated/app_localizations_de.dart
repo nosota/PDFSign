@@ -114,6 +114,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get menuCloseAll => 'Alle schließen';
 
   @override
+  String get menuEdit => 'Bearbeiten';
+
+  @override
+  String get menuDelete => 'Löschen';
+
+  @override
   String get menuQuit => 'PDFSign beenden';
 
   @override
@@ -251,4 +257,10 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Warten auf Ordnerzugriffsberechtigung...';
+
+  @override
+  String get deleteButtonLabel => 'Löschen';
+
+  @override
+  String get deleteButtonTooltip => 'Ausgewähltes Objekt löschen';
 }

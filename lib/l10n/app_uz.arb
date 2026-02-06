@@ -69,5 +69,15 @@
   "saveFailed": "Saqlash muvaffaqiyatsiz",
   "savedTo": "Saqlandi: {path}",
   "noOriginalPdfStored": "Asl PDF saqlanmagan",
-  "waitingForFolderPermission": "Jildga kirish ruxsati kutilmoqda..."
+  "waitingForFolderPermission": "Jildga kirish ruxsati kutilmoqda...",
+  "deleteButtonLabel": "O'chirish",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Tanlangan obyektni o'chirish",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Tahrirlash",
+  "menuDelete": "O'chirish"
 }

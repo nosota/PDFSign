@@ -69,5 +69,15 @@
   "saveFailed": "Échec de l'enregistrement",
   "savedTo": "Enregistré dans : {path}",
   "noOriginalPdfStored": "Aucun PDF original stocké",
-  "waitingForFolderPermission": "En attente de l'autorisation d'accès au dossier..."
+  "waitingForFolderPermission": "En attente de l'autorisation d'accès au dossier...",
+  "deleteButtonLabel": "Supprimer",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Supprimer l'objet sélectionné",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Édition",
+  "menuDelete": "Supprimer"
 }

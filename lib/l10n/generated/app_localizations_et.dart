@@ -96,6 +96,12 @@ class AppLocalizationsEt extends AppLocalizations {
   String get menuCloseAll => 'Sulge kõik';
 
   @override
+  String get menuEdit => 'Redigeeri';
+
+  @override
+  String get menuDelete => 'Kustuta';
+
+  @override
   String get menuQuit => 'Välju PDFSign';
 
   @override
@@ -232,4 +238,10 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get waitingForFolderPermission => 'Kausta juurdepääsu loa ootamine...';
+
+  @override
+  String get deleteButtonLabel => 'Kustuta';
+
+  @override
+  String get deleteButtonTooltip => 'Kustuta valitud objekt';
 }

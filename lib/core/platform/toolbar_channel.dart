@@ -9,6 +9,7 @@ class ToolbarChannel {
 
   static const _channel = MethodChannel('com.pdfsign/toolbar');
   static VoidCallback? _onSharePressed;
+  static VoidCallback? _onDeletePressed;
   static bool _initialized = false;
 
   /// Initializes the toolbar channel.
@@ -25,6 +26,35 @@ class ToolbarChannel {
   /// Pass null to unregister the callback.
   static void setOnSharePressed(VoidCallback? callback) {
     _onSharePressed = callback;
+  }
+
+  /// Sets the callback for when Delete button is pressed in toolbar.
+  ///
+  /// Pass null to unregister the callback.
+  static void setOnDeletePressed(VoidCallback? callback) {
+    _onDeletePressed = callback;
+  }
+
+  /// Sets the visibility of the Delete button in the toolbar.
+  ///
+  /// The Delete button should be visible only when an object is selected.
+  /// Pass [label] and [tooltip] to set localized texts.
+  static Future<void> setDeleteButtonVisible(
+    bool visible, {
+    String? label,
+    String? tooltip,
+  }) async {
+    try {
+      await _channel.invokeMethod('setDeleteButtonVisible', {
+        'visible': visible,
+        'label': label,
+        'tooltip': tooltip,
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print('ToolbarChannel: Failed to set delete button visibility: $e');
+      }
+    }
   }
 
   /// Requests native toolbar setup for this window.
@@ -51,6 +81,8 @@ class ToolbarChannel {
     switch (call.method) {
       case 'onSharePressed':
         _onSharePressed?.call();
+      case 'onDeletePressed':
+        _onDeletePressed?.call();
       default:
         if (kDebugMode) {
           print('ToolbarChannel: Unknown method ${call.method}');

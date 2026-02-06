@@ -96,6 +96,12 @@ class AppLocalizationsBn extends AppLocalizations {
   String get menuCloseAll => 'সব বন্ধ করুন';
 
   @override
+  String get menuEdit => 'সম্পাদনা';
+
+  @override
+  String get menuDelete => 'মুছুন';
+
+  @override
   String get menuQuit => 'PDFSign থেকে প্রস্থান';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsBn extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'ফোল্ডার অ্যাক্সেস অনুমতির জন্য অপেক্ষা করা হচ্ছে...';
+
+  @override
+  String get deleteButtonLabel => 'মুছুন';
+
+  @override
+  String get deleteButtonTooltip => 'নির্বাচিত বস্তু মুছুন';
 }

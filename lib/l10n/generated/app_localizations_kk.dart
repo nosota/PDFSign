@@ -96,6 +96,12 @@ class AppLocalizationsKk extends AppLocalizations {
   String get menuCloseAll => 'Барлығын жабу';
 
   @override
+  String get menuEdit => 'Өңдеу';
+
+  @override
+  String get menuDelete => 'Жою';
+
+  @override
   String get menuQuit => 'PDFSign-нан шығу';
 
   @override
@@ -232,4 +238,10 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get waitingForFolderPermission => 'Қалтаға кіру рұқсатын күтуде...';
+
+  @override
+  String get deleteButtonLabel => 'Жою';
+
+  @override
+  String get deleteButtonTooltip => 'Таңдалған нысанды жою';
 }

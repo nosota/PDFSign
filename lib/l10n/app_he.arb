@@ -69,5 +69,15 @@
   "saveFailed": "השמירה נכשלה",
   "savedTo": "נשמר ב: {path}",
   "noOriginalPdfStored": "לא נשמר PDF מקורי",
-  "waitingForFolderPermission": "ממתין להרשאת גישה לתיקייה..."
+  "waitingForFolderPermission": "ממתין להרשאת גישה לתיקייה...",
+  "deleteButtonLabel": "מחק",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "מחק אובייקט נבחר",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "עריכה",
+  "menuDelete": "מחק"
 }

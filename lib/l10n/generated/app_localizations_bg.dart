@@ -96,6 +96,12 @@ class AppLocalizationsBg extends AppLocalizations {
   String get menuCloseAll => 'Затвори всички';
 
   @override
+  String get menuEdit => 'Редактиране';
+
+  @override
+  String get menuDelete => 'Изтриване';
+
+  @override
   String get menuQuit => 'Изход от PDFSign';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Изчакване на разрешение за достъп до папката...';
+
+  @override
+  String get deleteButtonLabel => 'Изтрий';
+
+  @override
+  String get deleteButtonTooltip => 'Изтриване на избрания обект';
 }

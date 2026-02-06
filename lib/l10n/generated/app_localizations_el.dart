@@ -96,6 +96,12 @@ class AppLocalizationsEl extends AppLocalizations {
   String get menuCloseAll => 'Κλείσιμο όλων';
 
   @override
+  String get menuEdit => 'Επεξεργασία';
+
+  @override
+  String get menuDelete => 'Διαγραφή';
+
+  @override
   String get menuQuit => 'Τερματισμός PDFSign';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Αναμονή για άδεια πρόσβασης φακέλου...';
+
+  @override
+  String get deleteButtonLabel => 'Διαγραφή';
+
+  @override
+  String get deleteButtonTooltip => 'Διαγραφή επιλεγμένου αντικειμένου';
 }

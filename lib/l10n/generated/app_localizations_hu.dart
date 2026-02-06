@@ -96,6 +96,12 @@ class AppLocalizationsHu extends AppLocalizations {
   String get menuCloseAll => 'Összes bezárása';
 
   @override
+  String get menuEdit => 'Szerkesztés';
+
+  @override
+  String get menuDelete => 'Törlés';
+
+  @override
   String get menuQuit => 'PDFSign bezárása';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Várakozás a mappa hozzáférési engedélyére...';
+
+  @override
+  String get deleteButtonLabel => 'Törlés';
+
+  @override
+  String get deleteButtonTooltip => 'Kijelölt objektum törlése';
 }

@@ -69,5 +69,15 @@
   "saveFailed": "Išsaugoti nepavyko",
   "savedTo": "Išsaugota: {path}",
   "noOriginalPdfStored": "Originalus PDF neišsaugotas",
-  "waitingForFolderPermission": "Laukiama aplanko prieigos leidimo..."
+  "waitingForFolderPermission": "Laukiama aplanko prieigos leidimo...",
+  "deleteButtonLabel": "Ištrinti",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Ištrinti pasirinktą objektą",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Redaguoti",
+  "menuDelete": "Ištrinti"
 }

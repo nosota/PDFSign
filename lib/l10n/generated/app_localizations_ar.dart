@@ -96,6 +96,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get menuCloseAll => 'إغلاق الكل';
 
   @override
+  String get menuEdit => 'تحرير';
+
+  @override
+  String get menuDelete => 'حذف';
+
+  @override
   String get menuQuit => 'إنهاء PDFSign';
 
   @override
@@ -232,4 +238,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get waitingForFolderPermission => 'في انتظار إذن الوصول إلى المجلد...';
+
+  @override
+  String get deleteButtonLabel => 'حذف';
+
+  @override
+  String get deleteButtonTooltip => 'حذف العنصر المحدد';
 }

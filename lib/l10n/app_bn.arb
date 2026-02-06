@@ -69,5 +69,15 @@
   "saveFailed": "সংরক্ষণ ব্যর্থ",
   "savedTo": "সংরক্ষিত: {path}",
   "noOriginalPdfStored": "কোনো মূল PDF সংরক্ষিত নেই",
-  "waitingForFolderPermission": "ফোল্ডার অ্যাক্সেস অনুমতির জন্য অপেক্ষা করা হচ্ছে..."
+  "waitingForFolderPermission": "ফোল্ডার অ্যাক্সেস অনুমতির জন্য অপেক্ষা করা হচ্ছে...",
+  "deleteButtonLabel": "মুছুন",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "নির্বাচিত বস্তু মুছুন",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "সম্পাদনা",
+  "menuDelete": "মুছুন"
 }

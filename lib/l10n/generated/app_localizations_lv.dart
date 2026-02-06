@@ -96,6 +96,12 @@ class AppLocalizationsLv extends AppLocalizations {
   String get menuCloseAll => 'Aizvērt visu';
 
   @override
+  String get menuEdit => 'Rediģēt';
+
+  @override
+  String get menuDelete => 'Dzēst';
+
+  @override
   String get menuQuit => 'Iziet no PDFSign';
 
   @override
@@ -232,4 +238,10 @@ class AppLocalizationsLv extends AppLocalizations {
 
   @override
   String get waitingForFolderPermission => 'Gaida mapes piekļuves atļauju...';
+
+  @override
+  String get deleteButtonLabel => 'Dzēst';
+
+  @override
+  String get deleteButtonTooltip => 'Dzēst atlasīto objektu';
 }

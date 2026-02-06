@@ -69,5 +69,15 @@
   "saveFailed": "Ошибка сохранения",
   "savedTo": "Сохранено: {path}",
   "noOriginalPdfStored": "Исходный PDF не найден",
-  "waitingForFolderPermission": "Ожидание разрешения на доступ к папке..."
+  "waitingForFolderPermission": "Ожидание разрешения на доступ к папке...",
+  "deleteButtonLabel": "Удалить",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Удалить выбранный объект",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Редактирование",
+  "menuDelete": "Удалить"
 }

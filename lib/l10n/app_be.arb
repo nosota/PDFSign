@@ -69,5 +69,15 @@
   "saveFailed": "Памылка захавання",
   "savedTo": "Захавана: {path}",
   "noOriginalPdfStored": "Арыгінальны PDF не знойдзены",
-  "waitingForFolderPermission": "Чаканне дазволу на доступ да папкі..."
+  "waitingForFolderPermission": "Чаканне дазволу на доступ да папкі...",
+  "deleteButtonLabel": "Выдаліць",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Выдаліць выбраны аб'ект",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Рэдагаванне",
+  "menuDelete": "Выдаліць"
 }

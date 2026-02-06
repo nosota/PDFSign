@@ -69,5 +69,15 @@
   "saveFailed": "Zapisywanie nie powiodło się",
   "savedTo": "Zapisano w: {path}",
   "noOriginalPdfStored": "Brak oryginalnego PDF",
-  "waitingForFolderPermission": "Oczekiwanie na uprawnienia dostępu do folderu..."
+  "waitingForFolderPermission": "Oczekiwanie na uprawnienia dostępu do folderu...",
+  "deleteButtonLabel": "Usuń",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Usuń zaznaczony obiekt",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Edycja",
+  "menuDelete": "Usuń"
 }

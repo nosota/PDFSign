@@ -377,6 +377,18 @@ abstract class AppLocalizations {
   /// **'Close All'**
   String get menuCloseAll;
 
+  /// Edit menu label
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get menuEdit;
+
+  /// Delete menu item in Edit menu
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get menuDelete;
+
   /// Quit application menu item
   ///
   /// In en, this message translates to:
@@ -634,6 +646,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Waiting for folder access permission...'**
   String get waitingForFolderPermission;
+
+  /// Label for delete button in toolbar
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteButtonLabel;
+
+  /// Tooltip for delete button in toolbar
+  ///
+  /// In en, this message translates to:
+  /// **'Delete selected object'**
+  String get deleteButtonTooltip;
 }
 
 class _AppLocalizationsDelegate

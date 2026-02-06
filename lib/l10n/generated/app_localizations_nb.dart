@@ -114,6 +114,12 @@ class AppLocalizationsNb extends AppLocalizations {
   String get menuCloseAll => 'Lukk alle';
 
   @override
+  String get menuEdit => 'Rediger';
+
+  @override
+  String get menuDelete => 'Slett';
+
+  @override
   String get menuQuit => 'Avslutt PDFSign';
 
   @override
@@ -251,4 +257,10 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Venter på tillatelse til mappeadgang...';
+
+  @override
+  String get deleteButtonLabel => 'Slett';
+
+  @override
+  String get deleteButtonTooltip => 'Slett valgt objekt';
 }

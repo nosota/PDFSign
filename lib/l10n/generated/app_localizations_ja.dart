@@ -96,6 +96,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get menuCloseAll => 'すべて閉じる';
 
   @override
+  String get menuEdit => '編集';
+
+  @override
+  String get menuDelete => '削除';
+
+  @override
   String get menuQuit => 'PDFSignを終了';
 
   @override
@@ -231,4 +237,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get waitingForFolderPermission => 'フォルダアクセス許可を待っています...';
+
+  @override
+  String get deleteButtonLabel => '削除';
+
+  @override
+  String get deleteButtonTooltip => '選択したオブジェクトを削除';
 }

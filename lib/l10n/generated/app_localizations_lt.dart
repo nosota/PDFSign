@@ -96,6 +96,12 @@ class AppLocalizationsLt extends AppLocalizations {
   String get menuCloseAll => 'Uždaryti visus';
 
   @override
+  String get menuEdit => 'Redaguoti';
+
+  @override
+  String get menuDelete => 'Ištrinti';
+
+  @override
   String get menuQuit => 'Išeiti iš PDFSign';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsLt extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Laukiama aplanko prieigos leidimo...';
+
+  @override
+  String get deleteButtonLabel => 'Ištrinti';
+
+  @override
+  String get deleteButtonTooltip => 'Ištrinti pasirinktą objektą';
 }

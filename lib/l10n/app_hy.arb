@@ -69,5 +69,15 @@
   "saveFailed": "Pakhpanman skhalkutyun",
   "savedTo": "Pakhpanvatso e: {path}",
   "noOriginalPdfStored": "Bnatipi PDF-y pakhpanvatso che",
-  "waitingForFolderPermission": "Waiting for folder access permission..."
+  "waitingForFolderPermission": "Waiting for folder access permission...",
+  "deleteButtonLabel": "Delete",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Delete selected object",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Edit",
+  "menuDelete": "Delete"
 }

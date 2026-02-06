@@ -123,6 +123,14 @@
   "@menuCloseAll": {
     "description": "Close All menu item - closes all open PDF windows"
   },
+  "menuEdit": "Edit",
+  "@menuEdit": {
+    "description": "Edit menu label"
+  },
+  "menuDelete": "Delete",
+  "@menuDelete": {
+    "description": "Delete menu item in Edit menu"
+  },
   "menuQuit": "Quit PDFSign",
   "@menuQuit": {
     "description": "Quit application menu item"
@@ -314,5 +322,13 @@
   "waitingForFolderPermission": "Waiting for folder access permission...",
   "@waitingForFolderPermission": {
     "description": "Message shown while waiting for user to grant folder access permission on macOS"
+  },
+  "deleteButtonLabel": "Delete",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Delete selected object",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
   }
 }

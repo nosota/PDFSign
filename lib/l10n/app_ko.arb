@@ -69,5 +69,15 @@
   "saveFailed": "저장 실패",
   "savedTo": "저장 위치: {path}",
   "noOriginalPdfStored": "원본 PDF가 저장되지 않음",
-  "waitingForFolderPermission": "폴더 접근 권한을 기다리는 중..."
+  "waitingForFolderPermission": "폴더 접근 권한을 기다리는 중...",
+  "deleteButtonLabel": "삭제",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "선택한 개체 삭제",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "편집",
+  "menuDelete": "삭제"
 }

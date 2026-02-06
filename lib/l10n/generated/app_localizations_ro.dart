@@ -96,6 +96,12 @@ class AppLocalizationsRo extends AppLocalizations {
   String get menuCloseAll => 'Închide tot';
 
   @override
+  String get menuEdit => 'Editare';
+
+  @override
+  String get menuDelete => 'Șterge';
+
+  @override
   String get menuQuit => 'Ieșire din PDFSign';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Se așteaptă permisiunea de acces la folder...';
+
+  @override
+  String get deleteButtonLabel => 'Șterge';
+
+  @override
+  String get deleteButtonTooltip => 'Șterge obiectul selectat';
 }

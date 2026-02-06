@@ -96,6 +96,12 @@ class AppLocalizationsIs extends AppLocalizations {
   String get menuCloseAll => 'Loka öllu';
 
   @override
+  String get menuEdit => 'Breyta';
+
+  @override
+  String get menuDelete => 'Eyða';
+
+  @override
   String get menuQuit => 'Hætta í PDFSign';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsIs extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Bíð eftir aðgangsheimild fyrir möppu...';
+
+  @override
+  String get deleteButtonLabel => 'Eyða';
+
+  @override
+  String get deleteButtonTooltip => 'Eyða völdum hlut';
 }

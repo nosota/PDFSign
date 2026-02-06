@@ -41,6 +41,9 @@ class AppMenuBar extends ConsumerStatefulWidget {
     this.onCloseAll,
     this.isCloseAllEnabled = false,
     this.onQuit,
+    this.includeEditMenu = false,
+    this.isDeleteEnabled = false,
+    this.onDelete,
     super.key,
   });
 
@@ -106,6 +109,17 @@ class AppMenuBar extends ConsumerStatefulWidget {
   /// Callback when Quit is selected (Cmd+Q).
   /// Should check for unsaved changes and show CloseAllDialog if needed.
   final VoidCallback? onQuit;
+
+  /// Whether to include the Edit menu.
+  /// Should only be true for PDF viewer windows.
+  final bool includeEditMenu;
+
+  /// Whether Delete menu item is enabled.
+  /// Should be true when an object is selected.
+  final bool isDeleteEnabled;
+
+  /// Callback when Delete is selected.
+  final VoidCallback? onDelete;
 
   @override
   ConsumerState<AppMenuBar> createState() => _AppMenuBarState();
@@ -182,6 +196,12 @@ class _AppMenuBarState extends ConsumerState<AppMenuBar> {
           label: widget.localizations.menuFile,
           menus: _buildFileMenuItems(context, recentFilesAsync),
         ),
+        // Edit menu (only for PDF viewer windows)
+        if (widget.includeEditMenu)
+          PlatformMenu(
+            label: widget.localizations.menuEdit,
+            menus: _buildEditMenuItems(),
+          ),
         // Window menu
         PlatformMenu(
           label: widget.localizations.menuWindow,
@@ -309,6 +329,26 @@ class _AppMenuBarState extends ConsumerState<AppMenuBar> {
     );
 
     return items;
+  }
+
+  /// Builds the Edit menu items.
+  ///
+  /// Contains Delete item that's enabled only when an object is selected.
+  List<PlatformMenuItem> _buildEditMenuItems() {
+    return [
+      PlatformMenuItemGroup(
+        members: [
+          PlatformMenuItem(
+            label: widget.localizations.menuDelete,
+            shortcut: const SingleActivator(
+              LogicalKeyboardKey.backspace,
+              meta: true,
+            ),
+            onSelected: widget.isDeleteEnabled ? widget.onDelete : null,
+          ),
+        ],
+      ),
+    ];
   }
 
   PlatformMenu _buildOpenRecentMenu(

@@ -96,6 +96,12 @@ class AppLocalizationsSq extends AppLocalizations {
   String get menuCloseAll => 'Mbyll të gjitha';
 
   @override
+  String get menuEdit => 'Ndrysho';
+
+  @override
+  String get menuDelete => 'Fshi';
+
+  @override
   String get menuQuit => 'Dil nga PDFSign';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsSq extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Duke pritur lejen e qasjes në dosje...';
+
+  @override
+  String get deleteButtonLabel => 'Fshi';
+
+  @override
+  String get deleteButtonTooltip => 'Fshi objektin e zgjedhur';
 }

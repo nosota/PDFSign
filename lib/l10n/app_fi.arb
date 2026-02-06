@@ -69,5 +69,15 @@
   "saveFailed": "Tallennus epäonnistui",
   "savedTo": "Tallennettu: {path}",
   "noOriginalPdfStored": "Alkuperäistä PDF:ää ei tallennettu",
-  "waitingForFolderPermission": "Odotetaan kansion käyttöoikeutta..."
+  "waitingForFolderPermission": "Odotetaan kansion käyttöoikeutta...",
+  "deleteButtonLabel": "Poista",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Poista valittu kohde",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Muokkaa",
+  "menuDelete": "Poista"
 }

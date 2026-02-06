@@ -69,5 +69,15 @@
   "saveFailed": "Gagal menyimpan",
   "savedTo": "Disimpan ke: {path}",
   "noOriginalPdfStored": "Tiada PDF asal disimpan",
-  "waitingForFolderPermission": "Menunggu kebenaran akses folder..."
+  "waitingForFolderPermission": "Menunggu kebenaran akses folder...",
+  "deleteButtonLabel": "Padam",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Padam objek yang dipilih",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Edit",
+  "menuDelete": "Padam"
 }

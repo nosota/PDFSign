@@ -96,6 +96,12 @@ class AppLocalizationsHr extends AppLocalizations {
   String get menuCloseAll => 'Zatvori sve';
 
   @override
+  String get menuEdit => 'Uređivanje';
+
+  @override
+  String get menuDelete => 'Obriši';
+
+  @override
   String get menuQuit => 'Zatvori PDFSign';
 
   @override
@@ -232,4 +238,10 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get waitingForFolderPermission => 'Čekanje dozvole za pristup mapi...';
+
+  @override
+  String get deleteButtonLabel => 'Obriši';
+
+  @override
+  String get deleteButtonTooltip => 'Obriši odabrani objekt';
 }

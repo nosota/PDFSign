@@ -96,6 +96,12 @@ class AppLocalizationsTh extends AppLocalizations {
   String get menuCloseAll => 'ปิดทั้งหมด';
 
   @override
+  String get menuEdit => 'แก้ไข';
+
+  @override
+  String get menuDelete => 'ลบ';
+
+  @override
   String get menuQuit => 'ออกจาก PDFSign';
 
   @override
@@ -232,4 +238,10 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get waitingForFolderPermission => 'กำลังรอสิทธิ์การเข้าถึงโฟลเดอร์...';
+
+  @override
+  String get deleteButtonLabel => 'ลบ';
+
+  @override
+  String get deleteButtonTooltip => 'ลบวัตถุที่เลือก';
 }

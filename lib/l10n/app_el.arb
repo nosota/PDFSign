@@ -69,5 +69,15 @@
   "saveFailed": "Αποτυχία αποθήκευσης",
   "savedTo": "Αποθηκεύτηκε σε: {path}",
   "noOriginalPdfStored": "Δεν αποθηκεύτηκε αρχικό PDF",
-  "waitingForFolderPermission": "Αναμονή για άδεια πρόσβασης φακέλου..."
+  "waitingForFolderPermission": "Αναμονή για άδεια πρόσβασης φακέλου...",
+  "deleteButtonLabel": "Διαγραφή",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Διαγραφή επιλεγμένου αντικειμένου",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Επεξεργασία",
+  "menuDelete": "Διαγραφή"
 }

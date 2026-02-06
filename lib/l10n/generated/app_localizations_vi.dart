@@ -96,6 +96,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get menuCloseAll => 'Đóng tất cả';
 
   @override
+  String get menuEdit => 'Chỉnh sửa';
+
+  @override
+  String get menuDelete => 'Xóa';
+
+  @override
   String get menuQuit => 'Thoát PDFSign';
 
   @override
@@ -232,4 +238,10 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get waitingForFolderPermission => 'Đang chờ quyền truy cập thư mục...';
+
+  @override
+  String get deleteButtonLabel => 'Xóa';
+
+  @override
+  String get deleteButtonTooltip => 'Xóa đối tượng đã chọn';
 }

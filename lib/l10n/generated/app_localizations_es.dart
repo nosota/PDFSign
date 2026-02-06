@@ -114,6 +114,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get menuCloseAll => 'Cerrar todo';
 
   @override
+  String get menuEdit => 'Editar';
+
+  @override
+  String get menuDelete => 'Eliminar';
+
+  @override
   String get menuQuit => 'Salir de PDFSign';
 
   @override
@@ -251,6 +257,12 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Esperando permiso de acceso a la carpeta...';
+
+  @override
+  String get deleteButtonLabel => 'Eliminar';
+
+  @override
+  String get deleteButtonTooltip => 'Eliminar objeto seleccionado';
 }
 
 /// The translations for Spanish Castilian, as used in Argentina (`es_AR`).
@@ -361,6 +373,12 @@ class AppLocalizationsEsAr extends AppLocalizationsEs {
 
   @override
   String get menuCloseAll => 'Cerrar todo';
+
+  @override
+  String get menuEdit => 'Editar';
+
+  @override
+  String get menuDelete => 'Eliminar';
 
   @override
   String get menuQuit => 'Salir de PDFSign';
@@ -500,6 +518,12 @@ class AppLocalizationsEsAr extends AppLocalizationsEs {
   @override
   String get waitingForFolderPermission =>
       'Esperando permiso de acceso a la carpeta...';
+
+  @override
+  String get deleteButtonLabel => 'Eliminar';
+
+  @override
+  String get deleteButtonTooltip => 'Eliminar objeto seleccionado';
 }
 
 /// The translations for Spanish Castilian, as used in Spain (`es_ES`).
@@ -610,6 +634,12 @@ class AppLocalizationsEsEs extends AppLocalizationsEs {
 
   @override
   String get menuCloseAll => 'Cerrar todo';
+
+  @override
+  String get menuEdit => 'Editar';
+
+  @override
+  String get menuDelete => 'Eliminar';
 
   @override
   String get menuQuit => 'Salir de PDFSign';
@@ -749,6 +779,12 @@ class AppLocalizationsEsEs extends AppLocalizationsEs {
   @override
   String get waitingForFolderPermission =>
       'Esperando permiso de acceso a la carpeta...';
+
+  @override
+  String get deleteButtonLabel => 'Eliminar';
+
+  @override
+  String get deleteButtonTooltip => 'Eliminar objeto seleccionado';
 }
 
 /// The translations for Spanish Castilian, as used in Mexico (`es_MX`).
@@ -859,6 +895,12 @@ class AppLocalizationsEsMx extends AppLocalizationsEs {
 
   @override
   String get menuCloseAll => 'Cerrar todo';
+
+  @override
+  String get menuEdit => 'Editar';
+
+  @override
+  String get menuDelete => 'Eliminar';
 
   @override
   String get menuQuit => 'Salir de PDFSign';
@@ -998,4 +1040,10 @@ class AppLocalizationsEsMx extends AppLocalizationsEs {
   @override
   String get waitingForFolderPermission =>
       'Esperando permiso de acceso a la carpeta...';
+
+  @override
+  String get deleteButtonLabel => 'Eliminar';
+
+  @override
+  String get deleteButtonTooltip => 'Eliminar objeto seleccionado';
 }

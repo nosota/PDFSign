@@ -69,5 +69,15 @@
   "saveFailed": "Uloženie zlyhalo",
   "savedTo": "Uložené do: {path}",
   "noOriginalPdfStored": "Žiadne pôvodné PDF nie je uložené",
-  "waitingForFolderPermission": "Čakanie na povolenie prístupu k priečinku..."
+  "waitingForFolderPermission": "Čakanie na povolenie prístupu k priečinku...",
+  "deleteButtonLabel": "Odstrániť",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Odstrániť vybraný objekt",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Upraviť",
+  "menuDelete": "Odstrániť"
 }

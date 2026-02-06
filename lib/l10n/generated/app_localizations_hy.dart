@@ -96,6 +96,12 @@ class AppLocalizationsHy extends AppLocalizations {
   String get menuCloseAll => 'Pakers bolory';
 
   @override
+  String get menuEdit => 'Edit';
+
+  @override
+  String get menuDelete => 'Delete';
+
+  @override
   String get menuQuit => 'Yelk PDFSign-its';
 
   @override
@@ -233,4 +239,10 @@ class AppLocalizationsHy extends AppLocalizations {
   @override
   String get waitingForFolderPermission =>
       'Waiting for folder access permission...';
+
+  @override
+  String get deleteButtonLabel => 'Delete';
+
+  @override
+  String get deleteButtonTooltip => 'Delete selected object';
 }

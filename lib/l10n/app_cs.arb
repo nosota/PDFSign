@@ -69,5 +69,15 @@
   "saveFailed": "Uložení selhalo",
   "savedTo": "Uloženo do: {path}",
   "noOriginalPdfStored": "Žádné původní PDF není uloženo",
-  "waitingForFolderPermission": "Čekání na povolení přístupu ke složce..."
+  "waitingForFolderPermission": "Čekání na povolení přístupu ke složce...",
+  "deleteButtonLabel": "Smazat",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Smazat vybraný objekt",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Úpravy",
+  "menuDelete": "Smazat"
 }

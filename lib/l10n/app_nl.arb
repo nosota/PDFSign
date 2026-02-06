@@ -69,5 +69,15 @@
   "saveFailed": "Opslaan mislukt",
   "savedTo": "Opgeslagen naar: {path}",
   "noOriginalPdfStored": "Geen originele PDF opgeslagen",
-  "waitingForFolderPermission": "Wachten op toestemming voor maptoegang..."
+  "waitingForFolderPermission": "Wachten op toestemming voor maptoegang...",
+  "deleteButtonLabel": "Verwijderen",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Geselecteerd object verwijderen",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Bewerken",
+  "menuDelete": "Verwijderen"
 }

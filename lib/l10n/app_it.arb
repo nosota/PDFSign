@@ -69,5 +69,15 @@
   "saveFailed": "Salvataggio fallito",
   "savedTo": "Salvato in: {path}",
   "noOriginalPdfStored": "Nessun PDF originale memorizzato",
-  "waitingForFolderPermission": "In attesa dell'autorizzazione di accesso alla cartella..."
+  "waitingForFolderPermission": "In attesa dell'autorizzazione di accesso alla cartella...",
+  "deleteButtonLabel": "Elimina",
+  "@deleteButtonLabel": {
+    "description": "Label for delete button in toolbar"
+  },
+  "deleteButtonTooltip": "Elimina oggetto selezionato",
+  "@deleteButtonTooltip": {
+    "description": "Tooltip for delete button in toolbar"
+  },
+  "menuEdit": "Modifica",
+  "menuDelete": "Elimina"
 }
