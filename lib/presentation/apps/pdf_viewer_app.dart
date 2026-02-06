@@ -56,6 +56,12 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   /// Navigator key for showing dialogs.
   final _navigatorKey = GlobalKey<NavigatorState>();
 
+  /// Current file path (can change after Save As).
+  late String _currentFilePath;
+
+  /// Current file name (can change after Save As).
+  late String _currentFileName;
+
   /// Whether the document has been modified at least once.
   /// Used to determine if status suffix should be shown in title.
   bool _hasBeenModified = false;
@@ -81,6 +87,11 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   @override
   void initState() {
     super.initState();
+
+    // Initialize current file path/name from widget (can change after Save As)
+    _currentFilePath = widget.filePath;
+    _currentFileName = widget.fileName;
+
     // Initialize toolbar channel for native toolbar
     ToolbarChannel.init();
     ToolbarChannel.setOnSharePressed(_handleShare);
@@ -105,7 +116,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     // Set initial window title (just filename, no suffix)
     // Note: windowManager.setTitle works for sub-windows too
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      windowManager.setTitle(widget.fileName);
+      windowManager.setTitle(_currentFileName);
     });
   }
 
@@ -149,7 +160,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   /// Stores the original PDF bytes for use in Save operations.
   Future<void> _initOriginalPdfStorage() async {
     final storage = ref.read(originalPdfStorageProvider);
-    await storage.store(widget.filePath);
+    await storage.store(_currentFilePath);
   }
 
   @override
@@ -194,7 +205,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
 
     // No suffix until first modification
     if (!_hasBeenModified) {
-      windowManager.setTitle(widget.fileName);
+      windowManager.setTitle(_currentFileName);
       return;
     }
 
@@ -205,7 +216,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     if (l10n == null) return;
 
     final suffix = isDirty ? l10n.documentEdited : l10n.documentSaved;
-    windowManager.setTitle('${widget.fileName} - $suffix');
+    windowManager.setTitle('$_currentFileName - $suffix');
   }
 
   /// Handles window close request (system close button or Cmd+W).
@@ -238,7 +249,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
 
     final result = await SaveChangesDialog.show(
       navigatorContext,
-      widget.fileName,
+      _currentFileName,
     );
 
     if (kDebugMode) {
@@ -258,7 +269,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   /// If this is the last visible window, terminates the application.
   Future<void> _destroyWindow() async {
     // Unregister this file from open files tracker
-    await OpenPdfFilesChannel.unregisterPdfFile(widget.filePath);
+    await OpenPdfFilesChannel.unregisterPdfFile(_currentFilePath);
 
     // Get all windows from native to check if there are other visible windows.
     // We can't rely on local _openWindows because each sub-window runs in
@@ -583,13 +594,13 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   }
 
   Future<void> _handleShare() async {
-    if (widget.filePath.isEmpty) return;
+    if (_currentFilePath.isEmpty) return;
 
     final placedImages = ref.read(placedImagesProvider);
 
     if (placedImages.isEmpty) {
       // No changes, share original file
-      final file = XFile(widget.filePath);
+      final file = XFile(_currentFilePath);
       await Share.shareXFiles([file]);
       return;
     }
@@ -598,7 +609,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     final storage = ref.read(originalPdfStorageProvider);
     if (!storage.hasData) {
       // Fallback: share original file
-      final file = XFile(widget.filePath);
+      final file = XFile(_currentFilePath);
       await Share.shareXFiles([file]);
       return;
     }
@@ -615,7 +626,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     await result.fold(
       (failure) async {
         // Show error and share original
-        final file = XFile(widget.filePath);
+        final file = XFile(_currentFilePath);
         await Share.shareXFiles([file]);
       },
       (tempPath) async {
@@ -635,6 +646,18 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     );
   }
 
+  /// Shows a snackbar with the given content.
+  ///
+  /// Uses navigator context which is inside MaterialApp (has ScaffoldMessenger).
+  void _showSnackBar(Widget content) {
+    if (!mounted) return;
+    final navigatorContext = _navigatorKey.currentContext;
+    if (navigatorContext == null) return;
+    ScaffoldMessenger.of(navigatorContext).showSnackBar(
+      SnackBar(content: content),
+    );
+  }
+
   Future<void> _handleSave() async {
     final placedImages = ref.read(placedImagesProvider);
     final isDirty = ref.read(documentDirtyProvider);
@@ -645,11 +668,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     // Get original bytes from storage
     final storage = ref.read(originalPdfStorageProvider);
     if (!storage.hasData) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Save failed: no original PDF stored')),
-        );
-      }
+      _showSnackBar(const Text('Save failed: no original PDF stored'));
       return;
     }
 
@@ -659,17 +678,12 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     final result = await saveService.savePdfFromBytes(
       originalBytes: originalBytes,
       placedImages: placedImages,
-      outputPath: widget.filePath,
+      outputPath: _currentFilePath,
     );
 
     result.fold(
       (failure) {
-        // Show error snackbar
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Save failed: ${failure.message}')),
-          );
-        }
+        _showSnackBar(Text('Save failed: ${failure.message}'));
       },
       (_) {
         // Mark as clean but DO NOT clear objects or reload document
@@ -682,7 +696,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   Future<void> _handleSaveAs() async {
     final outputPath = await FilePicker.platform.saveFile(
       dialogTitle: 'Save PDF As',
-      fileName: widget.fileName,
+      fileName: _currentFileName,
       type: FileType.custom,
       allowedExtensions: ['pdf'],
     );
@@ -695,7 +709,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     // Get original bytes (from storage or fallback to disk)
     final originalBytes = storage.hasData
         ? await storage.getBytes()
-        : await File(widget.filePath).readAsBytes();
+        : await File(_currentFilePath).readAsBytes();
 
     final saveService = PdfSaveService();
     final result = await saveService.savePdfFromBytes(
@@ -706,21 +720,37 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
 
     result.fold(
       (failure) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Save failed: ${failure.message}')),
-          );
-        }
+        _showSnackBar(Text('Save failed: ${failure.message}'));
       },
-      (savedPath) {
-        // Mark as clean but DO NOT clear objects
-        // Objects remain editable for further modifications
-        ref.read(documentDirtyProvider.notifier).markClean();
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Saved to: $savedPath')),
-          );
+      (savedPath) async {
+        // Switch to the new file
+        final newFileName = savedPath.split('/').last;
+
+        // Update open files registry: unregister old path, register new path
+        await OpenPdfFilesChannel.unregisterPdfFile(_currentFilePath);
+        if (_windowId != null) {
+          await OpenPdfFilesChannel.registerPdfFile(savedPath, _windowId!);
         }
+
+        // Update current file path and name
+        setState(() {
+          _currentFilePath = savedPath;
+          _currentFileName = newFileName;
+        });
+
+        // Update original PDF storage to point to the new file
+        // (so future Save operations work correctly)
+        await storage.store(savedPath);
+
+        // Clear placed images since they're now embedded in the saved file
+        ref.read(placedImagesProvider.notifier).clear();
+
+        // Mark as clean and reset modification flag
+        _hasBeenModified = false;
+        ref.read(documentDirtyProvider.notifier).markClean();
+
+        // Update window title to new file name
+        windowManager.setTitle(newFileName);
       },
     );
   }
@@ -747,7 +777,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
 
     return MaterialApp(
       navigatorKey: _navigatorKey,
-      title: widget.fileName,
+      title: _currentFileName,
       theme: createAppTheme(),
       locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
