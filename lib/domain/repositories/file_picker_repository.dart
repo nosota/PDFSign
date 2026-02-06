@@ -7,8 +7,9 @@ import 'package:pdfsign/core/errors/failure.dart';
 abstract class FilePickerRepository {
   /// Opens native file picker for PDF selection.
   ///
+  /// [initialDirectory] - optional directory to open the picker in.
   /// Returns the file path if selected, or null if cancelled.
-  Future<Either<Failure, String?>> pickPdfFile();
+  Future<Either<Failure, String?>> pickPdfFile({String? initialDirectory});
 
   /// Checks if a file exists at the given path.
   Future<Either<Failure, bool>> fileExists(String path);

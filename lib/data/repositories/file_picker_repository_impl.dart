@@ -12,9 +12,9 @@ class FilePickerRepositoryImpl implements FilePickerRepository {
   FilePickerRepositoryImpl(this._dataSource);
 
   @override
-  Future<Either<Failure, String?>> pickPdfFile() async {
+  Future<Either<Failure, String?>> pickPdfFile({String? initialDirectory}) async {
     try {
-      final path = await _dataSource.pickPdfFile();
+      final path = await _dataSource.pickPdfFile(initialDirectory: initialDirectory);
       return Right(path);
     } on PlatformException catch (e) {
       return Left(FileAccessFailure(

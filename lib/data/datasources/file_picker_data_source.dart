@@ -5,7 +5,9 @@ import 'package:file_picker/file_picker.dart';
 /// Data source wrapping the file_picker package.
 abstract class FilePickerDataSource {
   /// Opens native file picker for PDF selection.
-  Future<String?> pickPdfFile();
+  ///
+  /// [initialDirectory] - optional directory to open the picker in.
+  Future<String?> pickPdfFile({String? initialDirectory});
 
   /// Checks if a file exists at the given path.
   Future<bool> fileExists(String path);
@@ -17,13 +19,14 @@ abstract class FilePickerDataSource {
 /// Implementation of [FilePickerDataSource].
 class FilePickerDataSourceImpl implements FilePickerDataSource {
   @override
-  Future<String?> pickPdfFile() async {
+  Future<String?> pickPdfFile({String? initialDirectory}) async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
       allowMultiple: false,
       withData: false, // Don't load file content into memory
       withReadStream: false,
+      initialDirectory: initialDirectory,
     );
 
     return result?.files.single.path;
