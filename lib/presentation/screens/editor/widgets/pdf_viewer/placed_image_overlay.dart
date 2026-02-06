@@ -32,6 +32,8 @@ class SelectionHandleConstants {
   // Визуальные стили
   static const double handleBorderWidth = 2.0;
   static const Color handleFillColor = Colors.white;
+  static const double handleFillOpacity = 0.5;
+  static const double handleFillHoverOpacity = 0.8;
   static const Color handleBorderColor = Color(0xFF0066FF);
   static const Color selectionBorderColor = Color(0xFF0066FF);
   static const double selectionBorderWidth = 2.0;
@@ -793,6 +795,11 @@ class _CornerHandleState extends State<_CornerHandle> {
     final borderColor = _isHovered
         ? SelectionHandleConstants.handleBorderColor
         : SelectionHandleConstants.handleBorderColor.withOpacity(0.5);
+    final fillColor = SelectionHandleConstants.handleFillColor.withOpacity(
+      _isHovered
+          ? SelectionHandleConstants.handleFillHoverOpacity
+          : SelectionHandleConstants.handleFillOpacity,
+    );
 
     // Use grabbing cursor during rotation to override handle cursor
     final cursor =
@@ -813,7 +820,7 @@ class _CornerHandleState extends State<_CornerHandle> {
               width: visualSize,
               height: visualSize,
               decoration: BoxDecoration(
-                color: SelectionHandleConstants.handleFillColor,
+                color: fillColor,
                 border: Border.all(
                   color: borderColor,
                   width: SelectionHandleConstants.handleBorderWidth,
@@ -856,6 +863,11 @@ class _SideHandleState extends State<_SideHandle> {
     final borderColor = _isHovered
         ? SelectionHandleConstants.handleBorderColor
         : SelectionHandleConstants.handleBorderColor.withOpacity(0.5);
+    final fillColor = SelectionHandleConstants.handleFillColor.withOpacity(
+      _isHovered
+          ? SelectionHandleConstants.handleFillHoverOpacity
+          : SelectionHandleConstants.handleFillOpacity,
+    );
 
     // Use grabbing cursor during rotation to override handle cursor
     final cursor =
@@ -876,7 +888,7 @@ class _SideHandleState extends State<_SideHandle> {
               width: visualSize,
               height: visualSize,
               decoration: BoxDecoration(
-                color: SelectionHandleConstants.handleFillColor,
+                color: fillColor,
                 border: Border.all(
                   color: borderColor,
                   width: SelectionHandleConstants.handleBorderWidth,
@@ -921,6 +933,11 @@ class _RotationHandleState extends State<_RotationHandle> {
     final borderColor = isActive
         ? SelectionHandleConstants.handleBorderColor
         : SelectionHandleConstants.handleBorderColor.withOpacity(0.5);
+    final fillColor = SelectionHandleConstants.handleFillColor.withOpacity(
+      isActive
+          ? SelectionHandleConstants.handleFillHoverOpacity
+          : SelectionHandleConstants.handleFillOpacity,
+    );
 
     return MouseRegion(
       cursor: _isDragging ? SystemMouseCursors.grabbing : SystemMouseCursors.grab,
@@ -947,7 +964,7 @@ class _RotationHandleState extends State<_RotationHandle> {
               width: visualSize,
               height: visualSize,
               decoration: BoxDecoration(
-                color: SelectionHandleConstants.handleFillColor,
+                color: fillColor,
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: borderColor,
