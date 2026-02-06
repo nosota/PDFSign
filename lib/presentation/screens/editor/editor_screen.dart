@@ -184,8 +184,13 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     if (path != oldWidget.filePath && path != null && path.isNotEmpty) {
       _cancelRetryTimer();
       _retryCount = 0;
-      ref.read(permissionRetryProvider.notifier).state = false;
-      ref.read(pdfDocumentProvider.notifier).openDocument(path);
+      // Defer provider modifications until after widget tree is built
+      // to avoid "Tried to modify a provider while building" error.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ref.read(permissionRetryProvider.notifier).state = false;
+        ref.read(pdfDocumentProvider.notifier).openDocument(path);
+      });
     }
   }
 

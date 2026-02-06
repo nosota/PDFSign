@@ -828,7 +828,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
           },
         );
       },
-      home: EditorScreen(filePath: widget.filePath),
+      home: EditorScreen(filePath: _currentFilePath),
     );
   }
 }
