@@ -137,41 +137,18 @@ See [PLATFORM_CHANNELS.md](PLATFORM_CHANNELS.md) for native integration details.
 | [REPOSITORIES.md](REPOSITORIES.md) | Repository interfaces and implementations |
 | [ENTITIES.md](ENTITIES.md) | Domain entities |
 | [PLATFORM_CHANNELS.md](PLATFORM_CHANNELS.md) | Native macOS integration |
-| [USER_GUIDE_RU.md](USER_GUIDE_RU.md) | User documentation (Russian) |
+| [adr/](adr/) | Architecture Decision Records |
 
 ## Key Design Decisions
 
-### 1. Images Copied to App Storage
+Design decisions are documented as Architecture Decision Records in [adr/](adr/):
 
-When adding image to sidebar, it's copied to app storage folder. This ensures:
-- Images work even if original file is moved/deleted
-- Consistent paths across sessions
-- Independence from external file changes
-
-### 2. Original PDF Caching
-
-Original PDF bytes are cached (in memory or temp file) when opening. This allows:
-- Multiple Save operations without accumulating embedded images
-- Always starting from clean original
-- Memory-efficient handling of large files (>50MB → temp file)
-
-### 3. No Cascade Deletion
-
-Deleting sidebar image does NOT delete placed images. This is intentional:
-- Placed images are independent copies
-- User might want to keep placed images
-- Less surprising behavior
-
-### 4. Dirty State Tracking
-
-Only add/duplicate/delete operations mark document as dirty:
-- Move, resize, rotate do NOT trigger dirty flag
-- Intentional design decision for user experience
-- Can be changed if needed
-
-### 5. Window Singleton via Native Storage
-
-Settings window singleton uses native UserDefaults storage:
-- Each Flutter engine has isolated Dart memory
-- Native storage is shared across all engines
-- Provides single source of truth for window ID
+| ADR | Decision |
+|-----|----------|
+| [ADR-0001](adr/0001-images-copied-to-app-storage.md) | Images copied to app storage on import |
+| [ADR-0002](adr/0002-original-pdf-caching.md) | Original PDF bytes cached for clean saves |
+| [ADR-0003](adr/0003-no-cascade-deletion.md) | No cascade deletion of placed images |
+| [ADR-0004](adr/0004-dirty-state-tracking.md) | Only add/delete marks document dirty |
+| [ADR-0005](adr/0005-settings-singleton-via-native-storage.md) | Settings singleton via native storage |
+| [ADR-0006](adr/0006-multi-window-isolated-engines.md) | Multi-window with isolated Flutter engines |
+| [ADR-0007](adr/0007-lazy-pdf-rendering-with-lru-cache.md) | Lazy PDF rendering with LRU cache |

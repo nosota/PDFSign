@@ -62,6 +62,8 @@ lib/
 - [Repositories](docs/REPOSITORIES.md) — data layer repositories
 - [Entities](docs/ENTITIES.md) — domain entities
 - [Platform Channels](docs/PLATFORM_CHANNELS.md) — native macOS integration
+- [ADRs](docs/adr/) — architecture decision records
+- [Changelog](CHANGELOG.md) — version history
 
 ## Tech Stack
 
