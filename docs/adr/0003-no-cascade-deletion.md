@@ -32,4 +32,4 @@ The decision (no cascade deletion of placed objects) still stands, but it is cur
 - warning the user that placed instances will break, or
 - cascading the deletion honestly, so the object disappears from the page too.
 
-Tracked in REQUIREMENTS.md §13.2.
+Tracked in REQUIREMENTS.md §13.1.

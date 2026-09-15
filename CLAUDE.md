@@ -21,7 +21,7 @@ A rule here is binding on **new and modified code**. Where existing code violate
 `ios/`, `android/`, `windows/`, and `linux/` contain unmodified Flutter templates. The app depends on macOS-native code for window management, Finder integration, the toolbar, and sub-window drag-and-drop.
 
 - Do **not** add code for, or reason about, other platforms unless explicitly asked.
-- Do **not** "fix" the mobile welcome view or the unused router to make them work — they are dead code pending a decision (REQUIREMENTS.md §13.4, §12.10).
+- Do **not** "fix" the mobile welcome view or the unused router to make them work — they are dead code pending a decision (REQUIREMENTS.md §13.3, §12.10).
 - If another platform is ever targeted, platform-abstraction rules must be reinstated in this file first.
 
 ---
@@ -94,7 +94,7 @@ There is no `lib/injection/`. Dependency injection is done with Riverpod provide
 
   No other presentation file may import from `data/`.
 
-  **Outstanding violation:** `presentation/apps/pdf_viewer_app.dart` imports and instantiates `PdfSaveService` directly. It must go through `pdfSaveServiceProvider` (REQUIREMENTS.md §13.3).
+  **Outstanding violation:** `presentation/apps/pdf_viewer_app.dart` imports and instantiates `PdfSaveService` directly. It must go through `pdfSaveServiceProvider` (REQUIREMENTS.md §13.2).
 - **Core** may be used by all layers.
 - Circular dependencies are FORBIDDEN.
 
@@ -190,9 +190,9 @@ Each window runs a **separate Flutter engine with isolated Dart memory** (ADR-00
 
 - All user-facing strings go in `lib/l10n/app_en.arb` and are consumed via `AppLocalizations`. **No hardcoded UI strings.**
 - `flutter gen-l10n` output in `lib/l10n/generated/` is generated — never edit it by hand.
-- A new locale requires: an `.arb` file **and** an entry in `supportedLocales` in `locale_preference_provider.dart`. Adding only the `.arb` leaves the translation unreachable — this is exactly why `ja`, `ko`, and `zh` are currently dead (REQUIREMENTS.md §13.6).
+- A new locale requires: an `.arb` file **and** an entry in `supportedLocales` in `locale_preference_provider.dart`. Adding only the `.arb` leaves the translation unreachable — this is exactly why `ja`, `ko`, and `zh` are currently dead (REQUIREMENTS.md §13.5).
 - RTL (`ar`, `he`, `fa`) must keep working.
-- Existing hardcoded strings are listed in REQUIREMENTS.md §13.7. Fix them when you touch the surrounding code; the keys already exist.
+- Existing hardcoded strings are listed in REQUIREMENTS.md §13.6. Fix them when you touch the surrounding code; the keys already exist.
 
 ---
 
@@ -235,14 +235,14 @@ go_router, mime
 
 - Adding a dependency requires a stated justification and a check that no existing dependency covers the need.
 - No deprecated or unmaintained packages. Prefer Flutter-team and well-established packages.
-- Review licences for commercial compatibility. Syncfusion is used under a Community licence — **never commit a licence key** (one is currently in `TODO.md` and must be removed; REQUIREMENTS.md §13.14).
+- Review licences for commercial compatibility. Syncfusion is used under a Community licence — **never commit a licence key** (one is currently in `TODO.md` and must be removed; REQUIREMENTS.md §13.13).
 - `go_router` and `mime` are unused. Either wire them up deliberately or remove them; do not build new code on them casually.
 
 ---
 
 ## Testing
 
-The project has 42 Dart tests (page-column geometry and drag-and-drop placement) and 15 native tests (`macos/RunnerTests`, toolbar item management). Everything else is uncovered, which remains the largest known risk (CODE_REVIEW §5.3). The following is the target state, and applies to code you add or change:
+The project has 52 Dart tests (page-column geometry, drag-and-drop placement, dirty-state policy) and 15 native tests (`macos/RunnerTests`, toolbar item management). Everything else is uncovered, which remains the largest known risk (CODE_REVIEW §5.3). The following is the target state, and applies to code you add or change:
 
 - New business logic (providers, repositories, services, coordinate math) ships with unit tests.
 - Test file mirrors source structure; one test file per source file.

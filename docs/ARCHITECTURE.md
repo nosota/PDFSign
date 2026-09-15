@@ -161,7 +161,8 @@ Design decisions are documented as Architecture Decision Records in [adr/](adr/)
 | [ADR-0001](adr/0001-images-copied-to-app-storage.md) | Images copied to app storage on import |
 | [ADR-0002](adr/0002-original-pdf-caching.md) | Original PDF bytes cached for clean saves |
 | [ADR-0003](adr/0003-no-cascade-deletion.md) | No cascade deletion of placed images |
-| [ADR-0004](adr/0004-dirty-state-tracking.md) | Only add/delete marks document dirty |
+| [ADR-0004](adr/0004-dirty-state-tracking.md) | Only add/delete marks document dirty — *superseded by ADR-0008* |
 | [ADR-0005](adr/0005-settings-singleton-via-native-storage.md) | Settings singleton via native storage |
 | [ADR-0006](adr/0006-multi-window-isolated-engines.md) | Multi-window with isolated Flutter engines |
 | [ADR-0007](adr/0007-lazy-pdf-rendering-with-lru-cache.md) | Lazy PDF rendering with LRU cache |
+| [ADR-0008](adr/0008-dirty-state-derived-from-a-baseline.md) | Dirty state derived from a baseline, not flagged per operation |

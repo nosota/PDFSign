@@ -173,7 +173,7 @@ The list is a `ReorderableListView`. Dragging works **only from the grip handle*
 Each card carries an inline editable comment below the thumbnail. `Enter` saves, `Esc` cancels, tapping outside saves. Long comments get a tooltip after 500 ms.
 
 #### FR-3.7 — Deletion
-A delete button appears on hover. Deleting removes both the database row **and the file in app storage** — see §13.2 for the consequence this has for already-placed images.
+A delete button appears on hover. Deleting removes both the database row **and the file in app storage** — see §13.1 for the consequence this has for already-placed images.
 
 #### FR-3.8 — Resizable panel
 Default 200 px, range 150–400 px, dragged by a 4 px handle. The width is per-window and is **not** persisted across launches.
@@ -266,7 +266,11 @@ Builds a temp PDF with the objects embedded and hands it to the native share she
 Saving marks the document clean but does **not** clear the objects or reload the document, so editing can continue.
 
 #### FR-6.7 — Dirty-state policy
-Only **add / duplicate / delete** mark a document dirty. Move, resize, and rotate do not (ADR-0004). See §13.1.
+A document counts as changed when its current set of placed objects differs
+from the set that was last written to the file — including position, size and
+rotation. The state is derived from that comparison rather than flagged per
+operation, so moving an object back where it was reports the document clean
+again (ADR-0008).
 
 #### FR-6.8 — Close with unsaved changes
 Closing a dirty window shows a Save / Discard dialog. Close All and Quit show a consolidated Save All / Don't Save / Cancel dialog reporting how many documents are affected; if saves fail afterwards, a second dialog offers "Close Anyway".
@@ -359,7 +363,7 @@ dependencies:
   riverpod_annotation: ^2.3.5
   equatable: ^2.0.5                 # value equality for entities
   freezed_annotation: ^2.4.1        # sealed viewer state, DTOs
-  go_router: ^14.2.7                # see §13.4 — currently unused
+  go_router: ^14.2.7                # see §13.3 — currently unused
   pdfx: ^2.6.0                      # PDF rendering
   syncfusion_flutter_pdf: ^32.1.23  # PDF writing / image embedding
   isar: ^3.1.0+1                    # image library database
@@ -373,7 +377,7 @@ dependencies:
   uuid: ^4.5.1
   intl: ^0.20.2
   json_annotation: ^4.9.0
-  logger: ^2.4.0                    # see §13.5 — currently unused
+  logger: ^2.4.0                    # see §13.4 — currently unused
   shared_preferences: ^2.3.2
   desktop_multi_window: ^0.3.0      # multi-window
   window_manager: ^0.4.2            # window control
@@ -470,7 +474,7 @@ Material 3, light only. There is no dark theme and no theme switch.
 - RTL is supported for `ar`, `he`, `fa`. The editor forces LTR layout direction so panels keep their sides; text inside widgets still renders RTL.
 - Changing the language applies immediately in all open windows via broadcast.
 
-Known localization defects are listed in §13.6 and §13.7.
+Known localization defects are listed in §13.5 and §13.6.
 
 ---
 
@@ -514,7 +518,7 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 | Aspect | State |
 |--------|-------|
 | `flutter analyze` | 929 issues: 0 errors, **10 warnings**, 919 info |
-| Unit tests | **30** — page-column geometry (`PdfPageLayout`) |
+| Unit tests | **40** — page-column geometry (`PdfPageLayout`), dirty-state policy |
 | Widget tests | **12** — drop placement, off-page snapping, drag feedback |
 | Native tests | **15** — toolbar item management (`macos/RunnerTests`) |
 | Integration tests | **none** |
@@ -528,12 +532,12 @@ The 12 warnings are all actionable and cheap to clear:
 | Warning | Location |
 |---------|----------|
 | `removed_lint` — `package_api_docs` was removed in Dart 3.7.0 | `analysis_options.yaml:119` |
-| `unused_element` — `_isSettingsWindowAlive`, `_bringSettingsWindowToFront` | `window_manager_service.dart:282, 317` (see §13.12) |
+| `unused_element` — `_isSettingsWindowAlive`, `_bringSettingsWindowToFront` | `window_manager_service.dart:282, 317` (see §13.11) |
 | `unused_import` — `window_manager_service.dart` | `pdf_viewer_app.dart:16` |
 | `unused_field` — `_previousScale`, `_viewportWidth` | `pdf_page_list.dart:46, 47` |
 | `inference_failure_on_instance_creation` — untyped `Future.delayed` ×6 | `pdf_viewer_app.dart:445, 532`; `settings_app.dart:199, 286`; `welcome_app.dart:156, 243` |
 
-All six `Future.delayed` warnings are the fixed 5-second Save All waits described in §13.10.
+All six `Future.delayed` warnings are the fixed 5-second Save All waits described in §13.9.
 
 > `CLAUDE.md` mandates "zero warnings/errors tolerance". The project currently does not meet its own rule.
 
@@ -575,7 +579,7 @@ Specified in v1.0 (or implied by leftover code) but **absent from the product**.
 | 12.7 | **Context menu** on placed objects | No right-click menu anywhere |
 | 12.8 | **Image validation limits** (100 MB, 4096×4096) | `maxImageFileSize` and `maxImageResolution` are declared and never read |
 | 12.9 | **Cross-platform support** (iOS, Android, Windows, Linux) | Template projects only; see §2.1 |
-| 12.10 | **Mobile layouts** | `MobileWelcomeView` exists but calls `context.goNamed('editor')` with no router mounted — see §13.4 |
+| 12.10 | **Mobile layouts** | `MobileWelcomeView` exists but calls `context.goNamed('editor')` with no router mounted — see §13.3 |
 | 12.11 | **Persistence of placed objects / session restore** | In-memory only |
 | 12.12 | **Copying an object between documents** | `Cmd+C` buffer is per-window. TODO → V1.1 |
 | 12.13 | **Text annotations** | TODO → V1.3 |
@@ -586,49 +590,46 @@ Specified in v1.0 (or implied by leftover code) but **absent from the product**.
 
 ## 13. Known Limitations and Technical Debt
 
-### 13.1 Move / resize / rotate do not mark the document dirty
-Per ADR-0004 only add/duplicate/delete set the dirty flag. A user who only repositions an object and closes the window gets **no save prompt** and loses the change silently. The ADR acknowledges the trade-off; it is worth revisiting.
-
-### 13.2 Deleting a library image deletes its file, breaking placed instances
+### 13.1 Deleting a library image deletes its file, breaking placed instances
 `SidebarImageRepositoryImpl.removeImage` deletes the row **and** the file in app storage. ADR-0003 states that placed objects keep working because their file still exists — that is not what the code does. A placed object whose source was deleted renders as a broken-image placeholder, and `PdfSaveService` skips it silently (`if (!await imageFile.exists()) continue;`), so it vanishes from the saved PDF without any warning.
 
-### 13.3 Save is implemented twice
+### 13.2 Save is implemented twice
 `_handleSave` / `_handleSaveAs` in `pdf_viewer_app.dart` (menu path) and `_save` / `_saveAs` in `pdf_viewer.dart` (`Cmd+S` via `Focus.onKeyEvent`). Both are live, so `Cmd+S` can run two save paths. The viewer copy also instantiates `PdfSaveService()` directly instead of using `pdfSaveServiceProvider`, and shows non-localized strings.
 
-### 13.4 `go_router` is dead weight
+### 13.3 `go_router` is dead weight
 `lib/core/router/app_router.dart` is referenced by nothing. All three window roots build `home:` directly. The only import of `go_router` outside it is the unreachable mobile view.
 
-### 13.5 `logger` is a declared but unused dependency
+### 13.4 `logger` is a declared but unused dependency
 Diagnostics go through `kDebugMode` + `print()`, which `CLAUDE.md` prohibits and which is the source of many lints.
 
-### 13.6 Three translations are unreachable
+### 13.5 Three translations are unreachable
 `app_ja.arb`, `app_ko.arb`, `app_zh.arb`, `app_zh_CN.arb`, and `app_zh_TW.arb` are translated and code-generated, but `ja`, `ko`, and `zh` are **missing from `supportedLocales`**. Since `MaterialApp.supportedLocales` is built from that same list, Japanese, Korean, and Chinese are neither selectable in Settings nor picked up from the system locale — those users fall back to English.
 
-### 13.7 Hardcoded UI strings
+### 13.6 Hardcoded UI strings
 Localized and unused: `savePdfAs`, `savedTo`, `noOriginalPdfStored`, `incorrectPassword`, `goToPage`, `go`, `removeFromList`, `fileAccessDenied`, `saveFailed`. The corresponding UI uses English literals — `GoToPageDialog` ("Go to Page", "Page number", "Cancel", "Go"), `PageIndicator` ("Page N of M"), the sidebar empty state, the viewer's empty/error/password states, and every save-failure snackbar.
 
-### 13.8 Placed objects are clipped to the page
+### 13.7 Placed objects are clipped to the page
 `PdfPageItem` wraps each page in `clipBehavior: Clip.antiAlias`. An object near a page edge has its handles — especially the rotation handle above the top edge — clipped. `PlacedImage`'s doc comment mentions cross-page objects; they are not supported.
 
-### 13.9 The page column is not virtualized
+### 13.8 The page column is not virtualized
 All pages are built into one `Column` inside a `SingleChildScrollView`. Only image *rendering* is lazy, so the widget count is O(page count).
 
 Page measurement itself is no longer a problem: `PdfPageLayout` precomputes page offsets once per (document, scale, viewport width) and answers lookups by binary search, so scrolling no longer walks every page.
 
-### 13.10 `Close All` waits a fixed 5 seconds
+### 13.9 `Close All` waits a fixed 5 seconds
 After broadcasting Save All, the initiating window sleeps 5 s before checking whether saves succeeded, instead of awaiting acknowledgements.
 
-### 13.11 Toolbar helpers live in a global mutable dictionary
+### 13.10 Toolbar helpers live in a global mutable dictionary
 
 `toolbarHelpers` in `AppDelegate.swift` is a file-scope mutable dictionary keyed by `ObjectIdentifier(window)` — the window's address, which the allocator reuses. Entries are now evicted when a window closes and every lookup confirms ownership, so the stale-entry hazard is closed, but the design is still a global that `CLAUDE.md` would reject in Dart. Attaching the helper to the window (associated object) or to the `FlutterViewController` would remove it.
 
-### 13.12 Dead private methods
+### 13.11 Dead private methods
 `WindowManagerService._isSettingsWindowAlive()` and `._bringSettingsWindowToFront()` are unreachable.
 
-### 13.13 Exception classification by string matching
+### 13.12 Exception classification by string matching
 `PdfDocumentRepositoryImpl` maps `pdfx` failures to `Failure` types by searching the exception's `toString()` for `"password"`, `"not found"`, `"permission"`, and similar. Brittle across library versions and locales. See CODE_REVIEW §1.1.
 
-### 13.14 The Syncfusion license key is committed
+### 13.13 The Syncfusion license key is committed
 `TODO.md` contains a Syncfusion community license key in plain text. It should be removed from the repository and from history.
 
 ---

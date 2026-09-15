@@ -15,10 +15,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Changed
 
+- Moving, resizing or rotating an object now counts as an unsaved change, so closing no longer discards it in silence and File → Save stays available
 - A drop that lands off-page now snaps to the nearest page instead of silently landing on page 1
 
 ### Fixed
 
+- Deleting an object that was already saved into the file no longer reports the document as clean, which used to drop the deletion on close
 - Crash when the Delete toolbar button was shown on a toolbar that already carried it — NSToolbar raised an uncatchable exception and the whole app aborted
 - Opening a second document no longer removes the Delete button from the first window: every window now owns its toolbar instead of sharing one by identifier
 - Delete toolbar button no longer appears in a freshly opened window before anything is selected, and a request that arrives before the toolbar exists is no longer lost

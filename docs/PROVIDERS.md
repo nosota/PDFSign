@@ -217,13 +217,38 @@ Deletes the selected object across three providers at once: removes it from `pla
 
 **File:** `lib/presentation/providers/editor/document_dirty_provider.dart`
 
-Tracks unsaved changes in document.
+Whether the document has changes that are not in the file yet. **Derived, not
+flagged** (ADR-0008): it compares the current objects with the baseline, so
+move, resize and rotate count as changes, and moving an object back where it
+was reports clean again.
 
 ```dart
 @Riverpod(keepAlive: true)
-class DocumentDirty extends _$DocumentDirty {
+bool documentDirty(DocumentDirtyRef ref) {
+  return !listEquals(
+    ref.watch(placedImagesProvider),
+    ref.watch(savedPlacedImagesProvider),
+  );
+}
+```
+
+There is nothing to call: consumers just read or listen to the `bool`.
+
+---
+
+### SavedPlacedImages
+
+**File:** `lib/presentation/providers/editor/document_dirty_provider.dart`
+
+The objects as of the last write — the baseline `documentDirty` compares
+against. The object-side counterpart of `OriginalPdfStorage`, which keeps the
+file-side baseline.
+
+```dart
+@Riverpod(keepAlive: true)
+class SavedPlacedImages extends _$SavedPlacedImages {
   @override
-  bool build() => false;
+  List<PlacedImage> build() => const [];
 }
 ```
 
@@ -231,8 +256,12 @@ class DocumentDirty extends _$DocumentDirty {
 
 | Method | Signature | Description |
 |--------|-----------|-------------|
-| `markDirty` | `void markDirty()` | Marks document as having unsaved changes |
-| `markClean` | `void markClean()` | Marks document as saved |
+| `markSaved` | `void markSaved(List<PlacedImage> current)` | Records the objects just written, which makes the document clean |
+| `reset` | `void reset()` | Baseline of an empty page; used by Save As, which clears the objects |
+
+Costs nothing to hold: `PlacedImages` replaces the whole list on every change
+and `PlacedImage` is immutable, so the baseline is a reference to a list that is
+never mutated, not a copy.
 
 ---
 
@@ -312,7 +341,7 @@ Provides the PDF writing service.
 PdfSaveService pdfSaveService(PdfSaveServiceRef ref) => PdfSaveService();
 ```
 
-> **Note:** `pdf_viewer_app.dart` instantiates `PdfSaveService()` directly instead of reading this provider. See REQUIREMENTS.md §13.3.
+> **Note:** `pdf_viewer_app.dart` instantiates `PdfSaveService()` directly instead of reading this provider. See REQUIREMENTS.md §13.2.
 
 ---
 
@@ -422,7 +451,7 @@ final localePreferenceProvider =
 
 **Supported:** 58 locales in `supportedLocales`, including RTL (Arabic, Hebrew, Persian). `allSupportedLocales` is derived from that list and passed to `MaterialApp.supportedLocales`.
 
-> **Known defect:** `lib/l10n/` contains 66 `.arb` files. `ja`, `ko`, and `zh` are translated and code-generated but are **absent from `supportedLocales`**, so they are neither selectable in Settings nor resolvable from the system locale. See REQUIREMENTS.md §13.6.
+> **Known defect:** `lib/l10n/` contains 66 `.arb` files. `ja`, `ko`, and `zh` are translated and code-generated but are **absent from `supportedLocales`**, so they are neither selectable in Settings nor resolvable from the system locale. See REQUIREMENTS.md §13.5.
 
 ---
 
