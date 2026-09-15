@@ -102,6 +102,21 @@ class AppLocalizationsMn extends AppLocalizations {
   String get menuDelete => 'Устгах';
 
   @override
+  String get menuCut => 'Cut';
+
+  @override
+  String get menuCopy => 'Copy';
+
+  @override
+  String get menuPaste => 'Paste';
+
+  @override
+  String get clipboardUnavailable => 'The clipboard is unavailable';
+
+  @override
+  String get pasteImageFailed => 'That image could not be added';
+
+  @override
   String get menuQuit => 'PDFSign-аас гарах';
 
   @override

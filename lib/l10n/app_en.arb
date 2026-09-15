@@ -131,6 +131,26 @@
   "@menuDelete": {
     "description": "Delete menu item in Edit menu"
   },
+  "menuCut": "Cut",
+  "@menuCut": {
+    "description": "Cut menu item in Edit menu"
+  },
+  "menuCopy": "Copy",
+  "@menuCopy": {
+    "description": "Copy menu item in Edit menu"
+  },
+  "menuPaste": "Paste",
+  "@menuPaste": {
+    "description": "Paste menu item in Edit menu"
+  },
+  "clipboardUnavailable": "The clipboard is unavailable",
+  "@clipboardUnavailable": {
+    "description": "Shown when the system clipboard cannot be read or written"
+  },
+  "pasteImageFailed": "That image could not be added",
+  "@pasteImageFailed": {
+    "description": "Shown when an image pasted from the clipboard cannot be imported"
+  },
   "menuQuit": "Quit PDFSign",
   "@menuQuit": {
     "description": "Quit application menu item"

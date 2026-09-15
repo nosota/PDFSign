@@ -5,6 +5,7 @@ import 'package:pdfsign/domain/entities/pdf_document_info.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_page_layout.dart';
+import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/placed_image_placement.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_viewer_constants.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/draggable_image_card.dart';
 
@@ -45,12 +46,6 @@ class PdfDropTarget extends ConsumerStatefulWidget {
 }
 
 class _PdfDropTargetState extends ConsumerState<PdfDropTarget> {
-  /// Share of the page width a freshly placed object occupies.
-  static const _defaultWidthRatio = 0.25;
-
-  /// Hard ceiling on a placed object relative to the page.
-  static const _maxPageCoverage = 0.9;
-
   final _layoutCache = PdfPageLayoutCache();
 
   /// Pointer position in this widget's coordinates while a drag is over it.
@@ -211,20 +206,16 @@ class _PdfDropTargetState extends ConsumerState<PdfDropTarget> {
 
     final page = widget.document.pages[pageIndex];
     final pageSize = Size(page.width, page.height);
-    final size = _defaultSizeFor(details.data.aspectRatio, pageSize);
+    final size =
+        PlacedImagePlacement.defaultSizeFor(details.data.aspectRatio, pageSize);
 
     // Cursor position in unscaled page points. Falls outside the page for an
     // off-page drop; the clamp below pulls the object back inside.
     final pageOrigin = layout.pageRect(pageIndex).topLeft;
     final cursorOnPage = (contentPoint - pageOrigin) / layout.scale;
 
-    final position = Offset(
-      _clamped(cursorOnPage.dx - size.width / 2, pageSize.width - size.width),
-      _clamped(
-        cursorOnPage.dy - size.height / 2,
-        pageSize.height - size.height,
-      ),
-    );
+    final position =
+        PlacedImagePlacement.centeredOn(cursorOnPage, size, pageSize);
 
     final placed = ref.read(placedImagesProvider.notifier).addImage(
           sourceImageId: details.data.sourceImageId,
@@ -235,44 +226,5 @@ class _PdfDropTargetState extends ConsumerState<PdfDropTarget> {
         );
 
     ref.read(editorSelectionProvider.notifier).select(placed.id);
-  }
-
-  /// Clamps a coordinate so the object stays fully on the page.
-  ///
-  /// [maxValue] can only go negative if an object were larger than its page,
-  /// which [_defaultSizeFor] prevents; guarding anyway keeps a malformed
-  /// document from producing an out-of-range position.
-  static double _clamped(double value, double maxValue) {
-    if (value < 0 || maxValue <= 0) {
-      return 0;
-    }
-    return value > maxValue ? maxValue : value;
-  }
-
-  /// Size for a freshly placed object: a quarter of the page width, keeping
-  /// the source aspect ratio, never covering more than 90% of the page.
-  static Size _defaultSizeFor(double aspectRatio, Size pageSize) {
-    // A library row with a zero dimension would yield 0, infinity or NaN.
-    // Fall back to a square rather than letting that reach the saved PDF.
-    final ratio =
-        aspectRatio.isFinite && aspectRatio > 0 ? aspectRatio : 1.0;
-
-    final target = pageSize.width * _defaultWidthRatio;
-    var width = ratio > 1 ? target : target * ratio;
-    var height = ratio > 1 ? target / ratio : target;
-
-    final maxWidth = pageSize.width * _maxPageCoverage;
-    if (width > maxWidth) {
-      width = maxWidth;
-      height = width / ratio;
-    }
-
-    final maxHeight = pageSize.height * _maxPageCoverage;
-    if (height > maxHeight) {
-      height = maxHeight;
-      width = height * ratio;
-    }
-
-    return Size(width, height);
   }
 }

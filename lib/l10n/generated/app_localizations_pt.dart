@@ -120,6 +120,21 @@ class AppLocalizationsPt extends AppLocalizations {
   String get menuDelete => 'Apagar';
 
   @override
+  String get menuCut => 'Cut';
+
+  @override
+  String get menuCopy => 'Copy';
+
+  @override
+  String get menuPaste => 'Paste';
+
+  @override
+  String get clipboardUnavailable => 'The clipboard is unavailable';
+
+  @override
+  String get pasteImageFailed => 'That image could not be added';
+
+  @override
   String get menuQuit => 'Sair do PDFSign';
 
   @override
@@ -381,6 +396,21 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get menuDelete => 'Excluir';
 
   @override
+  String get menuCut => 'Cut';
+
+  @override
+  String get menuCopy => 'Copy';
+
+  @override
+  String get menuPaste => 'Paste';
+
+  @override
+  String get clipboardUnavailable => 'The clipboard is unavailable';
+
+  @override
+  String get pasteImageFailed => 'That image could not be added';
+
+  @override
   String get menuQuit => 'Sair do PDFSign';
 
   @override
@@ -640,6 +670,21 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get menuDelete => 'Apagar';
+
+  @override
+  String get menuCut => 'Cut';
+
+  @override
+  String get menuCopy => 'Copy';
+
+  @override
+  String get menuPaste => 'Paste';
+
+  @override
+  String get clipboardUnavailable => 'The clipboard is unavailable';
+
+  @override
+  String get pasteImageFailed => 'That image could not be added';
 
   @override
   String get menuQuit => 'Sair do PDFSign';

@@ -79,5 +79,10 @@
     "description": "Tooltip for delete button in toolbar"
   },
   "menuEdit": "កែសម្រួល",
-  "menuDelete": "លុប"
+  "menuDelete": "លុប",
+  "menuCut": "Cut",
+  "menuCopy": "Copy",
+  "menuPaste": "Paste",
+  "clipboardUnavailable": "The clipboard is unavailable",
+  "pasteImageFailed": "That image could not be added"
 }

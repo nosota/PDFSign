@@ -79,5 +79,10 @@
     "description": "Tooltip for delete button in toolbar"
   },
   "menuEdit": "編集",
-  "menuDelete": "削除"
+  "menuDelete": "削除",
+  "menuCut": "Cut",
+  "menuCopy": "Copy",
+  "menuPaste": "Paste",
+  "clipboardUnavailable": "The clipboard is unavailable",
+  "pasteImageFailed": "That image could not be added"
 }

@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'dart:typed_data';
+
 import 'package:dartz/dartz.dart';
 import 'package:uuid/uuid.dart';
 
@@ -48,28 +50,70 @@ class SidebarImageRepositoryImpl implements SidebarImageRepository {
     try {
       // Copy image to app storage so it doesn't depend on original file
       final storagePath = await _storageService.copyImageToStorage(filePath);
-
-      // Get next order index
-      final nextIndex = await _localDataSource.getNextOrderIndex();
-
-      final entity = SidebarImage(
-        id: _uuid.v4(),
-        filePath: storagePath,
-        fileName: fileName,
-        addedAt: DateTime.now(),
-        orderIndex: nextIndex,
-        width: width,
-        height: height,
-        fileSize: fileSize,
+      return Right(
+        await _register(
+          storagePath: storagePath,
+          fileName: fileName,
+          width: width,
+          height: height,
+          fileSize: fileSize,
+        ),
       );
-
-      final model = SidebarImageModel.fromEntity(entity);
-      await _localDataSource.addImage(model);
-
-      return Right(entity);
     } catch (e) {
       return Left(StorageFailure(message: 'Failed to add image: $e'));
     }
+  }
+
+  @override
+  Future<Either<Failure, SidebarImage>> addImageFromBytes({
+    required Uint8List bytes,
+    required String fileExtension,
+    required String fileName,
+    required int width,
+    required int height,
+  }) async {
+    try {
+      final storagePath = await _storageService.saveImageBytes(
+        bytes,
+        fileExtension: fileExtension,
+      );
+      return Right(
+        await _register(
+          storagePath: storagePath,
+          fileName: fileName,
+          width: width,
+          height: height,
+          fileSize: bytes.length,
+        ),
+      );
+    } catch (e) {
+      return Left(StorageFailure(message: 'Failed to add image: $e'));
+    }
+  }
+
+  /// Records an image already written to app storage.
+  Future<SidebarImage> _register({
+    required String storagePath,
+    required String fileName,
+    required int width,
+    required int height,
+    required int fileSize,
+  }) async {
+    final nextIndex = await _localDataSource.getNextOrderIndex();
+
+    final entity = SidebarImage(
+      id: _uuid.v4(),
+      filePath: storagePath,
+      fileName: fileName,
+      addedAt: DateTime.now(),
+      orderIndex: nextIndex,
+      width: width,
+      height: height,
+      fileSize: fileSize,
+    );
+
+    await _localDataSource.addImage(SidebarImageModel.fromEntity(entity));
+    return entity;
   }
 
   @override

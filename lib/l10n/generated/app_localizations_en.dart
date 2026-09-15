@@ -120,6 +120,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuDelete => 'Delete';
 
   @override
+  String get menuCut => 'Cut';
+
+  @override
+  String get menuCopy => 'Copy';
+
+  @override
+  String get menuPaste => 'Paste';
+
+  @override
+  String get clipboardUnavailable => 'The clipboard is unavailable';
+
+  @override
+  String get pasteImageFailed => 'That image could not be added';
+
+  @override
   String get menuQuit => 'Quit PDFSign';
 
   @override
@@ -387,6 +402,21 @@ class AppLocalizationsEnAu extends AppLocalizationsEn {
   String get menuDelete => 'Delete';
 
   @override
+  String get menuCut => 'Cut';
+
+  @override
+  String get menuCopy => 'Copy';
+
+  @override
+  String get menuPaste => 'Paste';
+
+  @override
+  String get clipboardUnavailable => 'The clipboard is unavailable';
+
+  @override
+  String get pasteImageFailed => 'That image could not be added';
+
+  @override
   String get menuQuit => 'Quit PDFSign';
 
   @override
@@ -646,6 +676,21 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get menuDelete => 'Delete';
+
+  @override
+  String get menuCut => 'Cut';
+
+  @override
+  String get menuCopy => 'Copy';
+
+  @override
+  String get menuPaste => 'Paste';
+
+  @override
+  String get clipboardUnavailable => 'The clipboard is unavailable';
+
+  @override
+  String get pasteImageFailed => 'That image could not be added';
 
   @override
   String get menuQuit => 'Quit PDFSign';
@@ -909,6 +954,21 @@ class AppLocalizationsEnNz extends AppLocalizationsEn {
   String get menuDelete => 'Delete';
 
   @override
+  String get menuCut => 'Cut';
+
+  @override
+  String get menuCopy => 'Copy';
+
+  @override
+  String get menuPaste => 'Paste';
+
+  @override
+  String get clipboardUnavailable => 'The clipboard is unavailable';
+
+  @override
+  String get pasteImageFailed => 'That image could not be added';
+
+  @override
   String get menuQuit => 'Quit PDFSign';
 
   @override
@@ -1168,6 +1228,21 @@ class AppLocalizationsEnUs extends AppLocalizationsEn {
 
   @override
   String get menuDelete => 'Delete';
+
+  @override
+  String get menuCut => 'Cut';
+
+  @override
+  String get menuCopy => 'Copy';
+
+  @override
+  String get menuPaste => 'Paste';
+
+  @override
+  String get clipboardUnavailable => 'The clipboard is unavailable';
+
+  @override
+  String get pasteImageFailed => 'That image could not be added';
 
   @override
   String get menuQuit => 'Quit PDFSign';

@@ -102,6 +102,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get menuDelete => '删除';
 
   @override
+  String get menuCut => 'Cut';
+
+  @override
+  String get menuCopy => 'Copy';
+
+  @override
+  String get menuPaste => 'Paste';
+
+  @override
+  String get clipboardUnavailable => 'The clipboard is unavailable';
+
+  @override
+  String get pasteImageFailed => 'That image could not be added';
+
+  @override
   String get menuQuit => '退出 PDFSign';
 
   @override
@@ -343,6 +358,21 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get menuDelete => '删除';
 
   @override
+  String get menuCut => 'Cut';
+
+  @override
+  String get menuCopy => 'Copy';
+
+  @override
+  String get menuPaste => 'Paste';
+
+  @override
+  String get clipboardUnavailable => 'The clipboard is unavailable';
+
+  @override
+  String get pasteImageFailed => 'That image could not be added';
+
+  @override
   String get menuQuit => '退出 PDFSign';
 
   @override
@@ -582,6 +612,21 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get menuDelete => '刪除';
+
+  @override
+  String get menuCut => 'Cut';
+
+  @override
+  String get menuCopy => 'Copy';
+
+  @override
+  String get menuPaste => 'Paste';
+
+  @override
+  String get clipboardUnavailable => 'The clipboard is unavailable';
+
+  @override
+  String get pasteImageFailed => 'That image could not be added';
 
   @override
   String get menuQuit => '結束 PDFSign';

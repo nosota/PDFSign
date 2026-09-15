@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -24,36 +25,78 @@ class SidebarImages extends _$SidebarImages {
   ///
   /// Validates each file exists and is a valid image before adding.
   Future<void> addImages(List<String> filePaths) async {
+    for (final path in filePaths) {
+      await addImageFile(path);
+    }
+  }
+
+  /// Adds a single image file to the library and returns the stored row.
+  ///
+  /// Returns null when the file is missing or is not a decodable image. The
+  /// row carries the copy made in app storage (ADR-0001) and its dimensions,
+  /// which is what a caller needs to place the image on a page.
+  Future<SidebarImage?> addImageFile(String path) async {
     final repository = ref.read(sidebarImageRepositoryProvider);
 
-    for (final path in filePaths) {
-      // Validate file exists
-      final file = File(path);
-      if (!await file.exists()) continue;
+    final file = File(path);
+    if (!await file.exists()) return null;
 
-      try {
-        // Get image dimensions
-        final bytes = await file.readAsBytes();
-        final codec = await ui.instantiateImageCodec(bytes);
-        final frame = await codec.getNextFrame();
+    try {
+      // Get image dimensions
+      final bytes = await file.readAsBytes();
+      final codec = await ui.instantiateImageCodec(bytes);
+      final frame = await codec.getNextFrame();
 
-        // Extract file info
-        final fileName = path.split('/').last;
-        final fileSize = await file.length();
+      // Extract file info
+      final fileName = path.split('/').last;
+      final fileSize = await file.length();
 
-        await repository.addImage(
-          filePath: path,
-          fileName: fileName,
-          width: frame.image.width,
-          height: frame.image.height,
-          fileSize: fileSize,
-        );
+      final result = await repository.addImage(
+        filePath: path,
+        fileName: fileName,
+        width: frame.image.width,
+        height: frame.image.height,
+        fileSize: fileSize,
+      );
 
-        frame.image.dispose();
-      } catch (e) {
-        // Skip invalid images
-        continue;
-      }
+      frame.image.dispose();
+
+      return result.fold((failure) => null, (image) => image);
+    } catch (e) {
+      // Not a decodable image
+      return null;
+    }
+  }
+
+  /// Adds an image from raw bytes, as pasted from the clipboard.
+  ///
+  /// Returns the stored row, or null when the bytes are not a decodable
+  /// image — which is what the clipboard offers if another application
+  /// advertises a format it cannot actually produce.
+  Future<SidebarImage?> addImageData(
+    Uint8List bytes, {
+    required String fileExtension,
+  }) async {
+    final repository = ref.read(sidebarImageRepositoryProvider);
+
+    try {
+      final codec = await ui.instantiateImageCodec(bytes);
+      final frame = await codec.getNextFrame();
+      final width = frame.image.width;
+      final height = frame.image.height;
+      frame.image.dispose();
+
+      final result = await repository.addImageFromBytes(
+        bytes: bytes,
+        fileExtension: fileExtension,
+        fileName: 'pasted.$fileExtension',
+        width: width,
+        height: height,
+      );
+      return result.fold((failure) => null, (image) => image);
+    } catch (e) {
+      // Not a decodable image
+      return null;
     }
   }
 

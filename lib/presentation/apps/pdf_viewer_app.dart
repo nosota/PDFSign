@@ -13,10 +13,12 @@ import 'package:pdfsign/core/platform/sub_window_channel.dart';
 import 'package:pdfsign/core/platform/toolbar_channel.dart';
 import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/presentation/apps/close_all_coordinator.dart';
+import 'package:pdfsign/core/utils/focus_utils.dart';
 import 'package:pdfsign/core/window/window_broadcast.dart';
 import 'package:pdfsign/data/services/pdf_save_service.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/editor_clipboard.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/global_dirty_state_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/original_pdf_provider.dart';
@@ -78,7 +80,12 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   /// Notifier for menu state updates.
   /// Used to bypass MaterialApp.builder caching issues.
   final _menuStateNotifier = ValueNotifier<_MenuState>(
-    const _MenuState(isDirty: false, hasAnyDirtyWindow: false, hasSelection: false),
+    const _MenuState(
+      isDirty: false,
+      hasAnyDirtyWindow: false,
+      hasSelection: false,
+      canCopy: false,
+    ),
   );
 
   /// Whether this window currently has focus.
@@ -168,6 +175,9 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
 
   @override
   void dispose() {
+    // Stop following focus; the menu no longer exists.
+    FocusManager.instance.removeListener(_updateMenuState);
+
     // Dispose menu state notifier
     _menuStateNotifier.dispose();
 
@@ -390,6 +400,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
       isDirty: isDirty,
       hasAnyDirtyWindow: hasAnyDirty,
       hasSelection: hasSelection,
+      canCopy: hasSelection || textInputHasFocus(),
     );
   }
 
@@ -445,7 +456,12 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   }
 
   /// Sets up listener for selection changes to update Delete button visibility.
+  ///
+  /// Also follows the keyboard: Cut and Copy stay enabled while a text field
+  /// has focus, and no provider reports that.
   void _setupSelectionListener() {
+    FocusManager.instance.addListener(_updateMenuState);
+
     // Use addPostFrameCallback to ensure ref is available
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // Check if widget is still mounted before using ref
@@ -481,6 +497,42 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   void _handleDeleteSelected() {
     deleteSelectedImage(ref);
   }
+
+  /// Runs an Edit-menu clipboard action and reports what stopped it.
+  ///
+  /// Nothing is said when there was simply nothing to do — an empty clipboard
+  /// or no selection is an ordinary outcome, and a message for it would be
+  /// noise.
+  Future<void> _runClipboardAction(
+    Future<EditorClipboardOutcome> Function(EditorClipboard) action,
+  ) async {
+    final outcome = await action(EditorClipboard(ref: ref));
+
+    final navigatorContext = _navigatorKey.currentContext;
+    if (navigatorContext == null) return;
+    final l10n = AppLocalizations.of(navigatorContext);
+    if (l10n == null) return;
+
+    switch (outcome) {
+      case EditorClipboardOutcome.clipboardUnavailable:
+        _showSnackBar(Text(l10n.clipboardUnavailable));
+      case EditorClipboardOutcome.imageImportFailed:
+        _showSnackBar(Text(l10n.pasteImageFailed));
+      case EditorClipboardOutcome.done:
+      case EditorClipboardOutcome.nothing:
+      case EditorClipboardOutcome.handledByTextField:
+        break;
+    }
+  }
+
+  Future<void> _handleCut() =>
+      _runClipboardAction((clipboard) => clipboard.cut());
+
+  Future<void> _handleCopy() =>
+      _runClipboardAction((clipboard) => clipboard.copy());
+
+  Future<void> _handlePaste() =>
+      _runClipboardAction((clipboard) => clipboard.paste());
 
   Future<void> _handleShare() async {
     if (_currentFilePath.isEmpty) return;
@@ -723,6 +775,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
               includeEditMenu: true,
               isDeleteEnabled: menuState.hasSelection,
               onDelete: _handleDeleteSelected,
+              isCopyEnabled: menuState.canCopy,
+              onCut: _handleCut,
+              onCopy: _handleCopy,
+              onPaste: _handlePaste,
               child: child!,
             );
           },
@@ -745,11 +801,16 @@ class _MenuState {
     required this.isDirty,
     required this.hasAnyDirtyWindow,
     required this.hasSelection,
+    required this.canCopy,
   });
 
   final bool isDirty;
   final bool hasAnyDirtyWindow;
   final bool hasSelection;
+
+  /// Whether Cut and Copy have something to act on: an object on the page, or
+  /// a text field holding the keyboard.
+  final bool canCopy;
 
   @override
   bool operator ==(Object other) =>
@@ -757,8 +818,10 @@ class _MenuState {
       other is _MenuState &&
           isDirty == other.isDirty &&
           hasAnyDirtyWindow == other.hasAnyDirtyWindow &&
-          hasSelection == other.hasSelection;
+          hasSelection == other.hasSelection &&
+          canCopy == other.canCopy;
 
   @override
-  int get hashCode => Object.hash(isDirty, hasAnyDirtyWindow, hasSelection);
+  int get hashCode =>
+      Object.hash(isDirty, hasAnyDirtyWindow, hasSelection, canCopy);
 }

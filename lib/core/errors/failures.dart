@@ -106,6 +106,14 @@ class PdfRenderFailure extends Failure {
   List<Object?> get props => [...super.props, pageNumber];
 }
 
+/// Failure when the system clipboard cannot be read or written.
+class ClipboardFailure extends Failure {
+  const ClipboardFailure({
+    super.message = 'Clipboard is unavailable',
+    super.code = 'CLIPBOARD_ERROR',
+  });
+}
+
 /// Catch-all failure for unexpected errors.
 class UnknownFailure extends Failure {
   const UnknownFailure({

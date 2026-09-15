@@ -1,18 +1,11 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:file_picker/file_picker.dart';
-
-import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
-import 'package:pdfsign/presentation/providers/editor/original_pdf_provider.dart';
-import 'package:pdfsign/presentation/providers/editor/pdf_save_service_provider.dart';
-import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_viewer_state.dart';
@@ -29,7 +22,7 @@ import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/zoom_cont
 /// Displays PDF pages in a macOS Preview-style layout with:
 /// - Continuous vertical scroll
 /// - Pinch-to-zoom (trackpad) with Transform.scale for smooth performance
-/// - Keyboard shortcuts (Cmd+/-/0, PageUp/Down, Arrows, Cmd+G)
+/// - Keyboard navigation (PageUp/Down, Arrows, Home/End)
 /// - Center-focused zoom
 /// - Auto-hiding page indicator
 class PdfViewer extends ConsumerStatefulWidget {
@@ -54,9 +47,6 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
 
   // Scroll amount for arrow keys
   static const double _arrowScrollAmount = 50.0;
-
-  // Internal clipboard for copy/paste (stores image ID to duplicate)
-  String? _clipboardImageId;
 
   /// The visual scale during pinch gesture (baseScale * gestureScaleFactor)
   double get _visualScale => _baseScale * _gestureScaleFactor;
@@ -184,29 +174,6 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
     // Note: Delete/Backspace is handled at EditorScreen level via Shortcuts/Actions
     // to work independently of focus state.
 
-    // Cmd+C: Copy selected image
-    if (isCmd && logicalKey == LogicalKeyboardKey.keyC) {
-      _copySelectedImage();
-      return KeyEventResult.handled;
-    }
-
-    // Cmd+V: Paste copied image
-    if (isCmd && logicalKey == LogicalKeyboardKey.keyV) {
-      _pasteImage();
-      return KeyEventResult.handled;
-    }
-
-    // Cmd+S: Save document
-    if (isCmd && logicalKey == LogicalKeyboardKey.keyS) {
-      final isShift = HardwareKeyboard.instance.isShiftPressed;
-      if (isShift) {
-        _saveAs();
-      } else {
-        _save();
-      }
-      return KeyEventResult.handled;
-    }
-
     // Cmd+R: Reload document
     if (isCmd && logicalKey == LogicalKeyboardKey.keyR) {
       _reloadDocument();
@@ -290,132 +257,6 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
     }
 
     return KeyEventResult.ignored;
-  }
-
-  void _copySelectedImage() {
-    final selectedId = ref.read(editorSelectionProvider);
-    if (selectedId != null) {
-      setState(() {
-        _clipboardImageId = selectedId;
-      });
-    }
-  }
-
-  void _pasteImage() {
-    if (_clipboardImageId != null) {
-      final duplicate = ref.read(placedImagesProvider.notifier).duplicateImage(
-            _clipboardImageId!,
-            offset: const Offset(20, 20),
-          );
-      if (duplicate != null) {
-        ref.read(editorSelectionProvider.notifier).select(duplicate.id);
-      }
-    }
-  }
-
-  Future<void> _save() async {
-    final state = ref.read(pdfDocumentProvider);
-    final filePath = state.maybeMap(
-      loaded: (s) => s.document.filePath,
-      orElse: () => null,
-    );
-
-    if (filePath == null) return;
-
-    final placedImages = ref.read(placedImagesProvider);
-    final isDirty = ref.read(documentDirtyProvider);
-
-    // Nothing to save if no changes were made
-    if (placedImages.isEmpty && !isDirty) return;
-
-    // Get original bytes from storage
-    final storage = ref.read(originalPdfStorageProvider);
-    if (!storage.hasData) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Save failed: no original PDF stored')),
-        );
-      }
-      return;
-    }
-
-    final originalBytes = await storage.getBytes();
-
-    final saveService = ref.read(pdfSaveServiceProvider);
-    final result = await saveService.savePdfFromBytes(
-      originalBytes: originalBytes,
-      placedImages: placedImages,
-      outputPath: filePath,
-    );
-
-    result.fold(
-      (failure) {
-        // Show error snackbar
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Save failed: ${failure.message}')),
-          );
-        }
-      },
-      (_) {
-        // The objects stay on the page and remain editable; recording them as
-        // the written baseline is what makes the document clean again.
-        ref.read(savedPlacedImagesProvider.notifier).markSaved(placedImages);
-      },
-    );
-  }
-
-  Future<void> _saveAs() async {
-    final state = ref.read(pdfDocumentProvider);
-    final filePath = state.maybeMap(
-      loaded: (s) => s.document.filePath,
-      orElse: () => null,
-    );
-
-    if (filePath == null) return;
-
-    // Show save dialog
-    final outputPath = await FilePicker.platform.saveFile(
-      dialogTitle: 'Save PDF As',
-      fileName: 'document.pdf',
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
-
-    if (outputPath == null) return; // User cancelled
-
-    final placedImages = ref.read(placedImagesProvider);
-    final storage = ref.read(originalPdfStorageProvider);
-
-    // Get original bytes from storage or fallback to disk
-    final originalBytes = storage.hasData
-        ? await storage.getBytes()
-        : await File(filePath).readAsBytes();
-
-    final saveService = ref.read(pdfSaveServiceProvider);
-    final result = await saveService.savePdfFromBytes(
-      originalBytes: originalBytes,
-      placedImages: placedImages,
-      outputPath: outputPath,
-    );
-
-    result.fold(
-      (failure) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Save failed: ${failure.message}')),
-          );
-        }
-      },
-      (savedPath) {
-        ref.read(savedPlacedImagesProvider.notifier).markSaved(placedImages);
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Saved to: $savedPath')),
-          );
-        }
-      },
-    );
   }
 
   void _scrollBy(double deltaX, double deltaY) {

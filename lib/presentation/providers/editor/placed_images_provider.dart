@@ -30,6 +30,7 @@ class PlacedImages extends _$PlacedImages {
     required int pageIndex,
     required Offset position,
     required Size size,
+    double rotation = 0,
   }) {
     final image = PlacedImage(
       id: _uuid.v4(),
@@ -38,6 +39,7 @@ class PlacedImages extends _$PlacedImages {
       pageIndex: pageIndex,
       position: position,
       size: size,
+      rotation: rotation,
     );
 
     state = [...state, image];

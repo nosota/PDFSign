@@ -389,6 +389,36 @@ abstract class AppLocalizations {
   /// **'Delete'**
   String get menuDelete;
 
+  /// Cut menu item in Edit menu
+  ///
+  /// In en, this message translates to:
+  /// **'Cut'**
+  String get menuCut;
+
+  /// Copy menu item in Edit menu
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get menuCopy;
+
+  /// Paste menu item in Edit menu
+  ///
+  /// In en, this message translates to:
+  /// **'Paste'**
+  String get menuPaste;
+
+  /// Shown when the system clipboard cannot be read or written
+  ///
+  /// In en, this message translates to:
+  /// **'The clipboard is unavailable'**
+  String get clipboardUnavailable;
+
+  /// Shown when an image pasted from the clipboard cannot be imported
+  ///
+  /// In en, this message translates to:
+  /// **'That image could not be added'**
+  String get pasteImageFailed;
+
   /// Quit application menu item
   ///
   /// In en, this message translates to:

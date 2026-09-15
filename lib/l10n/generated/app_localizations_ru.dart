@@ -126,6 +126,21 @@ class AppLocalizationsRu extends AppLocalizations {
   String get menuDelete => 'Удалить';
 
   @override
+  String get menuCut => 'Вырезать';
+
+  @override
+  String get menuCopy => 'Копировать';
+
+  @override
+  String get menuPaste => 'Вставить';
+
+  @override
+  String get clipboardUnavailable => 'Буфер обмена недоступен';
+
+  @override
+  String get pasteImageFailed => 'Не удалось добавить изображение';
+
+  @override
   String get menuQuit => 'Выход из PDFSign';
 
   @override

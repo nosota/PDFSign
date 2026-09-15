@@ -102,6 +102,21 @@ class AppLocalizationsKo extends AppLocalizations {
   String get menuDelete => '삭제';
 
   @override
+  String get menuCut => 'Cut';
+
+  @override
+  String get menuCopy => 'Copy';
+
+  @override
+  String get menuPaste => 'Paste';
+
+  @override
+  String get clipboardUnavailable => 'The clipboard is unavailable';
+
+  @override
+  String get pasteImageFailed => 'That image could not be added';
+
+  @override
   String get menuQuit => 'PDFSign 종료';
 
   @override

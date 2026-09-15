@@ -44,6 +44,10 @@ class AppMenuBar extends ConsumerStatefulWidget {
     this.includeEditMenu = false,
     this.isDeleteEnabled = false,
     this.onDelete,
+    this.isCopyEnabled = false,
+    this.onCut,
+    this.onCopy,
+    this.onPaste,
     super.key,
   });
 
@@ -120,6 +124,23 @@ class AppMenuBar extends ConsumerStatefulWidget {
 
   /// Callback when Delete is selected.
   final VoidCallback? onDelete;
+
+  /// Whether anything is selected to cut or copy.
+  ///
+  /// Paste has no equivalent flag: what the clipboard holds can change while
+  /// the menu is closed and `PlatformMenuBar` offers no hook to revalidate as
+  /// it opens, so Paste stays enabled and does nothing when there is nothing
+  /// to paste.
+  final bool isCopyEnabled;
+
+  /// Cuts the selected object, or the selected text when a field has focus.
+  final VoidCallback? onCut;
+
+  /// Copies the selected object, or the selected text when a field has focus.
+  final VoidCallback? onCopy;
+
+  /// Pastes onto the page, or into the field that has focus.
+  final VoidCallback? onPaste;
 
   @override
   ConsumerState<AppMenuBar> createState() => _AppMenuBarState();
@@ -336,6 +357,34 @@ class _AppMenuBarState extends ConsumerState<AppMenuBar> {
   /// Contains Delete item that's enabled only when an object is selected.
   List<PlatformMenuItem> _buildEditMenuItems() {
     return [
+      PlatformMenuItemGroup(
+        members: [
+          PlatformMenuItem(
+            label: widget.localizations.menuCut,
+            shortcut: const SingleActivator(
+              LogicalKeyboardKey.keyX,
+              meta: true,
+            ),
+            onSelected: widget.isCopyEnabled ? widget.onCut : null,
+          ),
+          PlatformMenuItem(
+            label: widget.localizations.menuCopy,
+            shortcut: const SingleActivator(
+              LogicalKeyboardKey.keyC,
+              meta: true,
+            ),
+            onSelected: widget.isCopyEnabled ? widget.onCopy : null,
+          ),
+          PlatformMenuItem(
+            label: widget.localizations.menuPaste,
+            shortcut: const SingleActivator(
+              LogicalKeyboardKey.keyV,
+              meta: true,
+            ),
+            onSelected: widget.onPaste,
+          ),
+        ],
+      ),
       PlatformMenuItemGroup(
         members: [
           PlatformMenuItem(

@@ -79,5 +79,10 @@
     "description": "Tooltip for delete button in toolbar"
   },
   "menuEdit": "Édition",
-  "menuDelete": "Supprimer"
+  "menuDelete": "Supprimer",
+  "menuCut": "Cut",
+  "menuCopy": "Copy",
+  "menuPaste": "Paste",
+  "clipboardUnavailable": "The clipboard is unavailable",
+  "pasteImageFailed": "That image could not be added"
 }

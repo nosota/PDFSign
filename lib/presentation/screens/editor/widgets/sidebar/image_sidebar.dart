@@ -1,12 +1,8 @@
-import 'dart:io';
 
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:super_clipboard/super_clipboard.dart';
-import 'package:uuid/uuid.dart';
 
 import 'package:pdfsign/presentation/providers/sidebar/sidebar_images_provider.dart';
 import 'package:pdfsign/presentation/providers/sidebar/sidebar_selection_provider.dart';
@@ -45,7 +41,6 @@ class _ImageSidebarState extends ConsumerState<ImageSidebar> {
 
     return Focus(
       focusNode: _focusNode,
-      onKeyEvent: _handleKeyEvent,
       child: GestureDetector(
         // Focus sidebar when clicking, clear selection
         onTap: () {
@@ -97,43 +92,6 @@ class _ImageSidebarState extends ConsumerState<ImageSidebar> {
       ),
       ),
     );
-  }
-
-  KeyEventResult _handleKeyEvent(FocusNode node, KeyEvent event) {
-    if (event is KeyDownEvent &&
-        event.logicalKey == LogicalKeyboardKey.keyV &&
-        (HardwareKeyboard.instance.isMetaPressed ||
-            HardwareKeyboard.instance.isControlPressed)) {
-      _handlePaste();
-      return KeyEventResult.handled;
-    }
-    return KeyEventResult.ignored;
-  }
-
-  Future<void> _handlePaste() async {
-    final clipboard = SystemClipboard.instance;
-    if (clipboard == null) return;
-
-    final reader = await clipboard.read();
-
-    // Try PNG format first, then JPEG
-    for (final format in [Formats.png, Formats.jpeg]) {
-      if (reader.canProvide(format)) {
-        reader.getFile(format, (file) async {
-          final data = await file.readAll();
-
-          // Save to temp file
-          final tempDir = await getTemporaryDirectory();
-          final ext = format == Formats.png ? 'png' : 'jpg';
-          final tempFile = File('${tempDir.path}/${const Uuid().v4()}.$ext');
-          await tempFile.writeAsBytes(data);
-
-          // Add to sidebar using existing flow
-          ref.read(sidebarImagesProvider.notifier).addImages([tempFile.path]);
-        });
-        return;
-      }
-    }
   }
 
   Widget _buildEmptyState(BuildContext context) {
