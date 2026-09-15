@@ -14,8 +14,8 @@ import 'package:equatable/equatable.dart';
 /// null instead of throwing.
 class ClipboardPlacedObject extends Equatable {
   const ClipboardPlacedObject({
-    required this.sourceImageId,
     required this.imagePath,
+    this.sourceImageId,
     required this.size,
     required this.position,
     this.rotation = 0,
@@ -24,8 +24,9 @@ class ClipboardPlacedObject extends Equatable {
   /// Payload format version. Bump when the shape changes incompatibly.
   static const currentVersion = 1;
 
-  /// Library image the object was created from.
-  final String sourceImageId;
+  /// Library row the object came from, or null when it has none — an image
+  /// pasted from another application is stored with the document instead.
+  final String? sourceImageId;
 
   /// Path to the image file in app storage at the time of copying.
   ///
@@ -64,11 +65,13 @@ class ClipboardPlacedObject extends Equatable {
     }
 
     final sourceImageId = json['sourceImageId'];
+    if (sourceImageId != null &&
+        (sourceImageId is! String || sourceImageId.isEmpty)) {
+      return null;
+    }
+
     final imagePath = json['imagePath'];
-    if (sourceImageId is! String ||
-        sourceImageId.isEmpty ||
-        imagePath is! String ||
-        imagePath.isEmpty) {
+    if (imagePath is! String || imagePath.isEmpty) {
       return null;
     }
 
@@ -86,7 +89,7 @@ class ClipboardPlacedObject extends Equatable {
     }
 
     return ClipboardPlacedObject(
-      sourceImageId: sourceImageId,
+      sourceImageId: sourceImageId as String?,
       imagePath: imagePath,
       size: Size(width, height),
       position: Offset(x, y),

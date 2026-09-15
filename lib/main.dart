@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pdfsign/core/window/window_arguments.dart';
 import 'package:pdfsign/core/window/window_manager_service.dart';
 import 'package:pdfsign/data/models/sidebar_image_model.dart';
+import 'package:pdfsign/data/repositories/pasted_image_storage_impl.dart';
 import 'package:pdfsign/presentation/apps/pdf_viewer_app.dart';
 import 'package:pdfsign/presentation/apps/settings_app.dart';
 import 'package:pdfsign/presentation/apps/welcome_app.dart';
@@ -59,6 +60,13 @@ Future<Isar> _initializeIsar() async {
 Future<void> _runWelcomeWindow() async {
   // Initialize window manager for main window
   await WindowManagerService.instance.initializeMainWindow();
+
+  // Images pasted into a document are stored with it rather than in the
+  // library, so nothing owns their files the way a library row does. This is
+  // the one moment they can safely be swept: the main window starts before any
+  // document window exists, and objects pasted in one window can be copied
+  // into another, so the files are shared for the length of a session.
+  await PastedImageStorageImpl().clear();
 
   // Pre-initialize dependencies
   final sharedPrefs = await SharedPreferences.getInstance();

@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,20 +8,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pdfsign/domain/entities/clipboard_contents.dart';
 import 'package:pdfsign/domain/entities/clipboard_placed_object.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
-import 'package:pdfsign/presentation/providers/sidebar/sidebar_images_provider.dart';
+import 'package:pdfsign/presentation/providers/repository_providers.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/placed_image_placement.dart';
 
 /// A resolved paste: what to put on the page, and where.
 class PastePlan {
   const PastePlan({
-    required this.sourceImageId,
     required this.imagePath,
     required this.position,
     required this.size,
     required this.rotation,
+    this.sourceImageId,
   });
 
-  final String sourceImageId;
+  /// Library row the object comes from, or null for a pasted image.
+  final String? sourceImageId;
   final String imagePath;
   final Offset position;
   final Size size;
@@ -89,11 +92,12 @@ class PastePlanner {
     return image == null ? null : _fromImage(image, object);
   }
 
-  /// Imports a bitmap into the library and places it.
+  /// Stores a bitmap with the document and places it.
   ///
-  /// The library writes the bytes into app storage under a UUID (ADR-0001), so
-  /// the placed object keeps working for as long as the library row does — and
-  /// the user gets the pasted image in the sidebar to reuse.
+  /// A pasted image is not added to the image library: it belongs to this
+  /// document, not to the user's collection of stamps and signatures. It still
+  /// needs a file on disk, because the object is drawn from its path and
+  /// `PdfSaveService` reads that path when embedding it (ADR-0009).
   ///
   /// [object] is the payload the bitmap arrived with, if any: it carries the
   /// size and rotation the object was copied at, which survive the detour.
@@ -101,28 +105,40 @@ class PastePlanner {
     ClipboardImage image,
     ClipboardPlacedObject? object,
   ) async {
-    final imported = await ref
-        .read(sidebarImagesProvider.notifier)
-        .addImageData(image.bytes, fileExtension: image.format.fileExtension);
-    if (imported == null) {
+    final stored = await ref
+        .read(pastedImageStorageProvider)
+        .save(image.bytes, fileExtension: image.format.fileExtension);
+    final imagePath = stored.fold((failure) => null, (path) => path);
+    if (imagePath == null) {
       return null;
     }
 
-    final size = object?.size ??
-        PlacedImagePlacement.defaultSizeFor(
-          imported.height > 0 ? imported.width / imported.height : 1,
-          pageSize,
-        );
-
+    final size = object?.size ?? await _sizeFor(image.bytes);
     return PastePlan(
-      sourceImageId: imported.id,
-      imagePath: imported.filePath,
+      imagePath: imagePath,
       position: object == null
           ? PlacedImagePlacement.centeredOnPage(size, pageSize)
           : object.position + PlacedImagePlacement.cascadeStep,
       size: size,
       rotation: object?.rotation ?? 0,
     );
+  }
+
+  /// Size a freshly pasted bitmap gets, from its own proportions.
+  Future<Size> _sizeFor(Uint8List bytes) async {
+    var aspectRatio = 1.0;
+    try {
+      final codec = await ui.instantiateImageCodec(bytes);
+      final frame = await codec.getNextFrame();
+      if (frame.image.height > 0) {
+        aspectRatio = frame.image.width / frame.image.height;
+      }
+      frame.image.dispose();
+    } catch (e) {
+      // Undecodable here means the clipboard offered a format it could not
+      // produce. A square is a better answer than refusing the paste.
+    }
+    return PlacedImagePlacement.defaultSizeFor(aspectRatio, pageSize);
   }
 
   /// Steps the position aside while an object already sits exactly there.

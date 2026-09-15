@@ -25,8 +25,8 @@ class PlacedImages extends _$PlacedImages {
   /// Returns the created object so the caller can select it without having to
   /// guess which entry of [state] is the new one.
   PlacedImage addImage({
-    required String sourceImageId,
     required String imagePath,
+    String? sourceImageId,
     required int pageIndex,
     required Offset position,
     required Size size,

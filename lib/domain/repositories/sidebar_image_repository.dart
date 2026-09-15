@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:dartz/dartz.dart';
 
 import 'package:pdfsign/core/errors/failure.dart';
@@ -32,19 +30,6 @@ abstract class SidebarImageRepository {
     required int width,
     required int height,
     required int fileSize,
-  });
-
-  /// Adds a new image from raw bytes, as pasted from the clipboard.
-  ///
-  /// Stores the bytes in app storage (ADR-0001) under a unique name.
-  /// Returns the created [SidebarImage] with generated ID.
-  /// Returns a [Failure] if the operation fails.
-  Future<Either<Failure, SidebarImage>> addImageFromBytes({
-    required Uint8List bytes,
-    required String fileExtension,
-    required String fileName,
-    required int width,
-    required int height,
   });
 
   /// Removes an image by its ID.

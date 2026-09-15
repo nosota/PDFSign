@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -47,23 +46,6 @@ class ImageStorageService {
     final destinationPath = path.join(imagesDir.path, uniqueName);
 
     await sourceFile.copy(destinationPath);
-
-    return destinationPath;
-  }
-
-  /// Writes image bytes to app storage and returns the new path.
-  ///
-  /// The clipboard hands over bytes rather than a file, and going through a
-  /// temporary file first would only leave one behind to clean up.
-  Future<String> saveImageBytes(
-    Uint8List bytes, {
-    required String fileExtension,
-  }) async {
-    final imagesDir = await getImagesDirectory();
-    final uniqueName = '${_uuid.v4()}.$fileExtension';
-    final destinationPath = path.join(imagesDir.path, uniqueName);
-
-    await File(destinationPath).writeAsBytes(bytes);
 
     return destinationPath;
   }

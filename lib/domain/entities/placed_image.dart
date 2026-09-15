@@ -10,8 +10,12 @@ class PlacedImage extends Equatable {
   /// Unique identifier for this placed image.
   final String id;
 
-  /// Reference to the source image in the sidebar.
-  final String sourceImageId;
+  /// Library row this object came from, or null when it has none.
+  ///
+  /// An image pasted from another application is stored with the document
+  /// rather than in the library, so it has no row to point at. Nothing looks
+  /// the id up; it records where the object came from.
+  final String? sourceImageId;
 
   /// Path to the actual image file in app storage.
   final String imagePath;
@@ -31,7 +35,7 @@ class PlacedImage extends Equatable {
 
   const PlacedImage({
     required this.id,
-    required this.sourceImageId,
+    this.sourceImageId,
     required this.imagePath,
     required this.pageIndex,
     required this.position,

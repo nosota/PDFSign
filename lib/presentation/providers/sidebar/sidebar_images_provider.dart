@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -61,38 +60,6 @@ class SidebarImages extends _$SidebarImages {
 
       frame.image.dispose();
 
-      return result.fold((failure) => null, (image) => image);
-    } catch (e) {
-      // Not a decodable image
-      return null;
-    }
-  }
-
-  /// Adds an image from raw bytes, as pasted from the clipboard.
-  ///
-  /// Returns the stored row, or null when the bytes are not a decodable
-  /// image — which is what the clipboard offers if another application
-  /// advertises a format it cannot actually produce.
-  Future<SidebarImage?> addImageData(
-    Uint8List bytes, {
-    required String fileExtension,
-  }) async {
-    final repository = ref.read(sidebarImageRepositoryProvider);
-
-    try {
-      final codec = await ui.instantiateImageCodec(bytes);
-      final frame = await codec.getNextFrame();
-      final width = frame.image.width;
-      final height = frame.image.height;
-      frame.image.dispose();
-
-      final result = await repository.addImageFromBytes(
-        bytes: bytes,
-        fileExtension: fileExtension,
-        fileName: 'pasted.$fileExtension',
-        width: width,
-        height: height,
-      );
       return result.fold((failure) => null, (image) => image);
     } catch (e) {
       // Not a decodable image

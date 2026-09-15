@@ -14,6 +14,7 @@ import 'package:pdfsign/domain/entities/pdf_document_info.dart';
 import 'package:pdfsign/domain/entities/pdf_page_info.dart';
 import 'package:pdfsign/domain/entities/sidebar_image.dart';
 import 'package:pdfsign/domain/repositories/clipboard_repository.dart';
+import 'package:pdfsign/domain/repositories/pasted_image_storage.dart';
 import 'package:pdfsign/domain/repositories/pdf_document_repository.dart';
 import 'package:pdfsign/domain/repositories/sidebar_image_repository.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_clipboard.dart';
@@ -34,6 +35,7 @@ void main() {
   late ProviderContainer container;
   late _FakeClipboardRepository clipboard;
   late _FakeSidebarImageRepository library;
+  late _FakePastedImageStorage pasted;
   late Directory storage;
   late String imagePath;
   late Uint8List pngBytes;
@@ -48,12 +50,14 @@ void main() {
     await File(imagePath).writeAsBytes(pngBytes);
 
     clipboard = _FakeClipboardRepository();
-    library = _FakeSidebarImageRepository(storage.path);
+    library = _FakeSidebarImageRepository();
+    pasted = _FakePastedImageStorage(storage.path);
 
     container = ProviderContainer(
       overrides: [
         clipboardRepositoryProvider.overrideWithValue(clipboard),
         sidebarImageRepositoryProvider.overrideWithValue(library),
+        pastedImageStorageProvider.overrideWithValue(pasted),
         pdfDocumentRepositoryProvider
             .overrideWithValue(_FakePdfDocumentRepository()),
       ],
@@ -323,8 +327,11 @@ void main() {
       expect(await run(tester, editorClipboard.paste), EditorClipboardOutcome.done);
 
       final placed = container.read(placedImagesProvider).single;
-      expect(library.added, hasLength(1));
-      expect(placed.sourceImageId, library.added.single.id);
+      expect(pasted.saved, hasLength(1));
+      expect(placed.imagePath, pasted.saved.single);
+      // Stored with the document, not added to the library.
+      expect(library.images, isEmpty);
+      expect(placed.sourceImageId, isNull);
       // The size it was copied at survives the detour through the bitmap.
       expect(placed.size, const Size(120, 60));
     });
@@ -343,7 +350,7 @@ void main() {
   });
 
   group('pasting an image from another application', () {
-    testWidgets('should add it to the library and centre it on the page',
+    testWidgets('should store it with the document and centre it on the page',
         (tester) async {
       await openDocument();
       clipboard.contents = ClipboardContents(
@@ -353,9 +360,12 @@ void main() {
 
       expect(await run(tester, editorClipboard.paste), EditorClipboardOutcome.done);
 
-      expect(library.added, hasLength(1));
+      // The image belongs to this document, not to the user's library.
+      expect(pasted.saved, hasLength(1));
+      expect(library.images, isEmpty);
       final placed = container.read(placedImagesProvider).single;
-      expect(placed.imagePath, library.added.single.filePath);
+      expect(placed.imagePath, pasted.saved.single);
+      expect(placed.sourceImageId, isNull);
       expect(
         placed.position.dx + placed.size.width / 2,
         closeTo(_a4.width / 2, 0.001),
@@ -366,10 +376,10 @@ void main() {
       );
     });
 
-    testWidgets('should report an image the library will not take',
+    testWidgets('should report an image that could not be stored',
         (tester) async {
       await openDocument();
-      library.failAdds = true;
+      pasted.failSaves = true;
       clipboard.contents = ClipboardContents(
         image: ClipboardImage(bytes: pngBytes, format: ClipboardImageFormat.png),
       );
@@ -412,7 +422,7 @@ void main() {
 
       expect(await run(tester, editorClipboard.paste), EditorClipboardOutcome.nothing);
       // The clipboard is not even consulted: there is nowhere to put anything.
-      expect(library.added, isEmpty);
+      expect(pasted.saved, isEmpty);
     });
   });
 
@@ -505,44 +515,13 @@ class _FakeClipboardRepository implements ClipboardRepository {
 }
 
 class _FakeSidebarImageRepository implements SidebarImageRepository {
-  _FakeSidebarImageRepository(this._storagePath);
-
-  final String _storagePath;
-  final List<SidebarImage> added = [];
-  bool failAdds = false;
+  final List<SidebarImage> images = [];
 
   @override
-  Future<Either<Failure, SidebarImage>> addImageFromBytes({
-    required Uint8List bytes,
-    required String fileExtension,
-    required String fileName,
-    required int width,
-    required int height,
-  }) async {
-    if (failAdds) {
-      return const Left(StorageFailure(message: 'nope'));
-    }
-    final image = SidebarImage(
-      id: 'library-${added.length + 1}',
-      filePath: '$_storagePath/stored-${added.length + 1}.$fileExtension',
-      fileName: fileName,
-      addedAt: DateTime(2026),
-      orderIndex: added.length,
-      width: width,
-      height: height,
-      fileSize: bytes.length,
-    );
-    await File(image.filePath).writeAsBytes(bytes);
-    added.add(image);
-    return Right(image);
-  }
+  Stream<List<SidebarImage>> watchImages() => Stream.value(images);
 
   @override
-  Stream<List<SidebarImage>> watchImages() => Stream.value(added);
-
-  @override
-  Future<Either<Failure, List<SidebarImage>>> cleanupInvalidImages() =>
-      throw UnimplementedError();
+  Future<Either<Failure, List<SidebarImage>>> getImages() async => Right(images);
 
   @override
   Future<Either<Failure, SidebarImage>> addImage({
@@ -555,7 +534,8 @@ class _FakeSidebarImageRepository implements SidebarImageRepository {
       throw UnimplementedError();
 
   @override
-  Future<Either<Failure, List<SidebarImage>>> getImages() async => Right(added);
+  Future<Either<Failure, List<SidebarImage>>> cleanupInvalidImages() =>
+      throw UnimplementedError();
 
   @override
   Future<Either<Failure, Unit>> removeImage(String id) =>
@@ -571,6 +551,31 @@ class _FakeSidebarImageRepository implements SidebarImageRepository {
   @override
   Future<Either<Failure, Unit>> updateComment(String id, String? comment) =>
       throw UnimplementedError();
+}
+
+class _FakePastedImageStorage implements PastedImageStorage {
+  _FakePastedImageStorage(this._directory);
+
+  final String _directory;
+  final List<String> saved = [];
+  bool failSaves = false;
+
+  @override
+  Future<Either<Failure, String>> save(
+    Uint8List bytes, {
+    required String fileExtension,
+  }) async {
+    if (failSaves) {
+      return const Left(StorageFailure(message: 'nope'));
+    }
+    final path = '$_directory/pasted-${saved.length + 1}.$fileExtension';
+    await File(path).writeAsBytes(bytes);
+    saved.add(path);
+    return Right(path);
+  }
+
+  @override
+  Future<void> clear() async => saved.clear();
 }
 
 /// A two-page A4 document; nothing is ever rendered.

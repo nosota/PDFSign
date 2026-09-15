@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'dart:typed_data';
-
 import 'package:dartz/dartz.dart';
 import 'package:uuid/uuid.dart';
 
@@ -57,33 +55,6 @@ class SidebarImageRepositoryImpl implements SidebarImageRepository {
           width: width,
           height: height,
           fileSize: fileSize,
-        ),
-      );
-    } catch (e) {
-      return Left(StorageFailure(message: 'Failed to add image: $e'));
-    }
-  }
-
-  @override
-  Future<Either<Failure, SidebarImage>> addImageFromBytes({
-    required Uint8List bytes,
-    required String fileExtension,
-    required String fileName,
-    required int width,
-    required int height,
-  }) async {
-    try {
-      final storagePath = await _storageService.saveImageBytes(
-        bytes,
-        fileExtension: fileExtension,
-      );
-      return Right(
-        await _register(
-          storagePath: storagePath,
-          fileName: fileName,
-          width: width,
-          height: height,
-          fileSize: bytes.length,
         ),
       );
     } catch (e) {

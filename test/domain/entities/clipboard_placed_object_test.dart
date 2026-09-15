@@ -47,24 +47,33 @@ void main() {
       expect(ClipboardPlacedObject.fromJson(versionless), isNull);
     });
 
-    test('should be refused when an identifier is missing or empty', () {
-      for (final key in ['sourceImageId', 'imagePath']) {
-        expect(
-          ClipboardPlacedObject.fromJson(object.toJson()..remove(key)),
-          isNull,
-          reason: 'missing $key',
-        );
-        expect(
-          ClipboardPlacedObject.fromJson(object.toJson()..[key] = ''),
-          isNull,
-          reason: 'empty $key',
-        );
-        expect(
-          ClipboardPlacedObject.fromJson(object.toJson()..[key] = 7),
-          isNull,
-          reason: '$key of the wrong type',
-        );
+    test('should be refused when the image path is missing or empty', () {
+      for (final broken in [
+        object.toJson()..remove('imagePath'),
+        object.toJson()..['imagePath'] = '',
+        object.toJson()..['imagePath'] = 7,
+      ]) {
+        expect(ClipboardPlacedObject.fromJson(broken), isNull);
       }
+    });
+
+    test('should be refused when the library id is present but unusable', () {
+      for (final broken in [
+        object.toJson()..['sourceImageId'] = '',
+        object.toJson()..['sourceImageId'] = 7,
+      ]) {
+        expect(ClipboardPlacedObject.fromJson(broken), isNull);
+      }
+    });
+
+    test('should accept no library id, as a pasted image has none', () {
+      // An image pasted from another application is stored with the document
+      // rather than in the library, so it has no row to point at.
+      final withoutId = object.toJson()..remove('sourceImageId');
+      final decoded = ClipboardPlacedObject.fromJson(withoutId);
+      expect(decoded, isNotNull);
+      expect(decoded!.sourceImageId, isNull);
+      expect(decoded.imagePath, '/storage/abc.png');
     });
 
     test('should be refused when a dimension is not a positive number', () {
