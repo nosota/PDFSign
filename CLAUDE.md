@@ -235,14 +235,14 @@ go_router, mime
 
 - Adding a dependency requires a stated justification and a check that no existing dependency covers the need.
 - No deprecated or unmaintained packages. Prefer Flutter-team and well-established packages.
-- Review licences for commercial compatibility. Syncfusion is used under a Community licence — **never commit a licence key** (one is currently in `TODO.md` and must be removed; REQUIREMENTS.md §13.13).
+- Review licences for commercial compatibility. Syncfusion is used under a Community licence — **never commit a licence key** (one is currently in `TODO.md` and must be removed; REQUIREMENTS.md §13.14).
 - `go_router` and `mime` are unused. Either wire them up deliberately or remove them; do not build new code on them casually.
 
 ---
 
 ## Testing
 
-The project has **one test** — `test/presentation/screens/editor/widgets/pdf_viewer/pdf_drop_target_test.dart`, a widget test covering drop placement geometry. Everything else is uncovered, which remains the largest known risk (CODE_REVIEW §5.3). The following is the target state, and applies to code you add or change:
+The project has 42 Dart tests (page-column geometry and drag-and-drop placement) and 15 native tests (`macos/RunnerTests`, toolbar item management). Everything else is uncovered, which remains the largest known risk (CODE_REVIEW §5.3). The following is the target state, and applies to code you add or change:
 
 - New business logic (providers, repositories, services, coordinate math) ships with unit tests.
 - Test file mirrors source structure; one test file per source file.
@@ -250,7 +250,10 @@ The project has **one test** — `test/presentation/screens/editor/widgets/pdf_v
 - Mock with **mocktail** or **mockito** (both declared).
 - Test providers with `ProviderContainer` and `.overrideWith()`.
 - Test error cases first, happy path last.
-- **Coverage target: 80%.** Current: effectively 0% (one widget test). Do not report the target as if it were achieved.
+- **Coverage target: 80%.** Current: far below it — two feature areas out of the whole app. Do not report the target as if it were achieved.
+- Native code is tested with XCTest in `macos/RunnerTests`, run with
+  `xcodebuild test -workspace macos/Runner.xcworkspace -scheme Runner -destination 'platform=macOS'`.
+  **AppKit carries state between objects**: `NSToolbar` shares its item set *live* between instances created with the same identifier — removing an item from one window's toolbar removes it from every other window's too. Give each window its own identifier, use a throwaway one in destructive tests, and set `isReleasedWhenClosed = false` on any `NSWindow` a test closes.
 - Highest-value targets to cover first: `placed_image_overlay` transform math, `PdfPageCache` eviction and key quantization, `OriginalPdfStorage`, `RecentFilesRepositoryImpl` locking, `PdfSaveService` rotation and embedding.
 
 ---

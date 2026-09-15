@@ -513,9 +513,10 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 
 | Aspect | State |
 |--------|-------|
-| `flutter analyze` | 930 issues: 0 errors, **10 warnings**, 920 info |
-| Unit tests | **29** — page-column geometry (`PdfPageLayout`) |
-| Widget tests | **10** — drop placement, off-page snapping, drag feedback |
+| `flutter analyze` | 929 issues: 0 errors, **10 warnings**, 919 info |
+| Unit tests | **30** — page-column geometry (`PdfPageLayout`) |
+| Widget tests | **12** — drop placement, off-page snapping, drag feedback |
+| Native tests | **15** — toolbar item management (`macos/RunnerTests`) |
 | Integration tests | **none** |
 | Golden tests | **none** |
 | CI | none |
@@ -527,7 +528,7 @@ The 12 warnings are all actionable and cheap to clear:
 | Warning | Location |
 |---------|----------|
 | `removed_lint` — `package_api_docs` was removed in Dart 3.7.0 | `analysis_options.yaml:119` |
-| `unused_element` — `_isSettingsWindowAlive`, `_bringSettingsWindowToFront` | `window_manager_service.dart:282, 317` (see §13.11) |
+| `unused_element` — `_isSettingsWindowAlive`, `_bringSettingsWindowToFront` | `window_manager_service.dart:282, 317` (see §13.12) |
 | `unused_import` — `window_manager_service.dart` | `pdf_viewer_app.dart:16` |
 | `unused_field` — `_previousScale`, `_viewportWidth` | `pdf_page_list.dart:46, 47` |
 | `inference_failure_on_instance_creation` — untyped `Future.delayed` ×6 | `pdf_viewer_app.dart:445, 532`; `settings_app.dart:199, 286`; `welcome_app.dart:156, 243` |
@@ -617,13 +618,17 @@ Page measurement itself is no longer a problem: `PdfPageLayout` precomputes page
 ### 13.10 `Close All` waits a fixed 5 seconds
 After broadcasting Save All, the initiating window sleeps 5 s before checking whether saves succeeded, instead of awaiting acknowledgements.
 
-### 13.11 Dead private methods
+### 13.11 Toolbar helpers live in a global mutable dictionary
+
+`toolbarHelpers` in `AppDelegate.swift` is a file-scope mutable dictionary keyed by `ObjectIdentifier(window)` — the window's address, which the allocator reuses. Entries are now evicted when a window closes and every lookup confirms ownership, so the stale-entry hazard is closed, but the design is still a global that `CLAUDE.md` would reject in Dart. Attaching the helper to the window (associated object) or to the `FlutterViewController` would remove it.
+
+### 13.12 Dead private methods
 `WindowManagerService._isSettingsWindowAlive()` and `._bringSettingsWindowToFront()` are unreachable.
 
-### 13.12 Exception classification by string matching
+### 13.13 Exception classification by string matching
 `PdfDocumentRepositoryImpl` maps `pdfx` failures to `Failure` types by searching the exception's `toString()` for `"password"`, `"not found"`, `"permission"`, and similar. Brittle across library versions and locales. See CODE_REVIEW §1.1.
 
-### 13.13 The Syncfusion license key is committed
+### 13.14 The Syncfusion license key is committed
 `TODO.md` contains a Syncfusion community license key in plain text. It should be removed from the repository and from history.
 
 ---

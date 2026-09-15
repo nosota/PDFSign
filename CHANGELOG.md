@@ -19,6 +19,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Fixed
 
+- Crash when the Delete toolbar button was shown on a toolbar that already carried it — NSToolbar raised an uncatchable exception and the whole app aborted
+- Opening a second document no longer removes the Delete button from the first window: every window now owns its toolbar instead of sharing one by identifier
+- Delete toolbar button no longer appears in a freshly opened window before anything is selected, and a request that arrives before the toolbar exists is no longer lost
+- Drop outline now follows the page when the view scrolls under a held pointer, instead of pointing at the page that was under the cursor before the scroll
+- A library image with a zero dimension no longer produces an invalid size in the sidebar, the drag ghost or the placed object
+- Test target could not build since the app was renamed to PDFSign
 - Image dropped from the sidebar now lands under the cursor instead of jumping up and to the left
 - Drop hit-testing for documents with pages of differing widths while scrolled horizontally
 - An off-page drop no longer creates an unselected, invisible object on page 1 while marking the document dirty

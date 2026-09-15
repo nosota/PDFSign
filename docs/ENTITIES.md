@@ -74,7 +74,7 @@ Information about a single PDF page.
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `aspectRatio` | `double` | Width divided by height |
+| `aspectRatio` | `double` | Width divided by height; falls back to `1.0` when a dimension is zero, so an invalid row cannot produce NaN or infinity |
 
 ### Methods
 
@@ -183,7 +183,7 @@ Represents an image in the sidebar library panel.
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `aspectRatio` | `double` | Width divided by height |
+| `aspectRatio` | `double` | Width divided by height; falls back to `1.0` when a dimension is zero, so an invalid row cannot produce NaN or infinity |
 
 ### Methods
 
