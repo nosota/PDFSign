@@ -6,16 +6,15 @@ import 'package:window_manager/window_manager.dart';
 
 import 'package:pdfsign/core/platform/file_open_handler.dart';
 import 'package:pdfsign/core/theme/app_theme.dart';
+import 'package:pdfsign/presentation/apps/close_all_coordinator.dart';
 import 'package:pdfsign/core/window/window_broadcast.dart';
 import 'package:pdfsign/core/window/window_manager_service.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
-import 'package:pdfsign/presentation/providers/editor/global_dirty_state_provider.dart';
 import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
 import 'package:pdfsign/presentation/providers/recent_files_provider.dart';
 import 'package:pdfsign/presentation/providers/repository_providers.dart';
 import 'package:pdfsign/presentation/providers/shared_preferences_provider.dart';
 import 'package:pdfsign/presentation/screens/welcome/welcome_screen.dart';
-import 'package:pdfsign/presentation/widgets/dialogs/close_all_dialog.dart';
 import 'package:pdfsign/presentation/widgets/menus/app_menu_bar.dart';
 
 /// Root app widget for the welcome window (main window).
@@ -132,141 +131,23 @@ class _WelcomeAppState extends ConsumerState<WelcomeApp>
   ///
   /// Shows CloseAllDialog if any PDF windows have unsaved changes,
   /// then broadcasts close to all PDF windows.
+  /// Closes every PDF window, asking about unsaved work first.
   Future<void> _handleCloseAll() async {
-    final navigatorContext = _navigatorKey.currentContext;
-    if (navigatorContext == null) return;
-
-    final globalState = ref.read(globalDirtyStateProvider);
-    final dirtyCount = globalState.values.where((d) => d).length;
-
-    if (dirtyCount == 0) {
-      // No dirty windows, close all without dialog
+    if (await CloseAllCoordinator(ref: ref, navigatorKey: _navigatorKey)
+        .confirm()) {
       await WindowBroadcast.broadcastCloseAll();
-      return;
     }
-
-    // Show close all dialog
-    final result = await CloseAllDialog.show(navigatorContext, dirtyCount);
-
-    switch (result) {
-      case CloseAllResult.saveAll:
-        // Save all dirty windows first
-        await WindowBroadcast.broadcastSaveAll();
-        // Wait for saves to complete (5 seconds timeout)
-        await Future.delayed(const Duration(seconds: 5));
-
-        // Check if any windows still have unsaved changes (save failed)
-        final stillDirty = ref.read(globalDirtyStateProvider);
-        final failedCount = stillDirty.values.where((d) => d).length;
-
-        if (failedCount > 0) {
-          // Some saves failed, ask user what to do
-          final l10n = AppLocalizations.of(navigatorContext);
-          if (l10n != null) {
-            final closeAnyway = await _showSaveFailedDialog(
-              navigatorContext,
-              l10n,
-              failedCount,
-            );
-            if (!closeAnyway) return; // User cancelled
-          }
-        }
-
-        await WindowBroadcast.broadcastCloseAll();
-        break;
-      case CloseAllResult.discard:
-        // Close all without saving
-        await WindowBroadcast.broadcastCloseAll();
-        break;
-      case CloseAllResult.cancel:
-      case null:
-        // User cancelled, do nothing
-        break;
-    }
-  }
-
-  /// Shows dialog when save failed for some documents.
-  /// Returns true if user wants to close anyway, false to cancel.
-  Future<bool> _showSaveFailedDialog(
-    BuildContext context,
-    AppLocalizations l10n,
-    int failedCount,
-  ) async {
-    final result = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.saveFailedDialogTitle),
-        content: Text(l10n.saveFailedDialogMessage(failedCount)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.closeAllDialogCancel),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(l10n.saveFailedDialogClose),
-          ),
-        ],
-      ),
-    );
-    return result ?? false;
   }
 
   /// Handles Quit command (Cmd+Q).
   ///
   /// Shows CloseAllDialog if any PDF windows have unsaved changes,
   /// then quits the application.
+  /// Quits the application, asking about unsaved work first.
   Future<void> _handleQuit() async {
-    final navigatorContext = _navigatorKey.currentContext;
-    if (navigatorContext == null) {
-      // No context, just exit
+    if (await CloseAllCoordinator(ref: ref, navigatorKey: _navigatorKey)
+        .confirm()) {
       exit(0);
-    }
-
-    final globalState = ref.read(globalDirtyStateProvider);
-    final dirtyCount = globalState.values.where((d) => d).length;
-
-    if (dirtyCount == 0) {
-      // No dirty windows, quit immediately
-      exit(0);
-    }
-
-    // Show close all dialog
-    final result = await CloseAllDialog.show(navigatorContext, dirtyCount);
-
-    switch (result) {
-      case CloseAllResult.saveAll:
-        // Save all dirty windows first
-        await WindowBroadcast.broadcastSaveAll();
-        // Wait for saves to complete (5 seconds timeout)
-        await Future.delayed(const Duration(seconds: 5));
-
-        // Check if any windows still have unsaved changes (save failed)
-        final stillDirty = ref.read(globalDirtyStateProvider);
-        final failedCount = stillDirty.values.where((d) => d).length;
-
-        if (failedCount > 0) {
-          // Some saves failed, ask user what to do
-          final l10n = AppLocalizations.of(navigatorContext);
-          if (l10n != null) {
-            final closeAnyway = await _showSaveFailedDialog(
-              navigatorContext,
-              l10n,
-              failedCount,
-            );
-            if (!closeAnyway) return; // User cancelled
-          }
-        }
-
-        exit(0);
-      case CloseAllResult.discard:
-        // Quit without saving
-        exit(0);
-      case CloseAllResult.cancel:
-      case null:
-        // User cancelled, do nothing
-        break;
     }
   }
 

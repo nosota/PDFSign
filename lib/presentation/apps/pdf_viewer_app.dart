@@ -12,8 +12,8 @@ import 'package:pdfsign/core/platform/open_pdf_files_channel.dart';
 import 'package:pdfsign/core/platform/sub_window_channel.dart';
 import 'package:pdfsign/core/platform/toolbar_channel.dart';
 import 'package:pdfsign/core/theme/app_theme.dart';
+import 'package:pdfsign/presentation/apps/close_all_coordinator.dart';
 import 'package:pdfsign/core/window/window_broadcast.dart';
-import 'package:pdfsign/core/window/window_manager_service.dart';
 import 'package:pdfsign/data/services/pdf_save_service.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
@@ -27,7 +27,6 @@ import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
 import 'package:pdfsign/presentation/providers/recent_files_provider.dart';
 import 'package:pdfsign/presentation/providers/shared_preferences_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/editor_screen.dart';
-import 'package:pdfsign/presentation/widgets/dialogs/close_all_dialog.dart';
 import 'package:pdfsign/presentation/widgets/dialogs/save_changes_dialog.dart';
 import 'package:pdfsign/presentation/widgets/menus/app_menu_bar.dart';
 
@@ -397,10 +396,14 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   /// Handles Save All broadcast from any window.
   ///
   /// Only saves if this document has unsaved changes.
-  void _handleSaveAllBroadcast() {
-    final isDirty = ref.read(documentDirtyProvider);
-    if (isDirty) {
-      _handleSave();
+  Future<void> _handleSaveAllBroadcast() async {
+    if (!ref.read(documentDirtyProvider)) return;
+
+    final saved = await _handleSave();
+    if (!saved && _windowId != null) {
+      // The initiator is waiting on us; staying silent would leave it waiting
+      // for the backstop timeout before it could ask the user what to do.
+      await WindowBroadcast.broadcastSaveFailed(_windowId!);
     }
   }
 
@@ -421,141 +424,23 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   ///
   /// Shows CloseAllDialog if any PDF windows have unsaved changes,
   /// then broadcasts close to all PDF windows.
+  /// Closes every PDF window, asking about unsaved work first.
   Future<void> _handleCloseAll() async {
-    final navigatorContext = _navigatorKey.currentContext;
-    if (navigatorContext == null) return;
-
-    final globalState = ref.read(globalDirtyStateProvider);
-    final dirtyCount = globalState.values.where((d) => d).length;
-
-    if (dirtyCount == 0) {
-      // No dirty windows, close all without dialog
+    if (await CloseAllCoordinator(ref: ref, navigatorKey: _navigatorKey)
+        .confirm()) {
       await WindowBroadcast.broadcastCloseAll();
-      return;
     }
-
-    // Show close all dialog
-    final result = await CloseAllDialog.show(navigatorContext, dirtyCount);
-
-    switch (result) {
-      case CloseAllResult.saveAll:
-        // Save all dirty windows first
-        await WindowBroadcast.broadcastSaveAll();
-        // Wait for saves to complete (5 seconds timeout)
-        await Future.delayed(const Duration(seconds: 5));
-
-        // Check if any windows still have unsaved changes (save failed)
-        final stillDirty = ref.read(globalDirtyStateProvider);
-        final failedCount = stillDirty.values.where((d) => d).length;
-
-        if (failedCount > 0) {
-          // Some saves failed, ask user what to do
-          final l10n = AppLocalizations.of(navigatorContext);
-          if (l10n != null) {
-            final closeAnyway = await _showSaveFailedDialog(
-              navigatorContext,
-              l10n,
-              failedCount,
-            );
-            if (!closeAnyway) return; // User cancelled
-          }
-        }
-
-        await WindowBroadcast.broadcastCloseAll();
-        break;
-      case CloseAllResult.discard:
-        // Close all without saving
-        await WindowBroadcast.broadcastCloseAll();
-        break;
-      case CloseAllResult.cancel:
-      case null:
-        // User cancelled, do nothing
-        break;
-    }
-  }
-
-  /// Shows dialog when save failed for some documents.
-  /// Returns true if user wants to close anyway, false to cancel.
-  Future<bool> _showSaveFailedDialog(
-    BuildContext context,
-    AppLocalizations l10n,
-    int failedCount,
-  ) async {
-    final result = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.saveFailedDialogTitle),
-        content: Text(l10n.saveFailedDialogMessage(failedCount)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.closeAllDialogCancel),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(l10n.saveFailedDialogClose),
-          ),
-        ],
-      ),
-    );
-    return result ?? false;
   }
 
   /// Handles Quit command (Cmd+Q).
   ///
   /// Shows CloseAllDialog if any PDF windows have unsaved changes,
   /// then quits the application.
+  /// Quits the application, asking about unsaved work first.
   Future<void> _handleQuit() async {
-    final navigatorContext = _navigatorKey.currentContext;
-    if (navigatorContext == null) {
-      // No context, just exit
+    if (await CloseAllCoordinator(ref: ref, navigatorKey: _navigatorKey)
+        .confirm()) {
       exit(0);
-    }
-
-    final globalState = ref.read(globalDirtyStateProvider);
-    final dirtyCount = globalState.values.where((d) => d).length;
-
-    if (dirtyCount == 0) {
-      // No dirty windows, quit immediately
-      exit(0);
-    }
-
-    // Show close all dialog
-    final result = await CloseAllDialog.show(navigatorContext, dirtyCount);
-
-    switch (result) {
-      case CloseAllResult.saveAll:
-        // Save all dirty windows first
-        await WindowBroadcast.broadcastSaveAll();
-        // Wait for saves to complete (5 seconds timeout)
-        await Future.delayed(const Duration(seconds: 5));
-
-        // Check if any windows still have unsaved changes (save failed)
-        final stillDirty = ref.read(globalDirtyStateProvider);
-        final failedCount = stillDirty.values.where((d) => d).length;
-
-        if (failedCount > 0) {
-          // Some saves failed, ask user what to do
-          final l10n = AppLocalizations.of(navigatorContext);
-          if (l10n != null) {
-            final closeAnyway = await _showSaveFailedDialog(
-              navigatorContext,
-              l10n,
-              failedCount,
-            );
-            if (!closeAnyway) return; // User cancelled
-          }
-        }
-
-        exit(0);
-      case CloseAllResult.discard:
-        // Quit without saving
-        exit(0);
-      case CloseAllResult.cancel:
-      case null:
-        // User cancelled, do nothing
-        break;
     }
   }
 
@@ -662,18 +547,19 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     );
   }
 
-  Future<void> _handleSave() async {
+  /// Writes the document. Returns whether it is now on disk.
+  Future<bool> _handleSave() async {
     final placedImages = ref.read(placedImagesProvider);
     final isDirty = ref.read(documentDirtyProvider);
 
     // Nothing to save if no changes were made
-    if (placedImages.isEmpty && !isDirty) return;
+    if (placedImages.isEmpty && !isDirty) return true;
 
     // Get original bytes from storage
     final storage = ref.read(originalPdfStorageProvider);
     if (!storage.hasData) {
       _showSnackBar(const Text('Save failed: no original PDF stored'));
-      return;
+      return false;
     }
 
     final originalBytes = await storage.getBytes();
@@ -685,14 +571,16 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
       outputPath: _currentFilePath,
     );
 
-    result.fold(
+    return result.fold(
       (failure) {
         _showSnackBar(Text('Save failed: ${failure.message}'));
+        return false;
       },
       (_) {
         // The objects stay on the page and remain editable; recording them as
         // the written baseline is what makes the document clean again.
         ref.read(savedPlacedImagesProvider.notifier).markSaved(placedImages);
+        return true;
       },
     );
   }

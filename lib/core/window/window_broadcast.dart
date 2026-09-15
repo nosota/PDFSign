@@ -11,6 +11,9 @@ typedef DirtyStateResponseCallback = void Function();
 /// Callback type for Settings window opened event.
 typedef SettingsOpenedCallback = void Function(String windowId);
 
+/// Callback type for a window reporting that its save failed.
+typedef SaveFailedCallback = void Function(String windowId);
+
 /// Service for broadcasting messages between windows.
 ///
 /// Uses desktop_multi_window's native inter-window communication
@@ -27,6 +30,7 @@ class WindowBroadcast {
   static DirtyStateCallback? _onDirtyStateChanged;
   static DirtyStateResponseCallback? _onRequestDirtyStates;
   static SettingsOpenedCallback? _onSettingsOpened;
+  static SaveFailedCallback? _onSaveFailed;
   static VoidCallback? _onSettingsClosed;
   static bool _initialized = false;
 
@@ -93,6 +97,16 @@ class WindowBroadcast {
   /// Sets callback for when Settings window closes.
   static void setOnSettingsClosed(VoidCallback? callback) {
     _onSettingsClosed = callback;
+  }
+
+  /// Sets callback for when a window reports that its save failed.
+  ///
+  /// Set by whichever window is running Close All or Quit, for as long as it
+  /// waits for the saves it asked for, and cleared afterwards. Without it a
+  /// failure is indistinguishable from a slow save — both simply leave the
+  /// window dirty — and would only surface once the backstop timeout expired.
+  static void setOnSaveFailed(SaveFailedCallback? callback) {
+    _onSaveFailed = callback;
   }
 
   /// Initializes the broadcast listener for this window.
@@ -179,6 +193,11 @@ class WindowBroadcast {
   /// Called when Settings window is created to notify all other windows.
   static Future<void> broadcastSettingsOpened(String windowId) async {
     await _broadcastWithData('settingsOpened', {'windowId': windowId});
+  }
+
+  /// Tells the other windows that this window could not save.
+  static Future<void> broadcastSaveFailed(String windowId) async {
+    await _broadcastWithData('saveFailed', {'windowId': windowId});
   }
 
   /// Broadcasts that Settings window has closed.
@@ -283,6 +302,14 @@ class WindowBroadcast {
     }
   }
 
+  /// Dispatches an incoming message as if it had arrived from another window.
+  ///
+  /// The routing table is otherwise reachable only across real windows, so this
+  /// is the seam that lets tests cover it.
+  @visibleForTesting
+  static Future<dynamic> dispatchForTesting(MethodCall call) =>
+      _handleMethodCall(call);
+
   static Future<dynamic> _handleMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'unitChanged':
@@ -325,6 +352,13 @@ class WindowBroadcast {
         return null;
       case 'settingsClosed':
         _onSettingsClosed?.call();
+        return null;
+      case 'saveFailed':
+        final args = call.arguments as Map<dynamic, dynamic>?;
+        final windowId = args?['windowId'] as String?;
+        if (windowId != null) {
+          _onSaveFailed?.call(windowId);
+        }
         return null;
       default:
         return null;
