@@ -54,44 +54,72 @@ class _PdfDropTargetState extends ConsumerState<PdfDropTarget> {
 
   final _layoutCache = PdfPageLayoutCache();
 
-  /// Page that would receive the object if the drag ended now.
-  int? _targetPageIndex;
+  /// Pointer position in this widget's coordinates while a drag is over it.
+  ///
+  /// Kept in viewport space rather than as a resolved page index: which page
+  /// the pointer is over also depends on the scroll offset, which can change
+  /// while the pointer stands still. Resolving during build off the live offset
+  /// keeps the outline honest about where the object will actually land.
+  Offset? _pointerLocal;
 
   @override
   Widget build(BuildContext context) =>
       DragTarget<DraggableSidebarImage>(
         // Refuse the drag outright when there is no page to drop onto.
-        onWillAcceptWithDetails: (details) => _acceptAndTrack(details.offset),
-        onMove: (details) => _setTargetPage(_targetPageFor(details.offset)),
-        onLeave: (_) => _setTargetPage(null),
+        onWillAcceptWithDetails: (details) => _trackPointer(details.offset),
+        onMove: (details) => _trackPointer(details.offset),
+        onLeave: (_) => _clearPointer(),
         onAcceptWithDetails: (details) {
-          _setTargetPage(null);
+          _clearPointer();
           _handleDrop(details);
         },
         builder: (context, candidateData, rejectedData) {
           final highlight = _buildTargetHighlight(context);
-          return Stack(
-            fit: StackFit.expand,
-            children: [
-              widget.child,
-              if (highlight != null) highlight,
-            ],
+          return NotificationListener<ScrollNotification>(
+            // The outline is positioned from the live scroll offset, so it has
+            // to be repainted when the content scrolls under a held pointer.
+            // Depending on an ancestor to rebuild is not enough: the viewer
+            // only rebuilds at the start and end of a scroll burst.
+            onNotification: _onScroll,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                widget.child,
+                if (highlight != null) highlight,
+              ],
+            ),
           );
         },
       );
+
+  bool _onScroll(ScrollNotification notification) {
+    if (_pointerLocal != null && mounted) {
+      setState(() {});
+    }
+    // Never absorb it: the viewer listens for the same notifications.
+    return false;
+  }
 
   /// Outlines the page that will receive the drop.
   ///
   /// Positioned from the cached layout and the live scroll offset, so it stays
   /// aligned with the page without reading the render tree during build.
   Widget? _buildTargetHighlight(BuildContext context) {
-    final index = _targetPageIndex;
+    final local = _pointerLocal;
     final layout = _layoutCache.current;
-    if (index == null || layout == null || index >= layout.pageCount) {
+    if (local == null || layout == null) {
       return null;
     }
 
-    final rect = layout.pageRect(index).shift(-widget.getScrollOffset());
+    final scrollOffset = widget.getScrollOffset();
+    final contentPoint = local + scrollOffset;
+    final index = layout.pageIndexAt(contentPoint) ??
+        layout.nearestPageIndex(contentPoint);
+    if (index == null) {
+      return null;
+    }
+
+    final rect = layout.pageRect(index).shift(-scrollOffset);
     final primary = Theme.of(context).colorScheme.primary;
 
     return Positioned.fromRect(
@@ -114,31 +142,41 @@ class _PdfDropTargetState extends ConsumerState<PdfDropTarget> {
     );
   }
 
-  /// Tracks the page under the pointer and reports whether a drop is possible.
-  bool _acceptAndTrack(Offset globalPosition) {
-    final index = _targetPageFor(globalPosition);
-    _setTargetPage(index);
-    return index != null;
+  /// Records where the pointer is, and reports whether a drop is possible.
+  ///
+  /// The rebuild this triggers is cheap: `widget.child` is the same instance
+  /// every time, so only the Stack and the outline are rebuilt.
+  bool _trackPointer(Offset globalPosition) {
+    final renderBox = _renderBox;
+    if (renderBox == null) {
+      return false;
+    }
+
+    final local = renderBox.globalToLocal(globalPosition);
+    if (_pointerLocal != local) {
+      setState(() => _pointerLocal = local);
+    }
+    return _layoutFor(renderBox).pageCount > 0;
   }
 
-  void _setTargetPage(int? index) {
-    if (_targetPageIndex == index) {
+  void _clearPointer() {
+    if (_pointerLocal == null) {
       return;
     }
-    setState(() => _targetPageIndex = index);
+    setState(() => _pointerLocal = null);
   }
 
-  /// Page that a pointer at [globalPosition] would drop onto: the page under
-  /// the cursor, else the nearest one. Null only when there is no page at all.
-  int? _targetPageFor(Offset globalPosition) {
-    final resolved = _resolve(globalPosition);
-    if (resolved == null) {
-      return null;
-    }
-    final (:layout, :contentPoint) = resolved;
-    return layout.pageIndexAt(contentPoint) ??
-        layout.nearestPageIndex(contentPoint);
+  /// This widget's render box, or null before it has been laid out.
+  RenderBox? get _renderBox {
+    final box = context.findRenderObject() as RenderBox?;
+    return box != null && box.hasSize ? box : null;
   }
+
+  PdfPageLayout _layoutFor(RenderBox box) => _layoutCache.of(
+        document: widget.document,
+        scale: widget.scale,
+        viewportWidth: box.size.width,
+      );
 
   /// Maps a global pointer position onto the page column.
   ///
@@ -146,20 +184,15 @@ class _PdfDropTargetState extends ConsumerState<PdfDropTarget> {
   ({PdfPageLayout layout, Offset contentPoint})? _resolve(
     Offset globalPosition,
   ) {
-    final renderBox = context.findRenderObject() as RenderBox?;
-    if (renderBox == null || !renderBox.hasSize) {
+    final renderBox = _renderBox;
+    if (renderBox == null) {
       return null;
     }
-
-    final layout = _layoutCache.of(
-      document: widget.document,
-      scale: widget.scale,
-      viewportWidth: renderBox.size.width,
+    return (
+      layout: _layoutFor(renderBox),
+      contentPoint:
+          renderBox.globalToLocal(globalPosition) + widget.getScrollOffset(),
     );
-    final contentPoint =
-        renderBox.globalToLocal(globalPosition) + widget.getScrollOffset();
-
-    return (layout: layout, contentPoint: contentPoint);
   }
 
   void _handleDrop(DragTargetDetails<DraggableSidebarImage> details) {

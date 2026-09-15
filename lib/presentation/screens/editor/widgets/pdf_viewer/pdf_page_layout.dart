@@ -110,23 +110,51 @@ class PdfPageLayout {
 
   /// Index of the page closest to [point], measured to the page rectangle.
   ///
-  /// Used to resolve a drop that lands off-page. Ties resolve to the earlier
-  /// page. Linear in page count, which is fine for a once-per-gesture call.
+  /// Used to resolve a drop or a drag hover that lands off-page. Ties resolve
+  /// to the earlier page.
+  ///
+  /// Pages are stacked vertically, so the search starts at the band containing
+  /// [point] and walks outwards, stopping on each side as soon as the vertical
+  /// gap alone already exceeds the best distance found. A page further away
+  /// vertically can still win on a mixed-width document — a wide page beats a
+  /// narrow one the cursor is level with — so the walk cannot simply check the
+  /// immediate neighbours.
   ///
   /// Returns null for a document with no pages.
   int? nearestPageIndex(Offset point) {
     if (pageCount == 0) {
       return null;
     }
-    var best = 0;
-    var bestDistance = double.infinity;
-    for (var i = 0; i < pageCount; i++) {
-      final distance = _squaredDistanceToRect(pageRect(i), point);
+
+    final start = _pageStartingAtOrBefore(point.dy).clamp(0, pageCount - 1);
+    var best = start;
+    var bestDistance = _squaredDistanceToPage(start, point);
+
+    for (var i = start - 1; i >= 0; i--) {
+      final gap = _squaredVerticalGap(i, point.dy);
+      if (gap >= bestDistance) {
+        break;
+      }
+      final distance = _squaredDistanceToPage(i, point);
       if (distance < bestDistance) {
         bestDistance = distance;
         best = i;
       }
     }
+
+    for (var i = start + 1; i < pageCount; i++) {
+      final gap = _squaredVerticalGap(i, point.dy);
+      if (gap >= bestDistance) {
+        break;
+      }
+      final distance = _squaredDistanceToPage(i, point);
+      // Strict `<` keeps a tie on the earlier page.
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        best = i;
+      }
+    }
+
     return best;
   }
 
@@ -228,6 +256,33 @@ class PdfPageLayout {
       }
     }
     return result;
+  }
+
+  /// Squared distance from [point] to page [index], without building a Rect.
+  double _squaredDistanceToPage(int index, Offset point) {
+    final size = scaledPageSize(index);
+    final left = horizontalPadding + (columnWidth - size.width) / 2;
+    final top = _pageTops[index];
+    return _squaredDistanceToRect(
+      Rect.fromLTWH(left, top, size.width, size.height),
+      point,
+    );
+  }
+
+  /// Squared vertical-only distance to page [index]: a lower bound on the real
+  /// distance, used to stop the outward walk early.
+  double _squaredVerticalGap(int index, double y) {
+    final top = _pageTops[index];
+    final bottom = top + scaledPageSize(index).height;
+    if (y < top) {
+      final d = top - y;
+      return d * d;
+    }
+    if (y > bottom) {
+      final d = y - bottom;
+      return d * d;
+    }
+    return 0;
   }
 
   static double _squaredDistanceToRect(Rect rect, Offset point) {

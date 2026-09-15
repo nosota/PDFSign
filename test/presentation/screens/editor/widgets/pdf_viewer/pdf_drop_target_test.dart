@@ -126,7 +126,7 @@ void main() {
 
   /// Mounts the real page column inside the drop target, with the sidebar card
   /// beside it — the same wiring the editor uses.
-  Future<void> pumpEditor(
+  Future<GlobalKey<PdfPageListState>> pumpEditor(
     WidgetTester tester,
     ProviderContainer container, {
     required PdfDocumentInfo document,
@@ -185,6 +185,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    return pageListKey;
   }
 
   ProviderContainer buildContainer() {
@@ -452,6 +453,68 @@ void main() {
       await gesture.up();
       await tester.pumpAndSettle();
       expect(find.byKey(PdfDropTarget.highlightKey), findsNothing);
+    });
+  });
+
+  group('drag feedback follows the document', () {
+    testWidgets('should keep the outline on the page when the view scrolls',
+        (tester) async {
+      final container = buildContainer();
+
+      final pageList = await pumpEditor(
+        tester,
+        container,
+        document: _document(const [_a4, _a4, _a4]),
+        image: buildImage(),
+        viewportWidth: 600,
+        viewportHeight: 500,
+      );
+
+      final grabPoint = tester.getCenter(find.byType(ImageThumbnailCard).first);
+      final gesture = await tester.startGesture(grabPoint);
+      await tester.pump(const Duration(milliseconds: 50));
+      await gesture.moveTo(const Offset(300, 240));
+      await tester.pump();
+
+      final highlight = find.byKey(PdfDropTarget.highlightKey);
+      expect(tester.getRect(highlight), renderedPageRect(tester, 0));
+
+      // Scroll without moving the pointer. The outline must follow the page,
+      // not stay pinned to the offset it was drawn at.
+      pageList.currentState!.scrollBy(0, 100, animate: false);
+      await tester.pump();
+      await tester.pump();
+
+      final movedPage = renderedPageRect(tester, 0);
+      expect(movedPage.top, lessThan(_verticalPadding));
+      expect(tester.getRect(highlight), movedPage);
+
+      await gesture.up();
+      await tester.pumpAndSettle();
+    });
+  });
+
+  group('library row with unusable dimensions', () {
+    testWidgets('should still drag and drop without an invalid size',
+        (tester) async {
+      final container = buildContainer();
+
+      await pumpEditor(
+        tester,
+        container,
+        document: _document(const [_a4]),
+        image: buildImage(width: 100, height: 0),
+        viewportWidth: 600,
+        viewportHeight: 500,
+      );
+
+      await dragToViewer(tester, const Offset(300, 240));
+
+      final placed = container.read(placedImagesProvider).single;
+      expect(placed.size.width.isFinite, isTrue);
+      expect(placed.size.height.isFinite, isTrue);
+      expect(placed.size.width, greaterThan(0));
+      expect(placed.size.height, greaterThan(0));
     });
   });
 

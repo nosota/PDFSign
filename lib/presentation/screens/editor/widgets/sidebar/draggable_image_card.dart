@@ -23,7 +23,11 @@ class DraggableSidebarImage {
     required this.height,
   });
 
-  double get aspectRatio => width / height;
+  /// Aspect ratio (width / height), falling back to 1 for unusable dimensions.
+  double get aspectRatio {
+    final ratio = width / height;
+    return ratio.isFinite && ratio > 0 ? ratio : 1.0;
+  }
 
   factory DraggableSidebarImage.fromSidebarImage(SidebarImage image) {
     return DraggableSidebarImage(

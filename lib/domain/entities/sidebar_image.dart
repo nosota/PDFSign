@@ -43,8 +43,15 @@ class SidebarImage extends Equatable {
     this.comment,
   });
 
-  /// Aspect ratio (width / height).
-  double get aspectRatio => width / height;
+  /// Aspect ratio (width / height), falling back to 1 for unusable dimensions.
+  ///
+  /// A row with a zero dimension would otherwise yield 0, infinity or NaN,
+  /// which reaches `AspectRatio`, `Transform` and the PDF writer as an invalid
+  /// size and trips an assertion or paints nothing.
+  double get aspectRatio {
+    final ratio = width / height;
+    return ratio.isFinite && ratio > 0 ? ratio : 1.0;
+  }
 
   /// Creates a copy with updated fields.
   ///

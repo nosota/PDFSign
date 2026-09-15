@@ -209,6 +209,33 @@ void main() {
     test('should pick the first page above the start of the document', () {
       expect(layout.nearestPageIndex(const Offset(300, -500)), 0);
     });
+
+    test('should look past several pages when a distant one is truly closer',
+        () {
+      // Three narrow pages then a wide one. A point far to the left is level
+      // with the first page but much closer to the wide page three slots down,
+      // so a search that only checked neighbours would answer wrongly.
+      final mixed = PdfPageLayout(
+        document: _document(const [
+          Size(100, 20),
+          Size(100, 20),
+          Size(100, 20),
+          Size(_a4Width, 20),
+        ]),
+        scale: 1,
+        viewportWidth: 800,
+      );
+
+      const point = Offset(0, 50);
+      expect(mixed.pageIndexAt(point), isNull);
+
+      // Confirm the premise before asserting the answer.
+      final toFirst = (mixed.pageRect(0).left - point.dx).abs();
+      final toWide = mixed.pageRect(3).topLeft - point;
+      expect(toFirst * toFirst, greaterThan(toWide.distanceSquared));
+
+      expect(mixed.nearestPageIndex(point), 3);
+    });
   });
 
   group('visiblePageNumbers', () {
