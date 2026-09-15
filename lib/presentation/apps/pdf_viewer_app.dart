@@ -690,9 +690,9 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
         _showSnackBar(Text('Save failed: ${failure.message}'));
       },
       (_) {
-        // Mark as clean but DO NOT clear objects or reload document
-        // Objects remain editable for further modifications
-        ref.read(documentDirtyProvider.notifier).markClean();
+        // The objects stay on the page and remain editable; recording them as
+        // the written baseline is what makes the document clean again.
+        ref.read(savedPlacedImagesProvider.notifier).markSaved(placedImages);
       },
     );
   }
@@ -756,10 +756,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
 
         // Clear placed images since they're now embedded in the saved file
         ref.read(placedImagesProvider.notifier).clear();
+        ref.read(savedPlacedImagesProvider.notifier).reset();
 
-        // Mark as clean and reset modification flag
+        // The new file starts its own history.
         _hasBeenModified = false;
-        ref.read(documentDirtyProvider.notifier).markClean();
 
         // Update window title to new file name
         windowManager.setTitle(newFileName);

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:pdfsign/domain/entities/pdf_document_info.dart';
-import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_page_layout.dart';
@@ -235,7 +234,6 @@ class _PdfDropTargetState extends ConsumerState<PdfDropTarget> {
           size: size,
         );
 
-    ref.read(documentDirtyProvider.notifier).markDirty();
     ref.read(editorSelectionProvider.notifier).select(placed.id);
   }
 

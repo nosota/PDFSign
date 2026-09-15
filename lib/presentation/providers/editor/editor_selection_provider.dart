@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 
 part 'editor_selection_provider.g.dart';
@@ -39,12 +38,16 @@ class EditorSelection extends _$EditorSelection {
   bool isSelected(String id) => state == id;
 }
 
-/// Deletes the currently selected image and clears selection.
+/// Deletes the currently selected image and clears the selection.
 ///
 /// This is a coordinating function that works across multiple providers:
 /// - Removes the image from [placedImagesProvider]
 /// - Clears the selection in [editorSelectionProvider]
-/// - Updates dirty state: marks dirty if images remain, clean if all removed
+///
+/// The dirty state needs no bookkeeping here: it is derived from the object
+/// set (ADR-0008), so removing the last object of an unsaved document reports
+/// clean again, while removing one that had already been written reports
+/// dirty — which the previous hand-rolled flag got wrong.
 ///
 /// Does nothing if no image is selected.
 void deleteSelectedImage(WidgetRef ref) {
@@ -53,12 +56,4 @@ void deleteSelectedImage(WidgetRef ref) {
 
   ref.read(placedImagesProvider.notifier).removeImage(selectedId);
   ref.read(editorSelectionProvider.notifier).clear();
-
-  // If all images are removed, document is back to original state
-  final remainingImages = ref.read(placedImagesProvider);
-  if (remainingImages.isEmpty) {
-    ref.read(documentDirtyProvider.notifier).markClean();
-  } else {
-    ref.read(documentDirtyProvider.notifier).markDirty();
-  }
 }

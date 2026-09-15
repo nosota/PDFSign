@@ -1,25 +1,53 @@
+import 'package:flutter/foundation.dart';
+import 'package:pdfsign/domain/entities/placed_image.dart';
+import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'document_dirty_provider.g.dart';
 
-/// Provider for tracking whether the document has unsaved changes.
+/// The objects as they stood the last time the document was written, or empty
+/// for a document that has not been saved in this session.
 ///
-/// This is used to show a confirmation dialog when closing with unsaved changes.
-/// Uses keepAlive to persist state throughout the app lifecycle.
+/// This is the object-side counterpart of `OriginalPdfStorage`, which keeps the
+/// file-side baseline. Both live in memory for the lifetime of the window,
+/// which is exactly as long as the placed objects themselves exist.
+///
+/// Holding it costs nothing: [PlacedImages] replaces the whole list on every
+/// change and [PlacedImage] is immutable, so a baseline is a reference to a
+/// list that is never mutated, not a copy.
 @Riverpod(keepAlive: true)
-class DocumentDirty extends _$DocumentDirty {
+class SavedPlacedImages extends _$SavedPlacedImages {
   @override
-  bool build() {
-    return false;
+  List<PlacedImage> build() => const [];
+
+  /// Records [current] as written to disk, which makes the document clean.
+  ///
+  /// The caller passes the exact list it handed to the writer rather than this
+  /// re-reading the provider: a save is asynchronous, and re-reading on
+  /// completion would record edits made *during* the save as if they had been
+  /// written.
+  // ignore: use_setters_to_change_properties
+  void markSaved(List<PlacedImage> current) {
+    state = current;
   }
 
-  /// Marks the document as having unsaved changes.
-  void markDirty() {
-    state = true;
-  }
-
-  /// Marks the document as saved (no unsaved changes).
-  void markClean() {
-    state = false;
+  /// Resets the baseline to an empty document.
+  ///
+  /// Used when a document is opened, reloaded, or saved under a new name —
+  /// all of which leave the page without placed objects.
+  void reset() {
+    state = const [];
   }
 }
+
+/// Whether the document has changes that are not in the file yet.
+///
+/// Derived rather than flagged: it answers the only question that matters —
+/// does the current set of objects differ from what was written? Marking a
+/// flag by hand at each call site made move, resize and rotate invisible, and
+/// let a delete after a save report the document as clean (ADR-0008).
+@Riverpod(keepAlive: true)
+bool documentDirty(DocumentDirtyRef ref) => !listEquals(
+      ref.watch(placedImagesProvider),
+      ref.watch(savedPlacedImagesProvider),
+    );

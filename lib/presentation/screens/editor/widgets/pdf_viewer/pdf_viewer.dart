@@ -309,7 +309,6 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
           );
       if (duplicate != null) {
         ref.read(editorSelectionProvider.notifier).select(duplicate.id);
-        ref.read(documentDirtyProvider.notifier).markDirty();
       }
     }
   }
@@ -359,9 +358,9 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
         }
       },
       (_) {
-        // Mark as clean but DO NOT clear objects or reload document
-        // Objects remain editable for further modifications
-        ref.read(documentDirtyProvider.notifier).markClean();
+        // The objects stay on the page and remain editable; recording them as
+        // the written baseline is what makes the document clean again.
+        ref.read(savedPlacedImagesProvider.notifier).markSaved(placedImages);
       },
     );
   }
@@ -409,8 +408,7 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
         }
       },
       (savedPath) {
-        // Mark as clean but DO NOT clear objects
-        ref.read(documentDirtyProvider.notifier).markClean();
+        ref.read(savedPlacedImagesProvider.notifier).markSaved(placedImages);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Saved to: $savedPath')),
