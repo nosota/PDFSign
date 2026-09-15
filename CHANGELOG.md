@@ -11,9 +11,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - Delete button in toolbar and Edit menu
 - Single top-center rotate handle (replaced corner rotate zones)
 - Transparency to selection handles with hover effect
+- Drag feedback: the page that will receive a dropped image is outlined while dragging
+
+### Changed
+
+- A drop that lands off-page now snaps to the nearest page instead of silently landing on page 1
 
 ### Fixed
 
+- Image dropped from the sidebar now lands under the cursor instead of jumping up and to the left
+- Drop hit-testing for documents with pages of differing widths while scrolled horizontally
+- An off-page drop no longer creates an unselected, invisible object on page 1 while marking the document dirty
+- Continuous repainting while a document was open and idle, caused by the visible-page range notifying on every frame
+- First page is no longer dropped from the visible range when a second page is on screen
+- Current-page indicator no longer falls back to page 1 past the end of the document
 - Clear dirty flag when all placed images are deleted
 - Restore page position after Save As
 - Reload PDF after Save As to show embedded images

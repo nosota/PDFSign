@@ -1,11 +1,10 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:pdfsign/domain/entities/pdf_document_info.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_page_cache_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_page_item.dart';
+import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_page_layout.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_viewer_constants.dart';
 
 /// Virtualized list of PDF pages with continuous scroll.
@@ -43,16 +42,34 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
   ScrollController _horizontalController = ScrollController();
   bool _ownsVerticalController = false;
   int _currentPage = 1;
-  double _previousScale = 1.0;
   double _viewportWidth = 0;
+  PdfPageLayout? _cachedLayout;
 
   ScrollController get scrollController => _verticalController;
+
+  /// Page geometry for the current document, scale and viewport width.
+  ///
+  /// Cached because the scroll handlers query it on every tick. Rebuilt only
+  /// when one of its inputs changes; [identical] keeps the check O(1).
+  PdfPageLayout get _layout {
+    final cached = _cachedLayout;
+    if (cached != null &&
+        cached.scale == widget.scale &&
+        cached.viewportWidth == _viewportWidth &&
+        identical(cached.document, widget.document)) {
+      return cached;
+    }
+    return _cachedLayout = PdfPageLayout(
+      document: widget.document,
+      scale: widget.scale,
+      viewportWidth: _viewportWidth,
+    );
+  }
 
   @override
   void initState() {
     super.initState();
     _initScrollController();
-    _previousScale = widget.scale;
   }
 
   void _initScrollController() {
@@ -99,8 +116,6 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
         }
       });
     }
-
-    _previousScale = widget.scale;
   }
 
   void _adjustScrollForScaleChange(double oldScale, double newScale) {
@@ -113,11 +128,13 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
     final centerOffset = currentOffset + viewportHeight / 2;
 
     // Calculate the position ratio at old scale
-    final oldTotalHeight = _calculateTotalHeight(oldScale);
+    final oldTotalHeight =
+        PdfPageLayout.totalHeightFor(widget.document, oldScale);
     final positionRatio = centerOffset / oldTotalHeight;
 
     // Calculate new offset to maintain center
-    final newTotalHeight = _calculateTotalHeight(newScale);
+    final newTotalHeight =
+        PdfPageLayout.totalHeightFor(widget.document, newScale);
     final newCenterOffset = newTotalHeight * positionRatio;
     final newOffset = newCenterOffset - viewportHeight / 2;
 
@@ -142,33 +159,15 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
   void _updateVisiblePages() {
     if (!_verticalController.hasClients) return;
 
-    final viewportHeight = _verticalController.position.viewportDimension;
-    final scrollOffset = _verticalController.offset;
-
-    // Calculate which pages are visible
-    double cumulativeHeight = PdfViewerConstants.verticalPadding;
-    int firstVisible = 1;
-    int lastVisible = 1;
-
-    for (int i = 0; i < widget.document.pages.length; i++) {
-      final page = widget.document.pages[i];
-      final pageHeight = page.height * widget.scale;
-      final pageTop = cumulativeHeight;
-      final pageBottom = cumulativeHeight + pageHeight;
-
-      if (pageBottom >= scrollOffset && pageTop <= scrollOffset + viewportHeight) {
-        if (firstVisible == 1 || i + 1 < firstVisible) {
-          firstVisible = i + 1;
-        }
-        lastVisible = i + 1;
-      }
-
-      cumulativeHeight += pageHeight + PdfViewerConstants.pageGap;
-    }
+    final range = _layout.visiblePageNumbers(
+      scrollOffset: _verticalController.offset,
+      viewportHeight: _verticalController.position.viewportDimension,
+    );
+    if (range == null) return;
 
     ref.read(visiblePagesProvider.notifier).updateVisibleRange(
-          firstVisible: firstVisible,
-          lastVisible: lastVisible,
+          firstVisible: range.first,
+          lastVisible: range.last,
           totalPages: widget.document.pageCount,
         );
   }
@@ -176,28 +175,10 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
   void _updateCurrentPage() {
     if (!_verticalController.hasClients) return;
 
-    final scrollOffset = _verticalController.offset;
-    final viewportCenter = scrollOffset + _verticalController.position.viewportDimension / 2;
+    final viewportCenter = _verticalController.offset +
+        _verticalController.position.viewportDimension / 2;
 
-    double cumulativeHeight = PdfViewerConstants.verticalPadding;
-    int centerPage = 1;
-
-    for (int i = 0; i < widget.document.pages.length; i++) {
-      final page = widget.document.pages[i];
-      final pageHeight = page.height * widget.scale;
-      final pageTop = cumulativeHeight;
-      final pageBottom = cumulativeHeight + pageHeight;
-
-      // Current page = page that contains the viewport center point
-      // Include half of the gap after the page for smoother transitions
-      if (viewportCenter >= pageTop &&
-          viewportCenter < pageBottom + PdfViewerConstants.pageGap / 2) {
-        centerPage = i + 1;
-        break;
-      }
-
-      cumulativeHeight += pageHeight + PdfViewerConstants.pageGap;
-    }
+    final centerPage = _layout.pageNumberAtCenter(viewportCenter);
 
     if (centerPage != _currentPage) {
       _currentPage = centerPage;
@@ -205,50 +186,16 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
     }
   }
 
-  double _calculateTotalHeight([double? scale]) {
-    final s = scale ?? widget.scale;
-    double totalHeight = PdfViewerConstants.verticalPadding * 2;
-    for (final page in widget.document.pages) {
-      totalHeight += page.height * s;
-    }
-    totalHeight += PdfViewerConstants.pageGap * (widget.document.pageCount - 1);
-    return totalHeight;
-  }
-
-  /// Calculates the width of the widest page at current scale.
-  double _calculateContentWidth([double? scale]) {
-    final s = scale ?? widget.scale;
-    double maxWidth = 0;
-    for (final page in widget.document.pages) {
-      final scaledWidth = page.width * s;
-      if (scaledWidth > maxWidth) {
-        maxWidth = scaledWidth;
-      }
-    }
-    return maxWidth;
-  }
-
   /// Scrolls to show the specified page.
   void scrollToPage(int pageNumber, {bool animate = true}) {
     if (!_verticalController.hasClients) return;
 
-    final targetPage = pageNumber.clamp(1, widget.document.pageCount);
-    double targetOffset = PdfViewerConstants.verticalPadding;
-
-    for (int i = 0; i < targetPage - 1; i++) {
-      final page = widget.document.pages[i];
-      targetOffset += page.height * widget.scale + PdfViewerConstants.pageGap;
-    }
-
-    // Center the page in viewport if possible
-    final viewportHeight = _verticalController.position.viewportDimension;
-    final pageHeight = widget.document.pages[targetPage - 1].height * widget.scale;
-
-    if (pageHeight < viewportHeight) {
-      targetOffset -= (viewportHeight - pageHeight) / 2;
-    }
-
-    targetOffset = targetOffset.clamp(0.0, _verticalController.position.maxScrollExtent);
+    final targetOffset = _layout
+        .scrollOffsetForPage(
+          pageNumber,
+          viewportHeight: _verticalController.position.viewportDimension,
+        )
+        .clamp(0.0, _verticalController.position.maxScrollExtent);
 
     if (animate) {
       _verticalController.animateTo(
@@ -376,28 +323,17 @@ class PdfPageListState extends ConsumerState<PdfPageList> {
           }
         });
 
-        final contentWidth = _calculateContentWidth();
-        final contentHeight = _calculateTotalHeight();
-
-        // Check if horizontal scroll is needed
-        final needsHorizontalScroll = contentWidth > constraints.maxWidth;
-
-        // When horizontal scroll is needed, add padding to create "floating page" effect
-        // Content width includes page + horizontal padding on both sides
-        final effectiveWidth = needsHorizontalScroll
-            ? contentWidth + PdfViewerConstants.horizontalPadding * 2
-            : math.max(contentWidth, constraints.maxWidth);
+        final layout = _layout;
+        final needsHorizontalScroll = layout.needsHorizontalScroll;
+        final effectiveWidth = layout.effectiveWidth;
 
         Widget content = SizedBox(
           width: effectiveWidth,
-          height: contentHeight,
+          height: layout.totalHeight,
           child: Padding(
             padding: EdgeInsets.symmetric(
               vertical: PdfViewerConstants.verticalPadding,
-              // Add horizontal padding when scrolling horizontally
-              horizontal: needsHorizontalScroll
-                  ? PdfViewerConstants.horizontalPadding
-                  : 0,
+              horizontal: layout.horizontalPadding,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,

@@ -21,7 +21,10 @@ class PlacedImages extends _$PlacedImages {
   }
 
   /// Adds a new image to the PDF at the specified position.
-  void addImage({
+  ///
+  /// Returns the created object so the caller can select it without having to
+  /// guess which entry of [state] is the new one.
+  PlacedImage addImage({
     required String sourceImageId,
     required String imagePath,
     required int pageIndex,
@@ -38,6 +41,7 @@ class PlacedImages extends _$PlacedImages {
     );
 
     state = [...state, image];
+    return image;
   }
 
   /// Removes an image by its ID.

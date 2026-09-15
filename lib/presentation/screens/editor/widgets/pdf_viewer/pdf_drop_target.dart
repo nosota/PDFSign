@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -7,93 +5,16 @@ import 'package:pdfsign/domain/entities/pdf_document_info.dart';
 import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
+import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_page_layout.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_viewer_constants.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/draggable_image_card.dart';
 
-/// Mixin for calculating drop positions on PDF pages.
-mixin PdfDropPositionCalculator {
-  /// Calculates the page index and position from a drop offset.
-  ///
-  /// Returns null if the drop is outside any page.
-  DropPosition? calculateDropPosition({
-    required Offset dropOffset,
-    required Offset scrollOffset,
-    required double scale,
-    required PdfDocumentInfo document,
-    required Size viewportSize,
-  }) {
-    // Convert drop position to document coordinates
-    final documentY = dropOffset.dy + scrollOffset.dy;
-    final documentX = dropOffset.dx + scrollOffset.dx;
-
-    // Find which page the drop landed on
-    double cumulativeY = PdfViewerConstants.verticalPadding;
-
-    for (int i = 0; i < document.pages.length; i++) {
-      final page = document.pages[i];
-      final scaledPageWidth = page.width * scale;
-      final scaledPageHeight = page.height * scale;
-
-      // Calculate page X position (centered in viewport)
-      final contentWidth = _calculateContentWidth(document, scale);
-      final pageX = (viewportSize.width - contentWidth) / 2 +
-          (contentWidth - scaledPageWidth) / 2;
-
-      final pageTop = cumulativeY;
-      final pageBottom = cumulativeY + scaledPageHeight;
-      final pageLeft = pageX > 0 ? pageX : PdfViewerConstants.horizontalPadding;
-      final pageRight = pageLeft + scaledPageWidth;
-
-      // Check if drop is within this page
-      if (documentY >= pageTop &&
-          documentY < pageBottom &&
-          documentX >= pageLeft &&
-          documentX < pageRight) {
-        // Calculate position relative to page in PDF points (unscaled)
-        final relativeX = (documentX - pageLeft) / scale;
-        final relativeY = (documentY - pageTop) / scale;
-
-        return DropPosition(
-          pageIndex: i,
-          position: Offset(relativeX, relativeY),
-          pageSize: Size(page.width, page.height),
-        );
-      }
-
-      cumulativeY += scaledPageHeight + PdfViewerConstants.pageGap;
-    }
-
-    return null;
-  }
-
-  double _calculateContentWidth(PdfDocumentInfo document, double scale) {
-    double maxWidth = 0;
-    for (final page in document.pages) {
-      final scaledWidth = page.width * scale;
-      if (scaledWidth > maxWidth) {
-        maxWidth = scaledWidth;
-      }
-    }
-    return maxWidth;
-  }
-}
-
-/// Result of drop position calculation.
-class DropPosition {
-  final int pageIndex;
-  final Offset position;
-  final Size pageSize;
-
-  const DropPosition({
-    required this.pageIndex,
-    required this.position,
-    required this.pageSize,
-  });
-}
-
-/// DragTarget wrapper for the PDF viewer.
+/// Drop area covering the PDF viewport.
 ///
-/// Accepts drops of [DraggableSidebarImage] and creates placed images.
+/// Accepts a [DraggableSidebarImage] dragged out of the sidebar and turns it
+/// into a placed object on the page under the cursor. While a drag is in
+/// flight the page that would receive the object is outlined, so a drop that
+/// lands in the margin still shows where it will go.
 class PdfDropTarget extends ConsumerStatefulWidget {
   const PdfDropTarget({
     required this.child,
@@ -103,169 +24,222 @@ class PdfDropTarget extends ConsumerStatefulWidget {
     super.key,
   });
 
+  /// The viewer content this target sits on top of.
   final Widget child;
+
+  /// The document currently displayed.
   final PdfDocumentInfo document;
+
+  /// Render scale the pages are laid out at.
   final double scale;
+
+  /// Reads the live scroll offset of the page column, as (horizontal,
+  /// vertical). Content coordinates are viewport coordinates plus this.
   final Offset Function() getScrollOffset;
+
+  /// Identifies the outline drawn over the page that would receive the drop.
+  @visibleForTesting
+  static const highlightKey = ValueKey<String>('pdfDropTargetHighlight');
 
   @override
   ConsumerState<PdfDropTarget> createState() => _PdfDropTargetState();
 }
 
-class _PdfDropTargetState extends ConsumerState<PdfDropTarget>
-    with PdfDropPositionCalculator {
-  bool _isDragOver = false;
+class _PdfDropTargetState extends ConsumerState<PdfDropTarget> {
+  /// Share of the page width a freshly placed object occupies.
+  static const _defaultWidthRatio = 0.25;
+
+  /// Hard ceiling on a placed object relative to the page.
+  static const _maxPageCoverage = 0.9;
+
+  final _layoutCache = PdfPageLayoutCache();
+
+  /// Page that would receive the object if the drag ended now.
+  int? _targetPageIndex;
 
   @override
-  Widget build(BuildContext context) {
-    return DragTarget<DraggableSidebarImage>(
-      onWillAcceptWithDetails: (details) {
-        setState(() => _isDragOver = true);
-        return true;
-      },
-      onLeave: (_) {
-        setState(() => _isDragOver = false);
-      },
-      onAcceptWithDetails: (details) {
-        setState(() => _isDragOver = false);
-        _handleDrop(context, details);
-      },
-      builder: (context, candidateData, rejectedData) {
-        return Stack(
-          fit: StackFit.expand,
-          children: [
-            widget.child,
-            // Drop indicator overlay
-            if (_isDragOver)
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: Container(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .primary
-                        .withOpacity(0.05),
-                  ),
-                ),
-              ),
-          ],
-        );
-      },
+  Widget build(BuildContext context) =>
+      DragTarget<DraggableSidebarImage>(
+        // Refuse the drag outright when there is no page to drop onto.
+        onWillAcceptWithDetails: (details) => _acceptAndTrack(details.offset),
+        onMove: (details) => _setTargetPage(_targetPageFor(details.offset)),
+        onLeave: (_) => _setTargetPage(null),
+        onAcceptWithDetails: (details) {
+          _setTargetPage(null);
+          _handleDrop(details);
+        },
+        builder: (context, candidateData, rejectedData) {
+          final highlight = _buildTargetHighlight(context);
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              widget.child,
+              if (highlight != null) highlight,
+            ],
+          );
+        },
+      );
+
+  /// Outlines the page that will receive the drop.
+  ///
+  /// Positioned from the cached layout and the live scroll offset, so it stays
+  /// aligned with the page without reading the render tree during build.
+  Widget? _buildTargetHighlight(BuildContext context) {
+    final index = _targetPageIndex;
+    final layout = _layoutCache.current;
+    if (index == null || layout == null || index >= layout.pageCount) {
+      return null;
+    }
+
+    final rect = layout.pageRect(index).shift(-widget.getScrollOffset());
+    final primary = Theme.of(context).colorScheme.primary;
+
+    return Positioned.fromRect(
+      key: PdfDropTarget.highlightKey,
+      rect: rect,
+      child: IgnorePointer(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: primary.withValues(alpha: 0.06),
+            border: Border.all(
+              color: primary.withValues(alpha: 0.7),
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(
+              PdfViewerConstants.pageBorderRadius,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
-  void _handleDrop(
-    BuildContext context,
-    DragTargetDetails<DraggableSidebarImage> details,
+  /// Tracks the page under the pointer and reports whether a drop is possible.
+  bool _acceptAndTrack(Offset globalPosition) {
+    final index = _targetPageFor(globalPosition);
+    _setTargetPage(index);
+    return index != null;
+  }
+
+  void _setTargetPage(int? index) {
+    if (_targetPageIndex == index) {
+      return;
+    }
+    setState(() => _targetPageIndex = index);
+  }
+
+  /// Page that a pointer at [globalPosition] would drop onto: the page under
+  /// the cursor, else the nearest one. Null only when there is no page at all.
+  int? _targetPageFor(Offset globalPosition) {
+    final resolved = _resolve(globalPosition);
+    if (resolved == null) {
+      return null;
+    }
+    final (:layout, :contentPoint) = resolved;
+    return layout.pageIndexAt(contentPoint) ??
+        layout.nearestPageIndex(contentPoint);
+  }
+
+  /// Maps a global pointer position onto the page column.
+  ///
+  /// Returns null before this widget has been laid out.
+  ({PdfPageLayout layout, Offset contentPoint})? _resolve(
+    Offset globalPosition,
   ) {
-    final renderBox = context.findRenderObject() as RenderBox;
-    final localOffset = renderBox.globalToLocal(details.offset);
-    final viewportSize = renderBox.size;
+    final renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox == null || !renderBox.hasSize) {
+      return null;
+    }
 
-    final dropPosition = calculateDropPosition(
-      dropOffset: localOffset,
-      scrollOffset: widget.getScrollOffset(),
-      scale: widget.scale,
+    final layout = _layoutCache.of(
       document: widget.document,
-      viewportSize: viewportSize,
+      scale: widget.scale,
+      viewportWidth: renderBox.size.width,
     );
+    final contentPoint =
+        renderBox.globalToLocal(globalPosition) + widget.getScrollOffset();
 
-    if (dropPosition == null) {
-      // Drop outside any page - place on first visible page at center
-      _placeImageAtPageCenter(details.data, 0);
+    return (layout: layout, contentPoint: contentPoint);
+  }
+
+  void _handleDrop(DragTargetDetails<DraggableSidebarImage> details) {
+    final resolved = _resolve(details.offset);
+    if (resolved == null) {
+      return;
+    }
+    final (:layout, :contentPoint) = resolved;
+
+    // A drop in the margin, in a gap, or past the end of the document snaps to
+    // the nearest page rather than being lost or silently sent to page one.
+    final pageIndex = layout.pageIndexAt(contentPoint) ??
+        layout.nearestPageIndex(contentPoint);
+    if (pageIndex == null) {
       return;
     }
 
-    // Calculate default image size (fit within page bounds)
-    final imageData = details.data;
-    final defaultSize = _calculateDefaultSize(
-      imageAspectRatio: imageData.aspectRatio,
-      pageSize: dropPosition.pageSize,
-    );
-
-    // Adjust position so the image is centered at drop point
-    final adjustedPosition = Offset(
-      (dropPosition.position.dx - defaultSize.width / 2)
-          .clamp(0, dropPosition.pageSize.width - defaultSize.width),
-      (dropPosition.position.dy - defaultSize.height / 2)
-          .clamp(0, dropPosition.pageSize.height - defaultSize.height),
-    );
-
-    // Add the placed image
-    ref.read(placedImagesProvider.notifier).addImage(
-          sourceImageId: imageData.sourceImageId,
-          imagePath: imageData.imagePath,
-          pageIndex: dropPosition.pageIndex,
-          position: adjustedPosition,
-          size: defaultSize,
-        );
-
-    // Mark document as dirty
-    ref.read(documentDirtyProvider.notifier).markDirty();
-
-    // Select the newly placed image
-    // Note: We can't get the ID here since addImage generates it internally
-    // We'll select the last added image
-    final images = ref.read(placedImagesProvider);
-    if (images.isNotEmpty) {
-      ref.read(editorSelectionProvider.notifier).select(images.last.id);
-    }
-  }
-
-  void _placeImageAtPageCenter(DraggableSidebarImage data, int pageIndex) {
-    if (pageIndex >= widget.document.pages.length) return;
-
     final page = widget.document.pages[pageIndex];
     final pageSize = Size(page.width, page.height);
-    final defaultSize = _calculateDefaultSize(
-      imageAspectRatio: data.aspectRatio,
-      pageSize: pageSize,
+    final size = _defaultSizeFor(details.data.aspectRatio, pageSize);
+
+    // Cursor position in unscaled page points. Falls outside the page for an
+    // off-page drop; the clamp below pulls the object back inside.
+    final pageOrigin = layout.pageRect(pageIndex).topLeft;
+    final cursorOnPage = (contentPoint - pageOrigin) / layout.scale;
+
+    final position = Offset(
+      _clamped(cursorOnPage.dx - size.width / 2, pageSize.width - size.width),
+      _clamped(
+        cursorOnPage.dy - size.height / 2,
+        pageSize.height - size.height,
+      ),
     );
 
-    final centerPosition = Offset(
-      (pageSize.width - defaultSize.width) / 2,
-      (pageSize.height - defaultSize.height) / 2,
-    );
-
-    ref.read(placedImagesProvider.notifier).addImage(
-          sourceImageId: data.sourceImageId,
-          imagePath: data.imagePath,
+    final placed = ref.read(placedImagesProvider.notifier).addImage(
+          sourceImageId: details.data.sourceImageId,
+          imagePath: details.data.imagePath,
           pageIndex: pageIndex,
-          position: centerPosition,
-          size: defaultSize,
+          position: position,
+          size: size,
         );
 
     ref.read(documentDirtyProvider.notifier).markDirty();
+    ref.read(editorSelectionProvider.notifier).select(placed.id);
   }
 
-  /// Calculate default size for placed image (fit within reasonable bounds).
-  Size _calculateDefaultSize({
-    required double imageAspectRatio,
-    required Size pageSize,
-  }) {
-    // Default to 25% of page width
-    const defaultWidthRatio = 0.25;
-    final maxWidth = pageSize.width * defaultWidthRatio;
+  /// Clamps a coordinate so the object stays fully on the page.
+  ///
+  /// [maxValue] can only go negative if an object were larger than its page,
+  /// which [_defaultSizeFor] prevents; guarding anyway keeps a malformed
+  /// document from producing an out-of-range position.
+  static double _clamped(double value, double maxValue) {
+    if (value < 0 || maxValue <= 0) {
+      return 0;
+    }
+    return value > maxValue ? maxValue : value;
+  }
 
-    double width, height;
+  /// Size for a freshly placed object: a quarter of the page width, keeping
+  /// the source aspect ratio, never covering more than 90% of the page.
+  static Size _defaultSizeFor(double aspectRatio, Size pageSize) {
+    // A library row with a zero dimension would yield 0, infinity or NaN.
+    // Fall back to a square rather than letting that reach the saved PDF.
+    final ratio =
+        aspectRatio.isFinite && aspectRatio > 0 ? aspectRatio : 1.0;
 
-    if (imageAspectRatio > 1) {
-      // Landscape
+    final target = pageSize.width * _defaultWidthRatio;
+    var width = ratio > 1 ? target : target * ratio;
+    var height = ratio > 1 ? target / ratio : target;
+
+    final maxWidth = pageSize.width * _maxPageCoverage;
+    if (width > maxWidth) {
       width = maxWidth;
-      height = width / imageAspectRatio;
-    } else {
-      // Portrait or square
-      height = maxWidth;
-      width = height * imageAspectRatio;
+      height = width / ratio;
     }
 
-    // Ensure it doesn't exceed page bounds
-    if (width > pageSize.width * 0.9) {
-      width = pageSize.width * 0.9;
-      height = width / imageAspectRatio;
-    }
-    if (height > pageSize.height * 0.9) {
-      height = pageSize.height * 0.9;
-      width = height * imageAspectRatio;
+    final maxHeight = pageSize.height * _maxPageCoverage;
+    if (height > maxHeight) {
+      height = maxHeight;
+      width = height * ratio;
     }
 
     return Size(width, height);

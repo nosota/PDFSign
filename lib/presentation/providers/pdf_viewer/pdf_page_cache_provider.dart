@@ -180,12 +180,25 @@ class VisiblePages extends _$VisiblePages {
     required int lastVisible,
     required int totalPages,
   }) {
+    if (totalPages <= 0) {
+      state = const {};
+      return;
+    }
+
     final start = (firstVisible - _bufferSize).clamp(1, totalPages);
     final end = (lastVisible + _bufferSize).clamp(1, totalPages);
 
     final newVisible = <int>{};
     for (int i = start; i <= end; i++) {
       newVisible.add(i);
+    }
+
+    // Bail out when nothing moved. Riverpod notifies on every assignment of a
+    // fresh Set, and PdfPageList refreshes this range from a post-frame
+    // callback in build(), so assigning an equal set would rebuild the list
+    // forever and keep the window repainting while idle.
+    if (newVisible.length == state.length && newVisible.containsAll(state)) {
+      return;
     }
 
     // Cancel renders for pages no longer in range

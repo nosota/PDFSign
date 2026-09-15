@@ -85,6 +85,14 @@ class DraggableImageCard extends ConsumerWidget {
                 // Image area for dragging to PDF
                 Draggable<DraggableSidebarImage>(
                   data: dragData,
+                  // Anchor the drag to the pointer rather than to the point
+                  // grabbed inside the thumbnail. With the default
+                  // childDragAnchorStrategy, DragTargetDetails.offset reports
+                  // the feedback's top-left corner, not the cursor, which made
+                  // PdfDropTarget place the image up and to the left of the
+                  // drop point. The feedback is re-centred on the pointer in
+                  // _buildDragFeedback().
+                  dragAnchorStrategy: pointerDragAnchorStrategy,
                   feedback: _buildDragFeedback(context),
                   childWhenDragging: Opacity(
                     opacity: 0.3,
@@ -123,6 +131,17 @@ class DraggableImageCard extends ConsumerWidget {
     );
   }
 
+  /// Builds the drag ghost, centred on the pointer.
+  ///
+  /// Under [pointerDragAnchorStrategy] the feedback is rendered with its
+  /// top-left corner at the cursor, so it is shifted back by half its size to
+  /// sit centred under the cursor — the same point `PdfDropTarget` centres the
+  /// placed object on, so the object does not shift when released.
+  ///
+  /// Only the centre is preserved, not the size: this ghost is capped at
+  /// `maxSize` logical pixels, while the placed object is 25% of the page
+  /// width scaled by the current zoom. The object therefore grows or shrinks
+  /// about the drop point — roughly 37 px at 25% zoom, ~450 px at 300%.
   Widget _buildDragFeedback(BuildContext context) {
     const maxSize = 150.0;
     final aspectRatio = image.aspectRatio;
@@ -136,13 +155,16 @@ class DraggableImageCard extends ConsumerWidget {
       width = maxSize * aspectRatio;
     }
 
-    return Material(
-      color: Colors.transparent,
-      child: Image.file(
-        File(image.filePath),
-        width: width,
-        height: height,
-        fit: BoxFit.contain,
+    return Transform.translate(
+      offset: Offset(-width / 2, -height / 2),
+      child: Material(
+        color: Colors.transparent,
+        child: Image.file(
+          File(image.filePath),
+          width: width,
+          height: height,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }
