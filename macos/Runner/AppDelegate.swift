@@ -135,11 +135,10 @@ class AppDelegate: FlutterAppDelegate {
           let label = args["label"] as? String
           let tooltip = args["tooltip"] as? String
           DispatchQueue.main.async {
-            if let window = controller.view.window {
-              let windowId = ObjectIdentifier(window)
-              if let toolbarHelper = toolbarHelpers[windowId] {
-                toolbarHelper.setDeleteButtonVisible(visible, label: label, tooltip: tooltip)
-              }
+            if let window = controller.view.window,
+               let toolbarHelper = toolbarHelpers[ObjectIdentifier(window)],
+               toolbarHelper.owns(window) {
+              toolbarHelper.setDeleteButtonVisible(visible, label: label, tooltip: tooltip)
             }
           }
           result(nil)
@@ -636,9 +635,13 @@ class SubWindowDelegate: NSObject, NSWindowDelegate {
   }
 }
 
-/// Static dictionary to store toolbar helpers by window.
-/// Using ObjectIdentifier as key to properly track window instances.
-private var toolbarHelpers: [ObjectIdentifier: PDFSignToolbarHelper] = [:]
+/// Toolbar helpers, keyed by window.
+///
+/// `ObjectIdentifier` is the window's address, which the allocator reuses, so
+/// entries must be removed when a window closes and every lookup must confirm
+/// ownership with `PDFSignToolbarHelper.owns(_:)`. Internal rather than private
+/// so `RunnerTests` can verify that eviction.
+var toolbarHelpers: [ObjectIdentifier: PDFSignToolbarHelper] = [:]
 
 /// Helper class to manage NSToolbar for PDF viewer windows.
 class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation {
@@ -646,7 +649,23 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
   private var methodChannel: FlutterMethodChannel?
   private let shareItemIdentifier = NSToolbarItem.Identifier("ShareItem")
   private let deleteItemIdentifier = NSToolbarItem.Identifier("DeleteItem")
-  private var deleteButtonVisible = false
+
+  /// Unique per helper.
+  ///
+  /// NSToolbar shares its item set *live* between instances created with the
+  /// same identifier: removing an item from one window's toolbar removes it
+  /// from every other window's toolbar too. A per-window identifier keeps the
+  /// windows independent.
+  private let toolbarIdentifier = "PDFSignToolbar.\(UUID().uuidString)"
+
+  /// Last visibility Dart asked for.
+  ///
+  /// Only a record of the request — never used to decide whether to mutate the
+  /// toolbar, which is always derived from the toolbar itself. It exists so a
+  /// request that arrived before the toolbar existed is not lost, because the
+  /// Dart listener is edge-triggered and will not repeat it.
+  private var requestedDeleteVisible = false
+
   private var deleteLabel: String = "Delete"
   private var deleteTooltip: String = "Delete selected object"
 
@@ -657,54 +676,106 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
       binaryMessenger: binaryMessenger
     )
     super.init()
+
+    // toolbarHelpers is keyed by the window's address, which the allocator
+    // reuses. Without this the entry outlives its window and a later window
+    // at the same address is handed a helper bound to a dead one.
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(handleWindowWillClose(_:)),
+      name: NSWindow.willCloseNotification,
+      object: window
+    )
+  }
+
+  deinit {
+    NotificationCenter.default.removeObserver(self)
+  }
+
+  /// Whether this helper still manages [candidate].
+  ///
+  /// Callers must check this before use: a matching dictionary key only proves
+  /// the addresses match, not that it is the same window.
+  func owns(_ candidate: NSWindow) -> Bool {
+    return window === candidate
+  }
+
+  @objc private func handleWindowWillClose(_ note: Notification) {
+    guard let closing = note.object as? NSWindow else { return }
+    let key = ObjectIdentifier(closing)
+    // Deferred so this helper cannot be deallocated inside its own callback,
+    // and guarded by identity so it never evicts a successor that has already
+    // claimed the same key.
+    DispatchQueue.main.async { [weak self] in
+      guard let self = self else { return }
+      if toolbarHelpers[key] === self {
+        toolbarHelpers.removeValue(forKey: key)
+      }
+    }
   }
 
   func setupToolbar() {
     guard let window = window else { return }
 
-    let toolbar = NSToolbar(identifier: "PDFSignToolbar")
+    let toolbar = NSToolbar(identifier: toolbarIdentifier)
     toolbar.delegate = self
     toolbar.displayMode = .iconOnly
     toolbar.allowsUserCustomization = false
     window.toolbar = toolbar
+
+    // Apply whatever Dart asked for while the toolbar did not yet exist.
+    setDeleteButtonVisible(requestedDeleteVisible, label: nil, tooltip: nil)
+  }
+
+  /// Position of the Delete item in the live toolbar, or nil when absent.
+  private func deleteItemIndex(in toolbar: NSToolbar) -> Int? {
+    return toolbar.items.firstIndex { $0.itemIdentifier == deleteItemIdentifier }
   }
 
   /// Shows or hides the Delete button in the toolbar.
+  ///
+  /// The toolbar itself is the source of truth. An earlier version mirrored
+  /// its contents in a Bool and updated that mirror before the mutation, so
+  /// any early return left the two disagreeing; the next show then re-inserted
+  /// an item NSToolbar already held, raising NSInternalInconsistencyException
+  /// and aborting the process. Deriving the state makes the call idempotent
+  /// and that whole class of drift impossible.
   func setDeleteButtonVisible(_ visible: Bool, label: String?, tooltip: String?) {
-    // Update localized texts if provided
     if let label = label {
       deleteLabel = label
     }
     if let tooltip = tooltip {
       deleteTooltip = tooltip
     }
-
-    // Update existing item's texts if visible
-    if deleteButtonVisible, let toolbar = window?.toolbar,
-       let item = toolbar.items.first(where: { $0.itemIdentifier == deleteItemIdentifier }) {
-      item.label = deleteLabel
-      item.paletteLabel = deleteLabel
-      item.toolTip = deleteTooltip
-    }
-
-    guard visible != deleteButtonVisible else { return }
-    deleteButtonVisible = visible
+    requestedDeleteVisible = visible
 
     guard let toolbar = window?.toolbar else { return }
+    let existingIndex = deleteItemIndex(in: toolbar)
+    var mutated = false
 
     if visible {
-      // Insert delete button before share button
-      let insertIndex = max(0, toolbar.items.count - 1)
-      toolbar.insertItem(withItemIdentifier: deleteItemIdentifier, at: insertIndex)
-    } else {
-      // Remove delete button
-      if let index = toolbar.items.firstIndex(where: { $0.itemIdentifier == deleteItemIdentifier }) {
-        toolbar.removeItem(at: index)
+      if let index = existingIndex {
+        // Already present: only the localized texts can have changed.
+        let item = toolbar.items[index]
+        item.label = deleteLabel
+        item.paletteLabel = deleteLabel
+        item.toolTip = deleteTooltip
+      } else {
+        // Delete sits just before the trailing Share item. Clamp into the
+        // range NSToolbar accepts (0...count) so a toolbar with unexpected
+        // contents cannot push the index out of bounds.
+        let insertIndex = min(max(toolbar.items.count - 1, 0), toolbar.items.count)
+        toolbar.insertItem(withItemIdentifier: deleteItemIdentifier, at: insertIndex)
+        mutated = true
       }
+    } else if let index = existingIndex {
+      toolbar.removeItem(at: index)
+      mutated = true
     }
 
-    // Force toolbar to refresh its display
-    toolbar.validateVisibleItems()
+    if mutated {
+      toolbar.validateVisibleItems()
+    }
   }
 
   // MARK: - NSToolbarDelegate
