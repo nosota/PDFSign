@@ -517,9 +517,9 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 
 | Aspect | State |
 |--------|-------|
-| `flutter analyze` | 929 issues: 0 errors, **10 warnings**, 919 info |
+| `flutter analyze` | 904 issues: 0 errors, **0 warnings**, 904 info |
 | Unit tests | **40** — page-column geometry (`PdfPageLayout`), dirty-state policy |
-| Widget tests | **12** — drop placement, off-page snapping, drag feedback |
+| Widget tests | **20** — drop placement, off-page snapping, drag feedback, the close-everything flow |
 | Native tests | **15** — toolbar item management (`macos/RunnerTests`) |
 | Integration tests | **none** |
 | Golden tests | **none** |
@@ -527,19 +527,10 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 
 The largest info groups are `prefer_relative_imports`, `prefer_expression_function_bodies`, `always_put_control_body_on_new_line` and `avoid_catches_without_on_clauses`; see the Import Convention note in `CLAUDE.md` for why the first group cannot be acted on as things stand.
 
-The 12 warnings are all actionable and cheap to clear:
-
-| Warning | Location |
-|---------|----------|
-| `removed_lint` — `package_api_docs` was removed in Dart 3.7.0 | `analysis_options.yaml:119` |
-| `unused_element` — `_isSettingsWindowAlive`, `_bringSettingsWindowToFront` | `window_manager_service.dart:282, 317` (see §13.11) |
-| `unused_import` — `window_manager_service.dart` | `pdf_viewer_app.dart:16` |
-| `unused_field` — `_previousScale`, `_viewportWidth` | `pdf_page_list.dart:46, 47` |
-| `inference_failure_on_instance_creation` — untyped `Future.delayed` ×6 | `pdf_viewer_app.dart:445, 532`; `settings_app.dart:199, 286`; `welcome_app.dart:156, 243` |
-
-All six `Future.delayed` warnings are the fixed 5-second Save All waits described in §13.9.
-
-> `CLAUDE.md` mandates "zero warnings/errors tolerance". The project currently does not meet its own rule.
+The analyzer is clean of warnings: the last three — a lint removed in Dart 3.7
+still listed in `analysis_options.yaml`, and two unreachable private methods in
+`window_manager_service.dart` — were cleared on 2026-09-15. `CLAUDE.md`'s
+zero-warning rule is met; keep it that way.
 
 > `prefer_relative_imports` fires on nearly every file because `analysis_options.yaml` enables that rule while simultaneously setting `always_use_package_imports: error`, and `CLAUDE.md` forbids absolute imports. These three sources contradict each other; the codebase consistently uses `package:` imports. One of the three has to give.
 
@@ -616,20 +607,14 @@ All pages are built into one `Column` inside a `SingleChildScrollView`. Only ima
 
 Page measurement itself is no longer a problem: `PdfPageLayout` precomputes page offsets once per (document, scale, viewport width) and answers lookups by binary search, so scrolling no longer walks every page.
 
-### 13.9 `Close All` waits a fixed 5 seconds
-After broadcasting Save All, the initiating window sleeps 5 s before checking whether saves succeeded, instead of awaiting acknowledgements.
-
-### 13.10 Toolbar helpers live in a global mutable dictionary
+### 13.9 Toolbar helpers live in a global mutable dictionary
 
 `toolbarHelpers` in `AppDelegate.swift` is a file-scope mutable dictionary keyed by `ObjectIdentifier(window)` — the window's address, which the allocator reuses. Entries are now evicted when a window closes and every lookup confirms ownership, so the stale-entry hazard is closed, but the design is still a global that `CLAUDE.md` would reject in Dart. Attaching the helper to the window (associated object) or to the `FlutterViewController` would remove it.
 
-### 13.11 Dead private methods
-`WindowManagerService._isSettingsWindowAlive()` and `._bringSettingsWindowToFront()` are unreachable.
-
-### 13.12 Exception classification by string matching
+### 13.10 Exception classification by string matching
 `PdfDocumentRepositoryImpl` maps `pdfx` failures to `Failure` types by searching the exception's `toString()` for `"password"`, `"not found"`, `"permission"`, and similar. Brittle across library versions and locales. See CODE_REVIEW §1.1.
 
-### 13.13 The Syncfusion license key is committed
+### 13.11 The Syncfusion license key is committed
 `TODO.md` contains a Syncfusion community license key in plain text. It should be removed from the repository and from history.
 
 ---

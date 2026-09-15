@@ -254,6 +254,7 @@ Service for broadcasting messages between windows using `desktop_multi_window`'s
 | `broadcastRequestDirtyStates()` | Request dirty states from all |
 | `broadcastSettingsOpened(windowId)` | Settings window opened |
 | `broadcastSettingsClosed()` | Settings window closed |
+| `broadcastSaveFailed(windowId)` | This window could not write its document; lets the window running Close All ask the user instead of waiting for its backstop timeout |
 
 ### Callback Setters
 
