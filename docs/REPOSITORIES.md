@@ -93,6 +93,18 @@ Handles sidebar image CRUD operations and real-time syncing between windows.
 | `height` | `int` | Image height in pixels |
 | `fileSize` | `int` | File size in bytes |
 
+### Import Limits
+
+`SidebarImages.addImages` refuses a file over `ImageImportLimits.maxFileSizeBytes`
+(100 MB) or with a side over `maxPixelsPerSide` (4096), and reports why in an
+`ImageImportReport` so the caller can name the limit. The size is checked with
+`File.length()` **before** the bytes are read — decoding a 200 MB image to find
+out it is too big would already have cost the memory the limit exists to
+protect. The same limits apply to a pasted image (`PastePlanner`).
+
+A file that is missing or does not decode is skipped without a rejection: it is
+neither stored nor refused for a reason worth naming.
+
 ### Implementation Details
 
 **Image Storage Flow:**

@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
+- Images larger than 100 MB or 4096x4096 are refused on import and on paste, with a message naming the limit, instead of being decoded into memory
 - Cut, Copy and Paste for objects placed on the document, in the Edit menu and on Cmd+X/C/V
 - An image copied in another application can be pasted onto the page; it is stored with the document and does not appear in the image library
 - An object copied in PDFSign can be pasted into another application, and into another PDFSign window
@@ -25,6 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Fixed
 
+- An image the library could not store is no longer counted as added
 - Cut, Copy and Paste now work in text fields — the image comment, Go to Page and Settings — where Cmd shortcuts previously did nothing at all
 
 - Closing no longer offered to discard a document whose save was merely still running, which could destroy the window mid-write

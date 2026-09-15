@@ -517,8 +517,8 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 
 | Aspect | State |
 |--------|-------|
-| `flutter analyze` | 981 issues: 0 errors, **0 warnings**, 981 info |
-| Unit tests | **64** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec |
+| `flutter analyze` | 993 issues: 0 errors, **0 warnings**, 993 info |
+| Unit tests | **78** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits |
 | Widget tests | **41** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste |
 | Native tests | **15** — toolbar item management (`macos/RunnerTests`) |
 | Integration tests | **none** |
@@ -562,13 +562,13 @@ Specified in v1.0 (or implied by leftover code) but **absent from the product**.
 | # | Feature | Evidence of the gap |
 |---|---------|---------------------|
 | 12.1 | **Z-order management** (bring to front / send to back / forward / backward) | `PlacedImage` has no z-index; paint order is insertion order. TODO → V1.0 |
-| 12.2 | **Undo / redo**, 50 levels | No command stack. `AppConstants.undoRedoHistoryDepth = 50` is declared and never read. TODO → V1.1 |
+| 12.2 | **Undo / redo**, 50 levels | No command stack anywhere. TODO → V1.1 |
 | 12.3 | **Password entry for protected PDFs** | `PdfDocument.openProtectedDocument()` exists and works, but nothing calls it — `pdf_viewer.dart` carries `// TODO: Add password input dialog`. `l10n.incorrectPassword` is unused. TODO → V1.0 (save/share with the original password) |
-| 12.4 | **Paste dialog** with "Add to Signatures / Stamps / Don't add" and "Don't ask again" | Paste adds to the library silently. `AppConstants.dontAskPasteAgainKey` and `pasteDefaultTabKey` are declared and never read |
+| 12.4 | **Paste dialog** with "Add to Signatures / Stamps / Don't add" and "Don't ask again" | No dialog. A pasted image goes onto the page and is deliberately not added to the library (ADR-0009) |
 | 12.5 | **Signatures / Stamps split** in the library | One flat list |
 | 12.6 | **`Cmd+D` duplicate** | Duplication exists only via `Cmd+C` → `Cmd+V` |
 | 12.7 | **Context menu** on placed objects | No right-click menu anywhere |
-| 12.8 | **Image validation limits** (100 MB, 4096×4096) | `maxImageFileSize` and `maxImageResolution` are declared and never read |
+| 12.8 | **Image validation limits** (100 MB, 4096×4096) | **Implemented** — `ImageImportLimits`, enforced on library import and on paste |
 | 12.9 | **Cross-platform support** (iOS, Android, Windows, Linux) | Template projects only; see §2.1 |
 | 12.10 | **Mobile layouts** | `MobileWelcomeView` exists but calls `context.goNamed('editor')` with no router mounted — see §13.3 |
 | 12.11 | **Persistence of placed objects / session restore** | In-memory only |
