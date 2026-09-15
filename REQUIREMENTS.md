@@ -517,8 +517,8 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 
 | Aspect | State |
 |--------|-------|
-| `flutter analyze` | 959 issues: 0 errors, **0 warnings**, 959 info |
-| Unit tests | **62** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec |
+| `flutter analyze` | 981 issues: 0 errors, **0 warnings**, 981 info |
+| Unit tests | **64** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec |
 | Widget tests | **41** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste |
 | Native tests | **15** — toolbar item management (`macos/RunnerTests`) |
 | Integration tests | **none** |
@@ -627,7 +627,10 @@ Two consequences are still open:
 ### 13.12 Paste is always enabled
 `PlatformMenuBar` gives no hook to revalidate a menu item as the menu opens, and polling the pasteboard would be worse. Edit → Paste is therefore always enabled while a document is open and does nothing when the clipboard holds nothing usable. Cut and Copy do better: they follow the selection and the keyboard focus.
 
-### 13.13 The Syncfusion license key is committed
+### 13.13 Pasted images are swept only at a cold start
+An image pasted from another application is stored in `pasted/` in app support and has no library row to own it. The folder is emptied when the main window starts, which is the only moment no document window can be holding one of those files. If the app is killed, its scratch files survive until the next launch. Bounded and self-correcting, but not immediate.
+
+### 13.14 The Syncfusion license key is committed
 `TODO.md` contains a Syncfusion community license key in plain text. It should be removed from the repository and from history.
 
 ---

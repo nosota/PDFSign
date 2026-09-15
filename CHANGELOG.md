@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ### Added
 
 - Cut, Copy and Paste for objects placed on the document, in the Edit menu and on Cmd+X/C/V
-- An image copied in another application can be pasted onto the page; it is added to the image library at the same time
+- An image copied in another application can be pasted onto the page; it is stored with the document and does not appear in the image library
 - An object copied in PDFSign can be pasted into another application, and into another PDFSign window
 
 - Remember last used directory in File->Open dialog

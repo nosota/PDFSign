@@ -77,7 +77,6 @@ Handles sidebar image CRUD operations and real-time syncing between windows.
 | `getImages` | `Future<Either<Failure, List<SidebarImage>>> getImages()` | Gets all images sorted by order |
 | `watchImages` | `Stream<List<SidebarImage>> watchImages()` | Real-time stream of images |
 | `addImage` | `Future<Either<Failure, SidebarImage>> addImage({...})` | Adds new image from a file |
-| `addImageFromBytes` | `Future<Either<Failure, SidebarImage>> addImageFromBytes({...})` | Adds new image from raw bytes, as pasted from the clipboard |
 | `removeImage` | `Future<Either<Failure, Unit>> removeImage(String id)` | Removes image by ID |
 | `reorderImages` | `Future<Either<Failure, Unit>> reorderImages(List<String> orderedIds)` | Updates order |
 | `clearAllImages` | `Future<Either<Failure, Unit>> clearAllImages()` | Clears all images |
@@ -93,19 +92,6 @@ Handles sidebar image CRUD operations and real-time syncing between windows.
 | `width` | `int` | Image width in pixels |
 | `height` | `int` | Image height in pixels |
 | `fileSize` | `int` | File size in bytes |
-
-### addImageFromBytes Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `bytes` | `Uint8List` | Encoded image data |
-| `fileExtension` | `String` | `png` or `jpg`, decides the stored file name |
-| `fileName` | `String` | Display name |
-| `width` | `int` | Image width in pixels |
-| `height` | `int` | Image height in pixels |
-
-Bytes are written straight into app storage. A paste has no file to copy, and
-routing it through a temporary one would leave a file behind on every paste.
 
 ### Implementation Details
 
@@ -171,6 +157,36 @@ the bitmap beside it may still be pasteable.
 **Empty is not a failure:** a clipboard holding text or nothing at all returns
 an empty `ClipboardContents`. `Failure` is reserved for a pasteboard that
 cannot be reached.
+
+---
+
+## PastedImageStorage
+
+**Interface:** `lib/domain/repositories/pasted_image_storage.dart`
+**Implementation:** `lib/data/repositories/pasted_image_storage_impl.dart`
+
+Files for images pasted into a document from another application. Deliberately
+not the library: a pasted screenshot belongs to the document it was pasted into,
+not to the user's collection of stamps and signatures (ADR-0009).
+
+### Interface Methods
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `save` | `Future<Either<Failure, String>> save(bytes, {fileExtension})` | Writes bytes under a UUID, returns the path |
+| `clear` | `Future<void> clear()` | Deletes every stored pasted image |
+
+### Implementation Details
+
+Files live in `<app support>/pasted/`. A placed object still needs a path — it
+is drawn with `Image.file` and `PdfSaveService` reads the file when embedding it
+— so the bytes cannot simply stay in memory.
+
+**When `clear` may run.** Only from `main()`, as the main window starts. That is
+the one moment no document window exists: an object pasted in one window can be
+copied into another, so these files are shared for the length of a session.
+`clear` swallows its own errors — a sweep that cannot run costs disk space, and
+must not keep the app from starting (REQUIREMENTS §13.13).
 
 ---
 
@@ -282,6 +298,11 @@ SidebarImageRepository sidebarImageRepository(ref) {
 @Riverpod(keepAlive: true)
 ClipboardRepository clipboardRepository(ref) {
   return ClipboardRepositoryImpl();
+}
+
+@Riverpod(keepAlive: true)
+PastedImageStorage pastedImageStorage(ref) {
+  return PastedImageStorageImpl();
 }
 
 @riverpod

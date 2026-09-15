@@ -39,9 +39,13 @@ A copy writes one pasteboard item with two renditions:
 
 A paste prefers the first and falls back to the second.
 
-An image pasted from another application is **imported into the library** by the
-normal route (copy into app storage under a UUID, ADR-0001) and then placed on
-the page.
+An image pasted from another application is **stored with the document, not in
+the library**: the bytes go to a `pasted/` folder in app support under a UUID,
+and the placed object gets no `sourceImageId`. It still needs a file, because
+the object is drawn from its path and `PdfSaveService` reads that path when
+embedding it. The folder is swept when the main window starts — the one moment
+no document window exists — so a session's scratch files cannot outlive the
+session by more than one launch.
 
 Each action asks whether a text field holds the keyboard and, if so, hands the
 action to it via `CopySelectionTextIntent` / `PasteTextIntent`.
@@ -55,8 +59,10 @@ action to it via `CopySelectionTextIntent` / `PasteTextIntent`.
 - An object copied here pastes into Mail, Preview or Pages as an image.
 - An image copied anywhere pastes onto the page.
 - A paste survives the library row being deleted in between: the bitmap
-  rendition is re-imported, and the object comes back at the size and rotation
-  it was copied at.
+  rendition is re-stored, and the object comes back at the size and rotation it
+  was copied at.
+- Pasting a screenshot does not leave anything in the user's collection of
+  stamps and signatures.
 - Text fields got Cut/Copy/Paste, which had never worked anywhere in the app.
 
 **What it costs**
@@ -69,11 +75,14 @@ action to it via `CopySelectionTextIntent` / `PasteTextIntent`.
   revalidate an item as the menu opens, and polling the pasteboard would be
   worse. Paste stays enabled and does nothing when there is nothing usable
   (§13.12). Cut and Copy do follow the selection and the focus.
-- **A pasted external image lands in the library**, whether or not the user
-  wanted it there. This is not incidental: `PdfSaveService` reads the object's
-  file at save time, so a path outside app storage — a temporary file, say —
-  would silently vanish from the saved PDF. The library is what makes the path
-  permanent.
+- **Nothing owns a pasted image's file** the way a library row owns its image,
+  so the sweep at startup is what keeps the folder from growing without bound.
+  It cannot run while any document window is open: an object pasted in one
+  window can be copied into another, so the files are shared for the length of
+  a session. A crash therefore leaves files behind until the next cold start.
+- **A pasted image cannot be reused later** — it is not in the sidebar to drag
+  into a second document. Adding it deliberately is what the Add Image button
+  is for.
 - **Copying refuses when the source file is gone.** There would be no bytes to
   offer another application and no path worth writing. The alternative,
   writing a payload that cannot be pasted, is worse than saying no.
@@ -88,6 +97,14 @@ is for.
 But it would not cross applications in either direction, and it would need its
 own lifetime rules — when is a copied object stale? The pasteboard answers that
 already.
+
+**Importing pasted images into the library.** What the first version did, and
+what makes the file's lifetime somebody's responsibility for free. Rejected
+because it fills the user's collection with one-off screenshots. Keeping the
+bytes in memory instead of a file was also considered: it needs no sweep at all,
+but it puts byte arrays inside `PlacedImage`, which `documentDirtyProvider`
+compares on every change, and it splits drawing, saving and copying into two
+paths each.
 
 **A bitmap only, no private format.** Fewer moving parts, and it would still
 cross windows. But the size, rotation and library identity would be lost on

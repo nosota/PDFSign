@@ -374,11 +374,14 @@ This enables:
 
 **File:** `lib/domain/entities/clipboard_placed_object.dart`
 
-A placed object copied to the clipboard: `sourceImageId`, `imagePath`, `size`,
-`position`, `rotation`, plus a `version`.
+A placed object copied to the clipboard: `imagePath`, `size`, `position`,
+`rotation` and an optional `sourceImageId`, plus a `version`.
 
 ### Notes
 
+- `sourceImageId` is null for an image pasted from another application: it is
+  stored with the document rather than in the library, so there is no row to
+  point at.
 - `position` is where it was copied from, so a paste into the same document can
   land beside the original instead of in the middle of the page.
 - `imagePath` may no longer exist when the object is pasted — deleting a

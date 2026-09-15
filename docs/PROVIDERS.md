@@ -374,7 +374,9 @@ selected object.
 **Where a paste lands** is `PastePlanner`'s question
 (`lib/presentation/providers/editor/paste_planner.dart`): the page the viewer
 reports as current, at the copied position plus a cascade step, clamped onto the
-page; an image from another application is centred and sized like a drop. The
+page; an image from another application is stored with the document via
+`PastedImageStorage`, then centred and sized like a drop — it is **not** added
+to the library. The
 two classes are split along that seam — `EditorClipboard` decides *whether* a
 paste happens and who handles it, `PastePlanner` decides *what lands where*.
 `PlacedImagePlacement` holds the shared geometry so dropping and pasting cannot
