@@ -278,56 +278,11 @@ class WindowManagerService {
     }
   }
 
-  /// Checks if the Settings window is still alive by querying all windows.
-  Future<bool> _isSettingsWindowAlive() async {
-    if (_settingsWindowId == null) return false;
-
-    try {
-      // Get all currently open windows
-      final allWindows = await WindowController.getAll();
-      final allWindowIds = allWindows.map((w) => w.windowId).toList();
-
-      final exists = allWindowIds.contains(_settingsWindowId);
-
-      if (kDebugMode) {
-        print(
-          'Settings window $_settingsWindowId exists: $exists '
-          '(all windows: $allWindowIds)',
-        );
-      }
-
-      return exists;
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error checking if settings window exists: $e');
-      }
-      return false;
-    }
-  }
-
   /// Clears the Settings window ID when the window is closed.
   void clearSettingsWindowId() {
     _settingsWindowId = null;
     if (kDebugMode) {
       print('Settings window ID cleared');
-    }
-  }
-
-  /// Brings the existing Settings window to front.
-  Future<void> _bringSettingsWindowToFront() async {
-    if (_settingsWindowId == null) return;
-
-    try {
-      final window = WindowController.fromWindowId(_settingsWindowId!);
-      await window.show();
-
-      if (kDebugMode) {
-        print('Brought settings window to front: $_settingsWindowId');
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error bringing settings window to front: $e');
-      }
     }
   }
 
