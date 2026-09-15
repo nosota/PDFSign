@@ -1,1354 +1,636 @@
-# PDFSign - Requirements Specification
+# PDFSign — Requirements Specification
 
-**Version:** 1.0
-**Date:** 2025-11-29
-**Status:** Final Draft
+**Version:** 2.0
+**Date:** 2026-09-15
+**Status:** Actual — describes the implemented system
+**Supersedes:** v1.0 (2025-11-29), which described a planned cross-platform product that was never built as specified
 
 ---
 
-## 1. Project Overview
+## 0. About This Document
 
-### 1.1 Project Name
-**PDFSign**
+This specification describes **what PDFSign actually does**, verified against the source tree. Every functional requirement below is backed by an implementation and references the file that provides it.
+
+Two companion documents cover what this one deliberately does not:
+
+- **[TODO.md](TODO.md)** — the owner's personal roadmap (V1.0 → V1.3 and beyond). Planned features live there, not here.
+- **[KNOWN ISSUES.md](KNOWN%20ISSUES.md)** — open defects.
+
+§12 lists requirements from v1.0 that were **never implemented**, so that the gap between the original plan and the product is explicit rather than silently lost.
+
+Architecture detail is kept out of this document; see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/adr/](docs/adr/).
+
+---
+
+## 1. Product Overview
+
+### 1.1 Name and Identity
+
+| Field | Value |
+|-------|-------|
+| Product name | PDFSign |
+| Bundle identifier | `com.ivanvaganov.pdfsign` |
+| Dart package name | `pdfsign` |
+| Version | 1.0.0+1 (`pubspec.yaml`) |
+| License | Proprietary |
 
 ### 1.2 Description
-A cross-platform (Desktop and Mobile) Flutter application designed to add signature and stamp images to PDF documents. The application preserves the original PDF structure, including text layers, hyperlinks, interactive forms, and metadata.
 
-### 1.3 Package Information
-- **Package Name:** `com.nosota.pdfsign`
-- **Display Name:** PDFSign
-- **Type:** Non-commercial, personal use
-- **License:** Community (Syncfusion Community License eligible - revenue < $1M)
+A native macOS application for viewing PDF documents and placing raster images — signatures, stamps, seals — onto their pages. Placed images are permanently rasterized into the output PDF.
 
----
+### 1.3 Explicit Non-Goal
 
-## 2. Scope and Objectives
+PDFSign produces **visual** marks only. It does not create cryptographic or certified electronic signatures, does not use X.509 certificates, and makes no claim about the legal effect of the documents it produces.
 
-### 2.1 In Scope
-- PDF document viewing with continuous scrolling
-- Signature and stamp library management
-- Drag-and-drop placement of signatures/stamps on PDF
-- Transform operations (move, rotate, scale) on placed objects
-- Z-order management for overlapping objects
-- Undo/Redo functionality (50 levels)
-- Export modified PDF preserving original structure
-- Cross-platform support (iOS, Android, Windows, macOS, Linux)
-- Localization (English, Russian)
-- Password-protected PDF support
+### 1.4 Primary User
 
-### 2.2 Out of Scope (Phase 1)
-- Drawing signatures directly in app
-- Cloud synchronization
-- User authentication
-- Multiple document tabs
-- Batch processing
-- OCR functionality
-- Form filling
-- Digital signature certificates (X.509)
+An individual who repeatedly applies the same small set of signature/stamp images to PDF documents and wants them stored once, reachable instantly, and placed by drag-and-drop.
 
 ---
 
-## 3. User Roles and Personas
+## 2. Platform and Environment
 
-### 3.1 Primary User
-**Persona:** Document Manager
-**Description:** Individual who needs to quickly add signatures and stamps to PDF documents for personal or business use.
-**Technical Level:** Basic to Intermediate
-**Goals:**
-- Quickly add multiple signatures/stamps to documents
-- Maintain document quality and structure
-- Organize signature/stamp library efficiently
+### 2.1 Supported Platform
 
----
+**macOS only.**
 
-## 4. Functional Requirements
+The repository contains `ios/`, `android/`, `windows/`, and `linux/` directories, but these are **unmodified Flutter templates**. The application depends on macOS-specific native code (`macos/Runner/AppDelegate.swift`) for window management, the Finder integration, the native toolbar, and drag-and-drop into sub-windows. It will not run meaningfully on any other platform.
 
-### 4.1 PDF Document Management
+| Requirement | Value |
+|-------------|-------|
+| macOS | 10.15+ |
+| Flutter SDK | 3.24.0+ |
+| Dart SDK | 3.5.0+ |
 
-#### FR-1.1: Open PDF Document
-- **Desktop:** Welcome screen with "Open PDF" button + recent files list (last 10)
-- **Mobile:** Splash screen with "Select PDF" button
-- **Supported formats:** PDF (all versions)
-- **File size limit:** No limit (performance may vary)
-- **Platform file picker:** Native file picker for each platform
+### 2.2 Sandbox
 
-#### FR-1.2: Password-Protected PDF
-- Display password input dialog when opening protected PDF
-- Allow 3 password attempts
-- Return to file picker on failed attempts
-- Display error message for write-protected PDFs
+The app sandbox is **disabled** (`macos/Runner/Release.entitlements`: `com.apple.security.app-sandbox = false`). This is a deliberate trade-off: it allows recent files to be reopened after a restart without security-scoped bookmarks.
 
-#### FR-1.3: Save Document
-- **Save (Desktop: Ctrl+S, Mobile: N/A):** Overwrite original file without confirmation
-- **Save As (Desktop: Ctrl+Shift+S):** Native file picker for destination selection
-- **Format:** PDF with preserved structure (text, links, forms, metadata)
+**Consequence:** the app in its current configuration cannot be distributed through the Mac App Store, which requires sandboxing. Any App Store plan requires implementing security-scoped bookmarks first.
 
-#### FR-1.4: Close Document
-- Return to welcome/splash screen
-- Clear undo/redo history
-- Prompt to save if unsaved changes exist
+### 2.3 Build Flavors
 
-### 4.2 PDF Viewing
-
-#### FR-2.1: Continuous Page Scrolling
-- Display PDF pages in continuous vertical layout
-- Show end of one page and beginning of next simultaneously
-- Smooth scrolling with mouse wheel, trackpad, or touch gestures
-
-#### FR-2.2: Zoom Controls
-- **Desktop Toolbar:**
-    - Zoom In button
-    - Zoom Out button
-    - Zoom percentage display (editable dropdown: 50%, 75%, 100%, 125%, 150%, 200%)
-    - Actual Size (100%)
-    - Fit to Screen
-- **Keyboard Shortcuts:**
-    - Zoom In: Ctrl/Cmd + Plus
-    - Zoom Out: Ctrl/Cmd + Minus
-    - Actual Size: Ctrl/Cmd + 0
-    - Fit to Screen: Ctrl/Cmd + 1
-- **Gestures:**
-    - Pinch to zoom (mobile, trackpad)
-    - Ctrl/Cmd + Mouse wheel (desktop)
-- **Range:** 10% to 500%
-
-#### FR-2.3: Navigation
-- Vertical scrollbar (always visible)
-- Page indicator (e.g., "Page 3 of 15")
-- Keyboard navigation: Page Up/Down, Home, End
-
-### 4.3 Signature and Stamp Library
-
-#### FR-3.1: Library Structure
-- Two tabs: "Signatures" and "Stamps"
-- Each tab contains independent collections
-- Items displayed as cards with:
-    - Image preview
-    - Text label (always visible, below image)
-    - Drag handle for reordering
-
-#### FR-3.2: Add Signature/Stamp
-- **Desktop:**
-    - "Add" button at bottom of panel
-    - Click → native file picker
-- **Mobile:**
-    - FAB with "+" icon
-    - Tap → file picker
-- **Supported formats:** PNG, JPG, JPEG, TIFF, WEBP, SVG
-- **File size limit:** 100MB
-- **Resolution limit:** 4096 x 4096 pixels
-- **Error handling:** Display error dialog if limits exceeded
-
-#### FR-3.3: Edit Signature/Stamp
-- Edit text label by clicking on it (inline editing)
-- Auto-save on blur or Enter key
-
-#### FR-3.4: Delete Signature/Stamp
-- Right-click → Delete (desktop)
-- Long press → Delete (mobile)
-- Confirmation dialog
-- Does not affect already placed instances in documents
-
-#### FR-3.5: Reorder Items
-- Drag-and-drop to reorder within same tab
-- Visual feedback during drag (placeholder)
-- Affects display order only (not z-index)
-- Persists across sessions
-
-### 4.4 Object Placement
-
-#### FR-4.1: Drag-and-Drop (Desktop)
-- Drag signature/stamp from panel to PDF canvas
-- Show semi-transparent preview ("ghost") during drag
-- Drop to place at cursor position
-- Cursor changes to indicate valid drop zone
-
-#### FR-4.2: Tap-to-Place (Mobile)
-- Tap item in bottom sheet
-- Bottom sheet closes
-- Object appears in center of visible area
-- Automatically enters edit mode with handles visible
-
-#### FR-4.3: Initial Placement
-- Default size: Maintain aspect ratio, fit within 200x200 logical pixels
-- Default rotation: 0°
-- Z-index: Top-most (above all existing objects)
-
-### 4.5 Object Transformation
-
-#### FR-5.1: Selection
-- **Desktop:** Click on placed object
-- **Mobile:** Tap on placed object
-- **Visual feedback:**
-    - Blue selection box (#0066FF, 2px stroke)
-    - 8 white handles with blue border (4 corners + 4 sides)
-    - 1 rotation handle (above center, circular)
-- **Deselection:** Click/tap on empty area
-
-#### FR-5.2: Move
-- **Desktop:** Click and drag object
-- **Mobile:** Touch and drag object
-- **Constraint:** Object stays within page boundaries
-- **Visual feedback:** Real-time position update
-
-#### FR-5.3: Scale
-- **Desktop:** Drag corner or side handles
-    - Corner handles: Free scaling (no aspect ratio lock)
-    - Side handles: Scale along one axis
-    - No modifier keys required
-- **Mobile:** Pinch gesture on selected object
-- **Minimum size:** 20x20 logical pixels
-- **Maximum size:** Page dimensions
-
-#### FR-5.4: Rotate
-- **Desktop:**
-    - Drag rotation handle (circular motion)
-    - Display angle indicator during rotation
-- **Mobile:**
-    - Two-finger rotation gesture on selected object
-    - Display angle indicator
-- **Range:** 0° to 360° (continuous)
-- **Visual feedback:** Real-time rotation
-
-#### FR-5.5: Context Menu Operations
-**Desktop:** Right-click on selected object
-**Mobile:** Long press on selected object
-
-**Menu items:**
-- Rotate 5° Left (Ctrl+Alt+Left)
-- Rotate 5° Right (Ctrl+Alt+Right)
-- Rotate 90° (Ctrl+R)
-- Scale +5% (Ctrl+Alt+Plus)
-- Scale -5% (Ctrl+Alt+Minus)
-- ———————————— (separator)
-- Bring to Front (Ctrl+Shift+])
-- Bring Forward (Ctrl+])
-- Send Backward (Ctrl+[)
-- Send to Back (Ctrl+Shift+[)
-- ———————————— (separator)
-- Delete (Del)
-
-#### FR-5.6: Toolbar Operations (Desktop)
-Toolbar appears when object is selected:
-- [↻ 5°] [↺ 5°] [⤸ 90°] - Rotation
-- [➕ 5%] [➖ 5%] - Scale
-- [⬆⬆] [⬆] [⬇] [⬇⬇] - Z-order
-- [🗑 Delete] - Delete
-
-#### FR-5.7: Floating Toolbar (Mobile)
-Floating toolbar appears above selected object:
-- [↻] [↺] [⤸] - Rotation
-- [➕] [➖] - Scale
-- [↑] [↓] - Z-order (bring forward/send backward)
-- [🗑] - Delete
-
-### 4.6 Z-Order Management
-
-#### FR-6.1: Z-Index Rules
-- Each placed object has a z-index (integer)
-- Higher z-index renders on top
-- Initial z-index: max(existing) + 1
-- Minimum z-index: 0
-
-#### FR-6.2: Z-Order Commands
-- **Bring to Front:** Set z-index to max(all) + 1
-- **Send to Back:** Set z-index to 0, increment all others
-- **Bring Forward:** Swap z-index with next higher object
-- **Send Backward:** Swap z-index with next lower object
-
-### 4.7 Undo/Redo
-
-#### FR-7.1: History Management
-- Track all reversible operations:
-    - Place object
-    - Move object
-    - Scale object
-    - Rotate object
-    - Delete object
-    - Z-order change
-    - Add signature/stamp to library
-    - Delete signature/stamp from library
-- **History depth:** 50 operations
-- **Reset:** Clear history on opening new PDF
-
-#### FR-7.2: Undo/Redo Controls
-- **Desktop:**
-    - Toolbar buttons: [↶ Undo] [↷ Redo]
-    - Keyboard: Ctrl/Cmd+Z (undo), Ctrl/Cmd+Shift+Z (redo)
-    - Menu: Edit → Undo / Redo
-- **Mobile:**
-    - Floating action buttons (when applicable)
-- **State:**
-    - Disabled when no operations to undo/redo
-    - Show tooltip with operation name on hover
-
-### 4.8 Clipboard Operations (NEW)
-
-#### FR-8.1: Copy to Clipboard (Ctrl+C)
-- **Action:** Copy selected object's image to system clipboard
-- **Format:** PNG with transparency
-- **Desktop:** Ctrl/Cmd+C keyboard shortcut
-- **Mobile:** Context menu or floating toolbar option
-- **Behavior:**
-    - Only works when an object is selected
-    - Copies the signature/stamp image (not the placed instance)
-    - Maintains original resolution
-    - Shows toast notification "Copied to clipboard"
-
-#### FR-8.2: Paste from Clipboard (Ctrl+V)
-- **Action:** Paste image from clipboard to PDF and optionally add to library
-- **Desktop:** Ctrl/Cmd+V keyboard shortcut
-- **Mobile:** Long press → Paste option (if clipboard contains image)
-- **Behavior:**
-    1. Check if clipboard contains image data
-    2. If yes, show "Paste Image" dialog:
-        - Preview of the image
-        - Text input for name/label
-        - Radio buttons: "Add to Signatures" / "Add to Stamps" / "Don't add to library"
-        - Checkbox: "Don't ask again, always add to [selected option]"
-    3. Place image at center of visible viewport
-    4. If "add to library" selected, add to appropriate tab
-    5. If "Don't ask again" checked:
-        - Save preference to SharedPreferences
-        - Future pastes automatically use saved preference
-        - No dialog shown (silent paste)
-- **Supported formats:** PNG, JPG, WEBP (clipboard formats)
-- **Error handling:**
-    - If clipboard empty: Show toast "Clipboard is empty"
-    - If format unsupported: Show toast "Unsupported image format"
-    - If size exceeds limit: Show error dialog
-
-#### FR-8.3: Paste Preferences Management
-- **Settings location:** Settings screen → "Clipboard Behavior"
-- **Options:**
-    - Reset "Don't ask again" preference
-    - Change default paste target (Signatures/Stamps)
-- **Preference keys:**
-    - `dont_ask_paste_again` (boolean)
-    - `paste_default_tab` (0 = signatures, 1 = stamps, null = always ask)
-
-### 4.9 Object Duplication (NEW)
-
-#### FR-9.1: Duplicate Object (Ctrl+D)
-- **Action:** Create a copy of the selected object
-- **Keyboard shortcut:** Ctrl/Cmd+D
-- **Behavior:**
-    - Only works when an object is selected
-    - Creates exact copy with same:
-        - Size
-        - Rotation
-        - Signature/stamp reference
-    - Offset position:
-        - X: +20 logical pixels
-        - Y: +20 logical pixels
-    - Z-index: max(all) + 1 (on top)
-    - Automatically select the duplicate
-    - Add to undo stack
-- **Mobile:** Available via floating toolbar or context menu
-- **Visual feedback:** Duplicate appears with selection handles
-
-#### FR-9.2: Context Menu Updates
-Add new menu items:
-- **Copy Image (Ctrl+C)**
-- **Duplicate (Ctrl+D)**
-- Separator
-- *(existing rotate/scale options)*
-
-#### FR-9.3: Toolbar Updates (Desktop)
-Add new buttons:
-- **[📋 Copy]** - Copy to clipboard
-- **[📄 Duplicate]** - Duplicate object
+None. There is a single build configuration. `flutter_flavorizr` is not used.
 
 ---
 
-## 5. Technical Requirements
+## 3. Functional Requirements — Implemented
 
-### 5.1 Architecture
+### 3.1 Opening Documents
 
-#### TR-1.1: Clean Architecture
-**Mandatory layer structure:**
-```
-lib/
-├── core/
-│   ├── constants/
-│   ├── errors/
-│   ├── theme/
-│   ├── utils/
-│   └── widgets/
-├── domain/
-│   ├── entities/
-│   ├── repositories/
-│   └── usecases/
-├── data/
-│   ├── models/
-│   ├── datasources/
-│   └── repositories/
-├── presentation/
-│   ├── blocs/
-│   ├── screens/
-│   └── widgets/
-└── injection/
-```
+#### FR-1.1 — Open via Welcome window
+The Welcome window (`welcome_screen.dart`, `desktop_welcome_view.dart`) presents an app logo, an **Open PDF** button, and a Recent Files list. Selecting a file opens it in a new window and hides the Welcome window.
 
-#### TR-1.2: State Management
-- **Pattern:** Riverpod (flutter_riverpod ^2.5.1+)
-- **Rules:**
-    - Use `@riverpod` annotation for code generation
-    - StateNotifier for complex state with multiple mutations
-    - AsyncNotifier for async state loading
-    - Simple StateProvider for UI state (zoom, selected tab, etc.)
-    - Use Equatable for value equality
-    - Use freezed for complex state classes
-    - Provider scope: Application-wide via ProviderScope in main
-- **Key Providers:**
-    - `signaturesProvider` - Signature library management
-    - `stampsProvider` - Stamp library management
-    - `editorProvider` - Placed objects and transformations
-    - `undoRedoProvider` - Command pattern for undo/redo
-    - `pdfDocumentProvider` - PDF viewer state
-    - `zoomLevelProvider` - Current zoom level
-    - `settingsProvider` - App settings and preferences
+#### FR-1.2 — Open via File menu
+**File → Open…** (`Cmd+O`) opens the native picker from anywhere (`app_menu_bar.dart`).
 
-#### TR-1.3: Dependency Injection
-- **Built-in:** Riverpod providers handle DI automatically
-- **Pattern:** Define dependencies as providers with `@riverpod` annotation
-- **Scope:**
-    - Repositories: Singleton via provider caching
-    - Use cases: Accessed through repositories (no explicit DI needed)
-    - Data sources: Singleton providers
-- **Example:**
-  ```dart
-  @riverpod
-  SignatureRepository signatureRepository(SignatureRepositoryRef ref) {
-    final dataSource = ref.watch(signatureDataSourceProvider);
-    return SignatureRepositoryImpl(dataSource);
-  }
-  ```
+#### FR-1.3 — Picker remembers last directory
+The picker opens in the directory of the last file chosen, persisted under `last_open_directory`. Falls back to `~/Documents` if unset or if the stored directory no longer exists (`last_open_directory_provider.dart`).
 
-#### TR-1.4: Routing
-- **Package:** go_router ^14.0.0
-- **Routes:**
-    - `/` - Welcome/Splash screen
-    - `/editor` - PDF editor screen
-- **Type-safe navigation:** Use code generation
+#### FR-1.4 — Open from Finder
+Double-click, **Open With**, and drag-to-Dock are handled natively and forwarded over the `com.pdfsign/file_handler` channel. Files arriving before the Flutter engine is ready are queued natively and delivered once Dart signals `ready` (`file_open_handler.dart`, `AppDelegate.swift`). The app is registered as an `Alternate`-rank viewer for `com.adobe.pdf`.
 
-### 5.2 Core Dependencies
+#### FR-1.5 — Recent files
+- **12** entries retained (`AppConstants.maxRecentFiles`), stored as JSON in `SharedPreferences` under `recent_files`.
+- Ordered by last-opened, descending.
+- Up to **10** shown in **File → Open Recent**, plus a **Clear Menu** item.
+- Opening an entry whose file no longer exists removes it and reports "File not found".
+- Writes are serialized by a static async lock, because several windows may write concurrently (`recent_files_repository_impl.dart`).
+
+#### FR-1.6 — One window per file
+Opening a file that is already open focuses the existing window instead of opening a second one. The file → window mapping is held natively (`com.pdfsign/open_pdf_files`), because Dart state is not shared across Flutter engines.
+
+#### FR-1.7 — Folder-permission retry
+If opening fails with `File access denied`, the editor retries every 1.5 s up to 20 times (30 s total), showing a localized "Waiting for folder access permission…" state. On timeout the window closes (`editor_screen.dart`).
+
+#### FR-1.8 — Password-protected PDFs
+Detected and surfaced: the viewer shows a "Password Required" state. **Entering a password is not implemented** — see §12.3.
+
+---
+
+### 3.2 Viewing
+
+#### FR-2.1 — Continuous scroll
+All pages are laid out vertically in one scrollable column with a 24 pt gap and 40 pt padding at top and bottom (`pdf_page_list.dart`, `PdfViewerConstants`).
+
+#### FR-2.2 — Page appearance
+macOS Preview styling: `#E5E5E5` viewport background, white pages, 2 pt corner radius, two-layer soft shadow. A 20 px gradient fade sits under the title bar.
+
+#### FR-2.3 — Zoom
+| Property | Value |
+|----------|-------|
+| Range | 10 % – 500 % (`ZoomConstraints`) |
+| Default | Fit Width |
+| Presets | Fit Width, 50, 75, 100, 125, 150, 200, 300, 400, 500 % |
+| Step outside presets | 0.1 |
+
+Fit Width is computed against the **widest** page in the document minus 80 px of horizontal padding, and recomputed whenever the viewport resizes.
+
+#### FR-2.4 — Pinch-to-zoom
+During the gesture only a `Transform.scale` is applied — no re-rendering. On gesture end the real scale is committed once and the scroll offset is corrected so the focal point stays put (`pdf_viewer.dart`).
+
+#### FR-2.5 — Wheel zoom
+`Cmd`/`Ctrl` + scroll steps through zoom presets.
+
+#### FR-2.6 — Horizontal scroll
+Appears only when scaled content exceeds the viewport; 40 pt of padding is then added on each side for a "floating page" effect.
+
+#### FR-2.7 — Page indicator
+A floating pill showing `Page N of M` appears while scrolling or on page change, then fades out after 1.5 s.
+
+#### FR-2.8 — Go to page
+`Cmd+G` opens a dialog accepting a page number, clamped to the valid range.
+
+#### FR-2.9 — Reload
+`Cmd+R` closes and reopens the document, restoring the current page.
+
+---
+
+### 3.3 Image Library (Sidebar)
+
+#### FR-3.1 — Single flat library
+One list, shared by every open window. There is **no** separation into "Signatures" and "Stamps" tabs.
+
+#### FR-3.2 — Adding images
+Four routes, all converging on `SidebarImages.addImages`:
+1. **Add Image** button → native picker, multi-select.
+2. Drag-and-drop from Finder onto the sidebar.
+3. `Cmd+V` — PNG or JPEG from the system clipboard, written to a temp file first (`super_clipboard`).
+4. Programmatic (used internally).
+
+Accepted extensions on drop: `.png .jpg .jpeg .gif .webp .bmp .tiff .tif`. Dimensions and file size are read via `ui.instantiateImageCodec`; unreadable files are skipped silently.
+
+#### FR-3.3 — Copy into app storage
+Every added image is copied to `~/Library/Application Support/<bundle-id>/images/<uuid><ext>`. The database stores the **copy's** path, never the original's (ADR-0001). The library therefore survives the source file being moved, renamed, or deleted.
+
+#### FR-3.4 — Persistence and cross-window sync
+Metadata lives in Isar (collection `SidebarImageModel`). Every window subscribes to `watchImages()`, so an addition, deletion, or reorder in one window appears in all the others immediately, with no explicit message passing (ADR-0006).
+
+#### FR-3.5 — Reordering
+The list is a `ReorderableListView`. Dragging works **only from the grip handle** (`⋮⋮`); dragging the image body starts a drag-to-PDF instead. The drag proxy uses a Figma-style scale + opacity effect.
+
+#### FR-3.6 — Comments
+Each card carries an inline editable comment below the thumbnail. `Enter` saves, `Esc` cancels, tapping outside saves. Long comments get a tooltip after 500 ms.
+
+#### FR-3.7 — Deletion
+A delete button appears on hover. Deleting removes both the database row **and the file in app storage** — see §13.2 for the consequence this has for already-placed images.
+
+#### FR-3.8 — Resizable panel
+Default 200 px, range 150–400 px, dragged by a 4 px handle. The width is per-window and is **not** persisted across launches.
+
+---
+
+### 3.4 Placing Objects
+
+#### FR-4.1 — Drag from sidebar to page
+Dragging an image body onto a page creates a `PlacedImage` at the drop point (`pdf_drop_target.dart`).
+
+#### FR-4.2 — Default size
+25 % of page width, aspect ratio preserved, capped at 90 % of either page dimension. The object is centred on the cursor and clamped inside the page.
+
+#### FR-4.3 — Drop outside a page
+A drop that lands in the side margin, in the gap between pages, above the first
+page, or past the end of the document snaps to the **nearest page**, measured to
+the page rectangle, and is clamped so the object lies fully inside it. Ties
+resolve to the earlier page. A document with no pages refuses the drag outright.
+
+#### FR-4.4 — Auto-select
+A newly placed object is selected immediately, on every path including a snapped
+off-page drop.
+
+#### FR-4.4a — Drop feedback
+While a drag is in flight the page that would receive the object is outlined, so
+a drop aimed at the margin still shows where it will land.
+
+#### FR-4.5 — Coordinates
+Position and size are stored in **PDF points** (1/72 in) relative to the page's top-left corner, independent of zoom.
+
+#### FR-4.6 — Lifetime
+Placed objects live in memory only (`PlacedImages`, `keepAlive`). They are **not** persisted: closing the window without saving discards them, and there is no session restore.
+
+---
+
+### 3.5 Transforming Objects
+
+Implemented in `placed_image_overlay.dart`.
+
+#### FR-5.1 — Selection
+Single-selection. Click an object to select; click the page background to clear.
+
+#### FR-5.2 — Move
+Drag the object body. Deltas are rotated into PDF space so dragging stays intuitive on rotated objects.
+
+#### FR-5.3 — Proportional resize
+Four square corner handles. Scaling is driven by the width delta; the opposite corner stays fixed by shifting the centre. Minimum 20 pt on both axes.
+
+#### FR-5.4 — Non-proportional stretch
+Four side handles stretch one axis, anchoring the opposite edge.
+
+#### FR-5.5 — Rotate
+One circular handle on a 20 pt stem above the top edge. Free rotation with ±180° normalization for smooth wrap-around. There is no snapping and no modifier-key constraint.
+
+#### FR-5.6 — Handle appearance
+10 px corner squares / 10×6 px side handles, white fill at 50 % opacity rising to 80 % on hover, 2 px `#0066FF` border. Hit areas are larger than the visuals (24 px corners, 20 px sides, 32 px rotation handle).
+
+#### FR-5.7 — Size label
+Below the visually lowest edge, showing `W × H` in cm or inches to one decimal. Clicking toggles the unit and broadcasts the change to every open window.
+
+#### FR-5.8 — Delete
+`Delete` / `Backspace` (suppressed while a text field has focus), **Edit → Delete** (`Cmd+Backspace`), or the Delete button in the native toolbar, which appears only while something is selected.
+
+#### FR-5.9 — Copy / paste
+`Cmd+C` remembers the selected object's id; `Cmd+V` duplicates it offset by (20, 20) and selects the copy. This is an in-window mechanism, not the system clipboard, so it does not carry objects to another document.
+
+---
+
+### 3.6 Saving and Export
+
+#### FR-6.1 — Save (`Cmd+S`)
+Rasterizes every placed object into the PDF and overwrites the current file. Rotation is applied around the object's centre via `translate → rotate → translate` on the Syncfusion graphics state.
+
+#### FR-6.2 — Always save from the original
+Every save starts from the **original** PDF bytes cached at open time, never from the previous save (ADR-0002). Repeated saves therefore do not stack images or degrade the file.
+
+Caching strategy (`OriginalPdfStorage`): ≤ 50 MB in memory, > 50 MB copied to a temp file.
+
+#### FR-6.3 — Save As (`Cmd+Shift+S`)
+Writes to a chosen path, then switches the window to the new file: the open-files registry is updated, the title changes, placed objects are cleared (they are embedded now), the dirty flag resets, and the current page is restored after reload.
+
+#### FR-6.4 — Save All (`Cmd+Opt+S`)
+Broadcasts to every window; each saves only if it is dirty. Enabled only while at least one window is dirty.
+
+#### FR-6.5 — Share
+Builds a temp PDF with the objects embedded and hands it to the native share sheet, then deletes the temp file 5 s later. With no placed objects, the original file is shared directly. Available from **File → Share…** and the native toolbar button.
+
+#### FR-6.6 — Objects stay editable after save
+Saving marks the document clean but does **not** clear the objects or reload the document, so editing can continue.
+
+#### FR-6.7 — Dirty-state policy
+Only **add / duplicate / delete** mark a document dirty. Move, resize, and rotate do not (ADR-0004). See §13.1.
+
+#### FR-6.8 — Close with unsaved changes
+Closing a dirty window shows a Save / Discard dialog. Close All and Quit show a consolidated Save All / Don't Save / Cancel dialog reporting how many documents are affected; if saves fail afterwards, a second dialog offers "Close Anyway".
+
+---
+
+### 3.7 Multi-Window Behaviour
+
+#### FR-7.1 — Window types
+| Window | Size | Notes |
+|--------|------|-------|
+| Welcome | 900×700, min 600×400 | Main window, id `"0"` |
+| PDF viewer | inherited | One per document |
+| Settings | 650×500 fixed | Singleton, not resizable, not minimizable |
+
+#### FR-7.2 — Isolated engines
+Each window runs its own Flutter engine with its own `ProviderContainer`. Nothing in Dart is shared implicitly (ADR-0006).
+
+#### FR-7.3 — Welcome auto-hide
+Opening the first PDF hides the Welcome window permanently for that session. Closing Welcome while other windows exist hides it; closing it as the last window quits the app.
+
+#### FR-7.4 — Last window quits
+Closing the last visible window terminates the process. The check queries the native window list, not Dart state.
+
+#### FR-7.5 — Settings singleton
+Enforced through native `UserDefaults` plus an in-engine re-entrancy flag, because a Dart-level singleton cannot span engines (ADR-0005).
+
+#### FR-7.6 — Menu ownership
+Only the focused window renders `PlatformMenuBar`; otherwise several engines fight over the one system menu bar.
+
+#### FR-7.7 — Window menu
+Minimize (`Cmd+M`), Zoom, Bring All to Front, and a live list of open windows with a checkmark on the focused one, sourced from `com.pdfsign/window_list`.
+
+#### FR-7.8 — Cross-window messages
+`WindowBroadcast` carries: `unitChanged`, `localeChanged`, `saveAll`, `closeAll`, `showWelcome`, `hideWelcome`, `dirtyStateChanged`, `requestDirtyStates`, `settingsOpened`, `settingsClosed`. A newly opened window requests the dirty state of all the others on startup.
+
+---
+
+### 3.8 Settings
+
+One window, one **General** section:
+
+- **Language** — searchable list of 58 entries plus "System Default", applied live to every window.
+- **Units** — Centimeters / Inches, applied live to every window.
+
+There are no other settings. In particular there is no clipboard-behaviour section, no theme choice, and no storage management.
+
+---
+
+### 3.9 Menus and Shortcuts
+
+| Shortcut | Action | Scope |
+|----------|--------|-------|
+| `Cmd+O` | Open… | all windows |
+| `Cmd+S` | Save | PDF window |
+| `Cmd+Shift+S` | Save As… | PDF window |
+| `Cmd+Opt+S` | Save All | PDF window |
+| `Cmd+W` | Close Window | all |
+| `Cmd+Opt+W` | Close All | all |
+| `Cmd+Q` | Quit (with save prompt) | all |
+| `Cmd+,` | Settings | all |
+| `Cmd+Backspace` | Delete object (Edit menu) | PDF window |
+| `Delete` / `Backspace` | Delete object | PDF window, unless a text field has focus |
+| `Cmd+C` / `Cmd+V` | Copy / paste object | PDF viewer |
+| `Cmd+V` | Paste image into library | sidebar focused |
+| `Cmd+G` | Go to page | PDF window |
+| `Cmd+R` | Reload document | PDF window |
+| `Cmd+0` | Fit Width | PDF window |
+| `Cmd+=` / `Cmd+-` | Zoom in / out | PDF window |
+| `Cmd+M` | Minimize | all |
+| `PageUp` / `PageDown` | Previous / next page | PDF window |
+| `Home` / `End` | First / last page | PDF window |
+| Arrows | Scroll by 50 px | PDF window |
+
+The macOS app menu provides About, Settings…, and Quit PDFSign. The Edit menu exists only in PDF windows and contains only Delete.
+
+---
+
+## 4. Technical Specification
+
+### 4.1 Architecture
+
+Clean Architecture in four layers — `core`, `domain`, `data`, `presentation` — with Riverpod (code-generated) for state. Full detail in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+### 4.2 Actual Dependencies
 
 ```yaml
 dependencies:
-  # Flutter SDK
-  flutter:
-    sdk: flutter
-
-  # State Management (Riverpod)
-  flutter_riverpod: ^2.5.1
+  flutter_riverpod: ^2.5.1          # state management
   riverpod_annotation: ^2.3.5
-  equatable: ^2.0.0
-  freezed_annotation: ^2.4.0
-
-  # Navigation
-  go_router: ^14.0.0
-
-  # PDF Processing
-  syncfusion_flutter_pdf: ^27.1.48
-  syncfusion_flutter_pdfviewer: ^27.1.48
-
-  # Storage
-  isar: ^3.1.0
-  isar_flutter_libs: ^3.1.0
-  path_provider: ^2.1.0
-
-  # File Handling
-  file_picker: ^8.0.0
-  mime: ^1.0.0
-
-  # Utilities
-  dartz: ^0.10.1
-  uuid: ^4.0.0
-
-  # Localization
-  intl: ^0.19.0
-  flutter_localizations:
-    sdk: flutter
-
-dev_dependencies:
-  # Linting
-  flutter_lints: ^3.0.0
-
-  # Code Generation
-  build_runner: ^2.4.0
-  freezed: ^2.4.0
-  json_serializable: ^6.7.0
-  riverpod_generator: ^2.4.3
-  isar_generator: ^3.1.0
-
-  # Testing
-  flutter_test:
-    sdk: flutter
-  mockito: ^5.4.0
-  mocktail: ^1.0.4
+  equatable: ^2.0.5                 # value equality for entities
+  freezed_annotation: ^2.4.1        # sealed viewer state, DTOs
+  go_router: ^14.2.7                # see §13.4 — currently unused
+  pdfx: ^2.6.0                      # PDF rendering
+  syncfusion_flutter_pdf: ^32.1.23  # PDF writing / image embedding
+  isar: ^3.1.0+1                    # image library database
+  isar_flutter_libs: ^3.1.0+1
+  path_provider: ^2.1.4
+  file_picker: ^8.1.2
+  mime: ^1.0.6
+  desktop_drop: ^0.4.4              # Finder drop (main window)
+  super_clipboard: ^0.9.1           # image paste
+  dartz: ^0.10.1                    # Either
+  uuid: ^4.5.1
+  intl: ^0.20.2
+  json_annotation: ^4.9.0
+  logger: ^2.4.0                    # see §13.5 — currently unused
+  shared_preferences: ^2.3.2
+  desktop_multi_window: ^0.3.0      # multi-window
+  window_manager: ^0.4.2            # window control
+  share_plus: ^10.0.0
 ```
 
-### 5.3 Platform Requirements
+Rendering is **`pdfx`**, not `syncfusion_flutter_pdfviewer`. Syncfusion is used for writing only.
 
-#### TR-3.1: Minimum Versions
-- **iOS:** 13.0
-- **Android:** API 24 (Android 7.0)
-- **macOS:** 10.15
-- **Windows:** Windows 10 (1809)+
-- **Linux:** Ubuntu 20.04+
+### 4.3 Native Integration
 
-#### TR-3.2: Flutter/Dart Versions
-- **Flutter SDK:** 3.24.0+ (stable)
-- **Dart SDK:** 3.5.0+
+Six method channels, implemented in `macos/Runner/AppDelegate.swift`:
 
-### 5.4 Data Models
+| Channel | Purpose |
+|---------|---------|
+| `com.pdfsign/file_handler` | Finder → app file opening, with a pre-ready queue |
+| `com.pdfsign/window` | Sub-window close interception, focus/blur, destroy, show/hide |
+| `com.pdfsign/settings_singleton` | Settings window id in `UserDefaults` |
+| `com.pdfsign/open_pdf_files` | Open-file → window-id registry, focus-by-path |
+| `com.pdfsign/window_list` | Window menu list, focus, minimize, zoom, bring-all-to-front |
+| `com.pdfsign/toolbar` | Native `NSToolbar` with Share and conditional Delete buttons |
 
-#### TR-4.1: SignatureItem Entity
-```dart
-@collection
-class SignatureItem {
-  Id id = Isar.autoIncrement;
+`desktop_drop` is additionally **reimplemented natively** (`SubWindowDropTarget` / `DropTargetView`) because the package supports only the main window, while every document lives in a sub-window.
 
-  @Index()
-  late String uuid;              // UUID for app-level identification
+See [docs/PLATFORM_CHANNELS.md](docs/PLATFORM_CHANNELS.md).
 
-  late String name;              // User-provided label
+### 4.4 Domain Entities
 
-  @Enumerated(EnumType.name)
-  late SignatureType type;       // signature | stamp
+| Entity | Purpose |
+|--------|---------|
+| `PdfDocumentInfo` | Path, name, page count, per-page dimensions |
+| `PdfPageInfo` | 1-based number, width/height in points |
+| `PlacedImage` | id, source id, image path, page index, position, size, rotation |
+| `SidebarImage` | id, path, name, added-at, order, dimensions, size, comment |
+| `RecentFile` | path, name, last-opened, page count, protected flag |
+| `WindowInfo` | window id, title, type, focused flag, file path |
 
-  late List<byte> imageData;     // Binary image data
+All immutable, `Equatable`, with `copyWith`. Full field tables in [docs/ENTITIES.md](docs/ENTITIES.md).
 
-  @Index()
-  late int order;                // Display order in list
+> There is no `SignatureItem` entity. v1.0 specified one; the implementation splits the concept into `SidebarImage` (library) and `PlacedImage` (instance on a page).
 
-  late DateTime createdAt;
+### 4.5 Storage Map
 
-  late String originalFileName;
-
-  late String mimeType;          // image/png, image/jpeg, etc.
-}
-
-enum SignatureType {
-  signature,
-  stamp,
-}
-```
-
-#### TR-4.2: PlacedObject Entity
-```dart
-class PlacedObject {
-  final String id;               // UUID
-  final String signatureId;      // Reference to SignatureItem
-  final int pageNumber;          // 0-indexed
-  final Offset position;         // Top-left corner (PDF coordinates)
-  final Size size;               // Width and height
-  final double rotation;         // Degrees (0-360)
-  final int zIndex;              // Layering order
-  final DateTime placedAt;
-}
-```
-
-#### TR-4.3: RecentFile Model
-```dart
-class RecentFile {
-  final String path;
-  final String fileName;
-  final DateTime lastOpened;
-  final int pageCount;
-  final bool isPasswordProtected;
-}
-```
-
-### 5.5 Error Handling
-
-#### TR-5.1: Failure Types
-```dart
-abstract class Failure extends Equatable {
-  final String message;
-  const Failure(this.message);
-}
-
-class FileNotFoundFailure extends Failure {}
-class FileAccessFailure extends Failure {}
-class InvalidFileFormatFailure extends Failure {}
-class FileSizeLimitFailure extends Failure {}
-class PasswordRequiredFailure extends Failure {}
-class PasswordIncorrectFailure extends Failure {}
-class WriteProtectedFailure extends Failure {}
-class StorageFailure extends Failure {}
-class UnknownFailure extends Failure {}
-```
-
-#### TR-5.2: Result Pattern
-Use `Either<Failure, Success>` from dartz package for all use cases.
+| Data | Mechanism | Location |
+|------|-----------|----------|
+| Image library metadata | Isar, `SidebarImageModel` | `getApplicationDocumentsDirectory()` → `~/Documents/pdfsign.isar` |
+| Image files | file system | `~/Library/Application Support/<bundle-id>/images/` |
+| Recent files | SharedPreferences (JSON) | key `recent_files` |
+| Language | SharedPreferences | key `locale_preference` |
+| Units | SharedPreferences | key `size_unit_preference` |
+| Last open directory | SharedPreferences | key `last_open_directory` |
+| Original PDF bytes | memory or temp file | session only |
+| Placed objects | memory | session only, discarded on close |
+| Settings window id, open files | native `UserDefaults` | cross-engine |
 
 ---
 
-## 6. UI/UX Specifications
+## 5. UI Specification
 
-### 6.1 Design System
+### 5.1 Theme
 
-#### UI-1.1: Color Palette
-**Light Theme (Primary):**
-```dart
-// Background
-backgroundColor: Color(0xFFFFFFFF)
-surfaceColor: Color(0xFFF5F5F7)
-borderColor: Color(0xFFE5E5E7)
+Material 3, light only. There is no dark theme and no theme switch.
 
-// Text
-textPrimary: Color(0xFF1A1A1A)
-textSecondary: Color(0xFF6B6B6B)
-textDisabled: Color(0xFFB0B0B0)
+| Token | Value |
+|-------|-------|
+| Primary | `#0066FF` |
+| Background | `#FFFFFF` |
+| Surface | `#F5F5F7` |
+| Border | `#E5E5E7` |
+| Text primary / secondary / disabled | `#1A1A1A` / `#6B6B6B` / `#B0B0B0` |
+| Error / success / warning | `#DC3545` / `#28A745` / `#FFC107` |
+| Viewer background | `#E5E5E5` |
+| Selection + handle border | `#0066FF` |
 
-// Accent
-primaryColor: Color(0xFF0066FF)
-primaryHover: Color(0xFF0052CC)
-primaryPressed: Color(0xFF003D99)
+### 5.2 Key Metrics
 
-// Semantic
-errorColor: Color(0xFFDC3545)
-successColor: Color(0xFF28A745)
-warningColor: Color(0xFFFFC107)
-
-// Selection
-selectionColor: Color(0xFF0066FF)
-selectionHandleColor: Color(0xFFFFFFFF)
-selectionHandleBorder: Color(0xFF0066FF)
-
-// Hover
-hoverColor: Color(0x0A0066FF) // 4% opacity
-```
-
-#### UI-1.2: Typography
-```dart
-// Using default Flutter font (Roboto/SF Pro)
-displayLarge: 32px, weight: 700
-displayMedium: 24px, weight: 700
-displaySmall: 20px, weight: 600
-
-bodyLarge: 16px, weight: 400
-bodyMedium: 14px, weight: 400
-bodySmall: 12px, weight: 400
-
-labelLarge: 14px, weight: 500
-labelMedium: 12px, weight: 500
-labelSmall: 10px, weight: 500
-```
-
-#### UI-1.3: Spacing
-**Base unit:** 8px
-```dart
-spacing4: 4px
-spacing8: 8px
-spacing12: 12px
-spacing16: 16px
-spacing24: 24px
-spacing32: 32px
-spacing48: 48px
-spacing64: 64px
-```
-
-#### UI-1.4: Border Radius
-```dart
-radiusSmall: 4px   // inputs, small buttons
-radiusMedium: 6px  // buttons, chips
-radiusLarge: 8px   // cards, panels
-radiusXLarge: 12px // dialogs, bottom sheets
-```
-
-#### UI-1.5: Shadows
-```dart
-shadowSubtle: BoxShadow(
-  color: Color(0x0A000000), // 4% black
-  offset: Offset(0, 2),
-  blurRadius: 8,
-)
-
-shadowMedium: BoxShadow(
-  color: Color(0x14000000), // 8% black
-  offset: Offset(0, 4),
-  blurRadius: 16,
-)
-
-shadowLarge: BoxShadow(
-  color: Color(0x1F000000), // 12% black
-  offset: Offset(0, 8),
-  blurRadius: 24,
-)
-```
-
-#### UI-1.6: Icons
-- **Style:** Outline (Lucide Icons or Heroicons style)
-- **Sizes:** 16px, 20px, 24px, 32px
-- **Stroke width:** 2px
-
-### 6.2 Desktop Layout
-
-#### UI-2.1: Welcome Screen
-```
-┌──────────────────────────────────────────────────────┐
-│  File  Edit  View  Help                              │
-├──────────────────────────────────────────────────────┤
-│                                                       │
-│                    [PDFSign Logo]                     │
-│                                                       │
-│               ┌─────────────────────┐                │
-│               │   📄 Open PDF       │                │
-│               └─────────────────────┘                │
-│                                                       │
-│                  Recent Files                        │
-│               ┌─────────────────────┐                │
-│               │ 📄 Document1.pdf    │                │
-│               │    Opened 2h ago    │                │
-│               ├─────────────────────┤                │
-│               │ 📄 Contract.pdf     │                │
-│               │    Opened yesterday │                │
-│               └─────────────────────┘                │
-│                                                       │
-└──────────────────────────────────────────────────────┘
-```
-
-#### UI-2.2: Editor Screen (Desktop)
-```
-┌────────────────────────────────────────────────────────┐
-│ File  Edit  View                                       │
-│ [↶][↷] [🔍-][100%▾][🔍+][⊡]                          │
-├──────────────────────────────────┬─────────────────────┤
-│                                  │┃                    │
-│                                  │┃  ┌──────────────┐  │
-│                                  │┃  │🖊 Подписи    │  │
-│         PDF Canvas               │┃  │  📄 Печати   │  │
-│                                  │┃  └──────────────┘  │
-│      [Rendered PDF Pages]        │┃                    │
-│                                  │┃  ┌──────────────┐  │
-│   [Placed Objects with Handles]  │┃  │  [Preview]   │  │
-│                                  │┃  │  Подпись 1   │  │
-│                                  │┃  └──────────────┘  │
-│                                  │┃                    │
-│                                  │┃  ┌──────────────┐  │
-│                                  │┃  │  [Preview]   │  │
-│                                  │┃  │  Подпись 2   │  │
-│                                  │┃  └──────────────┘  │
-│                                  │┃                    │
-│                                  │┃  [+ Добавить]      │
-│                                  │┃                    │
-│ Page 2 of 15                     │┃                    │
-└──────────────────────────────────┴─────────────────────┘
-          │┃│ ← Resizable divider
-```
-
-**Toolbar Details:**
-- **Top Toolbar Height:** 48px
-- **Menu bar:** Standard native menu bar (macOS/Windows/Linux)
-- **Undo/Redo:** Icon buttons, 32x32, 8px margin
-- **Zoom Controls:**
-    - Zoom out: Icon button
-    - Percentage: Dropdown, 80px width
-    - Zoom in: Icon button
-    - Fit to screen: Icon button
-
-**Right Panel:**
-- **Initial width:** 280px
-- **Min width:** 200px
-- **Max width:** 400px
-- **Resizable:** Drag divider
-- **Tabs:** Horizontal tabs at top, 48px height
-- **Card spacing:** 16px vertical gap
-- **Card padding:** 12px
-- **Preview image:**
-    - Width: panel_width - 32px
-    - Max height: 150px
-    - Aspect ratio: maintain original
-- **Label:** Below image, 14px font, centered, 2 lines max with ellipsis
-- **Add button:** Fixed at bottom, full width minus 16px margin
-
-#### UI-2.3: Selection Handles (Desktop)
-```
-       ⟳ (rotate handle, 24px circle)
-       │
-   ┌───┼───┐
-   ◻───▭───◻  ← Corner handles: 12x12px white squares, 2px blue border
-   │       │     Side handles: 12x8px white rectangles, 2px blue border
-   ▭       ▭
-   │       │
-   ◻───▭───◻
-   └───────┘
-
-   Selection box: 2px solid #0066FF
-```
-
-### 6.3 Mobile Layout
-
-#### UI-3.1: Splash Screen (Mobile)
-```
-┌─────────────────────┐
-│                     │
-│                     │
-│   [PDFSign Logo]    │
-│                     │
-│                     │
-│  ┌───────────────┐  │
-│  │ 📄 Select PDF │  │
-│  └───────────────┘  │
-│                     │
-│                     │
-└─────────────────────┘
-```
-
-#### UI-3.2: Editor Screen (Mobile)
-```
-┌─────────────────────┐
-│ ☰  PDFSign      ⋮   │ ← App bar, 56dp
-├─────────────────────┤
-│                     │
-│                     │
-│    PDF Canvas       │
-│                     │
-│ [Rendered Pages]    │
-│                     │
-│ [Placed Objects]    │
-│                     │
-│                     │
-│                     │
-│                     │
-│                 [+] │ ← FAB, 56dp
-└─────────────────────┘
-```
-
-**App Bar Actions:**
-- Left: Menu (hamburger) → File operations, Settings
-- Right: More (3 dots) → Zoom controls, Help
-
-**Floating Action Button:**
-- Size: 56dp
-- Position: Bottom-right, 16dp margin
-- Icon: Plus sign
-- Action: Open bottom sheet with signatures/stamps
-
-#### UI-3.3: Bottom Sheet (Mobile)
-```
-┌─────────────────────┐
-│         ⎯           │ ← Handle, 32x4dp, centered
-├─────────────────────┤
-│  🖊 Подписи         │
-│  📄 Печати          │ ← Tabs
-├─────────────────────┤
-│  ┌───────────────┐  │
-│  │   [Preview]   │  │
-│  │   Подпись 1   │  │
-│  └───────────────┘  │
-│                     │
-│  ┌───────────────┐  │
-│  │   [Preview]   │  │
-│  │   Подпись 2   │  │
-│  └───────────────┘  │
-│                     │
-│  [ + Добавить ]     │
-└─────────────────────┘
-```
-
-**Bottom Sheet Specs:**
-- **Initial height:** 50% screen height
-- **Max height:** 80% screen height
-- **Min height:** 200dp
-- **Draggable:** Yes
-- **Backdrop:** Dim (40% black)
-- **Dismiss:** Drag down or tap backdrop
-
-#### UI-3.4: Floating Toolbar (Mobile)
-When object is selected, show floating toolbar above it:
-```
-┌──────────────────────────────┐
-│  ↻  ↺  ⤸  │  ➕  ➖  │  ↑  ↓  │  🗑  │
-└──────────────────────────────┘
-```
-
-**Specs:**
-- **Height:** 48dp
-- **Position:** 16dp above selected object (or below if space insufficient)
-- **Background:** White with shadowMedium
-- **Button size:** 40dp
-- **Dividers:** 1dp vertical line, borderColor
-
-### 6.4 Responsive Behavior
-
-#### UI-4.1: Desktop Window
-- **Initial size:** 1280x800 logical pixels
-- **Min size:** 1024x768
-- **Default state:** Maximized
-- **Resizable:** Yes
-- **Full screen:** F11 (toggle)
-
-#### UI-4.2: Tablet (7" - 12")
-- Use desktop layout if width > 600dp
-- Otherwise use mobile layout
-
-#### UI-4.3: Orientation
-- **Desktop:** Any (user-controlled window)
-- **Mobile/Tablet:** Portrait and Landscape supported
-- **Landscape behavior:**
-    - PDF canvas expands horizontally
-    - Bottom sheet converts to side sheet (right)
+| Element | Value |
+|---------|-------|
+| Sidebar width | 200 default, 150–400 |
+| Resize handle | 4 px |
+| Page gap / vertical padding / horizontal padding | 24 / 40 / 40 pt |
+| Page corner radius | 2 pt |
+| Minimum object size | 20 pt |
+| Corner handle / side handle | 10 px / 10×6 px |
+| Rotation handle / stem | 24 px / 20 px |
+| Page indicator auto-hide | 1500 ms |
+| Scroll-end debounce | 150 ms |
 
 ---
 
-## 7. Platform-Specific Requirements
+## 6. Localization
 
-### 7.1 Desktop Platforms
+- **66** `.arb` files in `lib/l10n/`, **74** message keys, generated into `lib/l10n/generated/`.
+- **58** locales are selectable in Settings and registered in `MaterialApp.supportedLocales`.
+- RTL is supported for `ar`, `he`, `fa`. The editor forces LTR layout direction so panels keep their sides; text inside widgets still renders RTL.
+- Changing the language applies immediately in all open windows via broadcast.
 
-#### PS-1.1: Window Management
-- Native title bar (macOS, Windows, Linux)
-- Native menu bar (File, Edit, View, Help)
-- Window state persistence (size, position, maximized)
-- Multiple windows: NOT supported in Phase 1
-
-#### PS-1.2: Keyboard Shortcuts
-**File:**
-- Ctrl/Cmd+O: Open PDF
-- Ctrl/Cmd+S: Save
-- Ctrl/Cmd+Shift+S: Save As
-- Ctrl/Cmd+W: Close document
-- Ctrl/Cmd+Q: Quit application (macOS only)
-
-**Edit:**
-- Ctrl/Cmd+Z: Undo
-- Ctrl/Cmd+Shift+Z: Redo
-- Ctrl/Cmd+C: Copy selected object to clipboard as image
-- Ctrl/Cmd+V: Paste image from clipboard (shows dialog for adding to library)
-- Ctrl/Cmd+D: Duplicate selected object
-- Del/Backspace: Delete selected object
-
-**View:**
-- Ctrl/Cmd+Plus: Zoom in
-- Ctrl/Cmd+Minus: Zoom out
-- Ctrl/Cmd+0: Actual size
-- Ctrl/Cmd+1: Fit to screen
-- F11: Full screen
-
-**Object Manipulation:**
-- Ctrl/Cmd+R: Rotate 90°
-- Ctrl/Cmd+Alt+Left: Rotate 5° left
-- Ctrl/Cmd+Alt+Right: Rotate 5° right
-- Ctrl/Cmd+Alt+Plus: Scale +5%
-- Ctrl/Cmd+Alt+Minus: Scale -5%
-- Ctrl/Cmd+Shift+]: Bring to front
-- Ctrl/Cmd+]: Bring forward
-- Ctrl/Cmd+[: Send backward
-- Ctrl/Cmd+Shift+[: Send to back
-
-**Navigation:**
-- Arrow keys: Nudge selected object (1px)
-- Shift+Arrow: Nudge selected object (10px)
-- Page Up/Down: Scroll PDF
-- Home/End: Go to first/last page
-
-#### PS-1.3: Mouse/Trackpad Gestures
-- **Drag:** Move selected object
-- **Right-click:** Context menu
-- **Ctrl+Scroll:** Zoom in/out
-- **Scroll:** Pan vertically
-- **Shift+Scroll:** Pan horizontally
-- **Trackpad pinch:** Zoom in/out
-- **Hover:** Show resize cursor on handles
-
-### 7.2 Mobile Platforms
-
-#### PS-2.1: Touch Gestures
-- **Tap:** Select object
-- **Long press:** Context menu
-- **Drag:** Move selected object
-- **Pinch:**
-    - On canvas: Zoom PDF
-    - On selected object: Scale object
-- **Two-finger rotate:** Rotate selected object
-- **Swipe:** Scroll PDF
-
-#### PS-2.2: iOS Specific
-- Respect Safe Area insets
-- Support Dynamic Type (accessibility)
-- Share sheet integration for export
-- Document picker integration
-- Haptic feedback on interactions
-
-#### PS-2.3: Android Specific
-- Material Design 3 components
-- Back button: Deselect object, then close document
-- Share sheet integration
-- System file picker
-- Permission requests (storage)
-
-### 7.3 Platform Capabilities
-
-#### PS-3.1: File System Access
-- **iOS:** Document picker, app sandbox
-- **Android:** Scoped storage (API 29+)
-- **Desktop:** Full file system access
-- **Permissions:** Request at runtime on mobile
+Known localization defects are listed in §13.6 and §13.7.
 
 ---
 
-## 8. Localization Requirements
+## 7. Security and Privacy
 
-### 8.1 Supported Languages
-- English (en) - Default
-- Russian (ru)
-
-### 8.2 Localizable Strings
-All user-facing text must be externalized to ARB files:
-```
-lib/l10n/
-├── app_en.arb
-└── app_ru.arb
-```
-
-### 8.3 String Categories
-- **UI Labels:** Button text, menu items, tab titles
-- **Messages:** Success, error, warning messages
-- **Tooltips:** Keyboard shortcut hints
-- **Dialogs:** Confirmation messages, prompts
-- **Placeholders:** Input field hints
-
-### 8.4 Format Strings
-Use ICU message format for:
-- Plurals (e.g., "1 page" vs "5 pages")
-- Dates/times (locale-specific formatting)
-- Numbers (decimal separators)
-
-### 8.5 RTL Support
-- NOT required in Phase 1
-- Architecture should support future RTL implementation
+- Fully offline. No network requests, no accounts, no telemetry, no crash reporting.
+- All data stays in the user's home directory.
+- No encryption at rest — the image library and its files are stored in the clear, consistent with their non-sensitive nature.
+- `Info.plist` declares usage descriptions for Desktop, Documents, Downloads, network volumes, and removable volumes.
+- The app sandbox is disabled (§2.2).
 
 ---
 
-## 9. Security and Privacy
+## 8. Error Handling
 
-### 9.1 Data Storage
-- **Location:** Local device only (no cloud)
-- **Signature library:** Stored in app documents directory
-- **Recent files:** Path references only (no content)
-- **PDF modifications:** In-place or user-selected location
+The `Either<Failure, T>` pattern (dartz) is used across data and domain layers. Failure types live in `core/errors/failures.dart`: `FileNotFoundFailure`, `FileAccessFailure`, `InvalidFileFormatFailure`, `FileSizeLimitFailure`, `PasswordRequiredFailure`, `PasswordIncorrectFailure`, `WriteProtectedFailure`, `PdfLoadFailure`, `PdfRenderFailure`, `RenderCancelledFailure`, `StorageFailure`.
 
-### 9.2 Permissions
-- **File system access:** Required
-- **Storage permission (Android):** Required on API < 29
-- **No network access:** Not required
-- **No camera access:** Not required in Phase 1
+`RenderCancelledFailure` is not an error condition — it signals a deliberately abandoned render and results in a placeholder, not an error state.
 
-### 9.3 Password Handling
-- PDF passwords NOT stored
-- Password entered per session
-- No password recovery mechanism
-
-### 9.4 Data Privacy
-- No analytics or telemetry
-- No crash reporting in Phase 1
-- No user accounts or authentication
+User-facing errors appear as snackbars (save failures), dedicated viewer states (load failure, password required, permission wait), or dialogs (file not found, save failed during Close All).
 
 ---
 
-## 10. Performance Requirements
+## 9. Performance Design
 
-### 10.1 Startup Time
-- **Cold start:** < 2 seconds
-- **Warm start:** < 1 second
+| Concern | Mechanism |
+|---------|-----------|
+| Large documents | Only visible pages + 2-page buffer are rendered (`VisiblePages`) |
+| Memory | LRU cache of 10 rendered pages (`PdfPageCache`) |
+| Cache thrashing while zooming | Scale quantized to 2 decimals |
+| Wasted work while scrolling | Render cancellation by render-id |
+| Pinch smoothness | `Transform.scale` during the gesture, one real re-render at the end |
+| Large PDFs during save | Originals > 50 MB cached to a temp file rather than RAM |
 
-### 10.2 PDF Loading
-- **Small PDF (< 5MB):** < 1 second
-- **Medium PDF (5-50MB):** < 3 seconds
-- **Large PDF (50-100MB):** < 10 seconds
-- **Progress indicator:** Show for operations > 500ms
-
-### 10.3 Rendering
-- **Frame rate:** 60 FPS minimum
-- **Jank:** < 5 dropped frames per second
-- **Memory:** < 200MB for typical session (10 page PDF, 5 signatures)
-
-### 10.4 Responsiveness
-- **Touch/click response:** < 100ms
-- **Drag latency:** < 16ms (60 FPS)
-- **Zoom smooth:** < 16ms per frame
-
-### 10.5 File Operations
-- **Save PDF:** < 5 seconds for typical document
-- **Add signature to library:** < 1 second
-
-### 10.6 Optimization Strategies
-- Lazy load PDF pages (render on-demand)
-- Cache rendered pages
-- Debounce/throttle zoom operations
-- Use `const` widgets extensively
-- Profile with Flutter DevTools before releases
+No formal performance budgets are enforced, and there is no profiling harness. The numeric targets in v1.0 (launch < 2 s, 10 MB load < 3 s, 60 FPS, < 200 MB) were never measured or asserted anywhere in the codebase.
 
 ---
 
-## 11. Data Management
+## 10. Quality Status
 
-### 11.1 Signature Library Storage
+| Aspect | State |
+|--------|-------|
+| `flutter analyze` | 930 issues: 0 errors, **10 warnings**, 920 info |
+| Unit tests | **29** — page-column geometry (`PdfPageLayout`) |
+| Widget tests | **10** — drop placement, off-page snapping, drag feedback |
+| Integration tests | **none** |
+| Golden tests | **none** |
+| CI | none |
 
-#### DM-1.1: Database
-- **Technology:** Isar (embedded NoSQL)
-- **Location:** App documents directory
-- **File:** `signatures.isar`
-- **Collections:** SignatureItem
+The largest info groups are `prefer_relative_imports`, `prefer_expression_function_bodies`, `always_put_control_body_on_new_line` and `avoid_catches_without_on_clauses`; see the Import Convention note in `CLAUDE.md` for why the first group cannot be acted on as things stand.
 
-#### DM-1.2: Image Storage
-- **Embedded:** Image data stored as BLOB in Isar
-- **Reason:** Simplifies backup, avoids orphaned files
-- **Compression:** Original format preserved
+The 12 warnings are all actionable and cheap to clear:
 
-#### DM-1.3: Backup Strategy
-- User responsible for backing up app documents directory
-- Export/import feature: OUT OF SCOPE for Phase 1
+| Warning | Location |
+|---------|----------|
+| `removed_lint` — `package_api_docs` was removed in Dart 3.7.0 | `analysis_options.yaml:119` |
+| `unused_element` — `_isSettingsWindowAlive`, `_bringSettingsWindowToFront` | `window_manager_service.dart:282, 317` (see §13.11) |
+| `unused_import` — `window_manager_service.dart` | `pdf_viewer_app.dart:16` |
+| `unused_field` — `_previousScale`, `_viewportWidth` | `pdf_page_list.dart:46, 47` |
+| `inference_failure_on_instance_creation` — untyped `Future.delayed` ×6 | `pdf_viewer_app.dart:445, 532`; `settings_app.dart:199, 286`; `welcome_app.dart:156, 243` |
 
-### 11.2 Recent Files
+All six `Future.delayed` warnings are the fixed 5-second Save All waits described in §13.10.
 
-#### DM-2.1: Storage
-- Shared Preferences or lightweight key-value store
-- Limit: 10 most recent files
+> `CLAUDE.md` mandates "zero warnings/errors tolerance". The project currently does not meet its own rule.
 
-#### DM-2.2: Data Stored
-```dart
-class RecentFile {
-  String path;
-  String fileName;
-  DateTime lastOpened;
-  int pageCount;
-  bool isPasswordProtected;
-}
-```
-
-#### DM-2.3: Cleanup
-- Remove entries for deleted files (check on app start)
-- Clear all: Manual option in settings
-
-### 11.3 Application State
-
-#### DM-3.1: Persistence
-- Window size/position (desktop)
-- Last used zoom level
-- Panel width (desktop)
-- Selected tab (Signatures/Stamps)
-
-#### DM-3.2: Session State
-- Current PDF path
-- Placed objects (in-memory until save)
-- Undo/redo stack (in-memory, cleared on close)
+> `prefer_relative_imports` fires on nearly every file because `analysis_options.yaml` enables that rule while simultaneously setting `always_use_package_imports: error`, and `CLAUDE.md` forbids absolute imports. These three sources contradict each other; the codebase consistently uses `package:` imports. One of the three has to give.
 
 ---
 
-## 12. Error Handling
+## 11. Documentation Map
 
-### 12.1 Error Categories
-
-#### ER-1.1: File Errors
-- **File not found:** "The selected file could not be found."
-- **Access denied:** "Permission denied. Please check file permissions."
-- **Invalid format:** "This file is not a valid PDF document."
-- **File too large:** "Image size exceeds 100MB limit."
-- **Resolution too high:** "Image resolution exceeds 4096x4096 pixels."
-- **Corrupted PDF:** "This PDF appears to be corrupted."
-
-#### ER-1.2: Password Errors
-- **Password required:** Dialog with input field
-- **Incorrect password:** "Incorrect password. X attempts remaining."
-- **Write protected:** "This PDF is protected and cannot be modified."
-
-#### ER-1.3: Operation Errors
-- **Save failed:** "Failed to save PDF. Error: [details]"
-- **Insufficient space:** "Not enough disk space to save file."
-- **Read-only location:** "Cannot save to a read-only location."
-
-#### ER-1.4: Resource Errors
-- **Out of memory:** "Insufficient memory. Try closing other apps."
-- **Database error:** "Failed to access signature library."
-
-### 12.2 Error Presentation
-
-#### ER-2.1: Dialogs
-- **Icon:** Error (red circle with X)
-- **Title:** Error type
-- **Message:** User-friendly explanation
-- **Actions:** [OK] or [Retry] [Cancel]
-- **Details:** Expandable technical details (desktop only)
-
-#### ER-2.2: Inline Messages
-- **Snackbar (mobile):** Brief error, auto-dismiss in 4 seconds
-- **Banner (desktop):** Persistent until dismissed
-
-#### ER-2.3: Logging
-- All errors logged to console (debug builds)
-- Log file: NOT implemented in Phase 1
+| Document | Content |
+|----------|---------|
+| [README.md](README.md) | Setup and build |
+| [CHANGELOG.md](CHANGELOG.md) | Version history |
+| [TODO.md](TODO.md) | Personal roadmap — **not** a requirements source |
+| [KNOWN ISSUES.md](KNOWN%20ISSUES.md) | Open defects |
+| [CODE_REVIEW.md](CODE_REVIEW.md) | Code review findings, with status per item |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Layers, multi-window, pipelines |
+| [docs/PROVIDERS.md](docs/PROVIDERS.md) | Every Riverpod provider |
+| [docs/SERVICES.md](docs/SERVICES.md) | Business services |
+| [docs/REPOSITORIES.md](docs/REPOSITORIES.md) | Repository contracts |
+| [docs/ENTITIES.md](docs/ENTITIES.md) | Domain entities |
+| [docs/PLATFORM_CHANNELS.md](docs/PLATFORM_CHANNELS.md) | Native macOS integration |
+| [docs/adr/](docs/adr/) | Architecture decision records |
 
 ---
 
-## 13. Testing Requirements
+## 12. Not Implemented
 
-### 13.1 Code Coverage
-- **Minimum:** 80% overall
-- **Domain layer:** 100% (pure business logic)
-- **Data layer:** ≥ 80%
-- **Presentation layer (BLoCs):** ≥ 90%
-- **Widgets:** ≥ 70%
+Specified in v1.0 (or implied by leftover code) but **absent from the product**. Listed so the gap is explicit; scheduling lives in [TODO.md](TODO.md).
 
-### 13.2 Test Types
-
-#### TS-1.1: Unit Tests
-- All use cases
-- All repositories
-- All BLoCs
-- Utility functions
-- **Naming:** `test('should return X when Y')`
-
-#### TS-1.2: Widget Tests
-- All custom widgets
-- Screen layouts (smoke tests)
-- User interactions (tap, drag)
-- **Golden tests:** Selection handles, floating toolbar
-
-#### TS-1.3: Integration Tests
-- Full user flows:
-    - Open PDF → Add signature → Save
-    - Drag-and-drop workflow
-    - Undo/redo operations
-    - Password-protected PDF flow
-
-#### TS-1.4: Platform Tests
-- Run integration tests on all target platforms
-- CI/CD: Automated testing on PR
-
-### 13.3 Testing Tools
-- **flutter_test:** Built-in testing framework
-- **mockito:** Mock dependencies
-- **bloc_test:** BLoC testing utilities
-- **integration_test:** Full app tests
+| # | Feature | Evidence of the gap |
+|---|---------|---------------------|
+| 12.1 | **Z-order management** (bring to front / send to back / forward / backward) | `PlacedImage` has no z-index; paint order is insertion order. TODO → V1.0 |
+| 12.2 | **Undo / redo**, 50 levels | No command stack. `AppConstants.undoRedoHistoryDepth = 50` is declared and never read. TODO → V1.1 |
+| 12.3 | **Password entry for protected PDFs** | `PdfDocument.openProtectedDocument()` exists and works, but nothing calls it — `pdf_viewer.dart` carries `// TODO: Add password input dialog`. `l10n.incorrectPassword` is unused. TODO → V1.0 (save/share with the original password) |
+| 12.4 | **Paste dialog** with "Add to Signatures / Stamps / Don't add" and "Don't ask again" | Paste adds to the library silently. `AppConstants.dontAskPasteAgainKey` and `pasteDefaultTabKey` are declared and never read |
+| 12.5 | **Signatures / Stamps split** in the library | One flat list |
+| 12.6 | **`Cmd+D` duplicate** | Duplication exists only via `Cmd+C` → `Cmd+V` |
+| 12.7 | **Context menu** on placed objects | No right-click menu anywhere |
+| 12.8 | **Image validation limits** (100 MB, 4096×4096) | `maxImageFileSize` and `maxImageResolution` are declared and never read |
+| 12.9 | **Cross-platform support** (iOS, Android, Windows, Linux) | Template projects only; see §2.1 |
+| 12.10 | **Mobile layouts** | `MobileWelcomeView` exists but calls `context.goNamed('editor')` with no router mounted — see §13.4 |
+| 12.11 | **Persistence of placed objects / session restore** | In-memory only |
+| 12.12 | **Copying an object between documents** | `Cmd+C` buffer is per-window. TODO → V1.1 |
+| 12.13 | **Text annotations** | TODO → V1.3 |
+| 12.14 | **Page rotation** (`Cmd+R` as rotate-all) | `Cmd+R` currently reloads. TODO → V1.1 |
+| 12.15 | **Crash reporting, flavors, CI/CD, obfuscation** | None configured |
 
 ---
 
-## 14. Dependencies and Licenses
+## 13. Known Limitations and Technical Debt
 
-### 14.1 Critical Dependencies
-- **syncfusion_flutter_pdf:** Community License (revenue < $1M)
-- **syncfusion_flutter_pdfviewer:** Community License
+### 13.1 Move / resize / rotate do not mark the document dirty
+Per ADR-0004 only add/duplicate/delete set the dirty flag. A user who only repositions an object and closes the window gets **no save prompt** and loses the change silently. The ADR acknowledges the trade-off; it is worth revisiting.
 
-### 14.2 License Compliance
-- Display license notice in About dialog
-- Include attribution as per Syncfusion Community License terms
-- Annual revenue verification required
+### 13.2 Deleting a library image deletes its file, breaking placed instances
+`SidebarImageRepositoryImpl.removeImage` deletes the row **and** the file in app storage. ADR-0003 states that placed objects keep working because their file still exists — that is not what the code does. A placed object whose source was deleted renders as a broken-image placeholder, and `PdfSaveService` skips it silently (`if (!await imageFile.exists()) continue;`), so it vanishes from the saved PDF without any warning.
 
-### 14.3 Third-Party Assets
-- Icons: Open source (MIT/Apache 2.0)
-- Fonts: System fonts (no custom fonts in Phase 1)
+### 13.3 Save is implemented twice
+`_handleSave` / `_handleSaveAs` in `pdf_viewer_app.dart` (menu path) and `_save` / `_saveAs` in `pdf_viewer.dart` (`Cmd+S` via `Focus.onKeyEvent`). Both are live, so `Cmd+S` can run two save paths. The viewer copy also instantiates `PdfSaveService()` directly instead of using `pdfSaveServiceProvider`, and shows non-localized strings.
 
----
+### 13.4 `go_router` is dead weight
+`lib/core/router/app_router.dart` is referenced by nothing. All three window roots build `home:` directly. The only import of `go_router` outside it is the unreachable mobile view.
 
-## 15. Constraints and Assumptions
+### 13.5 `logger` is a declared but unused dependency
+Diagnostics go through `kDebugMode` + `print()`, which `CLAUDE.md` prohibits and which is the source of many lints.
 
-### 15.1 Constraints
-- Must use Flutter stable channel (no beta/dev features)
-- Must comply with Syncfusion Community License
-- No network connectivity required
-- Single document at a time
-- Desktop and mobile only (no web)
+### 13.6 Three translations are unreachable
+`app_ja.arb`, `app_ko.arb`, `app_zh.arb`, `app_zh_CN.arb`, and `app_zh_TW.arb` are translated and code-generated, but `ja`, `ko`, and `zh` are **missing from `supportedLocales`**. Since `MaterialApp.supportedLocales` is built from that same list, Japanese, Korean, and Chinese are neither selectable in Settings nor picked up from the system locale — those users fall back to English.
 
-### 15.2 Assumptions
-- Users have basic computer/mobile literacy
-- PDF files are well-formed (not corrupted)
-- Signature/stamp images have transparent backgrounds (user responsibility)
-- Users understand z-order concept
-- Users manage their own backups
+### 13.7 Hardcoded UI strings
+Localized and unused: `savePdfAs`, `savedTo`, `noOriginalPdfStored`, `incorrectPassword`, `goToPage`, `go`, `removeFromList`, `fileAccessDenied`, `saveFailed`. The corresponding UI uses English literals — `GoToPageDialog` ("Go to Page", "Page number", "Cancel", "Go"), `PageIndicator` ("Page N of M"), the sidebar empty state, the viewer's empty/error/password states, and every save-failure snackbar.
 
-### 15.3 Risks
-- **Syncfusion license change:** Mitigation - abstract PDF operations, allow swappable implementation
-- **Performance on large PDFs:** Mitigation - pagination, lazy loading
-- **Platform-specific bugs:** Mitigation - comprehensive testing, phased rollout
+### 13.8 Placed objects are clipped to the page
+`PdfPageItem` wraps each page in `clipBehavior: Clip.antiAlias`. An object near a page edge has its handles — especially the rotation handle above the top edge — clipped. `PlacedImage`'s doc comment mentions cross-page objects; they are not supported.
 
----
+### 13.9 The page column is not virtualized
+All pages are built into one `Column` inside a `SingleChildScrollView`. Only image *rendering* is lazy, so the widget count is O(page count).
 
-## 16. Future Enhancements (Out of Scope for Phase 1)
+Page measurement itself is no longer a problem: `PdfPageLayout` precomputes page offsets once per (document, scale, viewport width) and answers lookups by binary search, so scrolling no longer walks every page.
 
-### 16.1 Features
-- Draw signature with stylus/finger
-- Text annotations
-- Cloud sync (Google Drive, Dropbox)
-- Multi-document tabs
-- Batch processing
-- PDF form filling
-- Digital signature certificates (PKI)
-- OCR integration
+### 13.10 `Close All` waits a fixed 5 seconds
+After broadcasting Save All, the initiating window sleeps 5 s before checking whether saves succeeded, instead of awaiting acknowledgements.
 
-### 16.2 Platforms
-- Web (requires different PDF library)
-- Chrome OS
+### 13.11 Dead private methods
+`WindowManagerService._isSettingsWindowAlive()` and `._bringSettingsWindowToFront()` are unreachable.
 
-### 16.3 Integrations
-- Email integration
-- Cloud storage providers
-- Document management systems
+### 13.12 Exception classification by string matching
+`PdfDocumentRepositoryImpl` maps `pdfx` failures to `Failure` types by searching the exception's `toString()` for `"password"`, `"not found"`, `"permission"`, and similar. Brittle across library versions and locales. See CODE_REVIEW §1.1.
+
+### 13.13 The Syncfusion license key is committed
+`TODO.md` contains a Syncfusion community license key in plain text. It should be removed from the repository and from history.
 
 ---
 
-## 17. Acceptance Criteria
+## 14. Document History
 
-### 17.1 Functional
-- ✅ Can open and view PDF with continuous scrolling
-- ✅ Can add signatures/stamps to library
-- ✅ Can drag-and-drop objects onto PDF
-- ✅ Can transform objects (move, scale, rotate)
-- ✅ Can manage z-order
-- ✅ Can undo/redo operations
-- ✅ Can save PDF with preserved structure
-- ✅ Password-protected PDFs supported
-- ✅ Works on all target platforms
-
-### 17.2 Non-Functional
-- ✅ 80%+ code coverage
-- ✅ 60 FPS performance
-- ✅ < 2s cold start time
-- ✅ Zero linter warnings
-- ✅ Follows Clean Architecture
-- ✅ Fully localized (en, ru)
-
-### 17.3 Quality
-- ✅ No crashes on typical workflows
-- ✅ User-friendly error messages
-- ✅ Consistent UI across platforms
-- ✅ Accessible (keyboard navigation, semantic labels)
-
----
-
-## 18. Glossary
-
-- **Signature:** An image representing a handwritten signature
-- **Stamp:** An image representing an official stamp/seal
-- **Placed Object:** An instance of a signature/stamp placed on PDF
-- **Z-Index:** Vertical stacking order of overlapping objects
-- **Transform:** Geometric operations (move, scale, rotate)
-- **Handle:** UI control for resizing/rotating objects
-- **Ghost:** Semi-transparent preview during drag operation
-- **Continuous Scrolling:** Pages displayed end-to-end without gaps
-- **Clean Architecture:** Layered architecture pattern (domain/data/presentation)
-
----
-
-## 19. Revision History
-
-| Version | Date       | Author          | Changes                          |
-|---------|------------|-----------------|----------------------------------|
-| 1.0     | 2025-11-29 | Requirements WG | Initial requirements finalized   |
-
----
-
-**Document Status:** APPROVED FOR IMPLEMENTATION
-
-**Next Steps:**
-1. Generate project skeleton
-2. Set up CI/CD pipeline
-3. Begin implementation (domain layer first)
-4. Iterative development with weekly reviews
-
----
-
-**END OF REQUIREMENTS SPECIFICATION**
+| Version | Date | Change |
+|---------|------|--------|
+| 2.0 | 2026-09-15 | Rewritten against the implementation. Removed unbuilt requirements to §12, added §13 technical debt, corrected platform scope, dependencies, entity model, storage map, and localization figures. |
+| 1.0 | 2025-11-29 | Original pre-implementation specification (cross-platform, Signatures/Stamps tabs, z-order, undo/redo, `com.nosota.pdfsign`). Superseded. |

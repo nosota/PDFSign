@@ -56,6 +56,7 @@ lib/
 ```
 
 ## Documentation
+- [Requirements](REQUIREMENTS.md) — what the app actually does, plus known gaps and technical debt
 - [Architecture](docs/ARCHITECTURE.md) — system architecture overview
 - [Providers](docs/PROVIDERS.md) — Riverpod state management
 - [Services](docs/SERVICES.md) — business services

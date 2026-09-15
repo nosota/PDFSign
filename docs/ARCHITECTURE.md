@@ -102,8 +102,8 @@ See [PLATFORM_CHANNELS.md](PLATFORM_CHANNELS.md) for native integration details.
 
 | Data | Storage | Location |
 |------|---------|----------|
-| Sidebar images | Isar database | `~/Library/Application Support/.../isar/` |
-| Image files | File system | `~/Library/Application Support/.../images/` |
+| Sidebar images | Isar database | `~/Documents/pdfsign.isar` (via `getApplicationDocumentsDirectory()`) |
+| Image files | File system | `~/Library/Application Support/.../images/` (via `getApplicationSupportDirectory()`) |
 | Recent files | SharedPreferences | UserDefaults |
 | Preferences | SharedPreferences | UserDefaults |
 
@@ -119,6 +119,19 @@ See [PLATFORM_CHANNELS.md](PLATFORM_CHANNELS.md) for native integration details.
 1. **Lazy Loading** — Only visible pages + 2 buffer pages rendered
 2. **LRU Cache** — 10 pages cached, scale quantized to 2 decimals
 3. **Render Cancellation** — Pages scrolled out of view cancelled
+
+### Page Geometry
+
+`PdfPageLayout` (`presentation/screens/editor/widgets/pdf_viewer/pdf_page_layout.dart`)
+is the single source of truth for where pages sit in the scrollable column.
+Both `PdfPageList`, which lays the pages out, and `PdfDropTarget`, which
+hit-tests them for drag-and-drop, derive their geometry from it, so layout and
+hit-testing cannot drift apart.
+
+It precomputes cumulative page offsets once per (document, scale, viewport
+width) and answers lookups — page at a point, nearest page, visible range,
+page at the viewport centre — by binary search. `PdfPageLayoutCache` keeps the
+instance alive across scroll ticks and pointer moves.
 
 ### Save Pipeline
 

@@ -40,7 +40,7 @@ class PdfDocument extends _$PdfDocument {
 
 | Method | Signature | Description |
 |--------|-----------|-------------|
-| `openDocument` | `Future<void> openDocument(String filePath)` | Opens PDF from file path |
+| `openDocument` | `Future<void> openDocument(String filePath, {int? initialPage})` | Opens PDF from file path; `initialPage` (clamped to the valid range) restores a page position, used after Save As |
 | `openProtectedDocument` | `Future<void> openProtectedDocument(String filePath, String password)` | Opens password-protected PDF |
 | `closeDocument` | `Future<void> closeDocument()` | Closes current document |
 | `reloadDocument` | `Future<int?> reloadDocument()` | Reloads document, preserves current page |
@@ -127,10 +127,22 @@ class VisiblePages extends _$VisiblePages {
 
 | Method | Signature | Description |
 |--------|-----------|-------------|
-| `updateVisibleRange` | `void updateVisibleRange({required int firstVisible, required int lastVisible, required int totalPages})` | Updates visible page range with buffer |
+| `updateVisibleRange` | `void updateVisibleRange({required int firstVisible, required int lastVisible, required int totalPages})` | Updates visible page range with buffer. No-ops when the resulting set is unchanged — `PdfPageList` refreshes this from a post-frame callback, so assigning an equal `Set` would rebuild the list on every frame |
 | `shouldRender` | `bool shouldRender(int pageNumber)` | Checks if page should be rendered |
 
 **Buffer:** 2 pages beyond visible range.
+
+---
+
+### PermissionRetry
+
+**File:** `lib/presentation/providers/pdf_viewer/permission_retry_provider.dart`
+
+Flag for the folder-permission retry loop. While `true`, the viewer shows a "Waiting for folder access permission…" state instead of an error, so a `FileAccessFailure` does not surface as a hard failure while `EditorScreen` retries (20 attempts, 1.5 s apart).
+
+```dart
+final permissionRetryProvider = StateProvider<bool>((ref) => false);
+```
 
 ---
 
@@ -154,7 +166,7 @@ class PlacedImages extends _$PlacedImages {
 
 | Method | Signature | Description |
 |--------|-----------|-------------|
-| `addImage` | `void addImage({required String sourceImageId, required String imagePath, required int pageIndex, required Offset position, required Size size})` | Adds new image |
+| `addImage` | `PlacedImage addImage({required String sourceImageId, required String imagePath, required int pageIndex, required Offset position, required Size size})` | Adds a new object and returns it, so the caller can select it without guessing which entry of the list is new |
 | `removeImage` | `void removeImage(String id)` | Removes image by ID |
 | `updateImage` | `void updateImage(PlacedImage updated)` | Updates existing image |
 | `moveImage` | `void moveImage(String id, Offset newPosition)` | Moves image to new position |
@@ -190,6 +202,14 @@ class EditorSelection extends _$EditorSelection {
 | `clear` | `void clear()` | Clears selection |
 | `toggle` | `void toggle(String id)` | Toggles selection |
 | `isSelected` | `bool isSelected(String id)` | Checks if image is selected |
+
+**Coordinating helper (same file, top-level function):**
+
+```dart
+void deleteSelectedImage(WidgetRef ref)
+```
+
+Deletes the selected object across three providers at once: removes it from `placedImagesProvider`, clears `editorSelectionProvider`, then marks `documentDirtyProvider` dirty — or **clean** if no objects remain, since the document is back to its original state. Called from the Delete/Backspace shortcut, the Edit → Delete menu item, and the native toolbar Delete button.
 
 ---
 
@@ -278,6 +298,21 @@ final originalPdfStorageProvider = Provider<OriginalPdfStorage>((ref) {
   return storage;
 });
 ```
+
+---
+
+### PdfSaveService
+
+**File:** `lib/presentation/providers/editor/pdf_save_service_provider.dart`
+
+Provides the PDF writing service.
+
+```dart
+@riverpod
+PdfSaveService pdfSaveService(PdfSaveServiceRef ref) => PdfSaveService();
+```
+
+> **Note:** `pdf_viewer_app.dart` instantiates `PdfSaveService()` directly instead of reading this provider. See REQUIREMENTS.md §13.3.
 
 ---
 
@@ -385,7 +420,31 @@ final localePreferenceProvider =
 
 **Persistence Key:** `'locale_preference'`
 
-**Supported:** 89 locales including RTL (Arabic, Hebrew, Persian).
+**Supported:** 58 locales in `supportedLocales`, including RTL (Arabic, Hebrew, Persian). `allSupportedLocales` is derived from that list and passed to `MaterialApp.supportedLocales`.
+
+> **Known defect:** `lib/l10n/` contains 66 `.arb` files. `ja`, `ko`, and `zh` are translated and code-generated but are **absent from `supportedLocales`**, so they are neither selectable in Settings nor resolvable from the system locale. See REQUIREMENTS.md §13.6.
+
+---
+
+### LastOpenDirectory
+
+**File:** `lib/presentation/providers/last_open_directory_provider.dart`
+
+Remembers the directory of the last opened PDF so the file picker reopens there.
+
+```dart
+final lastOpenDirectoryProvider =
+    NotifierProvider<LastOpenDirectoryNotifier, String?>(...);
+```
+
+**Public Methods:**
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `getDirectoryForPicker` | `Future<String> getDirectoryForPicker()` | Returns the saved directory if it still exists, otherwise `~/Documents` |
+| `saveFromFilePath` | `void saveFromFilePath(String filePath)` | Stores the parent directory of the given file |
+
+**Persistence Key:** `'last_open_directory'`
 
 ---
 
@@ -409,7 +468,7 @@ class PdfFilePicker extends _$PdfFilePicker {
 
 | Method | Signature | Description |
 |--------|-----------|-------------|
-| `pickPdf` | `Future<String?> pickPdf()` | Opens file picker, returns selected path |
+| `pickPdf` | `Future<String?> pickPdf()` | Opens the picker in the last used directory (see `lastOpenDirectoryProvider`), returns the selected path and remembers its directory |
 | `fileExists` | `Future<bool> fileExists(String path)` | Checks if file exists |
 | `clear` | `void clear()` | Clears selected file state |
 
@@ -474,18 +533,38 @@ Isar isar(ref) {
 
 ---
 
+### ImageStorageService
+
+**File:** `lib/presentation/providers/repository_providers.dart`
+
+Provides the service that copies imported images into app storage (ADR-0001).
+
+```dart
+@Riverpod(keepAlive: true)
+ImageStorageService imageStorageService(ImageStorageServiceRef ref) =>
+    ImageStorageService();
+```
+
+Consumed by `sidebarImageRepositoryProvider`.
+
+---
+
 ## Dependency Graph
 
 ```
 SharedPreferencesProvider ─┬─► SizeUnitPreferenceProvider
                            ├─► LocalePreferenceProvider
+                           ├─► LastOpenDirectoryProvider
+                           │    └─► PdfFilePickerProvider
                            └─► RecentFilesLocalDataSourceProvider
                                 └─► RecentFilesRepositoryProvider
                                     └─► RecentFilesProvider
 
-IsarProvider ─► SidebarImageLocalDataSourceProvider
-                └─► SidebarImageRepositoryProvider
-                    └─► SidebarImagesProvider
+IsarProvider ─► SidebarImageLocalDataSourceProvider ─┐
+                                                     ├─► SidebarImageRepositoryProvider
+ImageStorageServiceProvider ─────────────────────────┘        └─► SidebarImagesProvider
+
+FilePickerDataSourceProvider ─► FilePickerRepositoryProvider ─► PdfFilePickerProvider
 
 PdfDataSourceProvider ─► PdfDocumentRepositoryProvider
                          ├─► PdfDocumentProvider
@@ -501,7 +580,8 @@ Independent Providers:
 ├── DocumentDirty
 ├── GlobalDirtyState
 ├── OriginalPdfStorage
-└── PdfSaveService
+├── PdfSaveService
+└── PermissionRetry
 ```
 
 ---

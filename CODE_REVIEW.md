@@ -3,6 +3,28 @@
 **Reviewer:** Senior Developer (15+ years experience)
 **Date:** 2026-01-12
 **Scope:** Corner cases, error handling, memory usage, performance
+**Last re-verified:** 2026-09-15 — every finding re-checked against the current source; see the status line under each heading
+
+---
+
+## Verification Status (2026-09-15)
+
+Each finding below carries a **Status** line stating whether it is still present. Summary:
+
+| Status | Count | Findings |
+|--------|-------|----------|
+| **Fixed** | 3 | 2.1 (cache key now scale-quantized), 3.1 + 3.2 (scroll math now precomputed and binary-searched) |
+| **Mitigated** | 1 | 4.4 (scroll offsets clamped) |
+| **Not an issue** | 1 | 4.6 (confirmed acceptable) |
+| **Obsolete** | 1 | 3.3 (the method is now dead code) |
+| **Partially addressed** | 1 | 5.2 (most constants centralized) |
+| **Open** | 12 | 1.1, 1.2, 1.3, 1.4, 2.2, 2.3, 4.1, 4.2, 4.3, 4.5, 5.1, 5.3 |
+
+**Highest-value open items:** 5.3 (thin test coverage), 1.1 (string-matched exception classification), 4.1 (password entry never implemented).
+
+Two findings shifted rather than resolved: 4.5 moved from `WindowManagerService` into two app roots, and 3.3 became moot only because the calling code was deleted — not because the loop was fixed.
+
+Defects discovered *after* this review are tracked in [REQUIREMENTS.md §13](REQUIREMENTS.md#13-known-limitations-and-technical-debt), notably §13.2 (deleting a library image silently breaks placed instances) and §13.3 (Save implemented twice).
 
 ---
 
@@ -25,6 +47,8 @@ The PDFSign codebase demonstrates solid architectural foundations with Clean Arc
 ## 1. Critical Issues
 
 ### 1.1 Fragile Exception Message Parsing
+
+**Status (2026-09-15): OPEN.** `pdf_document_repository_impl.dart` still classifies `pdfx` errors by substring-matching `e.toString()` (`password`, `not found`, `permission`). Unchanged.
 
 **Location:** `lib/data/repositories/pdf_document_repository_impl.dart:33-44`
 
@@ -57,6 +81,8 @@ The PDFSign codebase demonstrates solid architectural foundations with Clean Arc
 
 ### 1.2 Provider Error Handling Loses Type Information
 
+**Status (2026-09-15): OPEN.** `recent_files_provider.dart` still does `throw Exception(failure.message)`; the same pattern is now also in `sidebar_images_provider` callers and `file_picker_provider`.
+
 **Location:** `lib/presentation/providers/recent_files_provider.dart:19-22`
 
 ```dart
@@ -85,6 +111,8 @@ return result.fold(
 ---
 
 ### 1.3 Render Pipeline Without Timeout
+
+**Status (2026-09-15): OPEN.** `PdfDataSourceImpl.renderPage()` has cancellation (render-id checks) but still no `.timeout()`.
 
 **Location:** `lib/data/datasources/pdf_data_source.dart:105-156`
 
@@ -118,6 +146,8 @@ Future<Uint8List> renderPage({...}) async {
 ---
 
 ### 1.4 Memory Leak Risk in PostFrameCallbacks
+
+**Status (2026-09-15): OPEN.** `pdf_viewer.dart` `_buildLoadedState()` still schedules `addPostFrameCallback` inside the `LayoutBuilder` builder on every rebuild.
 
 **Location:** `lib/presentation/screens/editor/widgets/pdf_viewer/pdf_viewer.dart:348-353`
 
@@ -158,6 +188,8 @@ void _scheduleViewportUpdate(double width, double height) {
 
 ### 2.1 Page Cache Scale Explosion
 
+**Status (2026-09-15): FIXED.** `pdf_page_cache_provider.dart` now quantizes the key via `_quantizedScale(scale) => scale.toStringAsFixed(2)`, applied consistently in `get`, `put`, `remove`, and `contains`. `removeAllForPage` additionally uses an anchored `RegExp` so page `1` no longer matches `12`.
+
 **Location:** `lib/presentation/providers/pdf_viewer/pdf_page_cache_provider.dart:24`
 
 ```dart
@@ -184,6 +216,8 @@ String get key => '${pageNumber}_${_quantizeScale(scale)}';
 ---
 
 ### 2.2 All Page Dimensions Loaded Upfront
+
+**Status (2026-09-15): OPEN.** `_extractDocumentInfo()` still opens every page sequentially at load time to read its dimensions.
 
 **Location:** `lib/data/datasources/pdf_data_source.dart:86-94`
 
@@ -212,6 +246,8 @@ for (int i = 1; i <= pageCount; i++) {
 
 ### 2.3 Uint8List Bytes Not Explicitly Released
 
+**Status (2026-09-15): OPEN.** No memory-pressure listener and no dynamic cache sizing; eviction still relies on GC.
+
 **Location:** `lib/presentation/providers/pdf_viewer/pdf_page_cache_provider.dart:50-61`
 
 ```dart
@@ -238,6 +274,8 @@ void put(PageCacheEntry entry) {
 ## 3. Performance Bottlenecks
 
 ### 3.1 O(n) Page Height Calculations on Every Scroll
+
+**Status (2026-09-15): FIXED.** Both helpers are gone. `PdfPageLayout` precomputes the cumulative page offsets, total height and content width once per (document, scale, viewport width); `PdfPageListState` caches the instance, so `build()` and the scroll handlers read O(1) fields instead of re-walking the document.
 
 **Location:** `lib/presentation/screens/editor/widgets/pdf_viewer/pdf_page_list.dart:202-210`
 
@@ -301,6 +339,8 @@ int _findPageAtOffset(double offset) {
 
 ### 3.2 Visible Page Calculation Inefficiency
 
+**Status (2026-09-15): FIXED.** Both now call `PdfPageLayout`, which locates a page by binary search over the precomputed offsets — O(log n) per scroll event. The visible-range scan also no longer drops the first page when a second one is on screen, and `pageNumberAtCenter` clamps to the last page instead of falling back to page 1.
+
 **Location:** `lib/presentation/screens/editor/widgets/pdf_viewer/pdf_page_list.dart:136-168`
 
 ```dart
@@ -320,6 +360,8 @@ void _updateVisiblePages() {
 ---
 
 ### 3.3 Sequential File Existence Checks
+
+**Status (2026-09-15): OBSOLETE.** The sequential loop still exists in `cleanupInvalidFiles()`, but the method is **no longer called anywhere**. It was deliberately removed from `RecentFiles.build()` because the static lock does not span Flutter engines (each window is a separate process), so concurrent cleanup and `addRecentFile` corrupted the list. Invalid entries are now removed lazily when the user tries to open a missing file. Either delete the dead method or re-introduce it behind cross-process synchronization.
 
 **Location:** `lib/data/repositories/recent_files_repository_impl.dart` (inferred from exploration)
 
@@ -346,6 +388,8 @@ Future<List<RecentFile>> cleanupInvalidFiles(List<RecentFile> files) async {
 
 ### 4.1 Password Dialog Not Implemented
 
+**Status (2026-09-15): OPEN.** `// TODO: Add password input dialog` is still in `pdf_viewer.dart`. `PdfDocument.openProtectedDocument()` and the `l10n.incorrectPassword` string exist but nothing reaches them. Tracked as REQUIREMENTS.md §12.3 and TODO.md V1.0.
+
 **Location:** `lib/presentation/screens/editor/widgets/pdf_viewer/pdf_viewer.dart:490`
 
 ```dart
@@ -359,6 +403,8 @@ Future<List<RecentFile>> cleanupInvalidFiles(List<RecentFile> files) async {
 ---
 
 ### 4.2 Stale Recent Files During Session
+
+**Status (2026-09-15): OPEN (reactive mitigation only).** Opening a missing entry still removes it after the fact. No watcher, no periodic cleanup — and see 3.3: startup cleanup was removed entirely, so this reactive path is now the *only* cleanup mechanism.
 
 **Problem:** File cleanup only happens on app startup. If a user deletes a file while the app is running and then clicks on it in the recent files list, they'll get an error.
 
@@ -377,6 +423,8 @@ if (!exists) {
 ---
 
 ### 4.3 fitWidthScale Not Clamped to Constraints
+
+**Status (2026-09-15): OPEN.** `_calculateFitWidthScale()` still returns `availableWidth / maxPageWidth` unclamped. A page narrower than roughly one fifth of the viewport yields a fit-width scale above `ZoomConstraints.maxScale`.
 
 **Location:** `lib/presentation/providers/pdf_viewer/pdf_document_provider.dart:268-290`
 
@@ -401,6 +449,8 @@ return (availableWidth / maxPageWidth).clamp(
 
 ### 4.4 Focal Point Validation Missing
 
+**Status (2026-09-15): MITIGATED.** The focal point itself is still unvalidated, but `adjustScrollForFocalZoom()` clamps both resulting offsets to `0.0 .. position.maxScrollExtent` before `jumpTo`, so an out-of-bounds focal point cannot produce an invalid scroll position. No further action needed unless the clamping is removed.
+
 **Location:** `lib/presentation/screens/editor/widgets/pdf_viewer/pdf_viewer.dart:148-154`
 
 ```dart
@@ -418,6 +468,8 @@ if (scaleChanged && focalPoint != null) {
 ---
 
 ### 4.5 Main Window ID Check is Fragile
+
+**Status (2026-09-15): OPEN (moved).** The literal `'0'` main-window check is no longer in `window_manager_service.dart`; it now lives in `_PdfViewerAppState._destroyWindow()` and `_SettingsAppState._handleWindowClose()`, where windows are filtered with `w.windowId != '0'`. Same fragility, two new locations.
 
 **Location:** `lib/core/window/window_manager_service.dart:118`
 
@@ -446,6 +498,8 @@ bool isMainWindow(String windowId) => windowId == _mainWindowId;
 ---
 
 ### 4.6 Timer Race Condition
+
+**Status (2026-09-15): NOT AN ISSUE.** Confirmed acceptable — the timer is cancelled in `dispose()` and the callback checks `mounted`. No change required.
 
 **Location:** `lib/presentation/screens/editor/widgets/pdf_viewer/pdf_viewer.dart:66-81`
 
@@ -478,6 +532,8 @@ void _handleScroll() {
 
 ### 5.1 Debug Print Statements
 
+**Status (2026-09-15): OPEN.** `kDebugMode` + `print()` is used throughout `core/window/`, `core/platform/`, and `presentation/apps/`. `logger: ^2.4.0` is declared in `pubspec.yaml` but never imported. Also the direct cause of a large share of the `avoid_print` lints.
+
 **Location:** `lib/core/window/window_manager_service.dart:75-77, 82-84`
 
 ```dart
@@ -494,6 +550,8 @@ if (kDebugMode) {
 
 ### 5.2 Magic Numbers
 
+**Status (2026-09-15): PARTIALLY ADDRESSED.** Viewer timings and metrics are now centralized in `PdfViewerConstants`, and handle geometry in `SelectionHandleConstants`. Still inline: the 200 ms toolbar-setup delay and 5 s share-cleanup delay in `pdf_viewer_app.dart`, the 5 s Save All wait in all three app roots, and the 1.5 s / 20-attempt permission retry in `editor_screen.dart`.
+
 **Location:** Various files
 
 Examples:
@@ -506,6 +564,8 @@ Examples:
 ---
 
 ### 5.3 Missing Tests
+
+**Status (2026-09-15): OPEN.** The repository now has 39 tests across two files, covering the page-column geometry (`PdfPageLayout`) and drag-and-drop placement. Every other module is uncovered. `flutter analyze` reports 930 issues: 0 errors, 10 warnings, 920 info. Thin coverage remains the single largest risk to the codebase.
 
 **Observation:** No test files were found during exploration.
 
