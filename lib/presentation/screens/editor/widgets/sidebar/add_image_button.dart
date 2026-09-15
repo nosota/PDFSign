@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pdfsign/core/constants/sidebar_constants.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/sidebar/sidebar_images_provider.dart';
+import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/image_import_feedback.dart';
 
 /// Button at the bottom of the sidebar for adding images.
 ///
@@ -54,7 +55,11 @@ class AddImageButton extends ConsumerWidget {
           .toList();
 
       if (paths.isNotEmpty) {
-        await ref.read(sidebarImagesProvider.notifier).addImages(paths);
+        final report =
+            await ref.read(sidebarImagesProvider.notifier).addImages(paths);
+        if (context.mounted) {
+          showImageImportReport(context, report);
+        }
       }
     }
   }

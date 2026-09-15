@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:pdfsign/core/constants/image_import_limits.dart';
 import 'package:pdfsign/domain/entities/clipboard_contents.dart';
 import 'package:pdfsign/domain/entities/clipboard_placed_object.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
@@ -105,6 +106,16 @@ class PastePlanner {
     ClipboardImage image,
     ClipboardPlacedObject? object,
   ) async {
+    // The same limits as a library import: an oversized image is no more
+    // welcome in a document for having arrived through the clipboard.
+    final pixels = await _decodedSize(image.bytes);
+    if (ImageImportLimits.forByteCount(image.bytes.length) != null ||
+        (pixels != null &&
+            ImageImportLimits.forDimensions(pixels.width, pixels.height) !=
+                null)) {
+      return null;
+    }
+
     final stored = await ref
         .read(pastedImageStorageProvider)
         .save(image.bytes, fileExtension: image.format.fileExtension);
@@ -113,7 +124,7 @@ class PastePlanner {
       return null;
     }
 
-    final size = object?.size ?? await _sizeFor(image.bytes);
+    final size = object?.size ?? _sizeFor(pixels);
     return PastePlan(
       imagePath: imagePath,
       position: object == null
@@ -124,21 +135,31 @@ class PastePlanner {
     );
   }
 
-  /// Size a freshly pasted bitmap gets, from its own proportions.
-  Future<Size> _sizeFor(Uint8List bytes) async {
-    var aspectRatio = 1.0;
+  /// Pixel dimensions of [bytes], or null when they do not decode.
+  ///
+  /// Undecodable here means the clipboard offered a format it could not
+  /// actually produce.
+  Future<({int width, int height})?> _decodedSize(Uint8List bytes) async {
     try {
       final codec = await ui.instantiateImageCodec(bytes);
       final frame = await codec.getNextFrame();
-      if (frame.image.height > 0) {
-        aspectRatio = frame.image.width / frame.image.height;
-      }
+      final size = (width: frame.image.width, height: frame.image.height);
       frame.image.dispose();
+      return size;
     } catch (e) {
-      // Undecodable here means the clipboard offered a format it could not
-      // produce. A square is a better answer than refusing the paste.
+      return null;
     }
-    return PlacedImagePlacement.defaultSizeFor(aspectRatio, pageSize);
+  }
+
+  /// Size a freshly pasted bitmap gets on the page, from its proportions.
+  ///
+  /// A square for an image whose proportions are unknown — a better answer
+  /// than refusing a paste the user can see is an image.
+  Size _sizeFor(({int width, int height})? pixels) {
+    final ratio = pixels != null && pixels.height > 0
+        ? pixels.width / pixels.height
+        : 1.0;
+    return PlacedImagePlacement.defaultSizeFor(ratio, pageSize);
   }
 
   /// Steps the position aside while an object already sits exactly there.

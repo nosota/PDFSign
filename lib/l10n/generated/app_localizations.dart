@@ -407,6 +407,24 @@ abstract class AppLocalizations {
   /// **'Paste'**
   String get menuPaste;
 
+  /// Shown when images are refused for exceeding the file size limit
+  ///
+  /// In en, this message translates to:
+  /// **'Not added: {count} {count, plural, one{image is} other{images are}} larger than {limit}'**
+  String imagesTooLarge(int count, String limit);
+
+  /// Shown when images are refused for exceeding the resolution limit
+  ///
+  /// In en, this message translates to:
+  /// **'Not added: {count} {count, plural, one{image is} other{images are}} larger than {limit} pixels'**
+  String imagesTooManyPixels(int count, String limit);
+
+  /// Shown when images are refused for more than one reason at once
+  ///
+  /// In en, this message translates to:
+  /// **'Not added: {count} {count, plural, one{image} other{images}}'**
+  String imagesNotAdded(int count);
+
   /// Shown when the system clipboard cannot be read or written
   ///
   /// In en, this message translates to:

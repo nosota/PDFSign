@@ -83,6 +83,9 @@
   "menuCut": "Cut",
   "menuCopy": "Copy",
   "menuPaste": "Paste",
+  "imagesTooLarge": "Not added: {count} {count, plural, one{image is} other{images are}} larger than {limit}",
+  "imagesTooManyPixels": "Not added: {count} {count, plural, one{image is} other{images are}} larger than {limit} pixels",
+  "imagesNotAdded": "Not added: {count} {count, plural, one{image} other{images}}",
   "clipboardUnavailable": "The clipboard is unavailable",
   "pasteImageFailed": "That image could not be added"
 }

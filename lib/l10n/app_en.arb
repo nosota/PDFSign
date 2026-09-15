@@ -143,6 +143,39 @@
   "@menuPaste": {
     "description": "Paste menu item in Edit menu"
   },
+  "imagesTooLarge": "Not added: {count} {count, plural, one{image is} other{images are}} larger than {limit}",
+  "@imagesTooLarge": {
+    "description": "Shown when images are refused for exceeding the file size limit",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "imagesTooManyPixels": "Not added: {count} {count, plural, one{image is} other{images are}} larger than {limit} pixels",
+  "@imagesTooManyPixels": {
+    "description": "Shown when images are refused for exceeding the resolution limit",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "imagesNotAdded": "Not added: {count} {count, plural, one{image} other{images}}",
+  "@imagesNotAdded": {
+    "description": "Shown when images are refused for more than one reason at once",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "clipboardUnavailable": "The clipboard is unavailable",
   "@clipboardUnavailable": {
     "description": "Shown when the system clipboard cannot be read or written"

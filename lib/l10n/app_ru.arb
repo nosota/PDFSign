@@ -83,6 +83,9 @@
   "menuCut": "Вырезать",
   "menuCopy": "Копировать",
   "menuPaste": "Вставить",
+  "imagesTooLarge": "Не добавлено: {count} изображени(я) больше {limit}",
+  "imagesTooManyPixels": "Не добавлено: {count} изображени(я) больше {limit} пикселей",
+  "imagesNotAdded": "Не добавлено изображений: {count}",
   "clipboardUnavailable": "Буфер обмена недоступен",
   "pasteImageFailed": "Не удалось добавить изображение"
 }

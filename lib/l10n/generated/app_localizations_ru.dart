@@ -135,6 +135,21 @@ class AppLocalizationsRu extends AppLocalizations {
   String get menuPaste => 'Вставить';
 
   @override
+  String imagesTooLarge(int count, String limit) {
+    return 'Не добавлено: $count изображени(я) больше $limit';
+  }
+
+  @override
+  String imagesTooManyPixels(int count, String limit) {
+    return 'Не добавлено: $count изображени(я) больше $limit пикселей';
+  }
+
+  @override
+  String imagesNotAdded(int count) {
+    return 'Не добавлено изображений: $count';
+  }
+
+  @override
   String get clipboardUnavailable => 'Буфер обмена недоступен';
 
   @override

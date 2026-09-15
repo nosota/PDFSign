@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:pdfsign/presentation/providers/sidebar/sidebar_images_provider.dart';
+import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/image_import_feedback.dart';
 import 'package:pdfsign/presentation/providers/sidebar/sidebar_selection_provider.dart';
 import 'package:pdfsign/presentation/providers/sidebar/sidebar_width_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/sidebar/add_image_button.dart';
@@ -128,7 +129,7 @@ class _ImageSidebarState extends ConsumerState<ImageSidebar> {
     );
   }
 
-  void _handleFileDrop(DropDoneDetails details) {
+  Future<void> _handleFileDrop(DropDoneDetails details) async {
     setState(() => _isDragging = false);
 
     final paths = details.files
@@ -136,8 +137,12 @@ class _ImageSidebarState extends ConsumerState<ImageSidebar> {
         .map((f) => f.path)
         .toList();
 
-    if (paths.isNotEmpty) {
-      ref.read(sidebarImagesProvider.notifier).addImages(paths);
+    if (paths.isEmpty) return;
+
+    final report =
+        await ref.read(sidebarImagesProvider.notifier).addImages(paths);
+    if (mounted) {
+      showImageImportReport(context, report);
     }
   }
 

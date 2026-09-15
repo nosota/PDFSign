@@ -129,6 +129,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuPaste => 'Paste';
 
   @override
+  String imagesTooLarge(int count, String limit) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'images are',
+      one: 'image is',
+    );
+    return 'Not added: $count $_temp0 larger than $limit';
+  }
+
+  @override
+  String imagesTooManyPixels(int count, String limit) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'images are',
+      one: 'image is',
+    );
+    return 'Not added: $count $_temp0 larger than $limit pixels';
+  }
+
+  @override
+  String imagesNotAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'images',
+      one: 'image',
+    );
+    return 'Not added: $count $_temp0';
+  }
+
+  @override
   String get clipboardUnavailable => 'The clipboard is unavailable';
 
   @override
@@ -411,6 +444,39 @@ class AppLocalizationsEnAu extends AppLocalizationsEn {
   String get menuPaste => 'Paste';
 
   @override
+  String imagesTooLarge(int count, String limit) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'images are',
+      one: 'image is',
+    );
+    return 'Not added: $count $_temp0 larger than $limit';
+  }
+
+  @override
+  String imagesTooManyPixels(int count, String limit) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'images are',
+      one: 'image is',
+    );
+    return 'Not added: $count $_temp0 larger than $limit pixels';
+  }
+
+  @override
+  String imagesNotAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'images',
+      one: 'image',
+    );
+    return 'Not added: $count $_temp0';
+  }
+
+  @override
   String get clipboardUnavailable => 'The clipboard is unavailable';
 
   @override
@@ -685,6 +751,39 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get menuPaste => 'Paste';
+
+  @override
+  String imagesTooLarge(int count, String limit) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'images are',
+      one: 'image is',
+    );
+    return 'Not added: $count $_temp0 larger than $limit';
+  }
+
+  @override
+  String imagesTooManyPixels(int count, String limit) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'images are',
+      one: 'image is',
+    );
+    return 'Not added: $count $_temp0 larger than $limit pixels';
+  }
+
+  @override
+  String imagesNotAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'images',
+      one: 'image',
+    );
+    return 'Not added: $count $_temp0';
+  }
 
   @override
   String get clipboardUnavailable => 'The clipboard is unavailable';
@@ -963,6 +1062,39 @@ class AppLocalizationsEnNz extends AppLocalizationsEn {
   String get menuPaste => 'Paste';
 
   @override
+  String imagesTooLarge(int count, String limit) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'images are',
+      one: 'image is',
+    );
+    return 'Not added: $count $_temp0 larger than $limit';
+  }
+
+  @override
+  String imagesTooManyPixels(int count, String limit) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'images are',
+      one: 'image is',
+    );
+    return 'Not added: $count $_temp0 larger than $limit pixels';
+  }
+
+  @override
+  String imagesNotAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'images',
+      one: 'image',
+    );
+    return 'Not added: $count $_temp0';
+  }
+
+  @override
   String get clipboardUnavailable => 'The clipboard is unavailable';
 
   @override
@@ -1237,6 +1369,39 @@ class AppLocalizationsEnUs extends AppLocalizationsEn {
 
   @override
   String get menuPaste => 'Paste';
+
+  @override
+  String imagesTooLarge(int count, String limit) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'images are',
+      one: 'image is',
+    );
+    return 'Not added: $count $_temp0 larger than $limit';
+  }
+
+  @override
+  String imagesTooManyPixels(int count, String limit) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'images are',
+      one: 'image is',
+    );
+    return 'Not added: $count $_temp0 larger than $limit pixels';
+  }
+
+  @override
+  String imagesNotAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'images',
+      one: 'image',
+    );
+    return 'Not added: $count $_temp0';
+  }
 
   @override
   String get clipboardUnavailable => 'The clipboard is unavailable';

@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:pdfsign/core/constants/image_import_limits.dart';
 import 'package:pdfsign/domain/entities/sidebar_image.dart';
 import 'package:pdfsign/presentation/providers/repository_providers.dart';
 
@@ -22,48 +23,70 @@ class SidebarImages extends _$SidebarImages {
 
   /// Adds images from file paths.
   ///
-  /// Validates each file exists and is a valid image before adding.
-  Future<void> addImages(List<String> filePaths) async {
+  /// Reports what happened so the caller can tell the user about anything
+  /// that was refused; a file that is silently dropped looks like a bug.
+  Future<ImageImportReport> addImages(List<String> filePaths) async {
+    var added = 0;
+    final rejections = <ImageImportRejection>[];
+
     for (final path in filePaths) {
-      await addImageFile(path);
+      final outcome = await _addImageFile(path);
+      if (outcome.stored) {
+        added++;
+      }
+      final rejection = outcome.rejection;
+      if (rejection != null) {
+        rejections.add(rejection);
+      }
     }
+
+    return ImageImportReport(added: added, rejections: rejections);
   }
 
-  /// Adds a single image file to the library and returns the stored row.
+  /// Adds one image file to the library.
   ///
-  /// Returns null when the file is missing or is not a decodable image. The
-  /// row carries the copy made in app storage (ADR-0001) and its dimensions,
-  /// which is what a caller needs to place the image on a page.
-  Future<SidebarImage?> addImageFile(String path) async {
+  /// Reports whether it was stored and, separately, whether it was refused
+  /// for a reason worth naming. A file that is missing or undecodable is
+  /// neither stored nor refused: there is nothing to tell the user beyond
+  /// what they already know about their own file.
+  Future<({bool stored, ImageImportRejection? rejection})> _addImageFile(
+    String path,
+  ) async {
     final repository = ref.read(sidebarImageRepositoryProvider);
 
     final file = File(path);
-    if (!await file.exists()) return null;
+    if (!await file.exists()) return (stored: false, rejection: null);
+
+    // Size first, before the bytes are read: reading a file to find out it is
+    // too big to read defeats the limit.
+    final fileSize = await file.length();
+    final tooLarge = ImageImportLimits.forByteCount(fileSize);
+    if (tooLarge != null) return (stored: false, rejection: tooLarge);
 
     try {
-      // Get image dimensions
       final bytes = await file.readAsBytes();
       final codec = await ui.instantiateImageCodec(bytes);
       final frame = await codec.getNextFrame();
+      final width = frame.image.width;
+      final height = frame.image.height;
+      frame.image.dispose();
 
-      // Extract file info
-      final fileName = path.split('/').last;
-      final fileSize = await file.length();
+      final tooManyPixels = ImageImportLimits.forDimensions(width, height);
+      if (tooManyPixels != null) {
+        return (stored: false, rejection: tooManyPixels);
+      }
 
       final result = await repository.addImage(
         filePath: path,
-        fileName: fileName,
-        width: frame.image.width,
-        height: frame.image.height,
+        fileName: path.split('/').last,
+        width: width,
+        height: height,
         fileSize: fileSize,
       );
-
-      frame.image.dispose();
-
-      return result.fold((failure) => null, (image) => image);
+      return (stored: result.isRight(), rejection: null);
     } catch (e) {
       // Not a decodable image
-      return null;
+      return (stored: false, rejection: null);
     }
   }
 
@@ -103,5 +126,30 @@ class SidebarImages extends _$SidebarImages {
   Future<void> updateComment(String id, String? comment) async {
     final repository = ref.read(sidebarImageRepositoryProvider);
     await repository.updateComment(id, comment);
+  }
+}
+
+/// What one call to [SidebarImages.addImages] did.
+class ImageImportReport {
+  const ImageImportReport({
+    required this.added,
+    required this.rejections,
+  });
+
+  /// How many images reached the library.
+  final int added;
+
+  /// Why each refused image was refused, one entry per image.
+  final List<ImageImportRejection> rejections;
+
+  /// The single reason every refusal shared, or null when they differ or
+  /// when nothing was refused.
+  ///
+  /// Lets the caller name the limit that was hit instead of saying only that
+  /// something went wrong.
+  ImageImportRejection? get sharedRejection {
+    if (rejections.isEmpty) return null;
+    final first = rejections.first;
+    return rejections.every((r) => r == first) ? first : null;
   }
 }
