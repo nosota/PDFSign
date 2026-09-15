@@ -166,3 +166,4 @@ Design decisions are documented as Architecture Decision Records in [adr/](adr/)
 | [ADR-0006](adr/0006-multi-window-isolated-engines.md) | Multi-window with isolated Flutter engines |
 | [ADR-0007](adr/0007-lazy-pdf-rendering-with-lru-cache.md) | Lazy PDF rendering with LRU cache |
 | [ADR-0008](adr/0008-dirty-state-derived-from-a-baseline.md) | Dirty state derived from a baseline, not flagged per operation |
+| [ADR-0009](adr/0009-clipboard-via-the-system-pasteboard.md) | Cut/copy/paste through the system pasteboard, driven from the Edit menu |

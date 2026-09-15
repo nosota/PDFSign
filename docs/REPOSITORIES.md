@@ -76,7 +76,8 @@ Handles sidebar image CRUD operations and real-time syncing between windows.
 |--------|-----------|-------------|
 | `getImages` | `Future<Either<Failure, List<SidebarImage>>> getImages()` | Gets all images sorted by order |
 | `watchImages` | `Stream<List<SidebarImage>> watchImages()` | Real-time stream of images |
-| `addImage` | `Future<Either<Failure, SidebarImage>> addImage({...})` | Adds new image |
+| `addImage` | `Future<Either<Failure, SidebarImage>> addImage({...})` | Adds new image from a file |
+| `addImageFromBytes` | `Future<Either<Failure, SidebarImage>> addImageFromBytes({...})` | Adds new image from raw bytes, as pasted from the clipboard |
 | `removeImage` | `Future<Either<Failure, Unit>> removeImage(String id)` | Removes image by ID |
 | `reorderImages` | `Future<Either<Failure, Unit>> reorderImages(List<String> orderedIds)` | Updates order |
 | `clearAllImages` | `Future<Either<Failure, Unit>> clearAllImages()` | Clears all images |
@@ -92,6 +93,19 @@ Handles sidebar image CRUD operations and real-time syncing between windows.
 | `width` | `int` | Image width in pixels |
 | `height` | `int` | Image height in pixels |
 | `fileSize` | `int` | File size in bytes |
+
+### addImageFromBytes Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `bytes` | `Uint8List` | Encoded image data |
+| `fileExtension` | `String` | `png` or `jpg`, decides the stored file name |
+| `fileName` | `String` | Display name |
+| `width` | `int` | Image width in pixels |
+| `height` | `int` | Image height in pixels |
+
+Bytes are written straight into app storage. A paste has no file to copy, and
+routing it through a temporary one would leave a file behind on every paste.
 
 ### Implementation Details
 
@@ -117,6 +131,46 @@ Handles sidebar image CRUD operations and real-time syncing between windows.
 **Multi-Window Sync:**
 
 The `watchImages()` method returns an Isar stream that automatically emits when database changes. Since all windows share the same Isar instance, changes in one window are immediately visible in others.
+
+---
+
+## ClipboardRepository
+
+**Interface:** `lib/domain/repositories/clipboard_repository.dart`
+**Implementation:** `lib/data/repositories/clipboard_repository_impl.dart`
+
+Gives the editor the system pasteboard. The system one rather than a field in
+memory because each window is a separate Dart isolate (ADR-0006), so nothing
+held in Dart can be copied in one window and pasted in another.
+
+### Interface Methods
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `writePlacedObject` | `Future<Either<Failure, Unit>> writePlacedObject({object, imageBytes, imageFormat})` | Writes one item with two renditions |
+| `read` | `Future<Either<Failure, ClipboardContents>> read()` | Reads whatever the editor can use |
+
+### Implementation Details
+
+**Two renditions, one item:**
+
+1. `com.ivanvaganov.pdfsign.placed-object` — UTF-8 JSON describing the object:
+   source image, storage path, size, position, rotation. Restores an object
+   exactly, in this window or another.
+2. `public.png` / `public.jpeg` — the image itself, so the object can be pasted
+   into Mail, Preview or anything else, and so a paste still works when the
+   library image was deleted between copying and pasting.
+
+Reading prefers the first and falls back to the second.
+
+**Untrusted input:** any application can put bytes under our format name, so
+`ClipboardPlacedObject.fromJson` validates every field and returns null rather
+than throwing. An unreadable payload is treated as absent, not as an error —
+the bitmap beside it may still be pasteable.
+
+**Empty is not a failure:** a clipboard holding text or nothing at all returns
+an empty `ClipboardContents`. `Failure` is reserved for a pasteboard that
+cannot be reached.
 
 ---
 
@@ -223,6 +277,11 @@ SidebarImageRepository sidebarImageRepository(ref) {
   final dataSource = ref.watch(sidebarImageLocalDataSourceProvider);
   final storageService = ref.watch(imageStorageServiceProvider);
   return SidebarImageRepositoryImpl(dataSource, storageService);
+}
+
+@Riverpod(keepAlive: true)
+ClipboardRepository clipboardRepository(ref) {
+  return ClipboardRepositoryImpl();
 }
 
 @riverpod

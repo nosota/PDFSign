@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
+- Cut, Copy and Paste for objects placed on the document, in the Edit menu and on Cmd+X/C/V
+- An image copied in another application can be pasted onto the page; it is added to the image library at the same time
+- An object copied in PDFSign can be pasted into another application, and into another PDFSign window
+
 - Remember last used directory in File->Open dialog
 - Delete button in toolbar and Edit menu
 - Single top-center rotate handle (replaced corner rotate zones)
@@ -20,6 +24,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - A drop that lands off-page now snaps to the nearest page instead of silently landing on page 1
 
 ### Fixed
+
+- Cut, Copy and Paste now work in text fields — the image comment, Go to Page and Settings — where Cmd shortcuts previously did nothing at all
 
 - Closing no longer offered to discard a document whose save was merely still running, which could destroy the window mid-write
 - Deleting an object that was already saved into the file no longer reports the document as clean, which used to drop the deletion on close

@@ -343,6 +343,46 @@ PdfSaveService pdfSaveService(PdfSaveServiceRef ref) => PdfSaveService();
 
 > **Note:** `pdf_viewer_app.dart` instantiates `PdfSaveService()` directly instead of reading this provider. See REQUIREMENTS.md §13.2.
 
+### EditorClipboard
+
+**File:** `lib/presentation/providers/editor/editor_clipboard.dart`
+
+Not a provider — a coordinator over several, in the same shape as
+`deleteSelectedImage(ref)` and `CloseAllCoordinator`. Cut, copy and paste for
+objects placed on the document.
+
+```dart
+final outcome = await EditorClipboard(ref: ref).paste();
+```
+
+| Method | Does |
+|--------|------|
+| `copy()` | Puts the selected object on the system clipboard, with its pixels beside it |
+| `cut()` | Copies, then removes the object — only if the copy succeeded |
+| `paste()` | Puts the clipboard contents on the page currently in view |
+
+Returns an `EditorClipboardOutcome` rather than showing anything itself; the
+caller maps it to a localized message. `nothing` is silent by design — an empty
+clipboard or no selection is an ordinary outcome.
+
+**Dispatches on focus.** The Edit menu owns Cmd+X/C/V for the whole window
+(§13.11), so each action first asks `textInputHasFocus()` and, when a text
+field holds the keyboard, invokes `CopySelectionTextIntent` / `PasteTextIntent`
+on it instead. Without that, typing a comment and pressing Cmd+C would copy the
+selected object.
+
+**Where a paste lands** is `PastePlanner`'s question
+(`lib/presentation/providers/editor/paste_planner.dart`): the page the viewer
+reports as current, at the copied position plus a cascade step, clamped onto the
+page; an image from another application is centred and sized like a drop. The
+two classes are split along that seam — `EditorClipboard` decides *whether* a
+paste happens and who handles it, `PastePlanner` decides *what lands where*.
+`PlacedImagePlacement` holds the shared geometry so dropping and pasting cannot
+drift apart.
+
+**Cross-window.** Nothing is broadcast: the system clipboard is already shared
+between windows, and between applications.
+
 ---
 
 ## Sidebar Providers

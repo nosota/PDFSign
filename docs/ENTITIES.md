@@ -11,7 +11,9 @@ lib/domain/entities/
 ├── placed_image.dart       # Image placed on PDF page
 ├── sidebar_image.dart      # Image in sidebar library
 ├── recent_file.dart        # Recently opened file
-└── window_info.dart        # Application window info
+├── window_info.dart        # Application window info
+├── clipboard_placed_object.dart  # A placed object on the clipboard
+└── clipboard_contents.dart       # What the clipboard holds for the editor
 ```
 
 ---
@@ -365,3 +367,34 @@ This enables:
 - Efficient state comparison in Riverpod
 - Correct behavior in collections (Set, Map keys)
 - Meaningful equality checks in tests
+
+---
+
+## ClipboardPlacedObject
+
+**File:** `lib/domain/entities/clipboard_placed_object.dart`
+
+A placed object copied to the clipboard: `sourceImageId`, `imagePath`, `size`,
+`position`, `rotation`, plus a `version`.
+
+### Notes
+
+- `position` is where it was copied from, so a paste into the same document can
+  land beside the original instead of in the middle of the page.
+- `imagePath` may no longer exist when the object is pasted — deleting a
+  library row deletes its file (§13.1). The paste path falls back to the bitmap
+  written alongside.
+- **`fromJson` treats its input as hostile.** Any application can write bytes
+  under our pasteboard type, so every field is checked and anything unexpected
+  yields null rather than an exception or a half-built object.
+
+---
+
+## ClipboardContents
+
+**File:** `lib/domain/entities/clipboard_contents.dart`
+
+What a clipboard read found: an optional `ClipboardPlacedObject` and an
+optional `ClipboardImage` (bytes plus `ClipboardImageFormat`). Both null means
+the clipboard holds nothing the editor can use — text, files, or nothing at
+all. That is `isEmpty`, not a failure.

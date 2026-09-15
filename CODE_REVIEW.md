@@ -24,7 +24,7 @@ Each finding below carries a **Status** line stating whether it is still present
 
 Two findings shifted rather than resolved: 4.5 moved from `WindowManagerService` into two app roots, and 3.3 became moot only because the calling code was deleted — not because the loop was fixed.
 
-Defects discovered *after* this review are tracked in [REQUIREMENTS.md §13](REQUIREMENTS.md#13-known-limitations-and-technical-debt), notably §13.1 (deleting a library image silently breaks placed instances) and §13.2 (Save implemented twice).
+Defects discovered *after* this review are tracked in [REQUIREMENTS.md §13](REQUIREMENTS.md#13-known-limitations-and-technical-debt), notably §13.1 (deleting a library image silently breaks placed instances) and §13.2 (`PdfSaveService` built outside its provider).
 
 ---
 

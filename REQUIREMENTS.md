@@ -517,9 +517,9 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 
 | Aspect | State |
 |--------|-------|
-| `flutter analyze` | 904 issues: 0 errors, **0 warnings**, 904 info |
-| Unit tests | **40** — page-column geometry (`PdfPageLayout`), dirty-state policy |
-| Widget tests | **20** — drop placement, off-page snapping, drag feedback, the close-everything flow |
+| `flutter analyze` | 959 issues: 0 errors, **0 warnings**, 959 info |
+| Unit tests | **62** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec |
+| Widget tests | **41** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste |
 | Native tests | **15** — toolbar item management (`macos/RunnerTests`) |
 | Integration tests | **none** |
 | Golden tests | **none** |
@@ -584,8 +584,10 @@ Specified in v1.0 (or implied by leftover code) but **absent from the product**.
 ### 13.1 Deleting a library image deletes its file, breaking placed instances
 `SidebarImageRepositoryImpl.removeImage` deletes the row **and** the file in app storage. ADR-0003 states that placed objects keep working because their file still exists — that is not what the code does. A placed object whose source was deleted renders as a broken-image placeholder, and `PdfSaveService` skips it silently (`if (!await imageFile.exists()) continue;`), so it vanishes from the saved PDF without any warning.
 
-### 13.2 Save is implemented twice
-`_handleSave` / `_handleSaveAs` in `pdf_viewer_app.dart` (menu path) and `_save` / `_saveAs` in `pdf_viewer.dart` (`Cmd+S` via `Focus.onKeyEvent`). Both are live, so `Cmd+S` can run two save paths. The viewer copy also instantiates `PdfSaveService()` directly instead of using `pdfSaveServiceProvider`, and shows non-localized strings.
+### 13.2 `PdfSaveService` is built outside its provider
+`pdf_viewer_app.dart` instantiates `PdfSaveService()` directly in three places instead of reading `pdfSaveServiceProvider`, which `CLAUDE.md` names as an outstanding layering violation. Its save-failure snackbars are also English literals rather than `AppLocalizations`.
+
+> Until 2026-09-15 this entry claimed Save was implemented twice and that `Cmd+S` could run both paths. Measurement showed otherwise: the copy in `pdf_viewer.dart` was unreachable, because with a `PlatformMenuBar` installed no `Cmd` shortcut reaches the widget tree (§13.13). It has been deleted along with the rest of the dead `Cmd` branch.
 
 ### 13.3 `go_router` is dead weight
 `lib/core/router/app_router.dart` is referenced by nothing. All three window roots build `home:` directly. The only import of `go_router` outside it is the unreachable mobile view.
@@ -614,7 +616,18 @@ Page measurement itself is no longer a problem: `PdfPageLayout` precomputes page
 ### 13.10 Exception classification by string matching
 `PdfDocumentRepositoryImpl` maps `pdfx` failures to `Failure` types by searching the exception's `toString()` for `"password"`, `"not found"`, `"permission"`, and similar. Brittle across library versions and locales. See CODE_REVIEW §1.1.
 
-### 13.11 The Syncfusion license key is committed
+### 13.11 `Cmd` shortcuts only exist in the menu
+With a `PlatformMenuBar` installed, a `Cmd` key equivalent never reaches Flutter's focus tree: verified on 2026-09-15 by synthesising key events against the running app, where `PageDown` reached `PdfViewer._handleKeyEvent` and `Cmd+G`, `Cmd+=` and `Cmd+C` did not. A shortcut therefore has to be a menu item to exist at all.
+
+Two consequences are still open:
+
+- **Go to Page (`Cmd+G`), Reload (`Cmd+R`) and zoom (`Cmd+0`, `Cmd+±`) are unreachable.** The handlers are still in `PdfViewer`, but nothing can invoke them. They need View-menu items or removal.
+- **Text editing shortcuts are dead in every field** except where the Edit menu now covers them: `Cmd+A` does not select all in the image comment, the Go to Page field or Settings. Cut/Copy/Paste were fixed by routing the Edit menu through `EditorClipboard`; Select All has no menu item yet.
+
+### 13.12 Paste is always enabled
+`PlatformMenuBar` gives no hook to revalidate a menu item as the menu opens, and polling the pasteboard would be worse. Edit → Paste is therefore always enabled while a document is open and does nothing when the clipboard holds nothing usable. Cut and Copy do better: they follow the selection and the keyboard focus.
+
+### 13.13 The Syncfusion license key is committed
 `TODO.md` contains a Syncfusion community license key in plain text. It should be removed from the repository and from history.
 
 ---
