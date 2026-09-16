@@ -241,7 +241,7 @@ go_router, mime
 
 ## Testing
 
-The project has 187 Dart tests (page-column geometry, drag-and-drop placement, dirty-state policy, the close-everything flow, cut/copy/paste) and 16 native tests (`macos/RunnerTests`, toolbar item management). Everything else is uncovered, which remains the largest known risk (CODE_REVIEW §5.3). The following is the target state, and applies to code you add or change:
+The project has 189 Dart tests (page-column geometry, drag-and-drop placement, dirty-state policy, the close-everything flow, cut/copy/paste) and 16 native tests (`macos/RunnerTests`, toolbar item management). Everything else is uncovered, which remains the largest known risk (CODE_REVIEW §5.3). The following is the target state, and applies to code you add or change:
 
 - New business logic (providers, repositories, services, coordinate math) ships with unit tests.
 - Test file mirrors source structure; one test file per source file.
@@ -263,13 +263,13 @@ Enforced bar, verified with `flutter analyze`:
 
 - **0 errors** — currently met.
 - **0 warnings** — currently met. Do not regress it.
-- Info-level lints: 1031 at last count. Not a merge gate, but do not increase the count in files you touch.
+- Info-level lints: 1025 at last count. Not a merge gate, but do not increase the count in files you touch.
 
 ### Import Convention
 
 Use **`package:pdfsign/...` imports** throughout. This matches 100% of the existing code.
 
-> **Nothing currently enforces this.** `analysis_options.yaml` sets `always_use_package_imports: error` under `analyzer.errors` (line 21), but that key only overrides the *severity* of a diagnostic — the rule is absent from `linter.rules`, so it never runs and the override is a no-op. Meanwhile `prefer_relative_imports` **is** enabled in `linter.rules` (line 152) and argues the opposite, producing 328 of the 1031 info lints.
+> **Nothing currently enforces this.** `analysis_options.yaml` sets `always_use_package_imports: error` under `analyzer.errors` (line 21), but that key only overrides the *severity* of a diagnostic — the rule is absent from `linter.rules`, so it never runs and the override is a no-op. Meanwhile `prefer_relative_imports` **is** enabled in `linter.rules` (line 152) and argues the opposite, producing 328 of the 1025 info lints.
 >
 > Until that is resolved: ignore those 328 diagnostics, and do **not** "fix" them by converting imports to relative paths. To make the stated policy real, add `always_use_package_imports` to `linter.rules` and remove `prefer_relative_imports` from it.
 

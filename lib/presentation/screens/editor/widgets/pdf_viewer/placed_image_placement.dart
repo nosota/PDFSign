@@ -48,7 +48,12 @@ abstract final class PlacedImagePlacement {
   /// one: keeping its points verbatim would cover the whole page or hang off
   /// it.
   static Size fitToPage(Size size, Size pageSize) {
-    if (size.width <= 0 || size.height <= 0) {
+    // Non-finite sides would pass a `<= 0` test and travel all the way to the
+    // saved PDF as an invalid rectangle.
+    if (!size.width.isFinite ||
+        !size.height.isFinite ||
+        size.width <= 0 ||
+        size.height <= 0) {
       return defaultSizeFor(1, pageSize);
     }
 

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:ui';
 import 'dart:ui' as ui;
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -100,8 +99,13 @@ class SidebarImages extends _$SidebarImages {
   /// Silent on failure. The reader resized an object and it stayed resized;
   /// that the preference could not be written is not worth interrupting them
   /// for, and the next resize will try again.
-  Future<void> rememberSize(String id, Size size) async {
-    if (size.width <= 0 || size.height <= 0) {
+  Future<void> rememberSize(String id, ui.Size size) async {
+    // `<= 0` alone lets NaN and infinity through, and a poisoned row would
+    // then hand back an unusable size on every later drop of that image.
+    if (!size.width.isFinite ||
+        !size.height.isFinite ||
+        size.width <= 0 ||
+        size.height <= 0) {
       return;
     }
     await ref.read(sidebarImageRepositoryProvider).updateLastUsedSize(id, size);

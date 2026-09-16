@@ -125,6 +125,28 @@ void main() {
 
       expect(library.writes, 1);
     });
+
+    testWidgets('should record a drag the pointer was taken away from',
+        (tester) async {
+      // A pointer can be lost mid-drag. Measured on this Flutter version, a
+      // PointerCancelEvent produces `onPanEnd` rather than `onPanCancel`, so
+      // the same path records it — which is why there is no cancel handler.
+      place(sourceImageId: 'row-1');
+      await pumpOverlay(tester);
+
+      final gesture =
+          await tester.startGesture(tester.getCenter(bottomRightHandle()));
+      await tester.pump();
+      await gesture.moveBy(const Offset(60, 30));
+      await tester.pump();
+
+      await gesture.cancel();
+      await tester.pump();
+
+      final size = container.read(placedImagesProvider).single.size;
+      expect(size.width, greaterThan(120), reason: 'the drag resized it');
+      expect(library.lastUsedSizes['row-1'], size);
+    });
   });
 
   group('resizing an object with no library image', () {

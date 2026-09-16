@@ -418,8 +418,7 @@ See [docs/PLATFORM_CHANNELS.md](docs/PLATFORM_CHANNELS.md).
 | `PdfDocumentInfo` | Path, name, page count, per-page dimensions |
 | `PdfPageInfo` | 1-based number, width/height in points |
 | `PlacedImage` | id, source id, image path, page index, position, size, rotation |
-| `SidebarImage` | id, path, name, added at, order, pixel size, file size, comment, last used size |
-| `SidebarImage` | id, path, name, added-at, order, dimensions, size, comment |
+| `SidebarImage` | id, path, name, added-at, order, pixel dimensions, file size, comment, last used size |
 | `RecentFile` | path, name, last-opened, page count, protected flag |
 | `WindowInfo` | window id, title, type, focused flag, file path |
 
@@ -526,9 +525,9 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 
 | Aspect | State |
 |--------|-------|
-| `flutter analyze` | 1031 issues: 0 errors, **0 warnings**, 1031 info |
-| Unit tests | **121** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry and the writer |
-| Widget tests | **66** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation |
+| `flutter analyze` | 1025 issues: 0 errors, **0 warnings**, 1025 info |
+| Unit tests | **122** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry and the writer |
+| Widget tests | **67** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation |
 | Native tests | **16** — the toolbar's fixed item set and layout, Delete's enabled state, the helper registry (`macos/RunnerTests`) |
 | Integration tests | **none** |
 | Golden tests | **none** |

@@ -129,6 +129,18 @@ void main() {
       expect(repository.lastUsedSizes['row-2'], const Size(50, 50));
     });
 
+    test('should refuse a size that is not a number', () async {
+      // A `<= 0` test alone lets these through, and the row would then hand
+      // back an unusable size on every later drop of that image.
+      final notifier = container.read(sidebarImagesProvider.notifier);
+
+      await notifier.rememberSize('row-1', const Size(double.nan, 50));
+      await notifier.rememberSize('row-1', const Size(50, double.infinity));
+      await notifier.rememberSize('row-1', const Size(double.nan, double.nan));
+
+      expect(repository.lastUsedSizes, isEmpty);
+    });
+
     test('should refuse a size with no area', () async {
       // Never reachable through the handles, which clamp to a minimum, but a
       // zero would come back as an object that cannot be seen or grabbed.

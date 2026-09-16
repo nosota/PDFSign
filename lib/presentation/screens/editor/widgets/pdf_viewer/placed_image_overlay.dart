@@ -809,11 +809,11 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
 class _CornerHandle extends StatefulWidget {
   const _CornerHandle({
     required this.corner,
-    super.key,
     required this.cursor,
     required this.onDrag,
     required this.onDragEnd,
     this.isRotating = false,
+    super.key,
   });
 
   final String corner;
@@ -857,6 +857,11 @@ class _CornerHandleState extends State<_CornerHandle> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onPanUpdate: (details) => widget.onDrag(details.delta),
+        // A pointer taken away mid-drag arrives here too: measured on this
+        // Flutter version, a PointerCancelEvent produces `onPanEnd`, whether
+        // or not the pan had moved. `onPanCancel` fires only when the
+        // recognizer loses the arena before accepting, where nothing was
+        // dragged and there is nothing to record.
         onPanEnd: (_) => widget.onDragEnd(),
         child: SizedBox(
           width: hitSize,
@@ -884,11 +889,11 @@ class _CornerHandleState extends State<_CornerHandle> {
 class _SideHandle extends StatefulWidget {
   const _SideHandle({
     required this.side,
-    super.key,
     required this.cursor,
     required this.onDrag,
     required this.onDragEnd,
     this.isRotating = false,
+    super.key,
   });
 
   final String side;
@@ -932,6 +937,11 @@ class _SideHandleState extends State<_SideHandle> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onPanUpdate: (details) => widget.onDrag(details.delta),
+        // A pointer taken away mid-drag arrives here too: measured on this
+        // Flutter version, a PointerCancelEvent produces `onPanEnd`, whether
+        // or not the pan had moved. `onPanCancel` fires only when the
+        // recognizer loses the arena before accepting, where nothing was
+        // dragged and there is nothing to record.
         onPanEnd: (_) => widget.onDragEnd(),
         child: SizedBox(
           width: hitSize,
