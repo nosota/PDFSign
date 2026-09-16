@@ -120,6 +120,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuDelete => 'Delete';
 
   @override
+  String get menuView => 'View';
+
+  @override
+  String goToPagePrompt(int total) {
+    return 'Enter page number (1-$total):';
+  }
+
+  @override
+  String get goToPageHint => 'Page number';
+
+  @override
+  String get goToPageInvalid => 'Please enter a valid number';
+
+  @override
+  String goToPageOutOfRange(int total) {
+    return 'Page must be between 1 and $total';
+  }
+
+  @override
   String get menuRotateLeft => 'Rotate Left';
 
   @override
@@ -441,6 +460,25 @@ class AppLocalizationsEnAu extends AppLocalizationsEn {
   String get menuDelete => 'Delete';
 
   @override
+  String get menuView => 'View';
+
+  @override
+  String goToPagePrompt(int total) {
+    return 'Enter page number (1-$total):';
+  }
+
+  @override
+  String get goToPageHint => 'Page number';
+
+  @override
+  String get goToPageInvalid => 'Please enter a valid number';
+
+  @override
+  String goToPageOutOfRange(int total) {
+    return 'Page must be between 1 and $total';
+  }
+
+  @override
   String get menuRotateLeft => 'Rotate Left';
 
   @override
@@ -754,6 +792,25 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get menuDelete => 'Delete';
+
+  @override
+  String get menuView => 'View';
+
+  @override
+  String goToPagePrompt(int total) {
+    return 'Enter page number (1-$total):';
+  }
+
+  @override
+  String get goToPageHint => 'Page number';
+
+  @override
+  String get goToPageInvalid => 'Please enter a valid number';
+
+  @override
+  String goToPageOutOfRange(int total) {
+    return 'Page must be between 1 and $total';
+  }
 
   @override
   String get menuRotateLeft => 'Rotate Left';
@@ -1071,6 +1128,25 @@ class AppLocalizationsEnNz extends AppLocalizationsEn {
   String get menuDelete => 'Delete';
 
   @override
+  String get menuView => 'View';
+
+  @override
+  String goToPagePrompt(int total) {
+    return 'Enter page number (1-$total):';
+  }
+
+  @override
+  String get goToPageHint => 'Page number';
+
+  @override
+  String get goToPageInvalid => 'Please enter a valid number';
+
+  @override
+  String goToPageOutOfRange(int total) {
+    return 'Page must be between 1 and $total';
+  }
+
+  @override
   String get menuRotateLeft => 'Rotate Left';
 
   @override
@@ -1384,6 +1460,25 @@ class AppLocalizationsEnUs extends AppLocalizationsEn {
 
   @override
   String get menuDelete => 'Delete';
+
+  @override
+  String get menuView => 'View';
+
+  @override
+  String goToPagePrompt(int total) {
+    return 'Enter page number (1-$total):';
+  }
+
+  @override
+  String get goToPageHint => 'Page number';
+
+  @override
+  String get goToPageInvalid => 'Please enter a valid number';
+
+  @override
+  String goToPageOutOfRange(int total) {
+    return 'Page must be between 1 and $total';
+  }
 
   @override
   String get menuRotateLeft => 'Rotate Left';

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:flutter/services.dart';
 
 import 'package:pdfsign/core/theme/app_colors.dart';
@@ -61,18 +63,22 @@ class _GoToPageDialogState extends State<GoToPageDialog> {
     super.dispose();
   }
 
+  /// The window's strings. Safe here: the dialog is only ever shown inside a
+  /// `MaterialApp` that carries the localizations.
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
+
   void _submit() {
     final pageNumber = int.tryParse(_controller.text);
     if (pageNumber == null) {
       setState(() {
-        _errorText = 'Please enter a valid number';
+        _errorText = l10n.goToPageInvalid;
       });
       return;
     }
 
     if (pageNumber < 1 || pageNumber > widget.totalPages) {
       setState(() {
-        _errorText = 'Page must be between 1 and ${widget.totalPages}';
+        _errorText = l10n.goToPageOutOfRange(widget.totalPages);
       });
       return;
     }
@@ -83,13 +89,13 @@ class _GoToPageDialogState extends State<GoToPageDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Go to Page'),
+      title: Text(l10n.goToPage),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Enter page number (1-${widget.totalPages}):',
+            l10n.goToPagePrompt(widget.totalPages),
             style: const TextStyle(
               color: AppColors.textSecondary,
               fontSize: 14,
@@ -105,7 +111,7 @@ class _GoToPageDialogState extends State<GoToPageDialog> {
             ],
             decoration: InputDecoration(
               errorText: _errorText,
-              hintText: 'Page number',
+              hintText: l10n.goToPageHint,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 12,
                 vertical: 8,
@@ -125,11 +131,11 @@ class _GoToPageDialogState extends State<GoToPageDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(l10n.cancel),
         ),
         ElevatedButton(
           onPressed: _submit,
-          child: const Text('Go'),
+          child: Text(l10n.go),
         ),
       ],
     );

@@ -389,6 +389,36 @@ abstract class AppLocalizations {
   /// **'Delete'**
   String get menuDelete;
 
+  /// View menu label
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get menuView;
+
+  /// Prompt in the Go to Page dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Enter page number (1-{total}):'**
+  String goToPagePrompt(int total);
+
+  /// Placeholder in the Go to Page field
+  ///
+  /// In en, this message translates to:
+  /// **'Page number'**
+  String get goToPageHint;
+
+  /// Shown when the Go to Page field holds something that is not a number
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid number'**
+  String get goToPageInvalid;
+
+  /// Shown when the requested page does not exist
+  ///
+  /// In en, this message translates to:
+  /// **'Page must be between 1 and {total}'**
+  String goToPageOutOfRange(int total);
+
   /// Rotate the current page a quarter turn anticlockwise
   ///
   /// In en, this message translates to:

@@ -131,6 +131,36 @@
   "@menuDelete": {
     "description": "Delete menu item in Edit menu"
   },
+  "menuView": "View",
+  "@menuView": {
+    "description": "View menu label"
+  },
+  "goToPagePrompt": "Enter page number (1-{total}):",
+  "@goToPagePrompt": {
+    "description": "Prompt in the Go to Page dialog",
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "goToPageHint": "Page number",
+  "@goToPageHint": {
+    "description": "Placeholder in the Go to Page field"
+  },
+  "goToPageInvalid": "Please enter a valid number",
+  "@goToPageInvalid": {
+    "description": "Shown when the Go to Page field holds something that is not a number"
+  },
+  "goToPageOutOfRange": "Page must be between 1 and {total}",
+  "@goToPageOutOfRange": {
+    "description": "Shown when the requested page does not exist",
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "menuRotateLeft": "Rotate Left",
   "@menuRotateLeft": {
     "description": "Rotate the current page a quarter turn anticlockwise"

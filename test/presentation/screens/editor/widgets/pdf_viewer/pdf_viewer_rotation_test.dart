@@ -12,6 +12,7 @@ import 'package:pdfsign/domain/entities/pdf_page_info.dart';
 import 'package:pdfsign/domain/repositories/pdf_document_repository.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/rotate_page.dart';
+import 'package:pdfsign/presentation/providers/pdf_viewer/page_jump_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 import 'package:pdfsign/presentation/providers/repository_providers.dart';
 import 'package:pdfsign/presentation/providers/shared_preferences_provider.dart';
@@ -46,12 +47,13 @@ void main() {
     addTearDown(container.dispose);
   });
 
-  /// Pumps a few frames.
+  /// Pumps past the viewer's animations.
   ///
   /// Not `pumpAndSettle`: the viewer runs an auto-hiding page indicator, so
-  /// there is always another frame coming and settling never happens.
+  /// there is always another frame coming and settling never happens. The
+  /// span covers a Go to Page scroll, which animates over 300 ms.
   Future<void> settle(WidgetTester tester) async {
-    for (var i = 0; i < 6; i++) {
+    for (var i = 0; i < 16; i++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
   }
@@ -90,6 +92,32 @@ void main() {
   int currentPage() => container
       .read(pdfDocumentProvider)
       .maybeMap(loaded: (state) => state.currentPage, orElse: () => 0);
+
+  group('going to a page', () {
+    // The dialog is opened from the menu at the window root, which cannot
+    // reach the page column; it leaves the answer in a provider instead.
+    testWidgets('should scroll to the page that was asked for', (tester) async {
+      await pumpViewer(tester);
+      expect(currentPage(), 1);
+
+      container.read(pageJumpRequestProvider.notifier).request(7);
+      await settle(tester);
+
+      expect(currentPage(), 7);
+    });
+
+    testWidgets('should stay put for a page that does not exist',
+        (tester) async {
+      await pumpViewer(tester);
+
+      container.read(pageJumpRequestProvider.notifier).request(99);
+      await settle(tester);
+
+      // Clamped to the last page rather than scrolled into nothing.
+      expect(currentPage(), lessThanOrEqualTo(_pageCount));
+      expect(currentPage(), greaterThan(0));
+    });
+  });
 
   group('after turning a page', () {
     testWidgets('should stay on that page rather than jump to the first',

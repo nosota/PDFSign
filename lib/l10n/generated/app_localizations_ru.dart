@@ -126,6 +126,25 @@ class AppLocalizationsRu extends AppLocalizations {
   String get menuDelete => 'Удалить';
 
   @override
+  String get menuView => 'Вид';
+
+  @override
+  String goToPagePrompt(int total) {
+    return 'Введите номер страницы (1-$total):';
+  }
+
+  @override
+  String get goToPageHint => 'Номер страницы';
+
+  @override
+  String get goToPageInvalid => 'Введите число';
+
+  @override
+  String goToPageOutOfRange(int total) {
+    return 'Страница должна быть от 1 до $total';
+  }
+
+  @override
   String get menuRotateLeft => 'Повернуть влево';
 
   @override

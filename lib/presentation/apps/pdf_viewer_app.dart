@@ -26,11 +26,13 @@ import 'package:pdfsign/presentation/providers/editor/global_dirty_state_provide
 import 'package:pdfsign/presentation/providers/editor/original_pdf_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/size_unit_preference_provider.dart';
+import 'package:pdfsign/presentation/providers/pdf_viewer/page_jump_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
 import 'package:pdfsign/presentation/providers/recent_files_provider.dart';
 import 'package:pdfsign/presentation/providers/shared_preferences_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/editor_screen.dart';
+import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/go_to_page_dialog.dart';
 import 'package:pdfsign/presentation/widgets/dialogs/save_changes_dialog.dart';
 import 'package:pdfsign/presentation/widgets/menus/app_menu_bar.dart';
 
@@ -536,6 +538,37 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
 
   void _handleRotateLeft() => rotateCurrentPage(ref, -1);
 
+  void _handleZoomIn() => ref.read(pdfDocumentProvider.notifier).zoomInStep();
+
+  void _handleZoomOut() => ref.read(pdfDocumentProvider.notifier).zoomOutStep();
+
+  void _handleFitWidth() => ref.read(pdfDocumentProvider.notifier).fitToWidth();
+
+  /// Asks which page to show, and leaves the answer for the viewer.
+  ///
+  /// The dialog belongs here because the menu does; the scrolling belongs to
+  /// the page column, which picks the request up.
+  Future<void> _handleGoToPage() async {
+    final context = _navigatorKey.currentContext;
+    if (context == null) return;
+
+    final document = ref.read(pdfDocumentProvider);
+    final info = document.documentOrNull;
+    if (info == null || info.pageCount <= 0) return;
+
+    final pageNumber = await GoToPageDialog.show(
+      context,
+      currentPage: document.maybeMap(
+        loaded: (state) => state.currentPage,
+        orElse: () => 1,
+      ),
+      totalPages: info.pageCount,
+    );
+    if (pageNumber != null) {
+      ref.read(pageJumpRequestProvider.notifier).request(pageNumber);
+    }
+  }
+
   void _handleRotateRight() => rotateCurrentPage(ref, 1);
 
   /// Gives the native toolbar its localized texts.
@@ -822,6 +855,11 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
               onPaste: _handlePaste,
               onRotateLeft: _handleRotateLeft,
               onRotateRight: _handleRotateRight,
+              includeViewMenu: true,
+              onZoomIn: _handleZoomIn,
+              onZoomOut: _handleZoomOut,
+              onFitWidth: _handleFitWidth,
+              onGoToPage: _handleGoToPage,
               child: child!,
             );
           },

@@ -7,10 +7,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
+import 'package:pdfsign/presentation/providers/pdf_viewer/page_jump_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_viewer_state.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/permission_retry_provider.dart';
-import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/go_to_page_dialog.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/page_indicator.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_drop_target.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_page_list.dart';
@@ -168,45 +168,10 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
       return KeyEventResult.ignored;
     }
 
-    final isCmd = HardwareKeyboard.instance.isMetaPressed;
     final logicalKey = event.logicalKey;
 
     // Note: Delete/Backspace is handled at EditorScreen level via Shortcuts/Actions
     // to work independently of focus state.
-
-    // Cmd+R: Reload document
-    if (isCmd && logicalKey == LogicalKeyboardKey.keyR) {
-      _reloadDocument();
-      return KeyEventResult.handled;
-    }
-
-    // Cmd+G: Go to page
-    if (isCmd && logicalKey == LogicalKeyboardKey.keyG) {
-      _showGoToPageDialog();
-      return KeyEventResult.handled;
-    }
-
-    // Cmd+0: Fit to width
-    if (isCmd && (logicalKey == LogicalKeyboardKey.digit0 ||
-                  logicalKey == LogicalKeyboardKey.numpad0)) {
-      ref.read(pdfDocumentProvider.notifier).fitToWidth();
-      return KeyEventResult.handled;
-    }
-
-    // Cmd+Plus or Cmd+=: Zoom in
-    if (isCmd && (logicalKey == LogicalKeyboardKey.equal ||
-                  logicalKey == LogicalKeyboardKey.add ||
-                  logicalKey == LogicalKeyboardKey.numpadAdd)) {
-      ref.read(pdfDocumentProvider.notifier).zoomInStep();
-      return KeyEventResult.handled;
-    }
-
-    // Cmd+Minus: Zoom out
-    if (isCmd && (logicalKey == LogicalKeyboardKey.minus ||
-                  logicalKey == LogicalKeyboardKey.numpadSubtract)) {
-      ref.read(pdfDocumentProvider.notifier).zoomOutStep();
-      return KeyEventResult.handled;
-    }
 
     // Page Up: Previous page
     if (logicalKey == LogicalKeyboardKey.pageUp) {
@@ -292,36 +257,6 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
     );
   }
 
-  Future<void> _showGoToPageDialog() async {
-    final state = ref.read(pdfDocumentProvider);
-    await state.maybeMap(
-      loaded: (loaded) async {
-        final pageNumber = await GoToPageDialog.show(
-          context,
-          currentPage: loaded.currentPage,
-          totalPages: loaded.document.pageCount,
-        );
-        if (pageNumber != null && mounted) {
-          _goToPage(pageNumber);
-        }
-      },
-      orElse: () async {},
-    );
-  }
-
-  Future<void> _reloadDocument() async {
-    final pageToRestore = await ref.read(pdfDocumentProvider.notifier).reloadDocument();
-
-    if (pageToRestore != null && mounted) {
-      // Wait for the widget to rebuild with new document
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          _pageListKey.currentState?.scrollToPage(pageToRestore, animate: false);
-        }
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final viewerState = ref.watch(pdfDocumentProvider);
@@ -366,6 +301,13 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
           }
         });
       }
+    });
+
+    // Go to Page is opened from the menu at the window root; the scrolling
+    // belongs here.
+    ref.listen<PageJump?>(pageJumpRequestProvider, (previous, next) {
+      if (next == null) return;
+      _goToPage(next.pageNumber);
     });
 
     return Focus(

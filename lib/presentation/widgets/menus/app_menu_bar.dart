@@ -50,6 +50,11 @@ class AppMenuBar extends ConsumerStatefulWidget {
     this.onPaste,
     this.onRotateLeft,
     this.onRotateRight,
+    this.includeViewMenu = false,
+    this.onZoomIn,
+    this.onZoomOut,
+    this.onFitWidth,
+    this.onGoToPage,
     super.key,
   });
 
@@ -150,6 +155,21 @@ class AppMenuBar extends ConsumerStatefulWidget {
   /// Turns the page in view a quarter turn clockwise.
   final VoidCallback? onRotateRight;
 
+  /// Whether this window shows a document and therefore a View menu.
+  final bool includeViewMenu;
+
+  /// Zooms in a step.
+  final VoidCallback? onZoomIn;
+
+  /// Zooms out a step.
+  final VoidCallback? onZoomOut;
+
+  /// Returns to fitting the page width, which is this app's neutral zoom.
+  final VoidCallback? onFitWidth;
+
+  /// Asks which page to show.
+  final VoidCallback? onGoToPage;
+
   @override
   ConsumerState<AppMenuBar> createState() => _AppMenuBarState();
 }
@@ -230,6 +250,12 @@ class _AppMenuBarState extends ConsumerState<AppMenuBar> {
           PlatformMenu(
             label: widget.localizations.menuEdit,
             menus: _buildEditMenuItems(),
+          ),
+        // View menu (only for PDF viewer windows)
+        if (widget.includeViewMenu)
+          PlatformMenu(
+            label: widget.localizations.menuView,
+            menus: _buildViewMenuItems(),
           ),
         // Window menu
         PlatformMenu(
@@ -363,6 +389,53 @@ class _AppMenuBarState extends ConsumerState<AppMenuBar> {
   /// Builds the Edit menu items.
   ///
   /// Contains Delete item that's enabled only when an object is selected.
+  List<PlatformMenuItem> _buildViewMenuItems() {
+    return [
+      PlatformMenuItemGroup(
+        members: [
+          PlatformMenuItem(
+            label: widget.localizations.zoomIn,
+            // The unshifted key, which is what macOS matches: a reader
+            // pressing Cmd and the plus key sends Cmd+= .
+            shortcut: const SingleActivator(
+              LogicalKeyboardKey.equal,
+              meta: true,
+            ),
+            onSelected: widget.onZoomIn,
+          ),
+          PlatformMenuItem(
+            label: widget.localizations.zoomOut,
+            shortcut: const SingleActivator(
+              LogicalKeyboardKey.minus,
+              meta: true,
+            ),
+            onSelected: widget.onZoomOut,
+          ),
+          PlatformMenuItem(
+            label: widget.localizations.zoomFitWidth,
+            shortcut: const SingleActivator(
+              LogicalKeyboardKey.digit0,
+              meta: true,
+            ),
+            onSelected: widget.onFitWidth,
+          ),
+        ],
+      ),
+      PlatformMenuItemGroup(
+        members: [
+          PlatformMenuItem(
+            label: '${widget.localizations.goToPage}...',
+            shortcut: const SingleActivator(
+              LogicalKeyboardKey.keyG,
+              meta: true,
+            ),
+            onSelected: widget.onGoToPage,
+          ),
+        ],
+      ),
+    ];
+  }
+
   List<PlatformMenuItem> _buildEditMenuItems() {
     return [
       PlatformMenuItemGroup(
