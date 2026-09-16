@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Builds the application icon for every place that needs one.
+"""Builds the flat artwork the application icon is made from.
 
 Run from the repository root:
 
@@ -7,9 +7,18 @@ Run from the repository root:
 
 Writes:
   tool/app_icon/app_icon_1024.png                     the master, with alpha
-  macos/Runner/Assets.xcassets/AppIcon.appiconset/    seven sizes Xcode packs
+  macos/Runner/Assets.xcassets/AppIcon.appiconset/    seven sizes, the icon
+                                                      macOS 25 and older use
   windows/runner/resources/app_icon.ico               seven sizes in one file
   assets/images/app_icon.png                          the Welcome screen logo
+
+**macOS 26 does not use any of these.** It takes `macos/Runner/AppIcon.icon`,
+an Icon Composer document that carries this master as its layer, and draws it
+on a tile of its own with the system's material and shadow. The result is what
+`tool/app_icon/render_composed.swift` cuts the Windows icon and the Welcome
+logo from, so that everything matches what the reader sees in the Dock. Those
+two files are therefore *not* what this script last wrote — rerunning it
+replaces them with the flat artwork.
 
 The artwork is a white page on a rounded blue square. The signature on the
 page is lifted out of `pSGNF.jpg`, the drawing this icon came from; the page,
@@ -31,13 +40,16 @@ HERE = Path(__file__).resolve().parent
 GRADIENT_TOP = (0x2B, 0x7C, 0xFF)
 GRADIENT_BOTTOM = (0x00, 0x3D, 0x99)
 
-# Apple's icon grid: the rounded square sits inside a margin, and its corner
-# radius is a fixed share of its side.
-MARGIN_RATIO = 0.098
+# The artwork fills the canvas and carries the icon's shape itself: rounded to
+# Apple's radius, edge to edge, nothing outside it.
+#
+# macOS 26 draws a legacy .icns onto a tile of its own. Leave a margin and the
+# tile's grey shows all round the artwork; square the corners off and it shows
+# through them. Matching the tile exactly is what leaves nothing to show.
 CORNER_RATIO = 0.2246
 
-# The page, as a share of the rounded square.
-PAGE_WIDTH_RATIO = 0.56
+# The page, as a share of the canvas.
+PAGE_WIDTH_RATIO = 0.45
 PAGE_ASPECT = 1.28
 FOLD_RATIO = 0.26
 
@@ -74,7 +86,7 @@ def signature() -> Image.Image:
 
 
 def rounded_mask(size: int) -> Image.Image:
-    """An antialiased rounded-square silhouette."""
+    """An antialiased rounded-square silhouette at Apple's corner radius."""
     scale = 4
     mask = Image.new("L", (size * scale, size * scale), 0)
     ImageDraw.Draw(mask).rounded_rectangle(
@@ -116,19 +128,14 @@ def page(width: int, height: int, fold: int) -> Image.Image:
 
 
 def build(size: int, ink: Image.Image) -> Image.Image:
-    canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    canvas = gradient(size).convert("RGBA")
+    canvas.putalpha(rounded_mask(size))
 
-    inset = round(size * MARGIN_RATIO)
-    side = size - inset * 2
-    background = gradient(side).convert("RGBA")
-    background.putalpha(rounded_mask(side))
-    canvas.paste(background, (inset, inset), background)
-
-    page_width = round(side * PAGE_WIDTH_RATIO)
+    page_width = round(size * PAGE_WIDTH_RATIO)
     page_height = round(page_width * PAGE_ASPECT)
     sheet = page(page_width, page_height, round(page_width * FOLD_RATIO))
-    x = inset + (side - page_width) // 2
-    y = inset + (side - page_height) // 2
+    x = (size - page_width) // 2
+    y = (size - page_height) // 2
 
     shadow = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
     shadow.paste(sheet, (x, y + round(size * 0.012)), sheet)

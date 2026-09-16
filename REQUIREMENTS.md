@@ -632,10 +632,12 @@ Go to Page and zoom were reached the same dead way and now have View-menu items.
 ### 13.12 Paste is always enabled
 `PlatformMenuBar` gives no hook to revalidate a menu item as the menu opens, and polling the pasteboard would be worse. Edit → Paste is therefore always enabled while a document is open and does nothing when the clipboard holds nothing usable. Cut and Copy do better: they follow the selection and the keyboard focus.
 
-### 13.13 The built icon carries only four sizes
-`actool` packs the asset catalogue into an `.icns` holding 16, 32, 128 and 256 px and drops the 512 and 1024 px images, though the catalogue declares them and the files are there. Measured on 2026-09-16 by reading the chunk table of the built `AppIcon.icns`; giving every catalogue entry its own file changed nothing, and a build with the previous icons produced the same four. It is the toolchain, not the artwork.
+### 13.13 Two icons are kept, for two generations of macOS
+`macos/Runner/AppIcon.icon` is an Icon Composer document and is what macOS 26 draws: the system puts every app icon on a tile of its own, and only an icon in this format fills it. Measured on 2026-09-16: with the legacy `.icns` alone the artwork was inset inside the tile and the tile's grey showed all round it, whatever the artwork did — a complete `.icns` with all ten representations made no difference, so it is the format, not the sizes.
 
-The Dock and ordinary Finder sizes are unaffected — they need 256 at most. Get Info and the largest Finder previews upscale from 256 and look slightly soft. Shipping a complete `.icns` built with `iconutil` would fix it, at the cost of pointing `Info.plist` at a resource file instead of the asset catalogue.
+`AppIcon.appiconset` stays beside it as the icon for macOS 25 and older, and `actool` prefers the `.icon` where both apply. The document must be a file in the Xcode project rather than an entry in the asset catalogue: placed inside `Assets.xcassets` it is ignored, and with the appiconset removed as well the build produced no icon at all.
+
+The `.icns` that `actool` emits still carries only 16, 32, 128 and 256 px. On macOS 26 that no longer matters — the tile is drawn from the new format — and on older systems Get Info upscales from 256.
 
 ### 13.14 Pasted images are swept only at a cold start
 An image pasted from another application is stored in `pasted/` in app support and has no library row to own it. The folder is emptied when the main window starts, which is the only moment no document window can be holding one of those files. If the app is killed, its scratch files survive until the next launch. Bounded and self-correcting, but not immediate.
