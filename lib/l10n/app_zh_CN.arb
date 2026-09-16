@@ -80,6 +80,8 @@
   },
   "menuEdit": "编辑",
   "menuDelete": "删除",
+  "menuRotateLeft": "Rotate Left",
+  "menuRotateRight": "Rotate Right",
   "menuCut": "Cut",
   "menuCopy": "Copy",
   "menuPaste": "Paste",

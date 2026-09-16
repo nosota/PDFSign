@@ -80,6 +80,8 @@
   },
   "menuEdit": "Редактирование",
   "menuDelete": "Удалить",
+  "menuRotateLeft": "Повернуть влево",
+  "menuRotateRight": "Повернуть вправо",
   "menuCut": "Вырезать",
   "menuCopy": "Копировать",
   "menuPaste": "Вставить",

@@ -80,6 +80,8 @@
   },
   "menuEdit": "Uređivanje",
   "menuDelete": "Obriši",
+  "menuRotateLeft": "Rotate Left",
+  "menuRotateRight": "Rotate Right",
   "menuCut": "Cut",
   "menuCopy": "Copy",
   "menuPaste": "Paste",

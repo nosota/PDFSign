@@ -102,6 +102,12 @@ class AppLocalizationsEt extends AppLocalizations {
   String get menuDelete => 'Kustuta';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override

@@ -143,6 +143,20 @@ class AppDelegate: FlutterAppDelegate {
           }
           result(nil)
 
+        case "setRotateLabels":
+          let args = call.arguments as? [String: Any] ?? [:]
+          let left = args["left"] as? String
+          let right = args["right"] as? String
+          DispatchQueue.main.async {
+            if let window = controller.view.window,
+               let toolbarHelper = toolbarHelpers[ObjectIdentifier(window)],
+               toolbarHelper.owns(window),
+               let left = left, let right = right {
+              toolbarHelper.setRotateLabels(left: left, right: right)
+            }
+          }
+          result(nil)
+
         default:
           result(FlutterMethodNotImplemented)
         }
@@ -649,6 +663,15 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
   private var methodChannel: FlutterMethodChannel?
   private let shareItemIdentifier = NSToolbarItem.Identifier("ShareItem")
   private let deleteItemIdentifier = NSToolbarItem.Identifier("DeleteItem")
+  private let rotateGroupIdentifier = NSToolbarItem.Identifier("RotateGroup")
+
+  /// Localized texts for the rotate control, replaced from Dart.
+  ///
+  /// English until Dart says otherwise: the toolbar is built before the
+  /// Flutter side has resolved a locale, and a window with no labels at all
+  /// would be worse than a window with English ones.
+  private var rotateLeftLabel = "Rotate Left"
+  private var rotateRightLabel = "Rotate Right"
 
   /// Unique per helper.
   ///
@@ -781,12 +804,88 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
   // MARK: - NSToolbarDelegate
 
   func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-    return [deleteItemIdentifier, shareItemIdentifier, .flexibleSpace]
+    return [rotateGroupIdentifier, deleteItemIdentifier, shareItemIdentifier, .flexibleSpace]
   }
 
   func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-    // Delete button is added dynamically, not by default
-    return [.flexibleSpace, shareItemIdentifier]
+    // Page rotation sits at the leading edge, apart from the trailing group,
+    // so that Delete appearing and disappearing cannot shift it. Delete itself
+    // is inserted dynamically, immediately before Share.
+    return [rotateGroupIdentifier, .flexibleSpace, shareItemIdentifier]
+  }
+
+  /// Replaces the rotate control's localized texts.
+  func setRotateLabels(left: String, right: String) {
+    rotateLeftLabel = left
+    rotateRightLabel = right
+
+    guard let toolbar = window?.toolbar else { return }
+    guard let group = toolbar.items.first(where: {
+      $0.itemIdentifier == rotateGroupIdentifier
+    }) as? NSToolbarItemGroup else { return }
+
+    group.label = left
+    if group.subitems.count == 2 {
+      group.subitems[0].label = left
+      group.subitems[0].toolTip = left
+      group.subitems[1].label = right
+      group.subitems[1].toolTip = right
+    }
+  }
+
+  /// Builds the two-segment rotate control.
+  private func makeRotateGroup() -> NSToolbarItem {
+    let group = NSToolbarItemGroup(itemIdentifier: rotateGroupIdentifier)
+    group.label = rotateLeftLabel
+    group.paletteLabel = rotateLeftLabel
+    group.subitems = [
+      makeRotateItem(
+        identifier: "RotateLeftItem",
+        symbol: "rotate.left",
+        label: rotateLeftLabel,
+        action: #selector(rotateLeftClicked)
+      ),
+      makeRotateItem(
+        identifier: "RotateRightItem",
+        symbol: "rotate.right",
+        label: rotateRightLabel,
+        action: #selector(rotateRightClicked)
+      ),
+    ]
+
+    if #available(macOS 10.15, *) {
+      // One control of two halves rather than two loose buttons: they are one
+      // tool, and a momentary group does not keep a segment pressed.
+      group.controlRepresentation = .expanded
+      group.selectionMode = .momentary
+    }
+    return group
+  }
+
+  private func makeRotateItem(
+    identifier: String,
+    symbol: String,
+    label: String,
+    action: Selector
+  ) -> NSToolbarItem {
+    let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(identifier))
+    item.label = label
+    item.paletteLabel = label
+    item.toolTip = label
+
+    if #available(macOS 11.0, *) {
+      item.image = NSImage(systemSymbolName: symbol, accessibilityDescription: label)
+    } else {
+      // The symbol set arrived in Big Sur; older systems get the closest
+      // template AppKit has always shipped.
+      item.image = NSImage(named: NSImage.refreshTemplateName)
+    }
+
+    item.action = action
+    item.target = self
+    item.isEnabled = true
+    item.autovalidates = false
+    return item
   }
 
   func toolbar(
@@ -794,6 +893,10 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
     itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
     willBeInsertedIntoToolbar flag: Bool
   ) -> NSToolbarItem? {
+    if itemIdentifier == rotateGroupIdentifier {
+      return makeRotateGroup()
+    }
+
     if itemIdentifier == shareItemIdentifier {
       let item = NSToolbarItem(itemIdentifier: itemIdentifier)
       item.label = "Share"
@@ -850,6 +953,14 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
 
   @objc func deleteButtonClicked() {
     methodChannel?.invokeMethod("onDeletePressed", arguments: nil)
+  }
+
+  @objc func rotateLeftClicked() {
+    methodChannel?.invokeMethod("onRotateLeftPressed", arguments: nil)
+  }
+
+  @objc func rotateRightClicked() {
+    methodChannel?.invokeMethod("onRotateRightPressed", arguments: nil)
   }
 
   // MARK: - NSToolbarItemValidation

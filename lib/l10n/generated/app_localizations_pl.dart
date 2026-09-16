@@ -126,6 +126,12 @@ class AppLocalizationsPl extends AppLocalizations {
   String get menuDelete => 'Usuń';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override

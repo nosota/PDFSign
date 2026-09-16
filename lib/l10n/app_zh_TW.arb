@@ -80,6 +80,8 @@
   },
   "menuEdit": "編輯",
   "menuDelete": "刪除",
+  "menuRotateLeft": "Rotate Left",
+  "menuRotateRight": "Rotate Right",
   "menuCut": "Cut",
   "menuCopy": "Copy",
   "menuPaste": "Paste",

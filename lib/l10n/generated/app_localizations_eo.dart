@@ -102,6 +102,12 @@ class AppLocalizationsEo extends AppLocalizations {
   String get menuDelete => 'Forigi';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override

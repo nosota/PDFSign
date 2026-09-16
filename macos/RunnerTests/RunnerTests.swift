@@ -299,4 +299,76 @@ final class PDFSignToolbarHelperTests: XCTestCase {
       "a closed window must not leave its helper behind for the next window at that address"
     )
   }
+
+  // MARK: - Where the items sit
+
+  /// Page rotation sits at the leading edge so that Delete appearing and
+  /// disappearing cannot shift it, and Share stays where it has always been.
+  func testShouldPlaceRotationAheadOfTheFlexibleSpace() {
+    let identifiers = (window.toolbar?.items ?? []).map { $0.itemIdentifier.rawValue }
+
+    XCTAssertEqual(
+      identifiers,
+      ["RotateGroup", "NSToolbarFlexibleSpaceItem", "ShareItem"],
+      "the rotate control belongs before the space that pushes the rest right"
+    )
+  }
+
+  /// The item Dart inserts must still land immediately before Share, which is
+  /// where the reader is used to finding it. The index is computed from the
+  /// item count, so adding the rotate group could have moved it.
+  func testShouldKeepDeleteImmediatelyBeforeShare() {
+    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
+
+    let identifiers = (window.toolbar?.items ?? []).map { $0.itemIdentifier.rawValue }
+
+    XCTAssertEqual(
+      identifiers,
+      ["RotateGroup", "NSToolbarFlexibleSpaceItem", "DeleteItem", "ShareItem"]
+    )
+  }
+
+  /// Showing and hiding Delete must not disturb the rotate control's position,
+  /// which is the whole reason it sits in its own group.
+  func testShouldLeaveRotationInPlaceWhileDeleteComesAndGoes() {
+    let before = (window.toolbar?.items ?? []).firstIndex {
+      $0.itemIdentifier.rawValue == "RotateGroup"
+    }
+
+    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
+    helper.setDeleteButtonVisible(false, label: nil, tooltip: nil)
+    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
+
+    let after = (window.toolbar?.items ?? []).firstIndex {
+      $0.itemIdentifier.rawValue == "RotateGroup"
+    }
+    XCTAssertEqual(before, 0)
+    XCTAssertEqual(after, 0)
+  }
+
+  /// One control of two halves, not two loose buttons.
+  func testShouldBuildRotationAsATwoSegmentGroup() {
+    let group = (window.toolbar?.items ?? []).first {
+      $0.itemIdentifier.rawValue == "RotateGroup"
+    } as? NSToolbarItemGroup
+
+    XCTAssertNotNil(group, "the rotate control must be a group")
+    XCTAssertEqual(group?.subitems.count, 2)
+    XCTAssertEqual(group?.subitems.first?.itemIdentifier.rawValue, "RotateLeftItem")
+    XCTAssertEqual(group?.subitems.last?.itemIdentifier.rawValue, "RotateRightItem")
+  }
+
+  /// The toolbar is built before Flutter has resolved a locale, so it starts
+  /// in English and is corrected afterwards.
+  func testShouldTakeLocalizedRotationTexts() {
+    helper.setRotateLabels(left: "Nach links drehen", right: "Nach rechts drehen")
+
+    let group = (window.toolbar?.items ?? []).first {
+      $0.itemIdentifier.rawValue == "RotateGroup"
+    } as? NSToolbarItemGroup
+
+    XCTAssertEqual(group?.subitems.first?.label, "Nach links drehen")
+    XCTAssertEqual(group?.subitems.last?.label, "Nach rechts drehen")
+    XCTAssertEqual(group?.subitems.first?.toolTip, "Nach links drehen")
+  }
 }

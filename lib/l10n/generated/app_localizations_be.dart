@@ -102,6 +102,12 @@ class AppLocalizationsBe extends AppLocalizations {
   String get menuDelete => 'Выдаліць';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override

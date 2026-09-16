@@ -289,6 +289,55 @@ class PdfDocument extends _$PdfDocument {
     );
   }
 
+  /// Turns one page by [quarterTurns] quarter turns clockwise.
+  ///
+  /// Only the page's own description changes; the rendered bitmap is left
+  /// alone, because the renderer works from the file and the difference is
+  /// applied when the page is drawn. Turning a page therefore costs no
+  /// re-render and no cache eviction.
+  void rotatePage(int pageNumber, int quarterTurns) {
+    state.maybeMap(
+      loaded: (current) {
+        final index = pageNumber - 1;
+        final pages = current.document.pages;
+        if (index < 0 || index >= pages.length || quarterTurns % 4 == 0) {
+          return;
+        }
+
+        final rotated = [...pages];
+        rotated[index] = pages[index].rotated(quarterTurns);
+        state = current.copyWith(
+          document: current.document.copyWith(pages: rotated),
+        );
+      },
+      orElse: () {},
+    );
+  }
+
+  /// Records the pages as written, which makes their rotation clean again.
+  ///
+  /// Called after a save to the same file, where the document is not reloaded
+  /// and so nothing else would tell the pages that the file has caught up.
+  void markRotationsSaved() {
+    state.maybeMap(
+      loaded: (current) {
+        final pages = current.document.pages;
+        if (!pages.any((page) => page.isRotatedFromFile)) {
+          return;
+        }
+        state = current.copyWith(
+          document: current.document.copyWith(
+            pages: [
+              for (final page in pages)
+                page.copyWith(fileRotation: page.rotation),
+            ],
+          ),
+        );
+      },
+      orElse: () {},
+    );
+  }
+
   /// Sets the current page number (1-based).
   void setCurrentPage(int pageNumber) {
     state.maybeMap(

@@ -102,6 +102,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get menuDelete => 'Xóa';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override

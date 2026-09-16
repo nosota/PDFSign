@@ -102,6 +102,12 @@ class AppLocalizationsLt extends AppLocalizations {
   String get menuDelete => 'Ištrinti';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override

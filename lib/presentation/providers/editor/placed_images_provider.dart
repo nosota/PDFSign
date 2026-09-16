@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:pdfsign/core/utils/page_rotation_transform.dart';
 import 'package:pdfsign/domain/entities/placed_image.dart';
 
 part 'placed_images_provider.g.dart';
@@ -105,6 +106,37 @@ class PlacedImages extends _$PlacedImages {
       }
       return img;
     }).toList();
+  }
+
+  /// Turns every object on [pageIndex] along with the page.
+  ///
+  /// [pageSize] is the page as displayed *before* the turn. An object stays
+  /// where it visually was relative to the page content, which is the only
+  /// behaviour that does not feel like the objects were thrown off.
+  void turnPage(int pageIndex, int quarterTurns, Size pageSize) {
+    if (quarterTurns % 4 == 0) {
+      return;
+    }
+    state = [
+      for (final image in state)
+        if (image.pageIndex == pageIndex)
+          _turned(image, quarterTurns, pageSize)
+        else
+          image,
+    ];
+  }
+
+  static PlacedImage _turned(PlacedImage image, int quarterTurns, Size page) {
+    final turned = PageRotationTransform.turned(
+      image.position & image.size,
+      page,
+      quarterTurns,
+    );
+    return image.copyWith(
+      position: turned.topLeft,
+      size: turned.size,
+      rotation: PageRotationTransform.angleTurned(image.rotation, quarterTurns),
+    );
   }
 
   /// Gets images for a specific page.

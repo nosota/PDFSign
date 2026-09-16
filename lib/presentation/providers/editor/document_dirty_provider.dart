@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:pdfsign/domain/entities/placed_image.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
+import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'document_dirty_provider.g.dart';
@@ -40,6 +41,17 @@ class SavedPlacedImages extends _$SavedPlacedImages {
   }
 }
 
+/// Whether any page is turned differently than the file has it.
+///
+/// Kept apart from the objects because the two are recorded differently: an
+/// object's baseline is a snapshot, a page's is the `/Rotate` it was read
+/// with, which the page itself carries.
+@Riverpod(keepAlive: true)
+bool hasUnsavedPageRotation(HasUnsavedPageRotationRef ref) {
+  final document = ref.watch(pdfDocumentProvider).documentOrNull;
+  return document?.pages.any((page) => page.isRotatedFromFile) ?? false;
+}
+
 /// Whether the document has changes that are not in the file yet.
 ///
 /// Derived rather than flagged: it answers the only question that matters —
@@ -47,7 +59,9 @@ class SavedPlacedImages extends _$SavedPlacedImages {
 /// flag by hand at each call site made move, resize and rotate invisible, and
 /// let a delete after a save report the document as clean (ADR-0008).
 @Riverpod(keepAlive: true)
-bool documentDirty(DocumentDirtyRef ref) => !listEquals(
+bool documentDirty(DocumentDirtyRef ref) =>
+    !listEquals(
       ref.watch(placedImagesProvider),
       ref.watch(savedPlacedImagesProvider),
-    );
+    ) ||
+    ref.watch(hasUnsavedPageRotationProvider);

@@ -102,6 +102,12 @@ class AppLocalizationsHr extends AppLocalizations {
   String get menuDelete => 'Obriši';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override

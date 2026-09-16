@@ -102,6 +102,12 @@ class AppLocalizationsKm extends AppLocalizations {
   String get menuDelete => 'លុប';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override

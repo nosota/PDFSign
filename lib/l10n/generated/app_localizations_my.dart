@@ -102,6 +102,12 @@ class AppLocalizationsMy extends AppLocalizations {
   String get menuDelete => 'ဖျက်';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override

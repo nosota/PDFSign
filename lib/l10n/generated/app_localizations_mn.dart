@@ -102,6 +102,12 @@ class AppLocalizationsMn extends AppLocalizations {
   String get menuDelete => 'Устгах';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override

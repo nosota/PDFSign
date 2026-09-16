@@ -80,6 +80,8 @@
   },
   "menuEdit": "Редагування",
   "menuDelete": "Видалити",
+  "menuRotateLeft": "Rotate Left",
+  "menuRotateRight": "Rotate Right",
   "menuCut": "Cut",
   "menuCopy": "Copy",
   "menuPaste": "Paste",

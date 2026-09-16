@@ -80,6 +80,8 @@
   },
   "menuEdit": "Edita",
   "menuDelete": "Suprimeix",
+  "menuRotateLeft": "Rotate Left",
+  "menuRotateRight": "Rotate Right",
   "menuCut": "Cut",
   "menuCopy": "Copy",
   "menuPaste": "Paste",

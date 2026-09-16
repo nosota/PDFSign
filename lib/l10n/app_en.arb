@@ -131,6 +131,14 @@
   "@menuDelete": {
     "description": "Delete menu item in Edit menu"
   },
+  "menuRotateLeft": "Rotate Left",
+  "@menuRotateLeft": {
+    "description": "Rotate the current page a quarter turn anticlockwise"
+  },
+  "menuRotateRight": "Rotate Right",
+  "@menuRotateRight": {
+    "description": "Rotate the current page a quarter turn clockwise"
+  },
   "menuCut": "Cut",
   "@menuCut": {
     "description": "Cut menu item in Edit menu"

@@ -102,6 +102,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get menuDelete => '삭제';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override

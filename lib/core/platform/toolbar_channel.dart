@@ -10,6 +10,8 @@ class ToolbarChannel {
   static const _channel = MethodChannel('com.pdfsign/toolbar');
   static VoidCallback? _onSharePressed;
   static VoidCallback? _onDeletePressed;
+  static VoidCallback? _onRotateLeftPressed;
+  static VoidCallback? _onRotateRightPressed;
   static bool _initialized = false;
 
   /// Initializes the toolbar channel.
@@ -33,6 +35,41 @@ class ToolbarChannel {
   /// Pass null to unregister the callback.
   static void setOnDeletePressed(VoidCallback? callback) {
     _onDeletePressed = callback;
+  }
+
+  /// Sets the callback for when Rotate Left is pressed in the toolbar.
+  ///
+  /// Pass null to unregister the callback.
+  static void setOnRotateLeftPressed(VoidCallback? callback) {
+    _onRotateLeftPressed = callback;
+  }
+
+  /// Sets the callback for when Rotate Right is pressed in the toolbar.
+  ///
+  /// Pass null to unregister the callback.
+  static void setOnRotateRightPressed(VoidCallback? callback) {
+    _onRotateRightPressed = callback;
+  }
+
+  /// Sets the localized texts of the rotate control.
+  ///
+  /// The toolbar is built before Flutter has resolved a locale, so it starts
+  /// with English texts and is corrected here — on setup and whenever the
+  /// language changes.
+  static Future<void> setRotateLabels({
+    required String left,
+    required String right,
+  }) async {
+    try {
+      await _channel.invokeMethod('setRotateLabels', {
+        'left': left,
+        'right': right,
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print('ToolbarChannel: Failed to set rotate labels: $e');
+      }
+    }
   }
 
   /// Sets the visibility of the Delete button in the toolbar.
@@ -83,6 +120,10 @@ class ToolbarChannel {
         _onSharePressed?.call();
       case 'onDeletePressed':
         _onDeletePressed?.call();
+      case 'onRotateLeftPressed':
+        _onRotateLeftPressed?.call();
+      case 'onRotateRightPressed':
+        _onRotateRightPressed?.call();
       default:
         if (kDebugMode) {
           print('ToolbarChannel: Unknown method ${call.method}');

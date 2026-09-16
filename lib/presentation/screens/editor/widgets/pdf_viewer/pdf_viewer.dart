@@ -355,6 +355,17 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
           }
         });
       }
+
+      // Turning a page swaps its sides, so every page below it moves and the
+      // scroll offset no longer points where it did — far enough, on a long
+      // document, to land back at the top. Stay on the page that was turned.
+      if (loadedPage != null && _rotationChanged(previous, next)) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            _pageListKey.currentState?.scrollToPage(loadedPage, animate: false);
+          }
+        });
+      }
     });
 
     return Focus(
@@ -495,6 +506,21 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
         );
       },
     );
+  }
+
+  /// Whether any page stands differently than it did a moment ago.
+  static bool _rotationChanged(PdfViewerState? previous, PdfViewerState next) {
+    final before = previous?.documentOrNull?.pages;
+    final after = next.documentOrNull?.pages;
+    if (before == null || after == null || before.length != after.length) {
+      return false;
+    }
+    for (var i = 0; i < before.length; i++) {
+      if (before[i].rotation != after[i].rotation) {
+        return true;
+      }
+    }
+    return false;
   }
 
   Widget _buildErrorState(String message) {

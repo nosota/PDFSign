@@ -102,6 +102,12 @@ class AppLocalizationsTa extends AppLocalizations {
   String get menuDelete => 'நீக்கு';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override

@@ -15,9 +15,11 @@ import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/presentation/apps/close_all_coordinator.dart';
 import 'package:pdfsign/core/utils/focus_utils.dart';
 import 'package:pdfsign/core/window/window_broadcast.dart';
-import 'package:pdfsign/data/services/pdf_save_service.dart';
+import 'package:pdfsign/domain/entities/pdf_page_info.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/pdf_save_service_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/rotate_page.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_clipboard.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/global_dirty_state_provider.dart';
@@ -106,9 +108,12 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     ToolbarChannel.init();
     ToolbarChannel.setOnSharePressed(_handleShare);
     ToolbarChannel.setOnDeletePressed(_handleDeleteSelected);
+    ToolbarChannel.setOnRotateLeftPressed(_handleRotateLeft);
+    ToolbarChannel.setOnRotateRightPressed(_handleRotateRight);
     // Delay toolbar setup to ensure native window is fully ready
-    Future.delayed(const Duration(milliseconds: 200), () {
-      ToolbarChannel.setupToolbar(); // Request native toolbar with Share button
+    Future.delayed(const Duration(milliseconds: 200), () async {
+      await ToolbarChannel.setupToolbar();
+      _pushToolbarLabels();
     });
 
     // Listen for selection changes to update Delete button visibility
@@ -192,6 +197,8 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     // Unregister callbacks
     ToolbarChannel.setOnSharePressed(null);
     ToolbarChannel.setOnDeletePressed(null);
+    ToolbarChannel.setOnRotateLeftPressed(null);
+    ToolbarChannel.setOnRotateRightPressed(null);
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
     WindowBroadcast.setOnSaveAll(null);
@@ -353,6 +360,8 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   /// Handles locale changed broadcast from another window.
   void _handleLocaleChanged() {
     ref.read(localePreferenceProvider.notifier).reload();
+    // The native toolbar is outside the widget tree and does not rebuild.
+    _pushToolbarLabels();
   }
 
   /// Handles dirty state changed broadcast from another window.
@@ -525,6 +534,26 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     }
   }
 
+  void _handleRotateLeft() => rotateCurrentPage(ref, -1);
+
+  void _handleRotateRight() => rotateCurrentPage(ref, 1);
+
+  /// Gives the native toolbar its localized texts.
+  ///
+  /// Called once the toolbar exists and again whenever the language changes:
+  /// the toolbar is built by AppKit before Flutter has resolved a locale.
+  void _pushToolbarLabels() {
+    final context = _navigatorKey.currentContext;
+    if (context == null) return;
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) return;
+
+    ToolbarChannel.setRotateLabels(
+      left: l10n.menuRotateLeft,
+      right: l10n.menuRotateRight,
+    );
+  }
+
   Future<void> _handleCut() =>
       _runClipboardAction((clipboard) => clipboard.cut());
 
@@ -558,11 +587,12 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     final originalBytes = await storage.getBytes();
 
     // Create temp PDF with placed images
-    final saveService = PdfSaveService();
-    final result = await saveService.createTempPdfWithImagesFromBytes(
-      originalBytes: originalBytes,
-      placedImages: placedImages,
-    );
+    final result =
+        await ref.read(pdfSaveServiceProvider).createTempPdfWithImagesFromBytes(
+              originalBytes: originalBytes,
+              placedImages: placedImages,
+              pages: _pages(),
+            );
 
     await result.fold(
       (failure) async {
@@ -599,6 +629,13 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     );
   }
 
+  /// The pages as the reader currently sees them.
+  ///
+  /// Empty while the document is still loading, which the writer reads as
+  /// "nothing to turn" and falls back to the rotation in the file.
+  List<PdfPageInfo> _pages() =>
+      ref.read(pdfDocumentProvider).documentOrNull?.pages ?? const [];
+
   /// Writes the document. Returns whether it is now on disk.
   Future<bool> _handleSave() async {
     final placedImages = ref.read(placedImagesProvider);
@@ -616,12 +653,13 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
 
     final originalBytes = await storage.getBytes();
 
-    final saveService = PdfSaveService();
-    final result = await saveService.savePdfFromBytes(
-      originalBytes: originalBytes,
-      placedImages: placedImages,
-      outputPath: _currentFilePath,
-    );
+    final pages = _pages();
+    final result = await ref.read(pdfSaveServiceProvider).savePdfFromBytes(
+          originalBytes: originalBytes,
+          placedImages: placedImages,
+          pages: pages,
+          outputPath: _currentFilePath,
+        );
 
     return result.fold(
       (failure) {
@@ -632,6 +670,9 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
         // The objects stay on the page and remain editable; recording them as
         // the written baseline is what makes the document clean again.
         ref.read(savedPlacedImagesProvider.notifier).markSaved(placedImages);
+        // The file now carries the turns the reader made. Nothing reloads
+        // after a save to the same file, so the pages have to be told.
+        ref.read(pdfDocumentProvider.notifier).markRotationsSaved();
         return true;
       },
     );
@@ -662,12 +703,12 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
         ? await storage.getBytes()
         : await File(_currentFilePath).readAsBytes();
 
-    final saveService = PdfSaveService();
-    final result = await saveService.savePdfFromBytes(
-      originalBytes: originalBytes,
-      placedImages: placedImages,
-      outputPath: outputPath,
-    );
+    final result = await ref.read(pdfSaveServiceProvider).savePdfFromBytes(
+          originalBytes: originalBytes,
+          placedImages: placedImages,
+          pages: _pages(),
+          outputPath: outputPath,
+        );
 
     result.fold(
       (failure) {
@@ -779,6 +820,8 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
               onCut: _handleCut,
               onCopy: _handleCopy,
               onPaste: _handlePaste,
+              onRotateLeft: _handleRotateLeft,
+              onRotateRight: _handleRotateRight,
               child: child!,
             );
           },

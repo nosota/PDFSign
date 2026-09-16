@@ -120,6 +120,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get menuDelete => 'Apagar';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override
@@ -429,6 +435,12 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get menuDelete => 'Excluir';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override
@@ -736,6 +748,12 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get menuDelete => 'Apagar';
+
+  @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
 
   @override
   String get menuCut => 'Cut';

@@ -126,6 +126,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get menuDelete => 'Видалити';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override

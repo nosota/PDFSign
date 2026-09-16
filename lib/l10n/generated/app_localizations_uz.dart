@@ -102,6 +102,12 @@ class AppLocalizationsUz extends AppLocalizations {
   String get menuDelete => 'O\'chirish';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override

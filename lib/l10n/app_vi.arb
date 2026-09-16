@@ -80,6 +80,8 @@
   },
   "menuEdit": "Chỉnh sửa",
   "menuDelete": "Xóa",
+  "menuRotateLeft": "Rotate Left",
+  "menuRotateRight": "Rotate Right",
   "menuCut": "Cut",
   "menuCopy": "Copy",
   "menuPaste": "Paste",

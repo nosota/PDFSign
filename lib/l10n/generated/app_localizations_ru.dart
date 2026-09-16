@@ -126,6 +126,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get menuDelete => 'Удалить';
 
   @override
+  String get menuRotateLeft => 'Повернуть влево';
+
+  @override
+  String get menuRotateRight => 'Повернуть вправо';
+
+  @override
   String get menuCut => 'Вырезать';
 
   @override

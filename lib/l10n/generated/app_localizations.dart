@@ -389,6 +389,18 @@ abstract class AppLocalizations {
   /// **'Delete'**
   String get menuDelete;
 
+  /// Rotate the current page a quarter turn anticlockwise
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate Left'**
+  String get menuRotateLeft;
+
+  /// Rotate the current page a quarter turn clockwise
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate Right'**
+  String get menuRotateRight;
+
   /// Cut menu item in Edit menu
   ///
   /// In en, this message translates to:

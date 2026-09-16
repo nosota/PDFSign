@@ -80,6 +80,8 @@
   },
   "menuEdit": "တည်းဖြတ်",
   "menuDelete": "ဖျက်",
+  "menuRotateLeft": "Rotate Left",
+  "menuRotateRight": "Rotate Right",
   "menuCut": "Cut",
   "menuCopy": "Copy",
   "menuPaste": "Paste",

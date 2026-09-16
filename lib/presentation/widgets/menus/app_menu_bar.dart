@@ -48,6 +48,8 @@ class AppMenuBar extends ConsumerStatefulWidget {
     this.onCut,
     this.onCopy,
     this.onPaste,
+    this.onRotateLeft,
+    this.onRotateRight,
     super.key,
   });
 
@@ -141,6 +143,12 @@ class AppMenuBar extends ConsumerStatefulWidget {
 
   /// Pastes onto the page, or into the field that has focus.
   final VoidCallback? onPaste;
+
+  /// Turns the page in view a quarter turn anticlockwise.
+  final VoidCallback? onRotateLeft;
+
+  /// Turns the page in view a quarter turn clockwise.
+  final VoidCallback? onRotateRight;
 
   @override
   ConsumerState<AppMenuBar> createState() => _AppMenuBarState();
@@ -385,6 +393,27 @@ class _AppMenuBarState extends ConsumerState<AppMenuBar> {
           ),
         ],
       ),
+      if (widget.onRotateLeft != null || widget.onRotateRight != null)
+        PlatformMenuItemGroup(
+          members: [
+            PlatformMenuItem(
+              label: widget.localizations.menuRotateLeft,
+              shortcut: const SingleActivator(
+                LogicalKeyboardKey.keyL,
+                meta: true,
+              ),
+              onSelected: widget.onRotateLeft,
+            ),
+            PlatformMenuItem(
+              label: widget.localizations.menuRotateRight,
+              shortcut: const SingleActivator(
+                LogicalKeyboardKey.keyR,
+                meta: true,
+              ),
+              onSelected: widget.onRotateRight,
+            ),
+          ],
+        ),
       PlatformMenuItemGroup(
         members: [
           PlatformMenuItem(

@@ -120,6 +120,12 @@ class AppLocalizationsNl extends AppLocalizations {
   String get menuDelete => 'Verwijderen';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override

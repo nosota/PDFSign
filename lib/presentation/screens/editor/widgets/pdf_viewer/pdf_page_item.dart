@@ -89,14 +89,25 @@ class PdfPageItem extends ConsumerWidget {
         clipBehavior: Clip.antiAlias,
         child: Stack(
           children: [
-            // PDF page image
-            Image.memory(
-              bytes,
-              width: width,
-              height: height,
-              fit: BoxFit.contain,
-              gaplessPlayback: true,
-              filterQuality: FilterQuality.high,
+            // PDF page image.
+            //
+            // The renderer works from the file and so applies only the
+            // rotation the file carries. A turn the reader has made but not
+            // saved is applied here instead, which also means turning a page
+            // costs no re-render: the same cached bitmap is simply shown the
+            // other way up.
+            RotatedBox(
+              quarterTurns: pageInfo.pendingQuarterTurns,
+              child: Image.memory(
+                bytes,
+                // The box swaps the sides for an odd number of turns, so the
+                // image is given the sides it has before being turned.
+                width: pageInfo.pendingQuarterTurns.isOdd ? height : width,
+                height: pageInfo.pendingQuarterTurns.isOdd ? width : height,
+                fit: BoxFit.contain,
+                gaplessPlayback: true,
+                filterQuality: FilterQuality.high,
+              ),
             ),
             // Placed images overlay
             Positioned.fill(

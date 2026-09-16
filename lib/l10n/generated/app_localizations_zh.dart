@@ -102,6 +102,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get menuDelete => '删除';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override
@@ -391,6 +397,12 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get menuDelete => '删除';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override
@@ -678,6 +690,12 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get menuDelete => '刪除';
+
+  @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
 
   @override
   String get menuCut => 'Cut';

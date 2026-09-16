@@ -123,6 +123,12 @@ class AppLocalizationsSk extends AppLocalizations {
   String get menuDelete => 'Odstrániť';
 
   @override
+  String get menuRotateLeft => 'Rotate Left';
+
+  @override
+  String get menuRotateRight => 'Rotate Right';
+
+  @override
   String get menuCut => 'Cut';
 
   @override
