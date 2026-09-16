@@ -343,6 +343,23 @@ PdfSaveService pdfSaveService(PdfSaveServiceRef ref) => PdfSaveService();
 
 > **Note:** `pdf_viewer_app.dart` instantiates `PdfSaveService()` directly instead of reading this provider. See REQUIREMENTS.md §13.2.
 
+### PageJumpRequest
+
+**File:** `lib/presentation/providers/pdf_viewer/page_jump_provider.dart`
+
+```dart
+ref.read(pageJumpRequestProvider.notifier).request(7);
+```
+
+Asks the viewer to bring a page into view. The Go to Page dialog is opened from
+the View menu, which lives at the window root and cannot reach the page column
+deep inside the tree; the root leaves a request here and `PdfViewer` picks it
+up.
+
+Each request carries a token, because the same page may be asked for twice in
+a row and the viewer acts on a *change*: without it the second ask would
+compare equal to the first and be ignored.
+
 ### rotateCurrentPage
 
 **File:** `lib/presentation/providers/editor/rotate_page.dart`

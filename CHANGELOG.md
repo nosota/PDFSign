@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
+- A View menu with Zoom In (Cmd+=), Zoom Out (Cmd+-), Fit Width (Cmd+0) and Go to Page (Cmd+G). The zoom controls on screen already worked; their shortcuts did not, and Go to Page could not be opened at all
 - Rotate the page in view left or right, from a two-part control at the left of the toolbar or from Edit → Rotate Left / Rotate Right (Cmd+L / Cmd+R). The turn is written into the file as the page's rotation, objects on the page turn with it, and the view stays on the page that was turned
 - Images larger than 100 MB or 4096x4096 are refused on import and on paste, with a message naming the limit, instead of being decoded into memory
 - Cut, Copy and Paste for objects placed on the document, in the Edit menu and on Cmd+X/C/V
@@ -19,6 +20,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - Transparency to selection handles with hover effect
 - Drag feedback: the page that will receive a dropped image is outlined while dragging
 
+### Removed
+
+- Reload document, which was unreachable and unsafe: it reopened the file without refreshing the cached bytes every save starts from, so a later save would have written the stale document
+
 ### Changed
 
 - The toolbar Delete button is now greyed out when nothing is selected instead of disappearing, so the rotate control beside it no longer shifts as the selection changes; it also stands apart from Share rather than beside it
@@ -28,6 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Fixed
 
+- The Go to Page dialog is translated instead of showing English text
 - A page the file marks as rotated is no longer displayed squeezed into a portrait slot: pages are laid out at the size they are actually shown at
 - An object placed on such a page is no longer saved in the wrong corner of it
 - An image the library could not store is no longer counted as added

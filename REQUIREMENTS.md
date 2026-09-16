@@ -519,9 +519,9 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 
 | Aspect | State |
 |--------|-------|
-| `flutter analyze` | 1008 issues: 0 errors, **0 warnings**, 1008 info |
-| Unit tests | **113** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry and the writer |
-| Widget tests | **59** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation |
+| `flutter analyze` | 1012 issues: 0 errors, **0 warnings**, 1012 info |
+| Unit tests | **117** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry and the writer |
+| Widget tests | **61** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation |
 | Native tests | **16** — the toolbar's fixed item set and layout, Delete's enabled state, the helper registry (`macos/RunnerTests`) |
 | Integration tests | **none** |
 | Golden tests | **none** |
@@ -601,7 +601,7 @@ Diagnostics go through `kDebugMode` + `print()`, which `CLAUDE.md` prohibits and
 `app_ja.arb`, `app_ko.arb`, `app_zh.arb`, `app_zh_CN.arb`, and `app_zh_TW.arb` are translated and code-generated, but `ja`, `ko`, and `zh` are **missing from `supportedLocales`**. Since `MaterialApp.supportedLocales` is built from that same list, Japanese, Korean, and Chinese are neither selectable in Settings nor picked up from the system locale — those users fall back to English.
 
 ### 13.6 Hardcoded UI strings
-Localized and unused: `savePdfAs`, `savedTo`, `noOriginalPdfStored`, `incorrectPassword`, `goToPage`, `go`, `removeFromList`, `fileAccessDenied`, `saveFailed`. The corresponding UI uses English literals — `GoToPageDialog` ("Go to Page", "Page number", "Cancel", "Go"), `PageIndicator` ("Page N of M"), the sidebar empty state, the viewer's empty/error/password states, and every save-failure snackbar.
+Localized and unused: `savePdfAs`, `savedTo`, `noOriginalPdfStored`, `incorrectPassword`, `removeFromList`, `fileAccessDenied`, `saveFailed`. The corresponding UI uses English literals — `PageIndicator` ("Page N of M"), the sidebar empty state, the viewer's empty/error/password states, and every save-failure snackbar.
 
 ### 13.7 Placed objects are clipped to the page
 `PdfPageItem` wraps each page in `clipBehavior: Clip.antiAlias`. An object near a page edge has its handles — especially the rotation handle above the top edge — clipped. `PlacedImage`'s doc comment mentions cross-page objects; they are not supported.
@@ -623,10 +623,11 @@ Page measurement itself is no longer a problem: `PdfPageLayout` precomputes page
 ### 13.11 `Cmd` shortcuts only exist in the menu
 With a `PlatformMenuBar` installed, a `Cmd` key equivalent never reaches Flutter's focus tree: verified on 2026-09-15 by synthesising key events against the running app, where `PageDown` reached `PdfViewer._handleKeyEvent` and `Cmd+G`, `Cmd+=` and `Cmd+C` did not. A shortcut therefore has to be a menu item to exist at all.
 
-Two consequences are still open:
+One consequence is still open:
 
-- **Go to Page (`Cmd+G`), Reload (`Cmd+R`) and zoom (`Cmd+0`, `Cmd+±`) are unreachable.** The handlers are still in `PdfViewer`, but nothing can invoke them. They need View-menu items or removal.
-- **Text editing shortcuts are dead in every field** except where the Edit menu now covers them: `Cmd+A` does not select all in the image comment, the Go to Page field or Settings. Cut/Copy/Paste were fixed by routing the Edit menu through `EditorClipboard`; Select All has no menu item yet.
+- **`Cmd+A` does not select all in any text field** — the image comment, Go to Page or Settings. Cut/Copy/Paste were fixed by routing the Edit menu through `EditorClipboard`; Select All has no menu item. There are keyboard workarounds (`Shift`+arrows, `Shift`+`Home`/`End`) and mouse ones, and "select all" over *objects* has no meaning here: the editor selects one object at a time.
+
+Go to Page and zoom were reached the same dead way and now have View-menu items. Reload was deleted rather than given one: it reopened the file without refreshing the cached original bytes every save starts from (ADR-0002), so a save after it would have written the stale document and discarded whatever had changed on disk.
 
 ### 13.12 Paste is always enabled
 `PlatformMenuBar` gives no hook to revalidate a menu item as the menu opens, and polling the pasteboard would be worse. Edit → Paste is therefore always enabled while a document is open and does nothing when the clipboard holds nothing usable. Cut and Copy do better: they follow the selection and the keyboard focus.
