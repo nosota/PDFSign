@@ -87,6 +87,8 @@ PDFSign supports multiple windows using `desktop_multi_window`:
 - **Settings Window** — Singleton, one instance max
 
 Each window runs in a separate Flutter engine with isolated Dart memory.
+Document windows are positioned natively by `WindowCascade`, which centres the first and
+cascades the rest; the plugin itself gives every window the same frame (REQUIREMENTS §FR-7.9).
 
 ### Inter-Window Communication
 

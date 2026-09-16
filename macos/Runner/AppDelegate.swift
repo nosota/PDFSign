@@ -73,6 +73,13 @@ class AppDelegate: FlutterAppDelegate {
     FlutterMultiWindowPlugin.setOnWindowCreatedCallback { controller in
       RegisterGeneratedPlugins(registry: controller)
 
+      // Every window the plugin creates is given the same frame, so without
+      // this they would all sit in one spot. Done first, before the window is
+      // drawn, so it is never seen in the corner it was created in.
+      if let window = controller.view.window {
+        WindowCascade.shared.place(window)
+      }
+
       // Setup channels for sub-windows
       setupSettingsSingletonChannel(binaryMessenger: controller.engine.binaryMessenger)
       setupOpenPdfFilesChannel(binaryMessenger: controller.engine.binaryMessenger)

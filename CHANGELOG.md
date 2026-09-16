@@ -3,6 +3,12 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Fixed
+
+- Opening several files at once from Finder no longer stacks every window in the same spot with only the last one visible: the first document window is centred and each one after it steps down and to the right, the way macOS places documents. The diagonal returns to the top of the screen rather than walking off it, and starts over once the last window closes
+
 ## [1.2.0] — 2026-09-16
 
 ### Added

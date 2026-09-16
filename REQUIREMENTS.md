@@ -295,7 +295,7 @@ Closing a dirty window shows a Save / Discard dialog. Close All and Quit show a 
 | Window | Size | Notes |
 |--------|------|-------|
 | Welcome | 900×700, min 600×400 | Main window, id `"0"` |
-| PDF viewer | inherited | One per document |
+| PDF viewer | 800×600 content | One per document; the size comes from `desktop_multi_window`, which gives every window it creates the same frame |
 | Settings | 650×500 fixed | Singleton, not resizable, not minimizable |
 
 #### FR-7.2 — Isolated engines
@@ -318,6 +318,11 @@ Minimize (`Cmd+M`), Zoom, Bring All to Front, and a live list of open windows wi
 
 #### FR-7.8 — Cross-window messages
 `WindowBroadcast` carries: `unitChanged`, `localeChanged`, `saveAll`, `closeAll`, `showWelcome`, `hideWelcome`, `dirtyStateChanged`, `requestDirtyStates`, `settingsOpened`, `settingsClosed`. A newly opened window requests the dirty state of all the others on startup.
+
+#### FR-7.9 — Window placement
+Because every window the plugin creates is handed the same frame, placement is decided natively by `WindowCascade` (`macos/Runner/WindowCascade.swift`), called from the window-created callback in `AppDelegate`. The first window of a run is centred; each one after it is stepped down and to the right with AppKit's `cascadeTopLeft(from:)` — 29 points, measured — which turns the diagonal back to the top or the left edge instead of pushing a window off the screen. The diagonal starts over once the last placed window has closed, so a document opened on its own does not land wherever the previous batch stopped.
+
+The Settings window is placed as well and then centres itself from Dart (FR-7.1), so it consumes a step of the diagonal without occupying it. That is deliberate: the alternative is teaching native code to tell one kind of window from another, for a difference nobody can see.
 
 ---
 
