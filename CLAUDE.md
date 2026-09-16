@@ -93,7 +93,7 @@ There is no `lib/injection/`. Dependency injection is done with Riverpod provide
 
   No other presentation file may import from `data/`.
 
-  **Outstanding violation:** `presentation/apps/pdf_viewer_app.dart` imports and instantiates `PdfSaveService` directly. It must go through `pdfSaveServiceProvider` (REQUIREMENTS.md §13.2).
+  This rule is currently met: the last violation, `pdf_viewer_app.dart` building `PdfSaveService` by hand, was fixed on 2026-09-16.
 - **Core** may be used by all layers.
 - Circular dependencies are FORBIDDEN.
 
@@ -241,7 +241,7 @@ go_router, mime
 
 ## Testing
 
-The project has 119 Dart tests (page-column geometry, drag-and-drop placement, dirty-state policy, the close-everything flow, cut/copy/paste) and 15 native tests (`macos/RunnerTests`, toolbar item management). Everything else is uncovered, which remains the largest known risk (CODE_REVIEW §5.3). The following is the target state, and applies to code you add or change:
+The project has 172 Dart tests (page-column geometry, drag-and-drop placement, dirty-state policy, the close-everything flow, cut/copy/paste) and 20 native tests (`macos/RunnerTests`, toolbar item management). Everything else is uncovered, which remains the largest known risk (CODE_REVIEW §5.3). The following is the target state, and applies to code you add or change:
 
 - New business logic (providers, repositories, services, coordinate math) ships with unit tests.
 - Test file mirrors source structure; one test file per source file.
@@ -263,15 +263,15 @@ Enforced bar, verified with `flutter analyze`:
 
 - **0 errors** — currently met.
 - **0 warnings** — currently met. Do not regress it.
-- Info-level lints: 993 at last count. Not a merge gate, but do not increase the count in files you touch.
+- Info-level lints: 1006 at last count. Not a merge gate, but do not increase the count in files you touch.
 
 ### Import Convention
 
 Use **`package:pdfsign/...` imports** throughout. This matches 100% of the existing code.
 
-> **Nothing currently enforces this.** `analysis_options.yaml` sets `always_use_package_imports: error` under `analyzer.errors` (line 21), but that key only overrides the *severity* of a diagnostic — the rule is absent from `linter.rules`, so it never runs and the override is a no-op. Meanwhile `prefer_relative_imports` **is** enabled in `linter.rules` (line 152) and argues the opposite, producing 315 of the 993 info lints.
+> **Nothing currently enforces this.** `analysis_options.yaml` sets `always_use_package_imports: error` under `analyzer.errors` (line 21), but that key only overrides the *severity* of a diagnostic — the rule is absent from `linter.rules`, so it never runs and the override is a no-op. Meanwhile `prefer_relative_imports` **is** enabled in `linter.rules` (line 152) and argues the opposite, producing 324 of the 1006 info lints.
 >
-> Until that is resolved: ignore those 315 diagnostics, and do **not** "fix" them by converting imports to relative paths. To make the stated policy real, add `always_use_package_imports` to `linter.rules` and remove `prefer_relative_imports` from it.
+> Until that is resolved: ignore those 324 diagnostics, and do **not** "fix" them by converting imports to relative paths. To make the stated policy real, add `always_use_package_imports` to `linter.rules` and remove `prefer_relative_imports` from it.
 
 ---
 

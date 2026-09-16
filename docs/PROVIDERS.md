@@ -343,6 +343,29 @@ PdfSaveService pdfSaveService(PdfSaveServiceRef ref) => PdfSaveService();
 
 > **Note:** `pdf_viewer_app.dart` instantiates `PdfSaveService()` directly instead of reading this provider. See REQUIREMENTS.md §13.2.
 
+### rotateCurrentPage
+
+**File:** `lib/presentation/providers/editor/rotate_page.dart`
+
+```dart
+rotateCurrentPage(ref, 1);   // a quarter turn clockwise
+rotateCurrentPage(ref, -1);  // anticlockwise
+```
+
+Turns the page the viewer reports as current and the objects standing on it,
+together. A top-level helper rather than a method on either notifier because it
+has to move two pieces of state at once, and a provider writing into another
+provider is what `CLAUDE.md` forbids.
+
+Returns whether anything was turned, so a caller can stay quiet when no
+document is open.
+
+The page's own `rotation` versus `fileRotation` is what makes the document
+dirty — `hasUnsavedPageRotationProvider` — so a turn cannot be closed away in
+silence. After a save to the same file, `markRotationsSaved()` tells the pages
+the file has caught up; after Save As the document reloads and reads the new
+file's rotations itself.
+
 ### EditorClipboard
 
 **File:** `lib/presentation/providers/editor/editor_clipboard.dart`

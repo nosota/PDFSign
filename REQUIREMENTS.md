@@ -248,6 +248,8 @@ Below the visually lowest edge, showing `W × H` in cm or inches to one decimal.
 #### FR-6.1 — Save (`Cmd+S`)
 Rasterizes every placed object into the PDF and overwrites the current file. Rotation is applied around the object's centre via `translate → rotate → translate` on the Syncfusion graphics state.
 
+Objects are positioned against the page **as the reader sees it**, while Syncfusion draws in the page's own unrotated space. `PageRotationTransform` maps between the two, and a page the reader turned is written as its `/Rotate` (ADR-0010). The object keeps its own width and height and is placed by its centre: drawing into the turned-over rectangle *and* rotating would count the page's turn twice.
+
 #### FR-6.2 — Always save from the original
 Every save starts from the **original** PDF bytes cached at open time, never from the previous save (ADR-0002). Repeated saves therefore do not stack images or degrade the file.
 
@@ -517,10 +519,10 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 
 | Aspect | State |
 |--------|-------|
-| `flutter analyze` | 993 issues: 0 errors, **0 warnings**, 993 info |
-| Unit tests | **78** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits |
-| Widget tests | **41** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste |
-| Native tests | **15** — toolbar item management (`macos/RunnerTests`) |
+| `flutter analyze` | 1006 issues: 0 errors, **0 warnings**, 1006 info |
+| Unit tests | **113** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry and the writer |
+| Widget tests | **59** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation |
+| Native tests | **20** — toolbar item management and layout (`macos/RunnerTests`) |
 | Integration tests | **none** |
 | Golden tests | **none** |
 | CI | none |
@@ -574,7 +576,7 @@ Specified in v1.0 (or implied by leftover code) but **absent from the product**.
 | 12.11 | **Persistence of placed objects / session restore** | In-memory only |
 | 12.12 | **Copying an object between documents** | `Cmd+C` buffer is per-window. TODO → V1.1 |
 | 12.13 | **Text annotations** | TODO → V1.3 |
-| 12.14 | **Page rotation** (`Cmd+R` as rotate-all) | `Cmd+R` currently reloads. TODO → V1.1 |
+| 12.14 | **Page rotation of the whole document at once** | One page at a time is implemented — the page in view, from the toolbar or Edit → Rotate Left / Right (⌘L / ⌘R). Turning every page at once is not |
 | 12.15 | **Crash reporting, flavors, CI/CD, obfuscation** | None configured |
 
 ---

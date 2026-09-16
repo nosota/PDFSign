@@ -220,18 +220,42 @@ Handles native macOS toolbar in PDF viewer windows.
 | Method | Arguments | Returns | Description |
 |--------|-----------|---------|-------------|
 | `setupToolbar` | - | - | Request toolbar setup for current window |
+| `setDeleteButtonVisible` | `visible`, `label`, `tooltip` | - | Show or hide Delete, with localized texts |
+| `setRotateLabels` | `left`, `right` | - | Localized texts for the rotate control |
 
 ### Native → Dart Methods
 
 | Method | Arguments | Description |
 |--------|-----------|-------------|
 | `onSharePressed` | - | Share toolbar button was clicked |
+| `onDeletePressed` | - | Delete toolbar button was clicked |
+| `onRotateLeftPressed` | - | Left half of the rotate control was clicked |
+| `onRotateRightPressed` | - | Right half of the rotate control was clicked |
 
-### Callback Setter
+### Callback Setters
 
 ```dart
 ToolbarChannel.setOnSharePressed(VoidCallback? callback);
+ToolbarChannel.setOnDeletePressed(VoidCallback? callback);
+ToolbarChannel.setOnRotateLeftPressed(VoidCallback? callback);
+ToolbarChannel.setOnRotateRightPressed(VoidCallback? callback);
 ```
+
+### Item layout
+
+```
+[ rotate ⟲ ⟳ ][ flexible space ][ Delete? ][ Share ]
+```
+
+Rotation sits at the leading edge, in its own `NSToolbarItemGroup` of two
+segments. Delete is inserted and removed as the selection changes, immediately
+before Share; because everything after the flexible space is pushed right,
+inserting there extends the group leftwards and leaves Share where it was. The
+rotate group is on the other side of the space, so it cannot be shifted at all.
+
+The toolbar is built by AppKit before Flutter has resolved a locale, so it
+starts with English texts. `setRotateLabels` corrects them once the toolbar
+exists and again whenever the language changes.
 
 ### Usage Example
 

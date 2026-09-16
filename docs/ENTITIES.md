@@ -92,6 +92,22 @@ Information about a single PDF page.
 
 ---
 
+### Rotation
+
+| Field | Meaning |
+|-------|---------|
+| `width` / `height` | The page **as displayed**. A page the file marks `/Rotate 90` reports its sides swapped, so layout, drop placement and pasting never deal with rotation. |
+| `rotation` | How the page stands now, in degrees clockwise. |
+| `fileRotation` | What the file on disk has. |
+
+`rotation - fileRotation` is the turn the reader made and has not saved. It is
+also `pendingQuarterTurns`, which is how much the rendered bitmap still has to
+be turned when it is drawn — the renderer works from the file, so turning a
+page costs no re-render (ADR-0010).
+
+`rotated(quarterTurns)` returns the page turned, with its sides swapped for an
+odd number of turns. Four turns return the original value exactly.
+
 ## PlacedImage
 
 **File:** `lib/domain/entities/placed_image.dart`
