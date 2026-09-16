@@ -16,11 +16,18 @@ class DraggableSidebarImage {
   final int width;
   final int height;
 
+  /// The size this image was last given on a page, in PDF points.
+  ///
+  /// Null until the reader has resized one, and the drop falls back to the
+  /// default size for the page.
+  final Size? lastUsedSize;
+
   const DraggableSidebarImage({
     required this.sourceImageId,
     required this.imagePath,
     required this.width,
     required this.height,
+    this.lastUsedSize,
   });
 
   /// Aspect ratio (width / height), falling back to 1 for unusable dimensions.
@@ -35,6 +42,7 @@ class DraggableSidebarImage {
       imagePath: image.filePath,
       width: image.width,
       height: image.height,
+      lastUsedSize: image.lastUsedSize,
     );
   }
 }

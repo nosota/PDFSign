@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pdfsign/domain/entities/placed_image.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
+import 'package:pdfsign/presentation/providers/sidebar/sidebar_images_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/size_label.dart';
 
 /// Selection handle constants.
@@ -51,6 +52,11 @@ class PlacedImageOverlay extends ConsumerWidget {
 
   final int pageIndex;
   final double scale;
+
+  /// Identifies a resize handle, so a test can grab the one it means.
+  @visibleForTesting
+  static ValueKey<String> handleKey(String name) =>
+      ValueKey<String>('placedImageHandle.$name');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -366,9 +372,11 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
                   left: cornerPositions[corner]!.dx - halfCornerHit,
                   top: cornerPositions[corner]!.dy - halfCornerHit,
                   child: _CornerHandle(
+                    key: PlacedImageOverlay.handleKey(corner),
                     corner: corner,
                     cursor: _getCornerCursor(corner, image.rotation),
                     onDrag: (delta) => _handleCornerDrag(corner, delta),
+                    onDragEnd: _rememberSizeForLibrary,
                     isRotating: _isRotating,
                   ),
                 ),
@@ -380,9 +388,11 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
                   left: sidePositions[side]!.dx - halfSideHit,
                   top: sidePositions[side]!.dy - halfSideHit,
                   child: _SideHandle(
+                    key: PlacedImageOverlay.handleKey(side),
                     side: side,
                     cursor: _getSideCursor(side, image.rotation),
                     onDrag: (delta) => _handleSideDrag(side, delta),
+                    onDragEnd: _rememberSizeForLibrary,
                     isRotating: _isRotating,
                   ),
                 ),
@@ -569,6 +579,35 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
           image.id,
           position: newPosition,
           size: Size(newWidth, newHeight),
+        );
+  }
+
+  /// Records the size the reader just settled on, against the library image
+  /// this object came from.
+  ///
+  /// Called when a resize gesture ends rather than while it runs: the drag
+  /// reports every frame, and each one would be a write.
+  ///
+  /// Does nothing for an object with no library row — an image pasted from
+  /// another application is stored with the document and has nothing to
+  /// remember against.
+  void _rememberSizeForLibrary() {
+    final sourceImageId = widget.image.sourceImageId;
+    if (sourceImageId == null) return;
+
+    // The size as it now stands, read from the provider rather than from
+    // `widget.image`: the gesture ends before the rebuild that would bring
+    // the new size here, so this widget is still holding the old one.
+    final id = widget.image.id;
+    final current = ref
+        .read(placedImagesProvider)
+        .where((image) => image.id == id)
+        .firstOrNull;
+    if (current == null) return;
+
+    ref.read(sidebarImagesProvider.notifier).rememberSize(
+          sourceImageId,
+          current.size,
         );
   }
 
@@ -770,14 +809,20 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
 class _CornerHandle extends StatefulWidget {
   const _CornerHandle({
     required this.corner,
+    super.key,
     required this.cursor,
     required this.onDrag,
+    required this.onDragEnd,
     this.isRotating = false,
   });
 
   final String corner;
   final MouseCursor cursor;
   final void Function(Offset delta) onDrag;
+
+  /// Called once the gesture is over, so the new size is recorded once rather
+  /// than on every frame of the drag.
+  final VoidCallback onDragEnd;
   final bool isRotating;
 
   @override
@@ -812,6 +857,7 @@ class _CornerHandleState extends State<_CornerHandle> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onPanUpdate: (details) => widget.onDrag(details.delta),
+        onPanEnd: (_) => widget.onDragEnd(),
         child: SizedBox(
           width: hitSize,
           height: hitSize,
@@ -838,14 +884,20 @@ class _CornerHandleState extends State<_CornerHandle> {
 class _SideHandle extends StatefulWidget {
   const _SideHandle({
     required this.side,
+    super.key,
     required this.cursor,
     required this.onDrag,
+    required this.onDragEnd,
     this.isRotating = false,
   });
 
   final String side;
   final MouseCursor cursor;
   final void Function(Offset delta) onDrag;
+
+  /// Called once the gesture is over, so the new size is recorded once rather
+  /// than on every frame of the drag.
+  final VoidCallback onDragEnd;
   final bool isRotating;
 
   @override
@@ -880,6 +932,7 @@ class _SideHandleState extends State<_SideHandle> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onPanUpdate: (details) => widget.onDrag(details.delta),
+        onPanEnd: (_) => widget.onDragEnd(),
         child: SizedBox(
           width: hitSize,
           height: hitSize,

@@ -226,6 +226,12 @@ Four square corner handles. Scaling is driven by the width delta; the opposite c
 #### FR-5.4 — Non-proportional stretch
 Four side handles stretch one axis, anchoring the opposite edge.
 
+#### FR-5.4a — Remembered size
+
+Resizing an object records that size against the library image it came from, and the next object dragged out of the library starts at it, fitted to the page it lands on. Objects already on a page are untouched: three copies of one image, resized separately, keep their three sizes, and a fourth arrives at the size of the one resized last.
+
+The size is recorded when the resize gesture ends, not while it runs, and it lives in the library row, so it survives a restart and is shared between windows through the Isar stream. Only the size: rotation stays with the object it was applied to. An image pasted from another application has no library row and so remembers nothing.
+
 #### FR-5.5 — Rotate
 One circular handle on a 20 pt stem above the top edge. Free rotation with ±180° normalization for smooth wrap-around. There is no snapping and no modifier-key constraint.
 
@@ -412,6 +418,7 @@ See [docs/PLATFORM_CHANNELS.md](docs/PLATFORM_CHANNELS.md).
 | `PdfDocumentInfo` | Path, name, page count, per-page dimensions |
 | `PdfPageInfo` | 1-based number, width/height in points |
 | `PlacedImage` | id, source id, image path, page index, position, size, rotation |
+| `SidebarImage` | id, path, name, added at, order, pixel size, file size, comment, last used size |
 | `SidebarImage` | id, path, name, added-at, order, dimensions, size, comment |
 | `RecentFile` | path, name, last-opened, page count, protected flag |
 | `WindowInfo` | window id, title, type, focused flag, file path |
@@ -519,9 +526,9 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 
 | Aspect | State |
 |--------|-------|
-| `flutter analyze` | 1012 issues: 0 errors, **0 warnings**, 1012 info |
-| Unit tests | **117** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry and the writer |
-| Widget tests | **61** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation |
+| `flutter analyze` | 1031 issues: 0 errors, **0 warnings**, 1031 info |
+| Unit tests | **121** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry and the writer |
+| Widget tests | **66** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation |
 | Native tests | **16** — the toolbar's fixed item set and layout, Delete's enabled state, the helper registry (`macos/RunnerTests`) |
 | Integration tests | **none** |
 | Golden tests | **none** |

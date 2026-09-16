@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:isar/isar.dart';
 
 import 'package:pdfsign/domain/entities/sidebar_image.dart';
@@ -42,6 +44,15 @@ class SidebarImageModel {
   /// Optional user comment.
   String? comment;
 
+  /// Width in PDF points this image was last given on a page.
+  ///
+  /// Stored as two nullable numbers rather than one object: Isar has no size
+  /// type, and either being absent means the image has never been resized.
+  double? lastUsedWidth;
+
+  /// Height in PDF points this image was last given on a page.
+  double? lastUsedHeight;
+
   /// Converts this model to a domain entity.
   SidebarImage toEntity() {
     return SidebarImage(
@@ -54,6 +65,9 @@ class SidebarImageModel {
       height: height,
       fileSize: fileSize,
       comment: comment,
+      lastUsedSize: lastUsedWidth != null && lastUsedHeight != null
+          ? Size(lastUsedWidth!, lastUsedHeight!)
+          : null,
     );
   }
 
@@ -68,6 +82,8 @@ class SidebarImageModel {
       ..width = entity.width
       ..height = entity.height
       ..fileSize = entity.fileSize
-      ..comment = entity.comment;
+      ..comment = entity.comment
+      ..lastUsedWidth = entity.lastUsedSize?.width
+      ..lastUsedHeight = entity.lastUsedSize?.height;
   }
 }

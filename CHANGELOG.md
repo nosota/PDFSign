@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
+- A library image remembers the size it was last resized to: drag it out again and it arrives at that size, fitted to the page. Objects already placed keep their own sizes, rotation is not remembered, and images pasted from other applications are unaffected
 - An application icon: the signed page from `pSGNF.jpg` on a rounded blue square, in the app's own accent colour. macOS 26 draws it from an Icon Composer document and it fills the icon tile the way the system's own apps do; older macOS falls back to the image set beside it. The Windows icon and the Welcome screen logo are cut from what the system composes, so all three match
 - A View menu with Zoom In (Cmd+=), Zoom Out (Cmd+-), Fit Width (Cmd+0) and Go to Page (Cmd+G). The zoom controls on screen already worked; their shortcuts did not, and Go to Page could not be opened at all
 - Rotate the page in view left or right, from a two-part control at the left of the toolbar or from Edit → Rotate Left / Rotate Right (Cmd+L / Cmd+R). The turn is written into the file as the page's rotation, objects on the page turn with it, and the view stays on the page that was turned

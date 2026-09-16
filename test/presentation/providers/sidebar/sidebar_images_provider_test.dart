@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -99,6 +100,47 @@ void main() {
     });
   });
 
+  group('the size an image was last given', () {
+    test('should be recorded against that image', () async {
+      await container
+          .read(sidebarImagesProvider.notifier)
+          .rememberSize('row-1', const Size(140, 70));
+
+      expect(repository.lastUsedSizes['row-1'], const Size(140, 70));
+    });
+
+    test('should be replaced by the next size, not added to', () async {
+      final notifier = container.read(sidebarImagesProvider.notifier);
+
+      await notifier.rememberSize('row-1', const Size(140, 70));
+      await notifier.rememberSize('row-1', const Size(300, 150));
+
+      expect(repository.lastUsedSizes['row-1'], const Size(300, 150));
+      expect(repository.lastUsedSizes, hasLength(1));
+    });
+
+    test('should be kept per image', () async {
+      final notifier = container.read(sidebarImagesProvider.notifier);
+
+      await notifier.rememberSize('row-1', const Size(140, 70));
+      await notifier.rememberSize('row-2', const Size(50, 50));
+
+      expect(repository.lastUsedSizes['row-1'], const Size(140, 70));
+      expect(repository.lastUsedSizes['row-2'], const Size(50, 50));
+    });
+
+    test('should refuse a size with no area', () async {
+      // Never reachable through the handles, which clamp to a minimum, but a
+      // zero would come back as an object that cannot be seen or grabbed.
+      final notifier = container.read(sidebarImagesProvider.notifier);
+
+      await notifier.rememberSize('row-1', Size.zero);
+      await notifier.rememberSize('row-1', const Size(-10, 20));
+
+      expect(repository.lastUsedSizes, isEmpty);
+    });
+  });
+
   group('a batch', () {
     test('should add what it can and report the rest', () async {
       final good = await writeFile('good.png', pngBytes);
@@ -168,8 +210,17 @@ class _FakeSidebarImageRepository implements SidebarImageRepository {
     return Right(image);
   }
 
+  /// Sizes recorded against library images.
+  final Map<String, Size> lastUsedSizes = {};
+
   @override
   Stream<List<SidebarImage>> watchImages() => Stream.value(added);
+  @override
+  Future<Either<Failure, Unit>> updateLastUsedSize(String id, Size size) async {
+    lastUsedSizes[id] = size;
+    return const Right(unit);
+  }
+
 
   @override
   Future<Either<Failure, List<SidebarImage>>> getImages() async => Right(added);

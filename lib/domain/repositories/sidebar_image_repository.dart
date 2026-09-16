@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:dartz/dartz.dart';
 
 import 'package:pdfsign/core/errors/failure.dart';
@@ -31,6 +33,12 @@ abstract class SidebarImageRepository {
     required int height,
     required int fileSize,
   });
+
+  /// Records the size [id] was last given on a page, in PDF points.
+  ///
+  /// The next object dragged out of the library starts at this size. Objects
+  /// already on a page keep the size they have.
+  Future<Either<Failure, Unit>> updateLastUsedSize(String id, Size size);
 
   /// Removes an image by its ID.
   ///

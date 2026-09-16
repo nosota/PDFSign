@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'dart:ui' as ui;
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -88,6 +89,22 @@ class SidebarImages extends _$SidebarImages {
       // Not a decodable image
       return (stored: false, rejection: null);
     }
+  }
+
+  /// Records the size an image was last given on a page.
+  ///
+  /// The next object dragged out of the library starts at this size. Objects
+  /// already on a page are not touched: three copies of one image, resized
+  /// separately, keep their three sizes.
+  ///
+  /// Silent on failure. The reader resized an object and it stayed resized;
+  /// that the preference could not be written is not worth interrupting them
+  /// for, and the next resize will try again.
+  Future<void> rememberSize(String id, Size size) async {
+    if (size.width <= 0 || size.height <= 0) {
+      return;
+    }
+    await ref.read(sidebarImageRepositoryProvider).updateLastUsedSize(id, size);
   }
 
   /// Removes an image by its ID.

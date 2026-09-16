@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:equatable/equatable.dart';
 
 /// Domain entity representing an image in the sidebar panel.
@@ -31,6 +33,14 @@ class SidebarImage extends Equatable {
   /// Optional user comment for the image.
   final String? comment;
 
+  /// The size this image was last given on a page, in PDF points.
+  ///
+  /// Null until the reader resizes one. A fresh drop then arrives at that
+  /// size instead of the default, which is what makes a stamp keep the size
+  /// it was adjusted to. Only the size: an object's own rotation stays with
+  /// that object.
+  final Size? lastUsedSize;
+
   const SidebarImage({
     required this.id,
     required this.filePath,
@@ -41,6 +51,7 @@ class SidebarImage extends Equatable {
     required this.height,
     required this.fileSize,
     this.comment,
+    this.lastUsedSize,
   });
 
   /// Aspect ratio (width / height), falling back to 1 for unusable dimensions.
@@ -67,6 +78,7 @@ class SidebarImage extends Equatable {
     int? fileSize,
     String? comment,
     bool clearComment = false,
+    Size? lastUsedSize,
   }) {
     return SidebarImage(
       id: id ?? this.id,
@@ -78,6 +90,7 @@ class SidebarImage extends Equatable {
       height: height ?? this.height,
       fileSize: fileSize ?? this.fileSize,
       comment: clearComment ? null : (comment ?? this.comment),
+      lastUsedSize: lastUsedSize ?? this.lastUsedSize,
     );
   }
 
@@ -92,6 +105,7 @@ class SidebarImage extends Equatable {
         height,
         fileSize,
         comment,
+        lastUsedSize,
       ];
 
   @override

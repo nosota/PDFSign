@@ -206,8 +206,13 @@ class _PdfDropTargetState extends ConsumerState<PdfDropTarget> {
 
     final page = widget.document.pages[pageIndex];
     final pageSize = Size(page.width, page.height);
-    final size =
-        PlacedImagePlacement.defaultSizeFor(details.data.aspectRatio, pageSize);
+    // The size this image was last adjusted to, if the reader ever adjusted
+    // one; objects already on a page are untouched by that and keep theirs.
+    // Fitted to this page, which may be smaller than the one it came from.
+    final remembered = details.data.lastUsedSize;
+    final size = remembered != null
+        ? PlacedImagePlacement.fitToPage(remembered, pageSize)
+        : PlacedImagePlacement.defaultSizeFor(details.data.aspectRatio, pageSize);
 
     // Cursor position in unscaled page points. Falls outside the page for an
     // off-page drop; the clamp below pulls the object back inside.

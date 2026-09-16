@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'dart:ui';
+
 import 'package:dartz/dartz.dart';
 import 'package:uuid/uuid.dart';
 
@@ -167,6 +169,23 @@ class SidebarImageRepositoryImpl implements SidebarImageRepository {
       return Right(entities);
     } catch (e) {
       return Left(StorageFailure(message: 'Failed to cleanup images: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> updateLastUsedSize(String id, Size size) async {
+    try {
+      final updated = await _localDataSource.updateLastUsedSize(
+        id,
+        size.width,
+        size.height,
+      );
+      if (!updated) {
+        return Left(StorageFailure(message: 'Image not found: $id'));
+      }
+      return const Right(unit);
+    } catch (e) {
+      return Left(StorageFailure(message: 'Failed to record size: $e'));
     }
   }
 

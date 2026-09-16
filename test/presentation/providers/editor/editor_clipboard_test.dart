@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
@@ -517,8 +518,17 @@ class _FakeClipboardRepository implements ClipboardRepository {
 class _FakeSidebarImageRepository implements SidebarImageRepository {
   final List<SidebarImage> images = [];
 
+  /// Sizes recorded against library images.
+  final Map<String, Size> lastUsedSizes = {};
+
   @override
   Stream<List<SidebarImage>> watchImages() => Stream.value(images);
+  @override
+  Future<Either<Failure, Unit>> updateLastUsedSize(String id, Size size) async {
+    lastUsedSizes[id] = size;
+    return const Right(unit);
+  }
+
 
   @override
   Future<Either<Failure, List<SidebarImage>>> getImages() async => Right(images);

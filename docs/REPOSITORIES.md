@@ -82,6 +82,7 @@ Handles sidebar image CRUD operations and real-time syncing between windows.
 | `clearAllImages` | `Future<Either<Failure, Unit>> clearAllImages()` | Clears all images |
 | `cleanupInvalidImages` | `Future<Either<Failure, List<SidebarImage>>> cleanupInvalidImages()` | Removes entries for deleted files |
 | `updateComment` | `Future<Either<Failure, Unit>> updateComment(String id, String? comment)` | Updates image comment |
+| `updateLastUsedSize` | `Future<Either<Failure, Unit>> updateLastUsedSize(String id, Size size)` | Records the size an image was last given on a page |
 
 ### addImage Parameters
 
@@ -92,6 +93,19 @@ Handles sidebar image CRUD operations and real-time syncing between windows.
 | `width` | `int` | Image width in pixels |
 | `height` | `int` | Image height in pixels |
 | `fileSize` | `int` | File size in bytes |
+
+### The remembered size
+
+Resizing an object writes that size into its library row, and the next drag out
+of the library starts there (FR-5.4a). Stored as two nullable numbers, because
+Isar has no size type and either being absent means the image has never been
+resized. Placed objects are never rewritten: three copies of one image keep
+three sizes.
+
+Written when the resize gesture ends rather than while it runs — the drag
+reports every frame, and each one would be a write — and read from the provider
+rather than from the widget, which at that moment still holds the size from
+before the gesture.
 
 ### Import Limits
 

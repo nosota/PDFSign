@@ -32,6 +32,11 @@ abstract class SidebarImageLocalDataSource {
 
   /// Updates the comment for an image.
   Future<bool> updateComment(String id, String? comment);
+
+  /// Records the size an image was last given on a page.
+  ///
+  /// Returns false when no image has that id.
+  Future<bool> updateLastUsedSize(String id, double width, double height);
 }
 
 /// Implementation of [SidebarImageLocalDataSource] using Isar.
@@ -116,6 +121,21 @@ class SidebarImageLocalDataSourceImpl implements SidebarImageLocalDataSource {
           .findFirst();
       if (model == null) return false;
       model.comment = comment;
+      await _isar.sidebarImageModels.put(model);
+      return true;
+    });
+  }
+
+  @override
+  Future<bool> updateLastUsedSize(String id, double width, double height) async {
+    return _isar.writeTxn(() async {
+      final model = await _isar.sidebarImageModels
+          .filter()
+          .idEqualTo(id)
+          .findFirst();
+      if (model == null) return false;
+      model.lastUsedWidth = width;
+      model.lastUsedHeight = height;
       await _isar.sidebarImageModels.put(model);
       return true;
     });

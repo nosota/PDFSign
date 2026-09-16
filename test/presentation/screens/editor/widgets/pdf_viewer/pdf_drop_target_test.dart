@@ -113,7 +113,12 @@ void main() {
   });
 
   /// A wide signature-shaped image: aspect ratio 800/300 ≈ 2.67.
-  SidebarImage buildImage({int width = 800, int height = 300}) => SidebarImage(
+  SidebarImage buildImage({
+    int width = 800,
+    int height = 300,
+    Size? lastUsedSize,
+  }) =>
+      SidebarImage(
         id: 'img-1',
         filePath: imagePath,
         fileName: 'stamp.png',
@@ -122,6 +127,7 @@ void main() {
         width: width,
         height: height,
         fileSize: 1024,
+        lastUsedSize: lastUsedSize,
       );
 
   /// Mounts the real page column inside the drop target, with the sidebar card
@@ -263,6 +269,50 @@ void main() {
         moreOrLessEquals(expected.dy, epsilon: 0.5),
       );
       expect(placed.single.pageIndex, 0);
+    });
+
+    testWidgets('should use the size this image was last given', (tester) async {
+      // A stamp adjusted once comes back at that size, rather than at the
+      // default a fresh image gets.
+      final container = buildContainer();
+
+      await pumpEditor(
+        tester,
+        container,
+        document: _document(const [_a4]),
+        image: buildImage(lastUsedSize: const Size(140, 70)),
+        viewportWidth: 600,
+        viewportHeight: 500,
+      );
+
+      await dragToViewer(tester, const Offset(300, 240));
+
+      expect(
+        container.read(placedImagesProvider).single.size,
+        const Size(140, 70),
+      );
+    });
+
+    testWidgets('should fit a remembered size onto a smaller page',
+        (tester) async {
+      // The size was settled on a larger page; it must not hang off this one.
+      final container = buildContainer();
+
+      await pumpEditor(
+        tester,
+        container,
+        document: _document(const [Size(200, 200)]),
+        image: buildImage(lastUsedSize: const Size(500, 250)),
+        viewportWidth: 600,
+        viewportHeight: 500,
+      );
+
+      await dragToViewer(tester, const Offset(300, 240));
+
+      final placed = container.read(placedImagesProvider).single;
+      expect(placed.size.width, lessThanOrEqualTo(200));
+      expect(placed.size.height, lessThanOrEqualTo(200));
+      expect(placed.size.width / placed.size.height, closeTo(2, 0.001));
     });
 
     testWidgets('should size the object to a quarter of the page width',

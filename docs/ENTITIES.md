@@ -196,6 +196,7 @@ Represents an image in the sidebar library panel.
 | `height` | `int` | Original image height in pixels |
 | `fileSize` | `int` | File size in bytes |
 | `comment` | `String?` | Optional user comment |
+| `lastUsedSize` | `Size?` | The size this image was last given on a page, in PDF points |
 
 ### Computed Properties
 
