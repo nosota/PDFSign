@@ -122,7 +122,8 @@ class _PdfDropTargetState extends ConsumerState<PdfDropTarget> {
       child: IgnorePointer(
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: primary.withValues(alpha: 0.06),
+            // An outline only: a wash over the page dims the very content the
+            // reader is aiming at.
             border: Border.all(
               color: primary.withValues(alpha: 0.7),
               width: 2,

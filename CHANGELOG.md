@@ -3,7 +3,7 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
-## [Unreleased]
+## [1.2.0] — 2026-09-16
 
 ### Added
 
@@ -28,6 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Changed
 
+- The page that will receive a dropped image is now marked with an outline alone; the translucent wash over it dimmed the very content the drop was being aimed at
 - The toolbar Delete button is now greyed out when nothing is selected instead of disappearing, so the rotate control beside it no longer shifts as the selection changes; it also stands apart from Share rather than beside it
 - Close All and Quit now wait for the windows to report their saves instead of sleeping five seconds: closing is immediate in the common case, and a slow save on a large document is no longer mistaken for a failure
 - Moving, resizing or rotating an object now counts as an unsaved change, so closing no longer discards it in silence and File → Save stays available
