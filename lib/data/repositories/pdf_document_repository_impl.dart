@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dartz/dartz.dart';
 
+import 'package:pdfsign/core/errors/exceptions.dart';
 import 'package:pdfsign/core/errors/failure.dart';
 import 'package:pdfsign/core/errors/failures.dart';
 import 'package:pdfsign/data/datasources/pdf_data_source.dart';
@@ -23,46 +25,39 @@ class PdfDocumentRepositoryImpl implements PdfDocumentRepository {
   PdfDocumentInfo? get currentDocument => _dataSource.currentDocument;
 
   @override
-  Future<Either<Failure, PdfDocumentInfo>> openDocument(
-    String filePath,
-  ) async {
-    try {
-      final documentInfo = await _dataSource.openDocument(filePath);
-      return Right(documentInfo);
-    } on Exception catch (e) {
-      final message = e.toString();
-      if (message.contains('password') ||
-          message.contains('encrypted') ||
-          message.contains('protected')) {
-        return const Left(PasswordRequiredFailure());
-      }
-      if (message.contains('not found') || message.contains('No such file')) {
-        return const Left(FileNotFoundFailure());
-      }
-      if (message.contains('permission') || message.contains('access')) {
-        return const Left(FileAccessFailure());
-      }
-      return Left(PdfLoadFailure(message: 'Failed to open PDF: $message'));
-    }
-  }
+  Future<Either<Failure, PdfDocumentInfo>> openDocument(String filePath) =>
+      _open(() => _dataSource.openDocument(filePath));
 
   @override
   Future<Either<Failure, PdfDocumentInfo>> openProtectedDocument(
     String filePath,
     String password,
+  ) =>
+      _open(() => _dataSource.openProtectedDocument(filePath, password));
+
+  /// Runs [open] and turns what it throws into a typed failure.
+  ///
+  /// Every case here is told apart by the type of what was thrown, never by
+  /// looking for words inside a message. The renderer describes a protected
+  /// document as "Invalid PDF format", so reading its prose used to send an
+  /// encrypted file down the path for a corrupt one.
+  Future<Either<Failure, PdfDocumentInfo>> _open(
+    Future<PdfDocumentInfo> Function() open,
   ) async {
     try {
-      final documentInfo = await _dataSource.openProtectedDocument(
-        filePath,
-        password,
-      );
-      return Right(documentInfo);
+      return Right(await open());
+    } on PdfPasswordRequiredException catch (e) {
+      return e.passwordWasGiven
+          ? const Left(PasswordIncorrectFailure())
+          : const Left(PasswordRequiredFailure());
+    } on PdfUnsupportedProtectionException catch (e) {
+      return Left(UnsupportedProtectionFailure(message: e.detail));
+    } on PathNotFoundException {
+      return const Left(FileNotFoundFailure());
+    } on FileSystemException {
+      return const Left(FileAccessFailure());
     } on Exception catch (e) {
-      final message = e.toString();
-      if (message.contains('password') || message.contains('incorrect')) {
-        return const Left(PasswordIncorrectFailure());
-      }
-      return Left(PdfLoadFailure(message: 'Failed to open PDF: $message'));
+      return Left(PdfLoadFailure(message: 'Failed to open PDF: $e'));
     }
   }
 

@@ -13,6 +13,7 @@ import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_viewer_state.dart'
 import 'package:pdfsign/presentation/providers/pdf_viewer/permission_retry_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/page_indicator.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_drop_target.dart';
+import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/document_password_prompt.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_page_list.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_viewer_constants.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/zoom_controls.dart';
@@ -318,8 +319,13 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
         initial: (_) => _buildEmptyState(),
         loading: (state) => _buildLoadingState(state.filePath),
         loaded: (state) => _buildLoadedState(state),
-        error: (state) => _buildErrorState(state.message),
-        passwordRequired: (state) => _buildPasswordRequired(state.filePath),
+        error: (state) => _buildErrorState(state.message, state.code),
+        passwordRequired: (state) => DocumentPasswordPrompt(
+          wasWrong: state.wasWrong,
+          onSubmit: (password) => ref
+              .read(pdfDocumentProvider.notifier)
+              .openProtectedDocument(state.filePath, password),
+        ),
       ),
     );
   }
@@ -465,12 +471,18 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
     return false;
   }
 
-  Widget _buildErrorState(String message) {
+  Widget _buildErrorState(String message, String? code) {
     // If we're retrying due to permission issues, show loading instead of error
     final isRetrying = ref.watch(permissionRetryProvider);
     if (isRetrying) {
       return _buildPermissionWaitingState();
     }
+
+    // A protection this app cannot open is a case worth naming, rather than
+    // showing the reader whatever the PDF library said about it in English.
+    final detail = code == 'UNSUPPORTED_PROTECTION'
+        ? AppLocalizations.of(context)!.unsupportedProtection
+        : message;
 
     return Container(
       color: PdfViewerConstants.backgroundColor,
@@ -490,7 +502,7 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
             ),
             const SizedBox(height: 8),
             Text(
-              message,
+              detail,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Colors.grey,
                   ),
@@ -525,32 +537,4 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
     );
   }
 
-  Widget _buildPasswordRequired(String filePath) {
-    return Container(
-      color: PdfViewerConstants.backgroundColor,
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              Icons.lock_outline,
-              size: 48,
-              color: Colors.orange,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Password Required',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'This PDF is password protected.',
-              style: TextStyle(color: Colors.grey),
-            ),
-            // TODO: Add password input dialog
-          ],
-        ),
-      ),
-    );
-  }
 }

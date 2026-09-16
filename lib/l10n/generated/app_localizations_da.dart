@@ -336,4 +336,48 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get deleteButtonTooltip => 'Slet valgt objekt';
+
+  @override
+  String get documentProtectedTitle => 'This document is protected';
+
+  @override
+  String get documentProtectedBody => 'Enter its password to open it.';
+
+  @override
+  String get passwordFieldLabel => 'Password';
+
+  @override
+  String get openDocumentButton => 'Open';
+
+  @override
+  String get documentReadOnlyTitle => 'This document does not allow changes';
+
+  @override
+  String get documentReadOnlyBody =>
+      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+
+  @override
+  String get enterOwnerPassword => 'Enter owner password';
+
+  @override
+  String get ownerPasswordFieldLabel => 'Owner password';
+
+  @override
+  String get largeProtectedDocumentTitle => 'This protected document is large';
+
+  @override
+  String largeProtectedDocumentBody(String size) {
+    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+  }
+
+  @override
+  String get openAnyway => 'Open';
+
+  @override
+  String get shareProtectedNotice =>
+      'The shared copy keeps the document\'s password.';
+
+  @override
+  String get unsupportedProtection =>
+      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
 }

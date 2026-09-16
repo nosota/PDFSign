@@ -72,6 +72,11 @@ dev_dependencies:
   riverpod_generator: ^2.4.0
   isar_generator: ^3.1.0+1
 
+  # Testing. Both already arrive with path_provider; they are named here so
+  # that a test may stand in for the temporary directory without a platform.
+  path_provider_platform_interface: ^2.1.0
+  plugin_platform_interface: ^2.1.0
+
   # Testing
   mockito: ^5.4.4
   mocktail: ^1.0.4

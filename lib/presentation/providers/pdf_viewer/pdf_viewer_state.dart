@@ -139,10 +139,15 @@ class PdfViewerState with _$PdfViewerState {
   const factory PdfViewerState.error({
     required String message,
     String? filePath,
+    /// The failure's code, so the view can show its own words for a case it
+    /// knows about rather than the one the data layer wrote in English.
+    String? code,
   }) = PdfViewerError;
 
   const factory PdfViewerState.passwordRequired({
     required String filePath,
+    /// Whether a password was already tried and turned down.
+    @Default(false) bool wasWrong,
   }) = PdfViewerPasswordRequired;
 }
 

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:pdfsign/domain/entities/document_security.dart';
 import 'package:pdfsign/domain/entities/pdf_page_info.dart';
 
 /// Information about a PDF document.
@@ -12,7 +13,7 @@ class PdfDocumentInfo extends Equatable {
     required this.fileName,
     required this.pageCount,
     required this.pages,
-    this.isPasswordProtected = false,
+    this.security = const DocumentSecurity.unprotected(),
   });
 
   /// Full path to the PDF file.
@@ -27,8 +28,11 @@ class PdfDocumentInfo extends Equatable {
   /// Information about each page.
   final List<PdfPageInfo> pages;
 
-  /// Whether the document is password protected.
-  final bool isPasswordProtected;
+  /// The document's protection, and what it took to open it.
+  final DocumentSecurity security;
+
+  /// Whether the document is encrypted.
+  bool get isPasswordProtected => security.isProtected;
 
   /// Creates a copy with modified fields.
   PdfDocumentInfo copyWith({
@@ -36,14 +40,14 @@ class PdfDocumentInfo extends Equatable {
     String? fileName,
     int? pageCount,
     List<PdfPageInfo>? pages,
-    bool? isPasswordProtected,
+    DocumentSecurity? security,
   }) {
     return PdfDocumentInfo(
       filePath: filePath ?? this.filePath,
       fileName: fileName ?? this.fileName,
       pageCount: pageCount ?? this.pageCount,
       pages: pages ?? this.pages,
-      isPasswordProtected: isPasswordProtected ?? this.isPasswordProtected,
+      security: security ?? this.security,
     );
   }
 
@@ -53,6 +57,6 @@ class PdfDocumentInfo extends Equatable {
         fileName,
         pageCount,
         pages,
-        isPasswordProtected,
+        security,
       ];
 }

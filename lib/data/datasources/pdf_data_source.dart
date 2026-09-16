@@ -6,7 +6,11 @@ import 'dart:ui';
 import 'package:pdfx/pdfx.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart' as sf;
 
+import 'package:pdfsign/core/errors/exceptions.dart';
+import 'package:pdfsign/core/platform/pdf_security_channel.dart';
 import 'package:pdfsign/core/utils/page_rotation_transform.dart';
+import 'package:pdfsign/data/datasources/protected_pdf_reader.dart';
+import 'package:pdfsign/domain/entities/document_security.dart';
 import 'package:pdfsign/domain/entities/pdf_document_info.dart';
 import 'package:pdfsign/domain/entities/pdf_page_info.dart';
 
@@ -45,6 +49,12 @@ abstract class PdfDataSource {
 
 /// Implementation of [PdfDataSource] using pdfx library.
 class PdfDataSourceImpl implements PdfDataSource {
+  PdfDataSourceImpl({ProtectedPdfReader? protectedReader})
+      : _protectedReader = protectedReader ?? const ProtectedPdfReader();
+
+  /// Opens documents the renderer cannot open by itself.
+  final ProtectedPdfReader _protectedReader;
+
   PdfDocument? _document;
   PdfDocumentInfo? _documentInfo;
 
@@ -65,35 +75,78 @@ class PdfDataSourceImpl implements PdfDataSource {
   PdfDocumentInfo? get currentDocument => _documentInfo;
 
   @override
-  Future<PdfDocumentInfo> openDocument(String filePath) async {
-    await closeDocument();
-
-    _document = await PdfDocument.openFile(filePath);
-    _documentInfo = await _extractDocumentInfo(filePath, _document!);
-
-    return _documentInfo!;
-  }
+  Future<PdfDocumentInfo> openDocument(String filePath) => _open(filePath, null);
 
   @override
   Future<PdfDocumentInfo> openProtectedDocument(
     String filePath,
     String password,
-  ) async {
+  ) =>
+      _open(filePath, password);
+
+  /// Opens [filePath], taking the protected route only when it is protected.
+  Future<PdfDocumentInfo> _open(String filePath, String? password) async {
     await closeDocument();
 
-    _document = await PdfDocument.openFile(filePath, password: password);
-    _documentInfo = await _extractDocumentInfo(filePath, _document!);
+    final file = File(filePath);
+    if (!await file.exists()) {
+      throw PathNotFoundException(
+        filePath,
+        const OSError('No such file or directory'),
+      );
+    }
 
+    final protection = await PdfSecurityChannel.inspect(filePath);
+    if (protection != null && protection.isEncrypted) {
+      return _openProtected(file, password);
+    }
+
+    // Read straight from the file, which is what keeps a large document out
+    // of memory. Only a protected one has to be held there.
+    _document = await PdfDocument.openFile(filePath);
+    _documentInfo = await _extractDocumentInfo(filePath, _document!);
+    return _documentInfo!;
+  }
+
+  /// Opens a protected document through the PDF writer and renders the copy.
+  Future<PdfDocumentInfo> _openProtected(File file, String? password) async {
+    final bytes = await file.readAsBytes();
+
+    final ProtectedPdfContents contents;
+    try {
+      contents = await _protectedReader.read(bytes, password: password);
+    } on ArgumentError catch (error) {
+      // The file is encrypted — CoreGraphics said so — and the writer turned
+      // it down for a reason that is not the password. Its protection is of a
+      // kind this app cannot open; in practice that means a certificate.
+      throw PdfUnsupportedProtectionException('${error.message}');
+    }
+
+    _document = await PdfDocument.openData(contents.renderableBytes);
+    _documentInfo = await _extractDocumentInfo(
+      file.path,
+      _document!,
+      rotations: contents.rotations,
+      security: contents.security,
+    );
     return _documentInfo!;
   }
 
   Future<PdfDocumentInfo> _extractDocumentInfo(
     String filePath,
-    PdfDocument document,
-  ) async {
+    PdfDocument document, {
+    List<int>? rotations,
+    DocumentSecurity security = const DocumentSecurity.unprotected(),
+  }) async {
     final fileName = filePath.split('/').last;
     final pageCount = document.pagesCount;
-    final rotations = await _readPageRotations(filePath, pageCount);
+    // A protected document was already parsed to be opened at all, and its
+    // rotations came back with it; reading them again would mean asking for
+    // the password a second time.
+    final pageRotations = _fitToPages(
+      rotations ?? await _readPageRotations(filePath),
+      pageCount,
+    );
     final pages = <PdfPageInfo>[];
 
     for (int i = 1; i <= pageCount; i++) {
@@ -102,7 +155,7 @@ class PdfDataSourceImpl implements PdfDataSource {
       // applied, while it renders the page with `/Rotate` applied. Reporting
       // the displayed size here is what keeps the page column and the image
       // inside it the same shape.
-      final rotation = rotations[i - 1];
+      final rotation = pageRotations[i - 1];
       final displayed = PageRotationTransform.displaySize(
         Size(page.width, page.height),
         rotation,
@@ -122,6 +175,7 @@ class PdfDataSourceImpl implements PdfDataSource {
       fileName: fileName,
       pageCount: pageCount,
       pages: pages,
+      security: security,
     );
   }
 
@@ -134,7 +188,7 @@ class PdfDataSourceImpl implements PdfDataSource {
   ///
   /// A file this fails on is shown unrotated rather than not at all: a wrong
   /// orientation is a visible annoyance, a refusal to open is a lost document.
-  Future<List<int>> _readPageRotations(String filePath, int pageCount) async {
+  Future<List<int>> _readPageRotations(String filePath) async {
     try {
       final bytes = await File(filePath).readAsBytes();
       final document = sf.PdfDocument(inputBytes: bytes);
@@ -143,16 +197,23 @@ class PdfDataSourceImpl implements PdfDataSource {
           document.pages[i].rotation.index * 90,
       ];
       document.dispose();
-
-      if (rotations.length < pageCount) {
-        // The two libraries disagree about the page count. Trust the renderer,
-        // which is what the reader will actually see.
-        rotations.addAll(List.filled(pageCount - rotations.length, 0));
-      }
       return rotations;
     } catch (e) {
-      return List.filled(pageCount, 0);
+      return const [];
     }
+  }
+
+  /// Makes a rotation per page, however many the reader of them found.
+  ///
+  /// The two PDF libraries can disagree about how many pages a document has.
+  /// The renderer decides, because it is what the reader will actually see; a
+  /// page it knows about and the other does not is shown unturned.
+  static List<int> _fitToPages(List<int> rotations, int pageCount) {
+    if (rotations.length == pageCount) return rotations;
+    return [
+      for (var i = 0; i < pageCount; i++)
+        i < rotations.length ? rotations[i] : 0,
+    ];
   }
 
   @override

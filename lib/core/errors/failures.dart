@@ -54,6 +54,17 @@ class PasswordIncorrectFailure extends Failure {
   List<Object?> get props => [...super.props, attemptsRemaining];
 }
 
+/// Failure when the PDF is protected by something other than a password.
+///
+/// Certificate-based protection is the case in practice: the PDF writer this
+/// app uses handles the standard security handler and nothing else.
+class UnsupportedProtectionFailure extends Failure {
+  const UnsupportedProtectionFailure({
+    required super.message,
+    super.code = 'UNSUPPORTED_PROTECTION',
+  });
+}
+
 /// Failure when the PDF is write-protected.
 class WriteProtectedFailure extends Failure {
   const WriteProtectedFailure({

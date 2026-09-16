@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:pdfsign/core/errors/failure.dart';
 import 'package:pdfsign/core/errors/failures.dart';
 import 'package:pdfsign/domain/entities/pdf_document_info.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_page_cache_provider.dart';
@@ -35,16 +36,7 @@ class PdfDocument extends _$PdfDocument {
     final result = await repository.openDocument(filePath);
 
     result.fold(
-      (failure) {
-        if (failure is PasswordRequiredFailure) {
-          state = PdfViewerState.passwordRequired(filePath: filePath);
-        } else {
-          state = PdfViewerState.error(
-            message: failure.message,
-            filePath: filePath,
-          );
-        }
-      },
+      (failure) => _reportFailure(failure, filePath),
       (document) {
         // Use initialPage if provided, otherwise default to 1
         final page = initialPage != null
@@ -72,19 +64,7 @@ class PdfDocument extends _$PdfDocument {
     final result = await repository.openProtectedDocument(filePath, password);
 
     result.fold(
-      (failure) {
-        if (failure is PasswordIncorrectFailure) {
-          state = PdfViewerState.error(
-            message: 'Incorrect password',
-            filePath: filePath,
-          );
-        } else {
-          state = PdfViewerState.error(
-            message: failure.message,
-            filePath: filePath,
-          );
-        }
-      },
+      (failure) => _reportFailure(failure, filePath),
       (document) {
         state = PdfViewerState.loaded(
           document: document,
@@ -97,6 +77,25 @@ class PdfDocument extends _$PdfDocument {
         );
       },
     );
+  }
+
+  /// Puts a failed open on screen.
+  ///
+  /// A document that wants a password and one that turned a password down are
+  /// the same screen: the reader is being asked for the password either way,
+  /// and the difference is only whether to say the last one was wrong.
+  void _reportFailure(Failure failure, String filePath) {
+    state = switch (failure) {
+      PasswordRequiredFailure() =>
+        PdfViewerState.passwordRequired(filePath: filePath),
+      PasswordIncorrectFailure() =>
+        PdfViewerState.passwordRequired(filePath: filePath, wasWrong: true),
+      _ => PdfViewerState.error(
+          message: failure.message,
+          filePath: filePath,
+          code: failure.code,
+        ),
+    };
   }
 
   /// Closes the current document.

@@ -26,14 +26,24 @@ class PdfSaveService {
   /// [pages] describe the pages as the reader sees them: their turn, and the
   /// sides that turn gives them. Objects are positioned against that view, so
   /// without it they cannot be placed into the file's own space.
+  ///
+  /// [password] is the one the document was opened with, and is needed to read
+  /// [originalBytes] at all when the document is protected. The protection
+  /// then survives into the saved file by itself: measured across RC4-40,
+  /// AES-128 and AES-256, the written document keeps its algorithm, its
+  /// permissions and both of its original passwords — including the owner
+  /// password, which cannot be recovered from a document opened with the user
+  /// one. Nothing here has to put the protection back, and nothing here may
+  /// take it off.
   Future<Either<Failure, String>> savePdfFromBytes({
     required Uint8List originalBytes,
     required List<PlacedImage> placedImages,
     required List<PdfPageInfo> pages,
     required String outputPath,
+    String? password,
   }) async {
     try {
-      final document = PdfDocument(inputBytes: originalBytes);
+      final document = PdfDocument(inputBytes: originalBytes, password: password);
       await _apply(document, placedImages, pages);
 
       final savedBytes = await document.save();
@@ -47,10 +57,14 @@ class PdfSaveService {
   }
 
   /// Creates a temporary copy of the PDF with images embedded, for sharing.
+  ///
+  /// The copy carries the original document's protection, so a shared
+  /// protected document stays protected and its recipient needs the password.
   Future<Either<Failure, String>> createTempPdfWithImagesFromBytes({
     required Uint8List originalBytes,
     required List<PlacedImage> placedImages,
     required List<PdfPageInfo> pages,
+    String? password,
   }) async {
     try {
       final tempDir = await getTemporaryDirectory();
@@ -59,6 +73,7 @@ class PdfSaveService {
         placedImages: placedImages,
         pages: pages,
         outputPath: '${tempDir.path}/${_uuid.v4()}.pdf',
+        password: password,
       );
     } catch (e) {
       return Left(StorageFailure(message: 'Failed to create temp PDF: $e'));

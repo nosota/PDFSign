@@ -596,6 +596,13 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   Future<void> _handlePaste() =>
       _runClipboardAction((clipboard) => clipboard.paste());
 
+  /// The password the open document needed, or null if it needed none.
+  ///
+  /// Held only in the state of this window's document; it is never written to
+  /// disk, never put in Recent Files, and never sent to another window.
+  String? get _documentPassword =>
+      ref.read(pdfDocumentProvider).documentOrNull?.security.password;
+
   Future<void> _handleShare() async {
     if (_currentFilePath.isEmpty) return;
 
@@ -625,6 +632,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
               originalBytes: originalBytes,
               placedImages: placedImages,
               pages: _pages(),
+              password: _documentPassword,
             );
 
     await result.fold(
@@ -692,6 +700,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
           placedImages: placedImages,
           pages: pages,
           outputPath: _currentFilePath,
+          password: _documentPassword,
         );
 
     return result.fold(
@@ -741,6 +750,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
           placedImages: placedImages,
           pages: _pages(),
           outputPath: outputPath,
+          password: _documentPassword,
         );
 
     result.fold(
