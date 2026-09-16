@@ -31,7 +31,7 @@ Architecture detail is kept out of this document; see [docs/ARCHITECTURE.md](doc
 | Product name | PDFSign |
 | Bundle identifier | `com.ivanvaganov.pdfsign` |
 | Dart package name | `pdfsign` |
-| Version | 1.0.0+1 (`pubspec.yaml`) |
+| Version | 1.2.0+1 (`pubspec.yaml`) — `Info.plist` reads both through `$(FLUTTER_BUILD_NAME)` / `$(FLUTTER_BUILD_NUMBER)`; the About panel shows the version alone (see §2.4) |
 | License | Proprietary |
 
 ### 1.2 Description
@@ -71,6 +71,10 @@ The app sandbox is **disabled** (`macos/Runner/Release.entitlements`: `com.apple
 ### 2.3 Build Flavors
 
 None. There is a single build configuration. `flutter_flavorizr` is not used.
+
+### 2.4 Application Object
+
+`NSPrincipalClass` is `PDFSignApplication` (`macos/Runner/PDFSignApplication.swift`), not `NSApplication`. The subclass exists for one reason and should not grow others: `NSApplication`'s standard About panel prints `Version <CFBundleShortVersionString> (<CFBundleVersion>)` whenever both keys are set, so the panel read "Version 1.2.0 (1)". The override shows the panel with an empty version option, which drops the parenthetical; `CFBundleVersion` itself is untouched, because macOS uses it to tell one build from another.
 
 ---
 

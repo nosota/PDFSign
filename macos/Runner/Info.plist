@@ -50,7 +50,7 @@
 	<key>NSNetworkVolumesUsageDescription</key>
 	<string>PDFSign needs access to open and save PDF files from network drives.</string>
 	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
+	<string>PDFSignApplication</string>
 	<key>NSRemovableVolumesUsageDescription</key>
 	<string>PDFSign needs access to open and save PDF files from external drives.</string>
 </dict>
