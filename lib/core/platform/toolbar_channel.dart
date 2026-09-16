@@ -72,24 +72,27 @@ class ToolbarChannel {
     }
   }
 
-  /// Sets the visibility of the Delete button in the toolbar.
+  /// Enables or disables the Delete button in the toolbar.
   ///
-  /// The Delete button should be visible only when an object is selected.
+  /// The button is always in the toolbar and is greyed out when nothing is
+  /// selected. Taking it away instead would move the controls beside it every
+  /// time the selection changed.
+  ///
   /// Pass [label] and [tooltip] to set localized texts.
-  static Future<void> setDeleteButtonVisible(
-    bool visible, {
+  static Future<void> setDeleteButtonEnabled(
+    bool enabled, {
     String? label,
     String? tooltip,
   }) async {
     try {
-      await _channel.invokeMethod('setDeleteButtonVisible', {
-        'visible': visible,
+      await _channel.invokeMethod('setDeleteButtonEnabled', {
+        'enabled': enabled,
         'label': label,
         'tooltip': tooltip,
       });
     } catch (e) {
       if (kDebugMode) {
-        print('ToolbarChannel: Failed to set delete button visibility: $e');
+        print('ToolbarChannel: Failed to set delete button state: $e');
       }
     }
   }

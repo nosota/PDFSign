@@ -128,17 +128,17 @@ class AppDelegate: FlutterAppDelegate {
           }
           result(nil)
 
-        case "setDeleteButtonVisible":
-          // Show or hide the delete button based on selection state
+        case "setDeleteButtonEnabled":
+          // Grey the delete button out when there is nothing selected
           let args = call.arguments as? [String: Any] ?? [:]
-          let visible = args["visible"] as? Bool ?? false
+          let enabled = args["enabled"] as? Bool ?? false
           let label = args["label"] as? String
           let tooltip = args["tooltip"] as? String
           DispatchQueue.main.async {
             if let window = controller.view.window,
                let toolbarHelper = toolbarHelpers[ObjectIdentifier(window)],
                toolbarHelper.owns(window) {
-              toolbarHelper.setDeleteButtonVisible(visible, label: label, tooltip: tooltip)
+              toolbarHelper.setDeleteButtonEnabled(enabled, label: label, tooltip: tooltip)
             }
           }
           result(nil)
@@ -681,13 +681,11 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
   /// windows independent.
   private let toolbarIdentifier = "PDFSignToolbar.\(UUID().uuidString)"
 
-  /// Last visibility Dart asked for.
+  /// Whether Delete currently has something to act on.
   ///
-  /// Only a record of the request — never used to decide whether to mutate the
-  /// toolbar, which is always derived from the toolbar itself. It exists so a
-  /// request that arrived before the toolbar existed is not lost, because the
-  /// Dart listener is edge-triggered and will not repeat it.
-  private var requestedDeleteVisible = false
+  /// Kept so a request that arrived before the toolbar existed is not lost:
+  /// the Dart listener is edge-triggered and will not repeat it.
+  private var deleteEnabled = false
 
   private var deleteLabel: String = "Delete"
   private var deleteTooltip: String = "Delete selected object"
@@ -747,71 +745,64 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
     window.toolbar = toolbar
 
     // Apply whatever Dart asked for while the toolbar did not yet exist.
-    setDeleteButtonVisible(requestedDeleteVisible, label: nil, tooltip: nil)
+    setDeleteButtonEnabled(deleteEnabled, label: nil, tooltip: nil)
   }
 
-  /// Position of the Delete item in the live toolbar, or nil when absent.
-  private func deleteItemIndex(in toolbar: NSToolbar) -> Int? {
-    return toolbar.items.firstIndex { $0.itemIdentifier == deleteItemIdentifier }
-  }
-
-  /// Shows or hides the Delete button in the toolbar.
+  /// Enables or disables the Delete button.
   ///
-  /// The toolbar itself is the source of truth. An earlier version mirrored
-  /// its contents in a Bool and updated that mirror before the mutation, so
-  /// any early return left the two disagreeing; the next show then re-inserted
-  /// an item NSToolbar already held, raising NSInternalInconsistencyException
-  /// and aborting the process. Deriving the state makes the call idempotent
-  /// and that whole class of drift impossible.
-  func setDeleteButtonVisible(_ visible: Bool, label: String?, tooltip: String?) {
+  /// The item is always in the toolbar. An earlier version inserted and
+  /// removed it as the selection changed, which moved everything around it and
+  /// which twice put NSToolbar into a state it aborted the process over. A
+  /// toolbar whose item set never changes cannot drift, cannot duplicate an
+  /// item, and cannot shift the controls beside it.
+  func setDeleteButtonEnabled(_ enabled: Bool, label: String?, tooltip: String?) {
     if let label = label {
       deleteLabel = label
     }
     if let tooltip = tooltip {
       deleteTooltip = tooltip
     }
-    requestedDeleteVisible = visible
+    deleteEnabled = enabled
 
-    guard let toolbar = window?.toolbar else { return }
-    let existingIndex = deleteItemIndex(in: toolbar)
-    var mutated = false
+    guard let item = deleteItem() else { return }
+    item.isEnabled = enabled
+    item.label = deleteLabel
+    item.paletteLabel = deleteLabel
+    item.toolTip = deleteTooltip
+  }
 
-    if visible {
-      if let index = existingIndex {
-        // Already present: only the localized texts can have changed.
-        let item = toolbar.items[index]
-        item.label = deleteLabel
-        item.paletteLabel = deleteLabel
-        item.toolTip = deleteTooltip
-      } else {
-        // Delete sits just before the trailing Share item. Clamp into the
-        // range NSToolbar accepts (0...count) so a toolbar with unexpected
-        // contents cannot push the index out of bounds.
-        let insertIndex = min(max(toolbar.items.count - 1, 0), toolbar.items.count)
-        toolbar.insertItem(withItemIdentifier: deleteItemIdentifier, at: insertIndex)
-        mutated = true
-      }
-    } else if let index = existingIndex {
-      toolbar.removeItem(at: index)
-      mutated = true
-    }
-
-    if mutated {
-      toolbar.validateVisibleItems()
+  /// The Delete item in the live toolbar, or nil before the toolbar exists.
+  private func deleteItem() -> NSToolbarItem? {
+    return window?.toolbar?.items.first {
+      $0.itemIdentifier == deleteItemIdentifier
     }
   }
 
   // MARK: - NSToolbarDelegate
 
   func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-    return [rotateGroupIdentifier, deleteItemIdentifier, shareItemIdentifier, .flexibleSpace]
+    return [
+      rotateGroupIdentifier,
+      deleteItemIdentifier,
+      shareItemIdentifier,
+      .flexibleSpace,
+      .space,
+    ]
   }
 
   func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-    // Page rotation sits at the leading edge, apart from the trailing group,
-    // so that Delete appearing and disappearing cannot shift it. Delete itself
-    // is inserted dynamically, immediately before Share.
-    return [rotateGroupIdentifier, .flexibleSpace, shareItemIdentifier]
+    // Every item, always. Delete is greyed out when nothing is selected rather
+    // than taken away: an item set that never changes is an item set that
+    // never moves the controls around it.
+    return [
+      rotateGroupIdentifier,
+      .flexibleSpace,
+      deleteItemIdentifier,
+      // Deleting the selected object and sharing the document are unrelated
+      // actions; a fixed gap keeps them from reading as one control.
+      .space,
+      shareItemIdentifier,
+    ]
   }
 
   /// Replaces the rotate control's localized texts.
@@ -939,7 +930,7 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
 
       item.action = #selector(deleteButtonClicked)
       item.target = self
-      item.isEnabled = true
+      item.isEnabled = deleteEnabled
       item.autovalidates = false
       return item
     }

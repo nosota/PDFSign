@@ -487,8 +487,8 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
               ? AppLocalizations.of(navigatorContext)
               : null;
 
-          // Update toolbar Delete button visibility
-          ToolbarChannel.setDeleteButtonVisible(
+          // Grey the toolbar Delete button out when nothing is selected
+          ToolbarChannel.setDeleteButtonEnabled(
             hasSelection,
             label: l10n?.deleteButtonLabel,
             tooltip: l10n?.deleteButtonTooltip,

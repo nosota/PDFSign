@@ -40,9 +40,8 @@ final class PDFSignToolbarHelperTests: XCTestCase {
     helper = PDFSignToolbarHelper(window: window, binaryMessenger: StubBinaryMessenger())
     helper.setupToolbar()
 
-    // setupToolbar drops an inherited Delete item; assert the fixture really is
-    // clean so a leak between tests cannot be mistaken for a passing case.
-    XCTAssertEqual(deleteItemCount(), 0, "fixture must start without a Delete item")
+    // The item set is fixed, so every test starts from the same toolbar.
+    XCTAssertEqual(deleteItemCount(), 1, "Delete is always in the toolbar")
   }
 
   override func tearDown() {
@@ -63,188 +62,105 @@ final class PDFSignToolbarHelperTests: XCTestCase {
     return window.toolbar?.items.first { $0.itemIdentifier.rawValue == Self.deleteIdentifier }
   }
 
-  // MARK: - Drift that used to abort the process
-
-  /// The real-world trigger. NSToolbar shares its item set between instances
-  /// created with the same identifier, so a window could come up with a Delete
-  /// button inherited from an earlier window while its own helper believed the
-  /// button was absent. The first selection then inserted a second copy and
-  /// NSToolbar aborted the process.
-  func testShouldNotDuplicateWhenTheToolbarAlreadyCarriesTheItem() {
-    guard let toolbar = window.toolbar else {
-      return XCTFail("setupToolbar did not install a toolbar")
-    }
-    // Stand in for AppKit handing over a pre-populated toolbar.
-    toolbar.insertItem(
-      withItemIdentifier: NSToolbarItem.Identifier(Self.deleteIdentifier),
-      at: max(0, toolbar.items.count - 1)
-    )
-    XCTAssertEqual(deleteItemCount(), 1)
-
-    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
-
-    XCTAssertEqual(deleteItemCount(), 1, "the inherited item must be reused, not duplicated")
+  private func identifiers() -> [String] {
+    return (window.toolbar?.items ?? []).map { $0.itemIdentifier.rawValue }
   }
 
-  /// A window opens with nothing selected, so an inherited button must go.
-  func testShouldStartWithoutAnInheritedDeleteItem() {
-    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
-    XCTAssertEqual(deleteItemCount(), 1)
+  // MARK: - A toolbar that never rearranges
 
-    // A second window of the same app, built the same way.
-    let second = NSWindow(
-      contentRect: NSRect(x: 0, y: 0, width: 400, height: 300),
-      styleMask: [.titled],
-      backing: .buffered,
-      defer: false
-    )
-    second.isReleasedWhenClosed = false
-    let secondHelper = PDFSignToolbarHelper(
-      window: second,
-      binaryMessenger: StubBinaryMessenger()
-    )
-    secondHelper.setupToolbar()
+  /// The whole point of the design. An item set that never changes cannot move
+  /// the controls beside it, cannot duplicate an item, and cannot put NSToolbar
+  /// into the inconsistent state that twice aborted the process.
+  func testShouldKeepTheSameItemsWhateverTheSelectionDoes() {
+    let before = identifiers()
 
-    let inherited = (second.toolbar?.items ?? [])
-      .filter { $0.itemIdentifier.rawValue == Self.deleteIdentifier }
-    XCTAssertTrue(inherited.isEmpty, "a fresh window must not show Delete before a selection")
+    helper.setDeleteButtonEnabled(true, label: nil, tooltip: nil)
+    XCTAssertEqual(identifiers(), before)
 
-    toolbarHelpers.removeValue(forKey: ObjectIdentifier(second))
-  }
+    helper.setDeleteButtonEnabled(false, label: nil, tooltip: nil)
+    XCTAssertEqual(identifiers(), before)
 
-  /// A hide that cannot reach the toolbar used to leave the cached flag saying
-  /// "hidden" while the item was still installed. The next show then inserted a
-  /// second copy, and NSToolbar raised NSInternalInconsistencyException, which
-  /// Swift cannot catch — the whole app died.
-  func testShouldNotDuplicateWhenAHideCouldNotReachTheToolbar() {
-    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
-    XCTAssertEqual(deleteItemCount(), 1)
-
-    let detached = window.toolbar
-    window.toolbar = nil
-    helper.setDeleteButtonVisible(false, label: nil, tooltip: nil)
-    window.toolbar = detached
-
-    XCTAssertEqual(deleteItemCount(), 1, "the detached toolbar still holds the item")
-
-    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
-
-    XCTAssertEqual(deleteItemCount(), 1, "showing again must not insert a duplicate")
-  }
-
-  // MARK: - Idempotence
-
-  func testShouldInsertTheItemWhenSelectionAppears() {
-    XCTAssertEqual(deleteItemCount(), 0)
-    helper.setDeleteButtonVisible(true, label: "Delete", tooltip: "Delete selected object")
-    XCTAssertEqual(deleteItemCount(), 1)
-  }
-
-  func testShouldRemoveTheItemWhenSelectionClears() {
-    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
-    helper.setDeleteButtonVisible(false, label: nil, tooltip: nil)
-    XCTAssertEqual(deleteItemCount(), 0)
-  }
-
-  func testShouldKeepOneItemWhenShownRepeatedly() {
-    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
-    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
-    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
-    XCTAssertEqual(deleteItemCount(), 1)
-  }
-
-  func testShouldStayEmptyWhenHiddenRepeatedly() {
-    helper.setDeleteButtonVisible(false, label: nil, tooltip: nil)
-    helper.setDeleteButtonVisible(false, label: nil, tooltip: nil)
-    XCTAssertEqual(deleteItemCount(), 0)
-  }
-
-  func testShouldSurviveAlternatingSelection() {
     for _ in 0..<10 {
-      helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
-      helper.setDeleteButtonVisible(false, label: nil, tooltip: nil)
+      helper.setDeleteButtonEnabled(true, label: nil, tooltip: nil)
+      helper.setDeleteButtonEnabled(false, label: nil, tooltip: nil)
     }
-    XCTAssertEqual(deleteItemCount(), 0)
-    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
+    XCTAssertEqual(identifiers(), before, "alternating selection must not rearrange anything")
     XCTAssertEqual(deleteItemCount(), 1)
   }
 
-  // MARK: - Texts and bounds
-
-  func testShouldUpdateTextsOnAnAlreadyVisibleItem() {
-    helper.setDeleteButtonVisible(true, label: "Удалить", tooltip: "Удалить объект")
-    helper.setDeleteButtonVisible(true, label: "Delete", tooltip: "Delete selected object")
-
-    XCTAssertEqual(deleteItem()?.label, "Delete")
-    XCTAssertEqual(deleteItem()?.toolTip, "Delete selected object")
-  }
-
-  func testShouldInsertIntoAnEmptyToolbarWithoutLeavingBounds() {
-    // A throwaway identifier: emptying the shared one would leak that
-    // configuration into every later toolbar built with the same identifier.
-    let isolated = NSToolbar(identifier: "PDFSignToolbarTest.\(UUID().uuidString)")
-    isolated.delegate = helper
-    window.toolbar = isolated
-    while !isolated.items.isEmpty {
-      isolated.removeItem(at: 0)
-    }
-    XCTAssertEqual(isolated.items.count, 0)
-
-    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
-
-    XCTAssertEqual(deleteItemCount(), 1)
-  }
-
-  func testShouldPlaceDeleteBeforeShare() {
-    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
-    let identifiers = (window.toolbar?.items ?? []).map { $0.itemIdentifier.rawValue }
-
-    guard let delete = identifiers.firstIndex(of: Self.deleteIdentifier),
-          let share = identifiers.firstIndex(of: "ShareItem")
-    else {
-      return XCTFail("expected both items, got \(identifiers)")
-    }
-    XCTAssertLessThan(delete, share, "order was \(identifiers)")
-  }
-
-  // MARK: - Independence between windows
-
-  /// NSToolbar shares its item set *live* between instances built with the same
-  /// identifier: removing an item from one window's toolbar removed it from
-  /// every other window's too. Each helper now uses its own identifier.
-  func testShouldNotDisturbAnotherWindowsToolbar() {
-    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
-    XCTAssertEqual(deleteItemCount(), 1)
-
-    let second = NSWindow(
-      contentRect: NSRect(x: 0, y: 0, width: 400, height: 300),
-      styleMask: [.titled],
-      backing: .buffered,
-      defer: false
-    )
-    second.isReleasedWhenClosed = false
-    let secondHelper = PDFSignToolbarHelper(
-      window: second,
-      binaryMessenger: StubBinaryMessenger()
-    )
-    secondHelper.setupToolbar()
-
-    let secondItems = (second.toolbar?.items ?? [])
-      .filter { $0.itemIdentifier.rawValue == Self.deleteIdentifier }
-    XCTAssertTrue(secondItems.isEmpty, "a new window starts without Delete")
-
+  func testShouldLayOutRotationDeleteAndShareInThatOrder() {
     XCTAssertEqual(
-      deleteItemCount(),
-      1,
-      "opening another window must not strip the first window's Delete button"
+      identifiers(),
+      [
+        "RotateGroup",
+        "NSToolbarFlexibleSpaceItem",
+        "DeleteItem",
+        "NSToolbarSpaceItem",
+        "ShareItem",
+      ],
+      "rotation leads; Delete stands on its own, apart from Share"
     )
+  }
 
-    toolbarHelpers.removeValue(forKey: ObjectIdentifier(second))
+  /// Deleting the selected object and sharing the document are unrelated, and
+  /// two icons side by side read as one control.
+  func testShouldSeparateDeleteFromShare() {
+    let items = identifiers()
+    let delete = items.firstIndex(of: "DeleteItem")
+    let share = items.firstIndex(of: "ShareItem")
+
+    XCTAssertNotNil(delete)
+    XCTAssertNotNil(share)
+    XCTAssertEqual(
+      items[delete! + 1],
+      "NSToolbarSpaceItem",
+      "a gap must stand between them"
+    )
+    XCTAssertEqual(share, delete! + 2)
+  }
+
+  // MARK: - Delete follows the selection
+
+  func testShouldStartDisabledBecauseNothingIsSelected() {
+    XCTAssertEqual(deleteItem()?.isEnabled, false)
+  }
+
+  func testShouldEnableWhenSomethingIsSelected() {
+    helper.setDeleteButtonEnabled(true, label: nil, tooltip: nil)
+    XCTAssertEqual(deleteItem()?.isEnabled, true)
+  }
+
+  func testShouldDisableAgainWhenTheSelectionClears() {
+    helper.setDeleteButtonEnabled(true, label: nil, tooltip: nil)
+    helper.setDeleteButtonEnabled(false, label: nil, tooltip: nil)
+    XCTAssertEqual(deleteItem()?.isEnabled, false)
+  }
+
+  func testShouldBeIdempotent() {
+    helper.setDeleteButtonEnabled(true, label: nil, tooltip: nil)
+    helper.setDeleteButtonEnabled(true, label: nil, tooltip: nil)
+    XCTAssertEqual(deleteItem()?.isEnabled, true)
+    XCTAssertEqual(deleteItemCount(), 1)
+  }
+
+  func testShouldTakeLocalizedTexts() {
+    helper.setDeleteButtonEnabled(true, label: "Löschen", tooltip: "Objekt löschen")
+
+    XCTAssertEqual(deleteItem()?.label, "Löschen")
+    XCTAssertEqual(deleteItem()?.paletteLabel, "Löschen")
+    XCTAssertEqual(deleteItem()?.toolTip, "Objekt löschen")
+  }
+
+  func testShouldKeepTextsWhenNoneAreGiven() {
+    helper.setDeleteButtonEnabled(true, label: "Löschen", tooltip: "Objekt löschen")
+    helper.setDeleteButtonEnabled(false, label: nil, tooltip: nil)
+
+    XCTAssertEqual(deleteItem()?.label, "Löschen", "a state change must not undo the translation")
   }
 
   /// The Dart listener is edge-triggered, so a request that arrives before the
   /// toolbar exists is never repeated and has to be replayed on setup.
-  func testShouldApplyAVisibilityRequestMadeBeforeSetup() {
+  func testShouldApplyARequestMadeBeforeSetup() {
     let pending = NSWindow(
       contentRect: NSRect(x: 0, y: 0, width: 400, height: 300),
       styleMask: [.titled],
@@ -259,15 +175,58 @@ final class PDFSignToolbarHelperTests: XCTestCase {
 
     // No toolbar yet — this would otherwise be dropped on the floor.
     XCTAssertNil(pending.toolbar)
-    pendingHelper.setDeleteButtonVisible(true, label: "Delete", tooltip: "tip")
+    pendingHelper.setDeleteButtonEnabled(true, label: "Delete", tooltip: "tip")
 
     pendingHelper.setupToolbar()
 
-    let items = (pending.toolbar?.items ?? [])
-      .filter { $0.itemIdentifier.rawValue == Self.deleteIdentifier }
-    XCTAssertEqual(items.count, 1, "the pending request must be applied on setup")
+    let item = pending.toolbar?.items.first {
+      $0.itemIdentifier.rawValue == Self.deleteIdentifier
+    }
+    XCTAssertEqual(item?.isEnabled, true, "the pending request must be applied on setup")
 
     toolbarHelpers.removeValue(forKey: ObjectIdentifier(pending))
+  }
+
+  func testShouldSurviveAToolbarThatCannotBeReached() {
+    // A window torn down between the selection changing and the call arriving.
+    let detached = window.toolbar
+    window.toolbar = nil
+
+    helper.setDeleteButtonEnabled(true, label: nil, tooltip: nil)
+
+    window.toolbar = detached
+    XCTAssertEqual(deleteItemCount(), 1)
+  }
+
+  // MARK: - Windows are independent
+
+  /// NSToolbar shares its item set between instances created with the same
+  /// identifier, which is what made one window strip another window's button.
+  /// Each helper therefore uses an identifier of its own.
+  func testShouldNotDisturbAnotherWindowsToolbar() {
+    helper.setDeleteButtonEnabled(true, label: "First", tooltip: nil)
+
+    let second = NSWindow(
+      contentRect: NSRect(x: 0, y: 0, width: 400, height: 300),
+      styleMask: [.titled],
+      backing: .buffered,
+      defer: false
+    )
+    second.isReleasedWhenClosed = false
+    let secondHelper = PDFSignToolbarHelper(
+      window: second,
+      binaryMessenger: StubBinaryMessenger()
+    )
+    secondHelper.setupToolbar()
+
+    let secondItem = second.toolbar?.items.first {
+      $0.itemIdentifier.rawValue == Self.deleteIdentifier
+    }
+    XCTAssertEqual(secondItem?.isEnabled, false, "a new window starts with nothing selected")
+    XCTAssertEqual(deleteItem()?.isEnabled, true, "and must not reach into the first window")
+    XCTAssertEqual(deleteItem()?.label, "First")
+
+    toolbarHelpers.removeValue(forKey: ObjectIdentifier(second))
   }
 
   // MARK: - Helper registry
@@ -300,53 +259,8 @@ final class PDFSignToolbarHelperTests: XCTestCase {
     )
   }
 
-  // MARK: - Where the items sit
+  // MARK: - The rotate control
 
-  /// Page rotation sits at the leading edge so that Delete appearing and
-  /// disappearing cannot shift it, and Share stays where it has always been.
-  func testShouldPlaceRotationAheadOfTheFlexibleSpace() {
-    let identifiers = (window.toolbar?.items ?? []).map { $0.itemIdentifier.rawValue }
-
-    XCTAssertEqual(
-      identifiers,
-      ["RotateGroup", "NSToolbarFlexibleSpaceItem", "ShareItem"],
-      "the rotate control belongs before the space that pushes the rest right"
-    )
-  }
-
-  /// The item Dart inserts must still land immediately before Share, which is
-  /// where the reader is used to finding it. The index is computed from the
-  /// item count, so adding the rotate group could have moved it.
-  func testShouldKeepDeleteImmediatelyBeforeShare() {
-    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
-
-    let identifiers = (window.toolbar?.items ?? []).map { $0.itemIdentifier.rawValue }
-
-    XCTAssertEqual(
-      identifiers,
-      ["RotateGroup", "NSToolbarFlexibleSpaceItem", "DeleteItem", "ShareItem"]
-    )
-  }
-
-  /// Showing and hiding Delete must not disturb the rotate control's position,
-  /// which is the whole reason it sits in its own group.
-  func testShouldLeaveRotationInPlaceWhileDeleteComesAndGoes() {
-    let before = (window.toolbar?.items ?? []).firstIndex {
-      $0.itemIdentifier.rawValue == "RotateGroup"
-    }
-
-    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
-    helper.setDeleteButtonVisible(false, label: nil, tooltip: nil)
-    helper.setDeleteButtonVisible(true, label: nil, tooltip: nil)
-
-    let after = (window.toolbar?.items ?? []).firstIndex {
-      $0.itemIdentifier.rawValue == "RotateGroup"
-    }
-    XCTAssertEqual(before, 0)
-    XCTAssertEqual(after, 0)
-  }
-
-  /// One control of two halves, not two loose buttons.
   func testShouldBuildRotationAsATwoSegmentGroup() {
     let group = (window.toolbar?.items ?? []).first {
       $0.itemIdentifier.rawValue == "RotateGroup"
