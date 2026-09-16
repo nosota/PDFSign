@@ -220,7 +220,7 @@ Handles native macOS toolbar in PDF viewer windows.
 | Method | Arguments | Returns | Description |
 |--------|-----------|---------|-------------|
 | `setupToolbar` | - | - | Request toolbar setup for current window |
-| `setDeleteButtonVisible` | `visible`, `label`, `tooltip` | - | Show or hide Delete, with localized texts |
+| `setDeleteButtonEnabled` | `enabled`, `label`, `tooltip` | - | Enable or grey out Delete, with localized texts |
 | `setRotateLabels` | `left`, `right` | - | Localized texts for the rotate control |
 
 ### Native → Dart Methods
@@ -244,14 +244,22 @@ ToolbarChannel.setOnRotateRightPressed(VoidCallback? callback);
 ### Item layout
 
 ```
-[ rotate ⟲ ⟳ ][ flexible space ][ Delete? ][ Share ]
+[ rotate ⟲ ⟳ ][ flexible space ][ Delete ][ gap ][ Share ]
 ```
 
-Rotation sits at the leading edge, in its own `NSToolbarItemGroup` of two
-segments. Delete is inserted and removed as the selection changes, immediately
-before Share; because everything after the flexible space is pushed right,
-inserting there extends the group leftwards and leaves Share where it was. The
-rotate group is on the other side of the space, so it cannot be shifted at all.
+The item set never changes. Delete is **greyed out** when nothing is selected
+rather than taken away: an earlier version inserted and removed it, which moved
+the controls beside it every time the selection changed, and which twice put
+NSToolbar into a state that aborted the process. A fixed item set cannot drift,
+cannot duplicate an item, and cannot shift anything.
+
+Rotation is an `NSToolbarItemGroup` of two segments — one control, not two
+buttons. Delete stands on its own: a fixed space separates it from Share,
+because deleting the selected object and sharing the document are unrelated
+actions and two icons side by side read as one control.
+
+Measured on the running app: with and without a selection the four icons occupy
+exactly the same columns, and only the trash's colour changes.
 
 The toolbar is built by AppKit before Flutter has resolved a locale, so it
 starts with English texts. `setRotateLabels` corrects them once the toolbar

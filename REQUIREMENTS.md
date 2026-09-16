@@ -519,10 +519,10 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 
 | Aspect | State |
 |--------|-------|
-| `flutter analyze` | 1006 issues: 0 errors, **0 warnings**, 1006 info |
+| `flutter analyze` | 1008 issues: 0 errors, **0 warnings**, 1008 info |
 | Unit tests | **113** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry and the writer |
 | Widget tests | **59** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation |
-| Native tests | **20** — toolbar item management and layout (`macos/RunnerTests`) |
+| Native tests | **16** — the toolbar's fixed item set and layout, Delete's enabled state, the helper registry (`macos/RunnerTests`) |
 | Integration tests | **none** |
 | Golden tests | **none** |
 | CI | none |
@@ -613,7 +613,9 @@ Page measurement itself is no longer a problem: `PdfPageLayout` precomputes page
 
 ### 13.9 Toolbar helpers live in a global mutable dictionary
 
-`toolbarHelpers` in `AppDelegate.swift` is a file-scope mutable dictionary keyed by `ObjectIdentifier(window)` — the window's address, which the allocator reuses. Entries are now evicted when a window closes and every lookup confirms ownership, so the stale-entry hazard is closed, but the design is still a global that `CLAUDE.md` would reject in Dart. Attaching the helper to the window (associated object) or to the `FlutterViewController` would remove it.
+`toolbarHelpers` in `AppDelegate.swift` is a file-scope mutable dictionary keyed by `ObjectIdentifier(window)` — the window's address, which the allocator reuses. Entries are evicted when a window closes and every lookup confirms ownership, so the stale-entry hazard is closed, but the design is still a global that `CLAUDE.md` would reject in Dart. Attaching the helper to the window (associated object) or to the `FlutterViewController` would remove it.
+
+> The related hazard is gone: the toolbar's item set is now fixed, and Delete is greyed out rather than inserted and removed, so there is no mutation to drift out of step.
 
 ### 13.10 Exception classification by string matching
 `PdfDocumentRepositoryImpl` maps `pdfx` failures to `Failure` types by searching the exception's `toString()` for `"password"`, `"not found"`, `"permission"`, and similar. Brittle across library versions and locales. See CODE_REVIEW §1.1.
