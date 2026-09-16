@@ -234,7 +234,7 @@ go_router, mime
 
 - Adding a dependency requires a stated justification and a check that no existing dependency covers the need.
 - No deprecated or unmaintained packages. Prefer Flutter-team and well-established packages.
-- Review licences for commercial compatibility. Syncfusion is used under a Community licence — **never commit a licence key** (one is currently in `TODO.md` and must be removed; REQUIREMENTS.md §13.14).
+- Review licences for commercial compatibility. Syncfusion is used under a Community licence — **never commit a licence key** (one is currently in `TODO.md` and must be removed; REQUIREMENTS.md §13.15).
 - `go_router` and `mime` are unused. Either wire them up deliberately or remove them; do not build new code on them casually.
 
 ---

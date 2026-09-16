@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
+- An application icon: the signed page from `pSGNF.jpg` on a rounded blue square, in the app's own accent colour. Built for macOS, for Windows, and for the Welcome screen by `tool/app_icon/generate.py`
 - A View menu with Zoom In (Cmd+=), Zoom Out (Cmd+-), Fit Width (Cmd+0) and Go to Page (Cmd+G). The zoom controls on screen already worked; their shortcuts did not, and Go to Page could not be opened at all
 - Rotate the page in view left or right, from a two-part control at the left of the toolbar or from Edit → Rotate Left / Rotate Right (Cmd+L / Cmd+R). The turn is written into the file as the page's rotation, objects on the page turn with it, and the view stays on the page that was turned
 - Images larger than 100 MB or 4096x4096 are refused on import and on paste, with a message naming the limit, instead of being decoded into memory

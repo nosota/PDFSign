@@ -632,10 +632,15 @@ Go to Page and zoom were reached the same dead way and now have View-menu items.
 ### 13.12 Paste is always enabled
 `PlatformMenuBar` gives no hook to revalidate a menu item as the menu opens, and polling the pasteboard would be worse. Edit → Paste is therefore always enabled while a document is open and does nothing when the clipboard holds nothing usable. Cut and Copy do better: they follow the selection and the keyboard focus.
 
-### 13.13 Pasted images are swept only at a cold start
+### 13.13 The built icon carries only four sizes
+`actool` packs the asset catalogue into an `.icns` holding 16, 32, 128 and 256 px and drops the 512 and 1024 px images, though the catalogue declares them and the files are there. Measured on 2026-09-16 by reading the chunk table of the built `AppIcon.icns`; giving every catalogue entry its own file changed nothing, and a build with the previous icons produced the same four. It is the toolchain, not the artwork.
+
+The Dock and ordinary Finder sizes are unaffected — they need 256 at most. Get Info and the largest Finder previews upscale from 256 and look slightly soft. Shipping a complete `.icns` built with `iconutil` would fix it, at the cost of pointing `Info.plist` at a resource file instead of the asset catalogue.
+
+### 13.14 Pasted images are swept only at a cold start
 An image pasted from another application is stored in `pasted/` in app support and has no library row to own it. The folder is emptied when the main window starts, which is the only moment no document window can be holding one of those files. If the app is killed, its scratch files survive until the next launch. Bounded and self-correcting, but not immediate.
 
-### 13.14 The Syncfusion license key is committed
+### 13.15 The Syncfusion license key is committed
 `TODO.md` contains a Syncfusion community license key in plain text. It should be removed from the repository and from history.
 
 ---
