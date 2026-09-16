@@ -15,6 +15,7 @@ import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/page_indi
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_drop_target.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/document_password_prompt.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_page_list.dart';
+import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/read_only_notice.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_viewer_constants.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/zoom_controls.dart';
 
@@ -318,7 +319,7 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
       child: viewerState.map(
         initial: (_) => _buildEmptyState(),
         loading: (state) => _buildLoadingState(state.filePath),
-        loaded: (state) => _buildLoadedState(state),
+        loaded: (state) => _withReadOnlyNotice(state, _buildLoadedState(state)),
         error: (state) => _buildErrorState(state.message, state.code),
         passwordRequired: (state) => DocumentPasswordPrompt(
           wasWrong: state.wasWrong,
@@ -351,6 +352,17 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
       child: const Center(
         child: CircularProgressIndicator(),
       ),
+    );
+  }
+
+  /// Puts a notice over the document when it does not allow changes.
+  Widget _withReadOnlyNotice(PdfViewerLoaded state, Widget viewer) {
+    if (state.document.security.allowsEditing) return viewer;
+    return Column(
+      children: [
+        ReadOnlyNotice(security: state.document.security),
+        Expanded(child: viewer),
+      ],
     );
   }
 

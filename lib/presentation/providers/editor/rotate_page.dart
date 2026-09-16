@@ -25,6 +25,11 @@ bool rotateCurrentPage(WidgetRef ref, int quarterTurns) {
   if (document == null || document.pages.isEmpty) {
     return false;
   }
+  // A turn is written into the file, so a document that does not allow its
+  // content to be changed does not allow this either.
+  if (!document.security.allowsEditing) {
+    return false;
+  }
 
   final pageNumber = state
       .maybeMap(loaded: (loaded) => loaded.currentPage, orElse: () => 1)

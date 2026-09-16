@@ -3,8 +3,9 @@ import 'dart:typed_data';
 
 import 'package:path_provider/path_provider.dart';
 
-/// Threshold for storing PDF in memory vs temp file.
-const _memoryThreshold = 50 * 1024 * 1024; // 50 MB
+import 'package:pdfsign/core/constants/document_memory.dart';
+
+
 
 /// Storage for original PDF bytes.
 ///
@@ -33,7 +34,7 @@ class OriginalPdfStorage {
     _originalFilePath = sourcePath;
     final size = await file.length();
 
-    if (size <= _memoryThreshold) {
+    if (size <= documentMemoryThresholdBytes) {
       // Small file — store in memory
       _inMemory = await file.readAsBytes();
     } else {

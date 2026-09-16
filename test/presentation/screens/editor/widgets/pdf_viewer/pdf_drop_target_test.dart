@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pdfsign/core/errors/failure.dart';
+import 'package:pdfsign/domain/entities/document_security.dart';
 import 'package:pdfsign/domain/entities/pdf_document_info.dart';
 import 'package:pdfsign/domain/entities/pdf_page_info.dart';
 import 'package:pdfsign/domain/entities/placed_image.dart';
@@ -79,9 +80,14 @@ class _FakePdfDocumentRepository implements PdfDocumentRepository {
       throw UnimplementedError();
 }
 
-PdfDocumentInfo _document(List<Size> pageSizes) => PdfDocumentInfo(
+PdfDocumentInfo _document(
+  List<Size> pageSizes, {
+  DocumentSecurity security = const DocumentSecurity.unprotected(),
+}) =>
+    PdfDocumentInfo(
       filePath: '/tmp/doc.pdf',
       fileName: 'doc.pdf',
+      security: security,
       pageCount: pageSizes.length,
       pages: [
         for (var i = 0; i < pageSizes.length; i++)
@@ -233,6 +239,69 @@ void main() {
   /// calculator does not expect, the expectations below break.
   Rect renderedPageRect(WidgetTester tester, int pageIndex) =>
       tester.getRect(find.byType(PdfPageItem).at(pageIndex));
+
+  group('a document that does not allow changes', () {
+    testWidgets('should refuse the drop and stay empty', (tester) async {
+      // The document permits reading and printing and nothing else. Putting a
+      // signature on it would be exactly the change it refuses.
+      final container = buildContainer();
+      final document = _document(
+        const [_a4],
+        security: const DocumentSecurity.protected(
+          password: 'open-me',
+          allowsEditing: false,
+          hasOwnerRights: false,
+        ),
+      );
+
+      await pumpEditor(
+        tester,
+        container,
+        document: document,
+        image: buildImage(),
+        viewportWidth: 600,
+        viewportHeight: 500,
+      );
+
+      await dragToViewer(tester, renderedPageRect(tester, 0).center);
+
+      expect(container.read(placedImagesProvider), isEmpty);
+    });
+
+    testWidgets('should not outline a page it will not accept',
+        (tester) async {
+      final container = buildContainer();
+      final document = _document(
+        const [_a4],
+        security: const DocumentSecurity.protected(
+          password: 'open-me',
+          allowsEditing: false,
+          hasOwnerRights: false,
+        ),
+      );
+
+      await pumpEditor(
+        tester,
+        container,
+        document: document,
+        image: buildImage(),
+        viewportWidth: 600,
+        viewportHeight: 500,
+      );
+
+      final centre = renderedPageRect(tester, 0).center;
+      final gesture =
+          await tester.startGesture(tester.getCenter(find.byType(ImageThumbnailCard).first));
+      await tester.pump(const Duration(milliseconds: 50));
+      await gesture.moveTo(centre);
+      await tester.pump();
+
+      expect(find.byKey(PdfDropTarget.highlightKey), findsNothing);
+
+      await gesture.up();
+      await tester.pumpAndSettle();
+    });
+  });
 
   group('drop on a page', () {
     testWidgets('should centre the object on the cursor', (tester) async {

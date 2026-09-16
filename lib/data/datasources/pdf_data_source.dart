@@ -85,9 +85,11 @@ class PdfDataSourceImpl implements PdfDataSource {
       _open(filePath, password);
 
   /// Opens [filePath], taking the protected route only when it is protected.
+  ///
+  /// The document already open is closed only once the new one has been read.
+  /// An open that fails — a wrong password, most of all — leaves the reader
+  /// looking at what they were looking at before, rather than at nothing.
   Future<PdfDocumentInfo> _open(String filePath, String? password) async {
-    await closeDocument();
-
     final file = File(filePath);
     if (!await file.exists()) {
       throw PathNotFoundException(
@@ -97,19 +99,31 @@ class PdfDataSourceImpl implements PdfDataSource {
     }
 
     final protection = await PdfSecurityChannel.inspect(filePath);
-    if (protection != null && protection.isEncrypted) {
-      return _openProtected(file, password);
-    }
+    final opened = protection != null && protection.isEncrypted
+        ? await _readProtected(file, password)
+        // Read straight from the file, which is what keeps a large document
+        // out of memory. Only a protected one has to be held there.
+        : (document: await PdfDocument.openFile(filePath), contents: null);
 
-    // Read straight from the file, which is what keeps a large document out
-    // of memory. Only a protected one has to be held there.
-    _document = await PdfDocument.openFile(filePath);
-    _documentInfo = await _extractDocumentInfo(filePath, _document!);
-    return _documentInfo!;
+    final info = await _extractDocumentInfo(
+      filePath,
+      opened.document,
+      rotations: opened.contents?.rotations,
+      security: opened.contents?.security ??
+          const DocumentSecurity.unprotected(),
+    );
+
+    await closeDocument();
+    _document = opened.document;
+    _documentInfo = info;
+    return info;
   }
 
-  /// Opens a protected document through the PDF writer and renders the copy.
-  Future<PdfDocumentInfo> _openProtected(File file, String? password) async {
+  /// Reads a protected document through the PDF writer and opens the copy.
+  Future<({PdfDocument document, ProtectedPdfContents contents})> _readProtected(
+    File file,
+    String? password,
+  ) async {
     final bytes = await file.readAsBytes();
 
     final ProtectedPdfContents contents;
@@ -122,14 +136,10 @@ class PdfDataSourceImpl implements PdfDataSource {
       throw PdfUnsupportedProtectionException('${error.message}');
     }
 
-    _document = await PdfDocument.openData(contents.renderableBytes);
-    _documentInfo = await _extractDocumentInfo(
-      file.path,
-      _document!,
-      rotations: contents.rotations,
-      security: contents.security,
+    return (
+      document: await PdfDocument.openData(contents.renderableBytes),
+      contents: contents,
     );
-    return _documentInfo!;
   }
 
   Future<PdfDocumentInfo> _extractDocumentInfo(

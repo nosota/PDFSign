@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'package:pdfsign/core/constants/document_memory.dart';
 import 'package:pdfsign/core/platform/open_pdf_files_channel.dart';
 import 'package:pdfsign/core/platform/sub_window_channel.dart';
 import 'package:pdfsign/core/platform/toolbar_channel.dart';
@@ -15,6 +16,7 @@ import 'package:pdfsign/core/theme/app_theme.dart';
 import 'package:pdfsign/presentation/apps/close_all_coordinator.dart';
 import 'package:pdfsign/core/utils/focus_utils.dart';
 import 'package:pdfsign/core/window/window_broadcast.dart';
+import 'package:pdfsign/domain/entities/pdf_document_info.dart';
 import 'package:pdfsign/domain/entities/pdf_page_info.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
@@ -529,6 +531,8 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
         _showSnackBar(Text(l10n.clipboardUnavailable));
       case EditorClipboardOutcome.imageImportFailed:
         _showSnackBar(Text(l10n.pasteImageFailed));
+      case EditorClipboardOutcome.editingNotAllowed:
+        _showSnackBar(Text(l10n.documentReadOnlyTitle));
       case EditorClipboardOutcome.done:
       case EditorClipboardOutcome.nothing:
       case EditorClipboardOutcome.handledByTextField:
@@ -596,6 +600,68 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   Future<void> _handlePaste() =>
       _runClipboardAction((clipboard) => clipboard.paste());
 
+  /// This window's strings, or null before the locale has resolved.
+  AppLocalizations? get _l10n {
+    final context = _navigatorKey.currentContext;
+    return context == null ? null : AppLocalizations.of(context);
+  }
+
+  /// Whether the open document permits its content to be changed.
+  bool get _editingAllowed =>
+      ref.read(pdfDocumentProvider).documentOrNull?.security.allowsEditing ??
+      true;
+
+  /// Hands [file] to the system, saying first if its password goes with it.
+  Future<void> _share(XFile file) async {
+    _noticeIfSharingProtected();
+    await Share.shareXFiles([file]);
+  }
+
+  /// Says that a shared copy of a protected document keeps its password.
+  ///
+  /// Without this the sender has no way of knowing that what they just handed
+  /// over cannot be opened without something they did not send.
+  void _noticeIfSharingProtected() {
+    final document = ref.read(pdfDocumentProvider).documentOrNull;
+    if (document == null || !document.security.isProtected) return;
+
+    final text = _l10n?.shareProtectedNotice;
+    if (text != null) _showSnackBar(Text(text));
+  }
+
+  /// Warns when a protected document is big enough for its memory to matter.
+  ///
+  /// The threshold is the one [OriginalPdfStorage] uses to decide whether a
+  /// document may be held in memory at all; a protected one has no choice,
+  /// because it cannot be read from the file as it stands.
+  void _warnIfHeldInMemory(PdfDocumentInfo? document) {
+    if (document == null || !document.security.isProtected) return;
+
+    final size = _sizeOf(document.filePath);
+    if (size == null || size <= documentMemoryThresholdBytes) return;
+
+    final text = _l10n?.largeProtectedDocumentBody(_megabytes(size));
+    if (text != null) _showSnackBar(Text(text));
+  }
+
+  /// The file's size, or null when it cannot be read.
+  int? _sizeOf(String filePath) {
+    try {
+      return File(filePath).lengthSync();
+    } on FileSystemException {
+      return null;
+    }
+  }
+
+  String _megabytes(int bytes) =>
+      '${(bytes / (1024 * 1024)).round()} MB';
+
+  /// Says why nothing can be written to this document.
+  void _showReadOnlyNotice() {
+    final title = _l10n?.documentReadOnlyTitle;
+    if (title != null) _showSnackBar(Text(title));
+  }
+
   /// The password the open document needed, or null if it needed none.
   ///
   /// Held only in the state of this window's document; it is never written to
@@ -611,7 +677,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     if (placedImages.isEmpty) {
       // No changes, share original file
       final file = XFile(_currentFilePath);
-      await Share.shareXFiles([file]);
+      await _share(file);
       return;
     }
 
@@ -620,7 +686,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     if (!storage.hasData) {
       // Fallback: share original file
       final file = XFile(_currentFilePath);
-      await Share.shareXFiles([file]);
+      await _share(file);
       return;
     }
 
@@ -639,12 +705,12 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
       (failure) async {
         // Show error and share original
         final file = XFile(_currentFilePath);
-        await Share.shareXFiles([file]);
+        await _share(file);
       },
       (tempPath) async {
         // Share temp file
         final file = XFile(tempPath);
-        await Share.shareXFiles([file]);
+        await _share(file);
 
         // Clean up temp file after a short delay (allow share to complete)
         Future.delayed(const Duration(seconds: 5), () {
@@ -685,6 +751,11 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     // Nothing to save if no changes were made
     if (placedImages.isEmpty && !isDirty) return true;
 
+    if (!_editingAllowed) {
+      _showReadOnlyNotice();
+      return false;
+    }
+
     // Get original bytes from storage
     final storage = ref.read(originalPdfStorageProvider);
     if (!storage.hasData) {
@@ -721,6 +792,11 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   }
 
   Future<void> _handleSaveAs() async {
+    if (!_editingAllowed) {
+      _showReadOnlyNotice();
+      return;
+    }
+
     final outputPath = await FilePicker.platform.saveFile(
       dialogTitle: 'Save PDF As',
       fileName: _currentFileName,
@@ -805,6 +881,14 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     // Listen to global dirty state changes for Save All (from other windows)
     ref.listen<Map<String, bool>>(globalDirtyStateProvider, (previous, current) {
       _updateMenuState();
+    });
+
+    // A protected document is shown from memory rather than from the file, so
+    // a large one costs its own size in memory. Say so once it is open, rather
+    // than standing between the reader and their document with a question.
+    ref.listen<PdfViewerState>(pdfDocumentProvider, (previous, current) {
+      if (previous?.documentOrNull == current.documentOrNull) return;
+      _warnIfHeldInMemory(current.documentOrNull);
     });
 
     // Watch locale preference for live updates

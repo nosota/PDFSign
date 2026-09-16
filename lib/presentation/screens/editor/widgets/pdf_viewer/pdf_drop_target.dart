@@ -59,8 +59,10 @@ class _PdfDropTargetState extends ConsumerState<PdfDropTarget> {
   @override
   Widget build(BuildContext context) =>
       DragTarget<DraggableSidebarImage>(
-        // Refuse the drag outright when there is no page to drop onto.
-        onWillAcceptWithDetails: (details) => _trackPointer(details.offset),
+        // Refuse the drag outright when there is no page to drop onto, or
+        // when the document does not allow anything to be put on it.
+        onWillAcceptWithDetails: (details) =>
+            _editingAllowed && _trackPointer(details.offset),
         onMove: (details) => _trackPointer(details.offset),
         onLeave: (_) => _clearPointer(),
         onAcceptWithDetails: (details) {
@@ -99,6 +101,10 @@ class _PdfDropTargetState extends ConsumerState<PdfDropTarget> {
   /// Positioned from the cached layout and the live scroll offset, so it stays
   /// aligned with the page without reading the render tree during build.
   Widget? _buildTargetHighlight(BuildContext context) {
+    // Outlining a page the drop will be refused on would promise something
+    // that is not going to happen.
+    if (!_editingAllowed) return null;
+
     final local = _pointerLocal;
     final layout = _layoutCache.current;
     if (local == null || layout == null) {
@@ -189,6 +195,9 @@ class _PdfDropTargetState extends ConsumerState<PdfDropTarget> {
           renderBox.globalToLocal(globalPosition) + widget.getScrollOffset(),
     );
   }
+
+  /// Whether the document permits its content to be changed.
+  bool get _editingAllowed => widget.document.security.allowsEditing;
 
   void _handleDrop(DragTargetDetails<DraggableSidebarImage> details) {
     final resolved = _resolve(details.offset);

@@ -79,6 +79,28 @@ class PdfDocument extends _$PdfDocument {
     );
   }
 
+  /// Re-opens the document with the owner password, lifting its restrictions.
+  ///
+  /// Returns false and leaves the document exactly as it was when the password
+  /// is not accepted. The reader is looking at the document while they try;
+  /// a wrong guess must not take it away from them.
+  Future<bool> unlockEditing(String ownerPassword) async {
+    final current = state.documentOrNull;
+    if (current == null) return false;
+
+    final result = await ref
+        .read(pdfDocumentRepositoryProvider)
+        .openProtectedDocument(current.filePath, ownerPassword);
+
+    return result.fold((_) => false, (document) {
+      state.maybeMap(
+        loaded: (loaded) => state = loaded.copyWith(document: document),
+        orElse: () {},
+      );
+      return true;
+    });
+  }
+
   /// Puts a failed open on screen.
   ///
   /// A document that wants a password and one that turned a password down are

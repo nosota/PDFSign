@@ -24,6 +24,12 @@ abstract final class AppColors {
   static const Color success = Color(0xFF28A745);
   static const Color warning = Color(0xFFFFC107);
 
+  // Notice bar carrying a warning: a ground light enough to read black text
+  // on, with text and icon dark enough to hold their own against it.
+  static const Color noticeBackground = Color(0xFFFFF4E5);
+  static const Color noticeText = Color(0xFF6B4E00);
+  static const Color noticeIcon = Color(0xFF8A6100);
+
   // Selection (for object handles)
   static const Color selection = Color(0xFF0066FF);
   static const Color selectionHandle = Color(0xFFFFFFFF);

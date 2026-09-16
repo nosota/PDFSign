@@ -30,6 +30,9 @@ enum EditorClipboardOutcome {
 
   /// An image from the clipboard could not be added to the library.
   imageImportFailed,
+
+  /// The document does not permit its content to be changed.
+  editingNotAllowed,
 }
 
 /// Cut, copy and paste for objects placed on the document.
@@ -84,6 +87,10 @@ class EditorClipboard {
       );
     }
 
+    if (!_editingAllowed) {
+      return EditorClipboardOutcome.editingNotAllowed;
+    }
+
     final target = _targetPage();
     if (target == null) {
       return EditorClipboardOutcome.nothing;
@@ -113,6 +120,11 @@ class EditorClipboard {
     _place(plan, target.index);
     return EditorClipboardOutcome.done;
   }
+
+  /// Whether the open document permits its content to be changed.
+  bool get _editingAllowed =>
+      ref.read(pdfDocumentProvider).documentOrNull?.security.allowsEditing ??
+      true;
 
   /// Reads the clipboard, or null when it cannot be reached.
   Future<ClipboardContents?> _readClipboard() async {
