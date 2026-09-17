@@ -44,9 +44,16 @@ class ProtectedPdfReader {
   /// Reads [bytes] with [password], or without one for a document that needs
   /// none.
   ///
+  /// [bytes] must already be known to be an encrypted PDF — the caller
+  /// establishes that with CoreGraphics before coming here. That is what makes
+  /// it safe to read a refusal at the opening stage as a protection this app
+  /// cannot handle.
+  ///
   /// Throws [PdfPasswordRequiredException] when the password is missing or
   /// wrong, and [PdfUnsupportedProtectionException] when the document is
-  /// protected by something this app cannot open.
+  /// protected by something this app cannot open. Anything that goes wrong
+  /// after the document is open — a damaged page tree, say — is passed on as
+  /// it is, because a broken document is not an unsupported one.
   Future<ProtectedPdfContents> read(
     Uint8List bytes, {
     String? password,
@@ -84,7 +91,11 @@ class ProtectedPdfReader {
       if (error.name == 'password') {
         throw PdfPasswordRequiredException(passwordWasGiven: password != null);
       }
-      rethrow;
+      // The file is encrypted and the library turned it down for a reason
+      // that is not the password: it does not handle this kind of protection.
+      // Certificate-based protection is the case in practice — the library
+      // reads the standard security handler and nothing else.
+      throw PdfUnsupportedProtectionException('${error.message}');
     }
   }
 

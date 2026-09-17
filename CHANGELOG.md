@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Added
+
+- Password-protected documents can be opened, signed, saved and shared. The password is asked for once, kept only while the window is open, and never written anywhere; Save, Save As and Share all keep the document's own protection, so the saved or shared file still needs the same password. Documents that carry only an owner password — readable by anyone, restricted in what may be done with them — now open at all, where before they were refused
+- A document whose permissions forbid changes is opened read-only: nothing can be dropped or pasted onto it, its pages cannot be turned, and it cannot be saved. A notice says why, and takes the owner password to lift it
+- A protected document large enough for its memory to matter says so when it opens, because it is shown from memory rather than from the file
+- Sharing a protected document says that the copy keeps its password
+
 ### Fixed
 
 - Opening several files at once from Finder no longer stacks every window in the same spot with only the last one visible: the first document window is centred and each one after it steps down and to the right, the way macOS places documents. The diagonal returns to the top of the screen rather than walking off it, and starts over once the last window closes

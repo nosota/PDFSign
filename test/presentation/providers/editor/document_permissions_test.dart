@@ -109,6 +109,42 @@ void main() {
     });
   });
 
+  group('reopening the document after Save As', () {
+    test('should not ask again for the password it already holds', () async {
+      // Save As writes a copy that keeps the original protection, and the
+      // window turns to that copy. Opening it without the password would put
+      // the password prompt on screen straight after a successful save.
+      await open(_ownerRights);
+
+      await container.read(pdfDocumentProvider.notifier).openDocument(
+            '/copy.pdf',
+            password: 'own-me',
+          );
+
+      expect(container.read(pdfDocumentProvider).isLoaded, isTrue);
+      expect(repository.lastPasswordUsed, 'own-me');
+    });
+
+    test('should ask for a password rather than call the old one wrong',
+        () async {
+      // A carried-over password is not one the reader typed. If it does not
+      // fit the document being opened, they are owed a question, not a
+      // complaint about something they never did.
+      await open(_ownerRights);
+      repository.refuse = true;
+
+      await container.read(pdfDocumentProvider.notifier).openDocument(
+            '/other.pdf',
+            password: 'own-me',
+          );
+
+      container.read(pdfDocumentProvider).maybeMap(
+            passwordRequired: (state) => expect(state.wasWrong, isFalse),
+            orElse: () => fail('expected the password to be asked for'),
+          );
+    });
+  });
+
   group('lifting the restriction with the owner password', () {
     test('should reopen the document when the password is accepted', () async {
       await open(_readOnly);
@@ -123,6 +159,24 @@ void main() {
           container.read(pdfDocumentProvider).documentOrNull!.security;
       expect(security.allowsEditing, isTrue);
       expect(security.hasOwnerRights, isTrue);
+    });
+
+    test('should refuse a password that opens the document but grants nothing',
+        () async {
+      // The document's own user password is accepted and reopens it with
+      // exactly the rights it already had. Reporting success would close the
+      // dialog on a reader who is no better off, with nothing said.
+      await open(_readOnly);
+
+      final accepted = await container
+          .read(pdfDocumentProvider.notifier)
+          .unlockEditing('open-me');
+
+      expect(accepted, isFalse);
+      expect(
+        container.read(pdfDocumentProvider).documentOrNull!.security,
+        _readOnly,
+      );
     });
 
     test('should leave the document alone when the password is wrong',
@@ -152,6 +206,9 @@ class _FakeRepository implements PdfDocumentRepository {
   /// Makes the next open fail, as a wrong password would.
   bool refuse = false;
 
+  /// The password the last protected open was given.
+  String? lastPasswordUsed;
+
   PdfDocumentInfo _info(String filePath) => PdfDocumentInfo(
         filePath: filePath,
         fileName: 'doc.pdf',
@@ -171,8 +228,12 @@ class _FakeRepository implements PdfDocumentRepository {
   Future<Either<Failure, PdfDocumentInfo>> openProtectedDocument(
     String filePath,
     String password,
-  ) async =>
-      refuse ? const Left(PasswordIncorrectFailure()) : Right(_info(filePath));
+  ) async {
+    lastPasswordUsed = password;
+    return refuse
+        ? const Left(PasswordIncorrectFailure())
+        : Right(_info(filePath));
+  }
 
   @override
   Future<Either<Failure, Uint8List>> renderPage({

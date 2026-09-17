@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pdfsign/core/errors/exceptions.dart';
 import 'package:pdfsign/data/datasources/protected_pdf_reader.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart' hide Rect;
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 /// Builds a protected document to read back.
 Future<Uint8List> encrypted({

@@ -797,23 +797,11 @@ abstract class AppLocalizations {
   /// **'Owner password'**
   String get ownerPasswordFieldLabel;
 
-  /// Heading of the warning shown before opening a big encrypted PDF
-  ///
-  /// In en, this message translates to:
-  /// **'This protected document is large'**
-  String get largeProtectedDocumentTitle;
-
   /// Explanation of the memory cost of opening a large encrypted PDF
   ///
   /// In en, this message translates to:
   /// **'A protected document has to be held in memory to be shown, and this one is {size}. Opening it will use about that much.'**
   String largeProtectedDocumentBody(String size);
-
-  /// Button that opens the large protected document despite the warning
-  ///
-  /// In en, this message translates to:
-  /// **'Open'**
-  String get openAnyway;
 
   /// Told to the user when sharing an encrypted document, because the recipient will need the password
   ///

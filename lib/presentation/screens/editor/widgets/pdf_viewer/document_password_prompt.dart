@@ -47,6 +47,19 @@ class _DocumentPasswordPromptState extends State<DocumentPasswordPrompt> {
   late bool _showWrong = widget.wasWrong;
 
   @override
+  void initState() {
+    super.initState();
+    // Asking for focus rather than relying on the field's own autofocus: the
+    // viewer this prompt replaces holds the focus of the surrounding scope,
+    // and an autofocus request into a scope that already has a focused child
+    // is dropped. Measured: without this the reader has to click the field
+    // before they can type the password.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _focusNode.requestFocus();
+    });
+  }
+
+  @override
   void didUpdateWidget(DocumentPasswordPrompt oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.wasWrong && !oldWidget.wasWrong) {

@@ -345,15 +345,9 @@ class AppLocalizationsEl extends AppLocalizations {
   String get ownerPasswordFieldLabel => 'Owner password';
 
   @override
-  String get largeProtectedDocumentTitle => 'This protected document is large';
-
-  @override
   String largeProtectedDocumentBody(String size) {
     return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
   }
-
-  @override
-  String get openAnyway => 'Open';
 
   @override
   String get shareProtectedNotice =>

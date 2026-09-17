@@ -454,10 +454,6 @@
   "@ownerPasswordFieldLabel": {
     "description": "Label of the owner password field"
   },
-  "largeProtectedDocumentTitle": "This protected document is large",
-  "@largeProtectedDocumentTitle": {
-    "description": "Heading of the warning shown before opening a big encrypted PDF"
-  },
   "largeProtectedDocumentBody": "A protected document has to be held in memory to be shown, and this one is {size}. Opening it will use about that much.",
   "@largeProtectedDocumentBody": {
     "description": "Explanation of the memory cost of opening a large encrypted PDF",
@@ -467,10 +463,6 @@
         "example": "310 MB"
       }
     }
-  },
-  "openAnyway": "Open",
-  "@openAnyway": {
-    "description": "Button that opens the large protected document despite the warning"
   },
   "shareProtectedNotice": "The shared copy keeps the document's password.",
   "@shareProtectedNotice": {

@@ -108,7 +108,16 @@ Opening a file that is already open focuses the existing window instead of openi
 If opening fails with `File access denied`, the editor retries every 1.5 s up to 20 times (30 s total), showing a localized "Waiting for folder access permission…" state. On timeout the window closes (`editor_screen.dart`).
 
 #### FR-1.8 — Password-protected PDFs
-Detected and surfaced: the viewer shows a "Password Required" state. **Entering a password is not implemented** — see §12.3.
+The password is asked for in the viewer, tried, and asked for again if it was wrong. It is then held only in the open document's state for as long as the window lives: it is not written to Recent Files, preferences or the database, is not logged, and is not broadcast to other windows.
+
+Opening takes the protected route only for a document CoreGraphics reports as encrypted (`com.pdfsign/pdf_security`). Everything else is opened straight from the file as before, so a large plain document is still never pulled into memory. A protected one is opened with `syncfusion` and rendered from a copy with its passwords cleared, held in memory and never written to disk (ADR-0011).
+
+A document carrying only an owner password — readable by anyone, restricted in what may be done with it — opens with no password at all. Before this it was refused outright, because the renderer turns down anything encrypted whether it is locked or not.
+
+Documents protected by a means other than a password (a certificate) cannot be opened, and say so: `UnsupportedProtectionFailure`.
+
+#### FR-1.9 — Permissions of a protected document
+A document whose permissions withhold `editContent` is opened read-only: nothing may be dropped or pasted onto it, its pages may not be turned, and it may not be saved. The page does not outline itself under a drag it will refuse. A notice above the document says why, and takes the owner password — which under PDF 32000-1:2008 §7.6.3.2 grants full access whatever the flags say. The document is reopened in place with it; a wrong password leaves the document on screen untouched.
 
 ---
 
@@ -500,6 +509,8 @@ Known localization defects are listed in §13.5 and §13.6.
 - Fully offline. No network requests, no accounts, no telemetry, no crash reporting.
 - All data stays in the user's home directory.
 - No encryption at rest — the image library and its files are stored in the clear, consistent with their non-sensitive nature.
+- A protected document's password is held in memory only, for as long as its window is open (FR-1.8). The decrypted copy made so that the document can be displayed is likewise memory-only: writing it would leave an unprotected copy of a protected document on disk.
+- A document's own protection is never removed. Save, Save As and the copy made for Share all carry it, so a shared file still needs the password its sender's copy needed — which the sender is told.
 - `Info.plist` declares usage descriptions for Desktop, Documents, Downloads, network volumes, and removable volumes.
 - The app sandbox is disabled (§2.2).
 
@@ -507,7 +518,7 @@ Known localization defects are listed in §13.5 and §13.6.
 
 ## 8. Error Handling
 
-The `Either<Failure, T>` pattern (dartz) is used across data and domain layers. Failure types live in `core/errors/failures.dart`: `FileNotFoundFailure`, `FileAccessFailure`, `InvalidFileFormatFailure`, `FileSizeLimitFailure`, `PasswordRequiredFailure`, `PasswordIncorrectFailure`, `WriteProtectedFailure`, `PdfLoadFailure`, `PdfRenderFailure`, `RenderCancelledFailure`, `StorageFailure`.
+The `Either<Failure, T>` pattern (dartz) is used across data and domain layers. Failure types live in `core/errors/failures.dart`: `FileNotFoundFailure`, `FileAccessFailure`, `InvalidFileFormatFailure`, `FileSizeLimitFailure`, `PasswordRequiredFailure`, `PasswordIncorrectFailure`, `WriteProtectedFailure`, `UnsupportedProtectionFailure`, `PdfLoadFailure`, `PdfRenderFailure`, `RenderCancelledFailure`, `StorageFailure`.
 
 `RenderCancelledFailure` is not an error condition — it signals a deliberately abandoned render and results in a placeholder, not an error state.
 
@@ -580,7 +591,6 @@ Specified in v1.0 (or implied by leftover code) but **absent from the product**.
 |---|---------|---------------------|
 | 12.1 | **Z-order management** (bring to front / send to back / forward / backward) | `PlacedImage` has no z-index; paint order is insertion order. TODO → V1.0 |
 | 12.2 | **Undo / redo**, 50 levels | No command stack anywhere. TODO → V1.1 |
-| 12.3 | **Password entry for protected PDFs** | `PdfDocument.openProtectedDocument()` exists and works, but nothing calls it — `pdf_viewer.dart` carries `// TODO: Add password input dialog`. `l10n.incorrectPassword` is unused. TODO → V1.0 (save/share with the original password) |
 | 12.4 | **Paste dialog** with "Add to Signatures / Stamps / Don't add" and "Don't ask again" | No dialog. A pasted image goes onto the page and is deliberately not added to the library (ADR-0009) |
 | 12.5 | **Signatures / Stamps split** in the library | One flat list |
 | 12.6 | **`Cmd+D` duplicate** | Duplication exists only via `Cmd+C` → `Cmd+V` |

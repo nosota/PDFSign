@@ -28,6 +28,7 @@
 		7F2C4A1E20261A0000000012 /* WindowCascade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2C4A1E20261A0000000011 /* WindowCascade.swift */; };
 		7F2C4A1E20261A0000000022 /* PdfFileSecurity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2C4A1E20261A0000000021 /* PdfFileSecurity.swift */; };
 		7F2C4A1E20261A0000000014 /* WindowCascadeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2C4A1E20261A0000000013 /* WindowCascadeTests.swift */; };
+		7F2C4A1E20261A0000000032 /* PdfFileSecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2C4A1E20261A0000000031 /* PdfFileSecurityTests.swift */; };
 		33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F22044A3C60003C045 /* Assets.xcassets */; };
 		A1C0DE010000000000000002 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = A1C0DE010000000000000001 /* AppIcon.icon */; };
 		33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F42044A3C60003C045 /* MainMenu.xib */; };
@@ -80,6 +81,7 @@
 		7F2C4A1E20261A0000000011 /* WindowCascade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowCascade.swift; sourceTree = "<group>"; };
 		7F2C4A1E20261A0000000021 /* PdfFileSecurity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFileSecurity.swift; sourceTree = "<group>"; };
 		7F2C4A1E20261A0000000013 /* WindowCascadeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowCascadeTests.swift; sourceTree = "<group>"; };
+		7F2C4A1E20261A0000000031 /* PdfFileSecurityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfFileSecurityTests.swift; sourceTree = "<group>"; };
 		33CC10F22044A3C60003C045 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Runner/Assets.xcassets; sourceTree = "<group>"; };
 		A1C0DE010000000000000001 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; name = AppIcon.icon; path = Runner/AppIcon.icon; sourceTree = "<group>"; };
 		33CC10F52044A3C60003C045 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 			children = (
 				331C80D7294CF71000263BE5 /* RunnerTests.swift */,
 				7F2C4A1E20261A0000000013 /* WindowCascadeTests.swift */,
+				7F2C4A1E20261A0000000031 /* PdfFileSecurityTests.swift */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -448,6 +451,7 @@
 			files = (
 				331C80D8294CF71000263BE5 /* RunnerTests.swift in Sources */,
 				7F2C4A1E20261A0000000014 /* WindowCascadeTests.swift in Sources */,
+				7F2C4A1E20261A0000000032 /* PdfFileSecurityTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

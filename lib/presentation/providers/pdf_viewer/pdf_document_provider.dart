@@ -25,7 +25,16 @@ class PdfDocument extends _$PdfDocument {
   ///
   /// If [initialPage] is provided, the document will open at that page
   /// (clamped to valid range). Otherwise opens at page 1.
-  Future<void> openDocument(String filePath, {int? initialPage}) async {
+  ///
+  /// [password] carries over the one the document already open was read with.
+  /// Save As writes a copy that keeps the original protection, and the window
+  /// then reopens that copy; without this the reader would be asked again,
+  /// straight after a save, for the password they gave a moment ago.
+  Future<void> openDocument(
+    String filePath, {
+    int? initialPage,
+    String? password,
+  }) async {
     // Clear page cache before loading new document
     // (old renders may be stale, especially after Save As)
     ref.read(pdfPageCacheProvider).clear();
@@ -33,10 +42,19 @@ class PdfDocument extends _$PdfDocument {
     state = PdfViewerState.loading(filePath: filePath);
 
     final repository = ref.read(pdfDocumentRepositoryProvider);
-    final result = await repository.openDocument(filePath);
+    final result = password == null
+        ? await repository.openDocument(filePath)
+        : await repository.openProtectedDocument(filePath, password);
 
     result.fold(
-      (failure) => _reportFailure(failure, filePath),
+      // A carried-over password is not one the reader typed, so a document it
+      // does not fit is one to ask about, not one to complain about.
+      (failure) => _reportFailure(
+        password != null && failure is PasswordIncorrectFailure
+            ? const PasswordRequiredFailure()
+            : failure,
+        filePath,
+      ),
       (document) {
         // Use initialPage if provided, otherwise default to 1
         final page = initialPage != null
@@ -81,9 +99,15 @@ class PdfDocument extends _$PdfDocument {
 
   /// Re-opens the document with the owner password, lifting its restrictions.
   ///
-  /// Returns false and leaves the document exactly as it was when the password
-  /// is not accepted. The reader is looking at the document while they try;
-  /// a wrong guess must not take it away from them.
+  /// Returns whether editing is now allowed — not merely whether the password
+  /// was accepted. The document's own user password is accepted too, and
+  /// opens the document again with exactly the rights it already had; saying
+  /// "yes" to that would close the dialog on a reader who is no better off
+  /// than before, with nothing to tell them why.
+  ///
+  /// The document is left exactly as it was when the password is turned down.
+  /// The reader is looking at it while they try; a wrong guess must not take
+  /// it away from them.
   Future<bool> unlockEditing(String ownerPassword) async {
     final current = state.documentOrNull;
     if (current == null) return false;
@@ -93,6 +117,7 @@ class PdfDocument extends _$PdfDocument {
         .openProtectedDocument(current.filePath, ownerPassword);
 
     return result.fold((_) => false, (document) {
+      if (!document.security.allowsEditing) return false;
       state.maybeMap(
         loaded: (loaded) => state = loaded.copyWith(document: document),
         orElse: () {},

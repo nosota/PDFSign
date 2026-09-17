@@ -200,6 +200,14 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
         ref.read(pdfDocumentProvider.notifier).openDocument(
               path,
               initialPage: initialPage,
+              // Save As has just written a copy that keeps the protection of
+              // the document still open here, and this is the window turning
+              // to that copy. The password it needs is the one already held.
+              password: ref
+                  .read(pdfDocumentProvider)
+                  .documentOrNull
+                  ?.security
+                  .password,
             );
       });
     }

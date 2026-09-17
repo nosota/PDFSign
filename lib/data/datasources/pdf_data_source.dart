@@ -6,7 +6,6 @@ import 'dart:ui';
 import 'package:pdfx/pdfx.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart' as sf;
 
-import 'package:pdfsign/core/errors/exceptions.dart';
 import 'package:pdfsign/core/platform/pdf_security_channel.dart';
 import 'package:pdfsign/core/utils/page_rotation_transform.dart';
 import 'package:pdfsign/data/datasources/protected_pdf_reader.dart';
@@ -105,13 +104,21 @@ class PdfDataSourceImpl implements PdfDataSource {
         // out of memory. Only a protected one has to be held there.
         : (document: await PdfDocument.openFile(filePath), contents: null);
 
-    final info = await _extractDocumentInfo(
-      filePath,
-      opened.document,
-      rotations: opened.contents?.rotations,
-      security: opened.contents?.security ??
-          const DocumentSecurity.unprotected(),
-    );
+    final PdfDocumentInfo info;
+    try {
+      info = await _extractDocumentInfo(
+        filePath,
+        opened.document,
+        rotations: opened.contents?.rotations,
+        security: opened.contents?.security ??
+            const DocumentSecurity.unprotected(),
+      );
+    } catch (_) {
+      // The document that was already open is still the one on screen, so the
+      // one that failed has nobody to close it but this.
+      await opened.document.close();
+      rethrow;
+    }
 
     await closeDocument();
     _document = opened.document;
@@ -126,15 +133,10 @@ class PdfDataSourceImpl implements PdfDataSource {
   ) async {
     final bytes = await file.readAsBytes();
 
-    final ProtectedPdfContents contents;
-    try {
-      contents = await _protectedReader.read(bytes, password: password);
-    } on ArgumentError catch (error) {
-      // The file is encrypted — CoreGraphics said so — and the writer turned
-      // it down for a reason that is not the password. Its protection is of a
-      // kind this app cannot open; in practice that means a certificate.
-      throw PdfUnsupportedProtectionException('${error.message}');
-    }
+    // Whatever the reader cannot handle it names itself; a failure from
+    // anywhere else — a damaged cross-reference table, say — is a broken
+    // document and must not be reported as an unsupported protection.
+    final contents = await _protectedReader.read(bytes, password: password);
 
     return (
       document: await PdfDocument.openData(contents.renderableBytes),

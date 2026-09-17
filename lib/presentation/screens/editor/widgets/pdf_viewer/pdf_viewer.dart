@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:pdfsign/core/utils/focus_utils.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/page_jump_provider.dart';
@@ -167,6 +168,14 @@ class _PdfViewerState extends ConsumerState<PdfViewer> {
   // Handle keyboard shortcuts
   KeyEventResult _handleKeyEvent(FocusNode node, KeyEvent event) {
     if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
+      return KeyEventResult.ignored;
+    }
+
+    // Step aside while someone is typing. These keys reach this handler
+    // before the text-editing shortcuts above it in the tree, so claiming an
+    // arrow key here would stop the caret moving in the password field that
+    // sits inside this very widget. Measured, not assumed.
+    if (textInputHasFocus()) {
       return KeyEventResult.ignored;
     }
 

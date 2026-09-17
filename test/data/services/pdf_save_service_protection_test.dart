@@ -9,7 +9,7 @@ import 'package:pdfsign/data/services/pdf_save_service.dart';
 import 'package:pdfsign/domain/entities/pdf_page_info.dart';
 import 'package:pdfsign/domain/entities/placed_image.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart' hide Rect;
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 /// Puts the temporary directory somewhere a test can reach without a platform.
 class _TempDirectory extends PathProviderPlatform with MockPlatformInterfaceMixin {
