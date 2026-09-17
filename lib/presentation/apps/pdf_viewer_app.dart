@@ -21,6 +21,7 @@ import 'package:pdfsign/domain/entities/pdf_page_info.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/pdf_save_service_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/document_protection_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_history.dart';
 import 'package:pdfsign/presentation/providers/editor/history_actions.dart';
 import 'package:pdfsign/presentation/providers/editor/restack_selected.dart';
@@ -656,6 +657,13 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     return context == null ? null : AppLocalizations.of(context);
   }
 
+  /// The password the file this window is turning to now wants.
+  ///
+  /// Set only by Save As, and only when the copy was written with a protection
+  /// of its own: the window is then holding the password of the document it
+  /// came from, which the new file no longer answers to.
+  String? _passwordForReopen;
+
   /// Whether the open document permits its content to be changed.
   bool get _editingAllowed =>
       ref.read(pdfDocumentProvider).documentOrNull?.security.allowsEditing ??
@@ -749,6 +757,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
               placedImages: placedImages,
               pages: _pages(),
               password: _documentPassword,
+              protection: ref.read(pendingProtectionProvider),
             );
 
     await result.fold(
@@ -816,12 +825,14 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     final originalBytes = await storage.getBytes();
 
     final pages = _pages();
+    final pendingProtection = ref.read(pendingProtectionProvider);
     final result = await ref.read(pdfSaveServiceProvider).savePdfFromBytes(
           originalBytes: originalBytes,
           placedImages: placedImages,
           pages: pages,
           outputPath: _currentFilePath,
           password: _documentPassword,
+          protection: pendingProtection,
         );
 
     return result.fold(
@@ -833,6 +844,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
         // The objects stay on the page and remain editable; recording them as
         // the written baseline is what makes the document clean again.
         ref.read(savedPlacedImagesProvider.notifier).markSaved(placedImages);
+        // The same for the protection. It stays pending rather than being
+        // cleared: the bytes a save starts from still carry the old
+        // protection, so the next save has to apply this one again.
+        ref.read(savedProtectionProvider.notifier).markSaved(pendingProtection);
         // The file now carries the turns the reader made. Nothing reloads
         // after a save to the same file, so the pages have to be told.
         ref.read(pdfDocumentProvider.notifier).markRotationsSaved();
@@ -877,6 +892,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
           pages: _pages(),
           outputPath: outputPath,
           password: _documentPassword,
+          protection: ref.read(pendingProtectionProvider),
         );
 
     result.fold(
@@ -895,6 +911,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
 
         // Update current file path, name, and page to restore
         setState(() {
+          final written = ref.read(pendingProtectionProvider);
+          _passwordForReopen = written == null
+              ? null
+              : (written.userPassword.isEmpty ? '' : written.userPassword);
           _currentFilePath = savedPath;
           _currentFileName = newFileName;
           _pageToRestore = currentPage;
@@ -907,6 +927,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
         // Clear placed images since they're now embedded in the saved file
         ref.read(placedImagesProvider.notifier).clear();
         ref.read(savedPlacedImagesProvider.notifier).reset();
+        // The new file already carries the protection, so there is nothing
+        // pending about it any more.
+        ref.read(pendingProtectionProvider.notifier).clear();
+        ref.read(savedProtectionProvider.notifier).reset();
 
         // The new file starts its own history.
         _hasBeenModified = false;
@@ -1032,6 +1056,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
       home: EditorScreen(
         filePath: _currentFilePath,
         initialPage: _pageToRestore,
+        password: _passwordForReopen,
       ),
     );
   }

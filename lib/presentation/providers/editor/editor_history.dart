@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:pdfsign/domain/entities/document_protection.dart';
 import 'package:pdfsign/domain/entities/placed_image.dart';
 
 part 'editor_history.g.dart';
@@ -27,6 +28,7 @@ class EditorSnapshot extends Equatable {
     required this.objects,
     required this.pageRotations,
     required this.selectedId,
+    this.protection,
   });
 
   /// The objects on the document, in the order they are drawn.
@@ -42,16 +44,23 @@ class EditorSnapshot extends Equatable {
   /// What was selected, so an undo puts the reader back where they were.
   final String? selectedId;
 
+  /// The protection the reader has asked for and not yet saved, if any.
+  ///
+  /// Null both for a document nobody has changed the protection of and for one
+  /// changed back to that, which is the same thing and should compare equal.
+  final DocumentProtection? protection;
+
   /// Whether this describes the same document as [other].
   ///
   /// The selection is left out on purpose: selecting something is not a change
   /// to the document and must not become a step of its own.
   bool describesSameDocumentAs(EditorSnapshot other) =>
       listEquals(objects, other.objects) &&
-      listEquals(pageRotations, other.pageRotations);
+      listEquals(pageRotations, other.pageRotations) &&
+      protection == other.protection;
 
   @override
-  List<Object?> get props => [objects, pageRotations, selectedId];
+  List<Object?> get props => [objects, pageRotations, selectedId, protection];
 }
 
 /// Which way a document can be taken from where it stands.

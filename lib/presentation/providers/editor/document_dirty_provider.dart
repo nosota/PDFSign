@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:pdfsign/domain/entities/placed_image.dart';
+import 'package:pdfsign/presentation/providers/editor/document_protection_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -64,4 +65,5 @@ bool documentDirty(DocumentDirtyRef ref) =>
       ref.watch(placedImagesProvider),
       ref.watch(savedPlacedImagesProvider),
     ) ||
-    ref.watch(hasUnsavedPageRotationProvider);
+    ref.watch(hasUnsavedPageRotationProvider) ||
+    ref.watch(protectionChangedProvider);

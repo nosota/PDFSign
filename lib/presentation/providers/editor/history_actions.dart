@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pdfsign/core/utils/focus_utils.dart';
 
 import 'package:pdfsign/domain/entities/pdf_page_info.dart';
+import 'package:pdfsign/presentation/providers/editor/document_protection_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_history.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
@@ -26,6 +27,7 @@ EditorSnapshot currentSnapshot(WidgetRef ref) {
         page.rotation,
     ],
     selectedId: ref.read(editorSelectionProvider),
+    protection: ref.read(pendingProtectionProvider),
   );
 }
 
@@ -102,6 +104,11 @@ bool _travel(
 
 void _restore(WidgetRef ref, EditorSnapshot snapshot) {
   ref.read(placedImagesProvider.notifier).replaceAll(snapshot.objects);
+
+  final protection = snapshot.protection;
+  final pending = ref.read(pendingProtectionProvider.notifier);
+  protection == null ? pending.clear() : pending.set(protection);
+
   ref.read(pdfDocumentProvider.notifier).restoreRotations(snapshot.pageRotations);
 
   // Put the reader back where they were, but only on something that is there:

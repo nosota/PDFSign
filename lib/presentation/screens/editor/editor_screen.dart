@@ -67,6 +67,7 @@ class EditorScreen extends ConsumerStatefulWidget {
   const EditorScreen({
     required this.filePath,
     this.initialPage,
+    this.password,
     super.key,
   });
 
@@ -75,6 +76,13 @@ class EditorScreen extends ConsumerStatefulWidget {
   /// Initial page to display when loading the document.
   /// Used to restore page position after Save As.
   final int? initialPage;
+
+  /// The password the file at [filePath] now wants, when it is not the one the
+  /// open document was read with.
+  ///
+  /// Save As can write the copy with a protection of its own; the window then
+  /// turns to a file whose password is not the one it is holding.
+  final String? password;
 
   @override
   ConsumerState<EditorScreen> createState() => _EditorScreenState();
@@ -209,14 +217,17 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
         ref.read(pdfDocumentProvider.notifier).openDocument(
               path,
               initialPage: initialPage,
-              // Save As has just written a copy that keeps the protection of
-              // the document still open here, and this is the window turning
-              // to that copy. The password it needs is the one already held.
-              password: ref
-                  .read(pdfDocumentProvider)
-                  .documentOrNull
-                  ?.security
-                  .password,
+              // Save As has just written a copy, and this is the window
+              // turning to it. Usually it keeps the protection of the document
+              // still open here, so the password already held fits; when the
+              // copy was given a protection of its own, that one is passed in
+              // instead.
+              password: widget.password ??
+                  ref
+                      .read(pdfDocumentProvider)
+                      .documentOrNull
+                      ?.security
+                      .password,
             );
       });
     }
