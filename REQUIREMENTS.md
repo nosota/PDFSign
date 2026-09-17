@@ -654,6 +654,7 @@ zero-warning rule is met; keep it that way.
 | [docs/REPOSITORIES.md](docs/REPOSITORIES.md) | Repository contracts |
 | [docs/ENTITIES.md](docs/ENTITIES.md) | Domain entities |
 | [docs/PLATFORM_CHANNELS.md](docs/PLATFORM_CHANNELS.md) | Native macOS integration |
+| [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) | Plan for a signed DMG and the PDF association — **open**, nothing started |
 | [docs/adr/](docs/adr/) | Architecture decision records |
 
 ---
