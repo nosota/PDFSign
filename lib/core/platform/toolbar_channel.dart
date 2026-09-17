@@ -19,6 +19,7 @@ class ToolbarChannel {
   static final List<VoidCallback?> _onRestack = List.filled(4, null);
   static VoidCallback? _onUndoPressed;
   static VoidCallback? _onRedoPressed;
+  static VoidCallback? _onProtectPressed;
   static bool _initialized = false;
 
   /// Initializes the toolbar channel.
@@ -56,6 +57,35 @@ class ToolbarChannel {
   /// Pass null to unregister the callback.
   static void setOnRotateRightPressed(VoidCallback? callback) {
     _onRotateRightPressed = callback;
+  }
+
+  /// Sets the callback for the lock button.
+  ///
+  /// Pass null to unregister the callback.
+  static void setOnProtectPressed(VoidCallback? callback) {
+    _onProtectPressed = callback;
+  }
+
+  /// Shows the lock closed or open.
+  ///
+  /// The document's protection cannot be seen by looking at the page, so the
+  /// button carries it.
+  static Future<void> setProtectionState({
+    required bool protected,
+    String? label,
+    String? tooltip,
+  }) async {
+    try {
+      await _channel.invokeMethod('setProtectionState', {
+        'protected': protected,
+        if (label != null) 'label': label,
+        if (tooltip != null) 'tooltip': tooltip,
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print('ToolbarChannel: Failed to set protection state: $e');
+      }
+    }
   }
 
   /// Sets the callbacks for the two halves of the undo control.
@@ -194,6 +224,8 @@ class ToolbarChannel {
         _onRotateLeftPressed?.call();
       case 'onRotateRightPressed':
         _onRotateRightPressed?.call();
+      case 'onProtectPressed':
+        _onProtectPressed?.call();
       case 'onUndoPressed':
         _onUndoPressed?.call();
       case 'onRedoPressed':

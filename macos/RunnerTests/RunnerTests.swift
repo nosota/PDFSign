@@ -98,6 +98,8 @@ final class PDFSignToolbarHelperTests: XCTestCase {
         "NSToolbarFlexibleSpaceItem",
         "DeleteItem",
         "NSToolbarSpaceItem",
+        "ProtectItem",
+        "NSToolbarSpaceItem",
         "ShareItem",
       ],
       "restacking acts on the object and leads the page turns that follow it; "
@@ -110,6 +112,34 @@ final class PDFSignToolbarHelperTests: XCTestCase {
     return (window.toolbar?.items ?? []).first {
       $0.itemIdentifier.rawValue == "ZOrderGroup"
     } as? NSToolbarItemGroup
+  }
+
+  /// The lock.
+  private func protectItem() -> NSToolbarItem? {
+    return (window.toolbar?.items ?? []).first {
+      $0.itemIdentifier.rawValue == "ProtectItem"
+    }
+  }
+
+  func testShouldShowTheLockOpenUntilToldOtherwise() {
+    XCTAssertNotNil(protectItem()?.image)
+  }
+
+  func testShouldTakeLocalizedProtectTexts() {
+    helper.setProtectionState(
+      protected: true, label: "Защита", tooltip: "Пароли и права")
+
+    XCTAssertEqual(protectItem()?.label, "Защита")
+    XCTAssertEqual(protectItem()?.toolTip, "Пароли и права")
+  }
+
+  func testShouldKeepAPictureWhicheverWayTheLockIs() {
+    // A button with nothing in it is a button nobody can use.
+    helper.setProtectionState(protected: true, label: nil, tooltip: nil)
+    XCTAssertNotNil(protectItem()?.image)
+
+    helper.setProtectionState(protected: false, label: nil, tooltip: nil)
+    XCTAssertNotNil(protectItem()?.image)
   }
 
   /// The undo control.
@@ -254,19 +284,19 @@ final class PDFSignToolbarHelperTests: XCTestCase {
 
   /// Deleting the selected object and sharing the document are unrelated, and
   /// two icons side by side read as one control.
-  func testShouldSeparateDeleteFromShare() {
+  func testShouldSeparateDeleteProtectAndShare() {
+    // Three unrelated actions. Icons side by side read as one control, so a
+    // gap has to stand between each pair.
     let items = identifiers()
-    let delete = items.firstIndex(of: "DeleteItem")
-    let share = items.firstIndex(of: "ShareItem")
+    guard let delete = items.firstIndex(of: "DeleteItem"),
+      let protect = items.firstIndex(of: "ProtectItem"),
+      let share = items.firstIndex(of: "ShareItem")
+    else { return XCTFail("the toolbar is missing one of the three") }
 
-    XCTAssertNotNil(delete)
-    XCTAssertNotNil(share)
-    XCTAssertEqual(
-      items[delete! + 1],
-      "NSToolbarSpaceItem",
-      "a gap must stand between them"
-    )
-    XCTAssertEqual(share, delete! + 2)
+    XCTAssertEqual(items[delete + 1], "NSToolbarSpaceItem")
+    XCTAssertEqual(protect, delete + 2)
+    XCTAssertEqual(items[protect + 1], "NSToolbarSpaceItem")
+    XCTAssertEqual(share, protect + 2)
   }
 
   // MARK: - Delete follows the selection

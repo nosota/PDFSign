@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:syncfusion_flutter_pdf/pdf.dart' as sf;
 
 import 'package:pdfsign/core/errors/exceptions.dart';
+import 'package:pdfsign/domain/entities/document_protection.dart';
 import 'package:pdfsign/domain/entities/document_security.dart';
 
 /// A protected document, read far enough that it can be rendered.
@@ -57,12 +58,17 @@ class ProtectedPdfReader {
   Future<ProtectedPdfContents> read(
     Uint8List bytes, {
     String? password,
+    bool requiresPasswordToOpen = false,
   }) async {
     final document = _open(bytes, password);
     try {
       // Read before the passwords are cleared: blanking them takes the
       // permissions and the owner's rights with them.
-      final security = _securityOf(document, password);
+      final security = _securityOf(
+        document,
+        password,
+        requiresPasswordToOpen: requiresPasswordToOpen,
+      );
       final rotations = [
         for (var i = 0; i < document.pages.count; i++)
           document.pages[i].rotation.index * 90,
@@ -100,29 +106,67 @@ class ProtectedPdfReader {
   }
 
   /// Reads what the document permits.
-  DocumentSecurity _securityOf(sf.PdfDocument document, String? password) {
+  DocumentSecurity _securityOf(
+    sf.PdfDocument document,
+    String? password, {
+    required bool requiresPasswordToOpen,
+  }) {
     final security = document.security;
     // Opening with the owner password grants full access whatever the
     // permission flags say (PDF 32000-1:2008, 7.6.3.2). Measured: the library
     // reports a non-empty owner password exactly when the document was opened
     // with it — including the case where it recovers the user password too.
     final hasOwnerRights = security.ownerPassword.isNotEmpty;
+    final granted = _granted(security);
 
     return DocumentSecurity.protected(
       password: password,
       hasOwnerRights: hasOwnerRights,
-      allowsEditing: hasOwnerRights ||
-          _permits(security, sf.PdfPermissionsFlags.editContent),
+      allowsEditing:
+          hasOwnerRights || granted.contains(DocumentPermission.changingContent),
+      current: DocumentProtection(
+        // The password that opens the document, as far as it is known. Opening
+        // with the owner password reveals the user one as well; opening with
+        // the user password does not work the other way round, so the owner
+        // field is left empty and the panel asks for it afresh.
+        userPassword: requiresPasswordToOpen ? security.userPassword : '',
+        ownerPassword: security.ownerPassword,
+        permissions: granted,
+        algorithm: _encryptionOf(security.algorithm),
+      ),
     );
   }
 
-  bool _permits(sf.PdfSecurity security, sf.PdfPermissionsFlags flag) {
-    var permitted = false;
-    security.permissions.forEach((granted) {
-      if (granted == flag) permitted = true;
-    });
-    return permitted;
+  /// What the document permits, in the app's own terms.
+  Set<DocumentPermission> _granted(sf.PdfSecurity security) {
+    final flags = <sf.PdfPermissionsFlags>{};
+    security.permissions.forEach(flags.add);
+
+    return {
+      if (flags.contains(sf.PdfPermissionsFlags.print))
+        DocumentPermission.printing,
+      if (flags.contains(sf.PdfPermissionsFlags.copyContent))
+        DocumentPermission.copying,
+      if (flags.contains(sf.PdfPermissionsFlags.assembleDocument))
+        DocumentPermission.pageAssembly,
+      if (flags.contains(sf.PdfPermissionsFlags.editAnnotations))
+        DocumentPermission.annotations,
+      if (flags.contains(sf.PdfPermissionsFlags.editContent))
+        DocumentPermission.changingContent,
+      if (flags.contains(sf.PdfPermissionsFlags.fillFields))
+        DocumentPermission.formFilling,
+    };
   }
+
+  static DocumentEncryption _encryptionOf(sf.PdfEncryptionAlgorithm algorithm) =>
+      switch (algorithm) {
+        sf.PdfEncryptionAlgorithm.rc4x40Bit => DocumentEncryption.rc4x40,
+        sf.PdfEncryptionAlgorithm.rc4x128Bit => DocumentEncryption.rc4x128,
+        sf.PdfEncryptionAlgorithm.aesx128Bit => DocumentEncryption.aes128,
+        sf.PdfEncryptionAlgorithm.aesx256Bit => DocumentEncryption.aes256,
+        sf.PdfEncryptionAlgorithm.aesx256BitRevision6 =>
+          DocumentEncryption.aes256,
+      };
 
   /// Returns a copy of [document] the renderer will accept.
   ///

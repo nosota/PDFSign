@@ -862,6 +862,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Drag to reorder'**
   String get dragToReorder;
+
+  /// Title of the panel that sets a document's passwords and permissions
+  ///
+  /// In en, this message translates to:
+  /// **'Protect Document'**
+  String get protectDocumentTitle;
+
+  /// Checkbox that makes the document ask for a password before it can be read
+  ///
+  /// In en, this message translates to:
+  /// **'Require Password To Open Document'**
+  String get requirePasswordToOpen;
+
+  /// Label of the field where a password is typed a second time
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get verifyFieldLabel;
+
+  /// Heading above the list of what may be done without the owner password
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions'**
+  String get permissionsHeading;
+
+  /// Explains what the permission checkboxes mean
+  ///
+  /// In en, this message translates to:
+  /// **'Allow the following changes to be made without entering the owner password.'**
+  String get permissionsNote;
+
+  /// Permission to print the document
+  ///
+  /// In en, this message translates to:
+  /// **'Printing'**
+  String get permissionPrinting;
+
+  /// Permission to copy content out of the document
+  ///
+  /// In en, this message translates to:
+  /// **'Copying Text or Graphics'**
+  String get permissionCopying;
+
+  /// Permission to rearrange the document's pages
+  ///
+  /// In en, this message translates to:
+  /// **'Inserting, Deleting, or Rotating Pages'**
+  String get permissionPageAssembly;
+
+  /// Permission to annotate and sign
+  ///
+  /// In en, this message translates to:
+  /// **'Adding Annotations or Signatures'**
+  String get permissionAnnotations;
+
+  /// Permission to change the content of the document
+  ///
+  /// In en, this message translates to:
+  /// **'Changing the Document'**
+  String get permissionChangingContent;
+
+  /// Permission to fill in form fields
+  ///
+  /// In en, this message translates to:
+  /// **'Filling Existing Form Fields'**
+  String get permissionFormFilling;
+
+  /// Explains why two checkboxes are ticked and unavailable
+  ///
+  /// In en, this message translates to:
+  /// **'Changing the document includes annotating and filling in forms, so those are granted with it.'**
+  String get changingContentIncludes;
+
+  /// Heading above the owner password fields
+  ///
+  /// In en, this message translates to:
+  /// **'Owner Password'**
+  String get ownerPasswordHeading;
+
+  /// Button that clears both passwords and permits everything
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Protection'**
+  String get removeProtection;
+
+  /// Button that accepts the protection panel
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get applyButton;
+
+  /// Shown when a password and its verification differ
+  ///
+  /// In en, this message translates to:
+  /// **'The passwords do not match'**
+  String get passwordsDoNotMatch;
+
+  /// Shown when a password is required but was left blank
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a password'**
+  String get passwordCannotBeEmpty;
+
+  /// Shown when permissions are withheld but no owner password was given
+  ///
+  /// In en, this message translates to:
+  /// **'Restrictions need an owner password. Without one, anyone can lift them.'**
+  String get restrictionsNeedOwnerPassword;
+
+  /// Warns that the app itself will be shut out of the document it is protecting
+  ///
+  /// In en, this message translates to:
+  /// **'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.'**
+  String get signingNeedsChangingContent;
+
+  /// File menu item that opens the panel setting a document's passwords and permissions
+  ///
+  /// In en, this message translates to:
+  /// **'Protect Document…'**
+  String get menuProtectDocument;
+
+  /// Label of the toolbar button that opens the protection panel
+  ///
+  /// In en, this message translates to:
+  /// **'Protect'**
+  String get protectButtonLabel;
+
+  /// Tooltip of the toolbar button that opens the protection panel
+  ///
+  /// In en, this message translates to:
+  /// **'Set this document\'s passwords and permissions'**
+  String get protectButtonTooltip;
 }
 
 class _AppLocalizationsDelegate

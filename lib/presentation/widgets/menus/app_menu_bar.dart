@@ -48,6 +48,7 @@ class AppMenuBar extends ConsumerStatefulWidget {
     this.onCut,
     this.onCopy,
     this.onPaste,
+    this.onProtect,
     this.onUndo,
     this.onRedo,
     this.canUndo = false,
@@ -156,6 +157,9 @@ class AppMenuBar extends ConsumerStatefulWidget {
 
   /// Pastes onto the page, or into the field that has focus.
   final VoidCallback? onPaste;
+
+  /// Opens the panel that sets the document's passwords and permissions.
+  final VoidCallback? onProtect;
 
   /// Taking the document a step back or forward through its history.
   final VoidCallback? onUndo;
@@ -361,7 +365,29 @@ class _AppMenuBarState extends ConsumerState<AppMenuBar> {
       items.add(PlatformMenuItemGroup(members: saveMembers));
     }
 
-    // Group 4: Share (optional)
+    // Group 4: Protecting the document (optional)
+    //
+    // Between saving and sharing on purpose: the protection is a property of
+    // the file, and it is the thing worth settling before handing it on.
+    if (widget.onProtect != null) {
+      items.add(
+        PlatformMenuItemGroup(
+          members: [
+            PlatformMenuItem(
+              label: widget.localizations.menuProtectDocument,
+              shortcut: const SingleActivator(
+                LogicalKeyboardKey.keyL,
+                meta: true,
+                shift: true,
+              ),
+              onSelected: widget.onProtect,
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Group 5: Share (optional)
     if (widget.includeShare) {
       items.add(
         PlatformMenuItemGroup(
@@ -375,7 +401,7 @@ class _AppMenuBarState extends ConsumerState<AppMenuBar> {
       );
     }
 
-    // Group 5: Close All (optional) and Close Window
+    // Group 6: Close All (optional) and Close Window
     final closeItems = <PlatformMenuItem>[];
 
     if (widget.includeCloseAll) {

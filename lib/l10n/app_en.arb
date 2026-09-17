@@ -579,5 +579,17 @@
   "signingNeedsChangingContent": "Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.",
   "@signingNeedsChangingContent": {
     "description": "Warns that the app itself will be shut out of the document it is protecting"
+  },
+  "menuProtectDocument": "Protect Document…",
+  "@menuProtectDocument": {
+    "description": "File menu item that opens the panel setting a document's passwords and permissions"
+  },
+  "protectButtonLabel": "Protect",
+  "@protectButtonLabel": {
+    "description": "Label of the toolbar button that opens the protection panel"
+  },
+  "protectButtonTooltip": "Set this document's passwords and permissions",
+  "@protectButtonTooltip": {
+    "description": "Tooltip of the toolbar button that opens the protection panel"
   }
 }

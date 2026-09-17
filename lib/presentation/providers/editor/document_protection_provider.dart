@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:pdfsign/domain/entities/document_protection.dart';
+import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 
 part 'document_protection_provider.g.dart';
 
@@ -50,3 +51,17 @@ class SavedProtection extends _$SavedProtection {
 @Riverpod(keepAlive: true)
 bool protectionChanged(ProtectionChangedRef ref) =>
     ref.watch(pendingProtectionProvider) != ref.watch(savedProtectionProvider);
+
+/// Whether the document asks for a password or withholds anything.
+///
+/// What the lock in the toolbar shows. The pending change wins when there is
+/// one: it is what the file will carry once saved, and the button should say
+/// what the reader has asked for rather than what is still on disk.
+@Riverpod(keepAlive: true)
+bool documentIsProtected(DocumentIsProtectedRef ref) {
+  final pending = ref.watch(pendingProtectionProvider);
+  if (pending != null) return !pending.isOpen;
+
+  final current = ref.watch(pdfDocumentProvider).documentOrNull?.security.current;
+  return current != null && !current.isOpen;
+}

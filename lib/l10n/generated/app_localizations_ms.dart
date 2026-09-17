@@ -379,4 +379,75 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get dragToReorder => 'Drag to reorder';
+
+  @override
+  String get protectDocumentTitle => 'Protect Document';
+
+  @override
+  String get requirePasswordToOpen => 'Require Password To Open Document';
+
+  @override
+  String get verifyFieldLabel => 'Verify';
+
+  @override
+  String get permissionsHeading => 'Permissions';
+
+  @override
+  String get permissionsNote =>
+      'Allow the following changes to be made without entering the owner password.';
+
+  @override
+  String get permissionPrinting => 'Printing';
+
+  @override
+  String get permissionCopying => 'Copying Text or Graphics';
+
+  @override
+  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+
+  @override
+  String get permissionAnnotations => 'Adding Annotations or Signatures';
+
+  @override
+  String get permissionChangingContent => 'Changing the Document';
+
+  @override
+  String get permissionFormFilling => 'Filling Existing Form Fields';
+
+  @override
+  String get changingContentIncludes =>
+      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+
+  @override
+  String get ownerPasswordHeading => 'Owner Password';
+
+  @override
+  String get removeProtection => 'Remove Protection';
+
+  @override
+  String get applyButton => 'Apply';
+
+  @override
+  String get passwordsDoNotMatch => 'The passwords do not match';
+
+  @override
+  String get passwordCannotBeEmpty => 'Enter a password';
+
+  @override
+  String get restrictionsNeedOwnerPassword =>
+      'Restrictions need an owner password. Without one, anyone can lift them.';
+
+  @override
+  String get signingNeedsChangingContent =>
+      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+
+  @override
+  String get menuProtectDocument => 'Protect Document…';
+
+  @override
+  String get protectButtonLabel => 'Protect';
+
+  @override
+  String get protectButtonTooltip =>
+      'Set this document\'s passwords and permissions';
 }

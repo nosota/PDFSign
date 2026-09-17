@@ -99,7 +99,11 @@ class PdfDataSourceImpl implements PdfDataSource {
 
     final protection = await PdfSecurityChannel.inspect(filePath);
     final opened = protection != null && protection.isEncrypted
-        ? await _readProtected(file, password)
+        ? await _readProtected(
+            file,
+            password,
+            requiresPasswordToOpen: protection.needsPassword,
+          )
         // Read straight from the file, which is what keeps a large document
         // out of memory. Only a protected one has to be held there.
         : (document: await PdfDocument.openFile(filePath), contents: null);
@@ -129,14 +133,19 @@ class PdfDataSourceImpl implements PdfDataSource {
   /// Reads a protected document through the PDF writer and opens the copy.
   Future<({PdfDocument document, ProtectedPdfContents contents})> _readProtected(
     File file,
-    String? password,
-  ) async {
+    String? password, {
+    required bool requiresPasswordToOpen,
+  }) async {
     final bytes = await file.readAsBytes();
 
     // Whatever the reader cannot handle it names itself; a failure from
     // anywhere else — a damaged cross-reference table, say — is a broken
     // document and must not be reported as an unsupported protection.
-    final contents = await _protectedReader.read(bytes, password: password);
+    final contents = await _protectedReader.read(
+      bytes,
+      password: password,
+      requiresPasswordToOpen: requiresPasswordToOpen,
+    );
 
     return (
       document: await PdfDocument.openData(contents.renderableBytes),

@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:pdfsign/domain/entities/document_protection.dart';
+
 /// What a document's own protection allows, and what it took to open it.
 ///
 /// The [password] is kept only for as long as the document is open, and only
@@ -9,7 +11,8 @@ import 'package:equatable/equatable.dart';
 class DocumentSecurity extends Equatable {
   /// A document with no encryption at all: everything is permitted.
   const DocumentSecurity.unprotected()
-      : password = null,
+      : current = null,
+        password = null,
         isProtected = false,
         allowsEditing = true,
         hasOwnerRights = true;
@@ -27,6 +30,7 @@ class DocumentSecurity extends Equatable {
     required this.password,
     required this.allowsEditing,
     required this.hasOwnerRights,
+    this.current,
   }) : isProtected = true;
 
   /// Whether the document is encrypted.
@@ -42,6 +46,13 @@ class DocumentSecurity extends Equatable {
   /// lifts this.
   final bool allowsEditing;
 
+  /// The protection the document carries, as far as it could be read.
+  ///
+  /// This is what the panel starts from. Null for a document with none, and
+  /// for one whose protection could not be read back — a password that opened
+  /// the document does not always reveal the other one.
+  final DocumentProtection? current;
+
   /// Whether the document was opened with owner rights.
   ///
   /// When false, editing can still be unlocked by supplying the owner
@@ -54,6 +65,7 @@ class DocumentSecurity extends Equatable {
         password,
         allowsEditing,
         hasOwnerRights,
+        current,
       ];
 
   /// Says nothing about the password, deliberately.

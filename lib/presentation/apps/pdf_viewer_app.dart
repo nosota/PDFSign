@@ -38,6 +38,8 @@ import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
 import 'package:pdfsign/presentation/providers/recent_files_provider.dart';
 import 'package:pdfsign/presentation/providers/shared_preferences_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/editor_screen.dart';
+import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/owner_password_dialog.dart';
+import 'package:pdfsign/presentation/screens/editor/widgets/protection/protection_panel.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/go_to_page_dialog.dart';
 import 'package:pdfsign/presentation/widgets/dialogs/save_changes_dialog.dart';
 import 'package:pdfsign/presentation/widgets/menus/app_menu_bar.dart';
@@ -121,6 +123,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     ToolbarChannel.setOnRotateLeftPressed(_handleRotateLeft);
     ToolbarChannel.setOnRotateRightPressed(_handleRotateRight);
     ToolbarChannel.setOnHistoryPressed(undo: _handleUndo, redo: _handleRedo);
+    ToolbarChannel.setOnProtectPressed(_handleProtect);
     ToolbarChannel.setOnRestackPressed([
       () => _restack(ZOrderMove.toBack),
       () => _restack(ZOrderMove.backward),
@@ -218,6 +221,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     ToolbarChannel.setOnRotateRightPressed(null);
     ToolbarChannel.setOnRestackPressed(const [null, null, null, null]);
     ToolbarChannel.setOnHistoryPressed();
+    ToolbarChannel.setOnProtectPressed(null);
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
     WindowBroadcast.setOnSaveAll(null);
@@ -566,6 +570,39 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     }
   }
 
+  /// Opens the panel that sets the document's passwords and permissions.
+  ///
+  /// Changing a protected document's protection is the owner's business, so a
+  /// reader holding only the password that opens it is asked for the owner's
+  /// first. A document with no protection has no owner to ask.
+  Future<void> _handleProtect() async {
+    final context = _navigatorKey.currentContext;
+    final document = ref.read(pdfDocumentProvider).documentOrNull;
+    if (context == null || document == null) return;
+
+    if (document.security.isProtected && !document.security.hasOwnerRights) {
+      final unlocked = await OwnerPasswordDialog.show(
+        context,
+        onSubmit: ref.read(pdfDocumentProvider.notifier).unlockEditing,
+      );
+      if (!unlocked || !mounted) return;
+    }
+
+    final panelContext = _navigatorKey.currentContext;
+    if (panelContext == null) return;
+    final chosen = await ProtectionPanel.show(
+      panelContext,
+      current: ref.read(pendingProtectionProvider) ??
+          ref.read(pdfDocumentProvider).documentOrNull?.security.current,
+    );
+    if (chosen == null || !mounted) return;
+
+    recordHistoryStep(
+      ref,
+      () => ref.read(pendingProtectionProvider.notifier).set(chosen),
+    );
+  }
+
   void _handleUndo() => undoEdit(ref);
 
   void _handleRedo() => redoEdit(ref);
@@ -633,6 +670,11 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
       ref.read(editorSelectionProvider) != null,
       labels: _zOrderLabels(l10n),
       groupLabel: l10n.zOrderGroupLabel,
+    );
+    ToolbarChannel.setProtectionState(
+      protected: ref.read(documentIsProtectedProvider),
+      label: l10n.protectButtonLabel,
+      tooltip: l10n.protectButtonTooltip,
     );
     final history = ref.read(editorHistoryProvider);
     ToolbarChannel.setHistoryEnabled(
@@ -969,6 +1011,18 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
       );
     });
 
+    // The lock says whether the document asks for a password or withholds
+    // anything — the one thing in the toolbar that cannot be seen by looking
+    // at the page.
+    ref.listen<bool>(documentIsProtectedProvider, (previous, current) {
+      final l10n = _l10n;
+      ToolbarChannel.setProtectionState(
+        protected: current,
+        label: l10n?.protectButtonLabel,
+        tooltip: l10n?.protectButtonTooltip,
+      );
+    });
+
     // A protected document is shown from memory rather than from the file, so
     // a large one costs its own size in memory. Say so once it is open, rather
     // than standing between the reader and their document with a question.
@@ -1033,6 +1087,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
               onCut: _handleCut,
               onCopy: _handleCopy,
               onPaste: _handlePaste,
+              onProtect: _handleProtect,
               onUndo: _handleUndo,
               onRedo: _handleRedo,
               canUndo: menuState.canUndo,

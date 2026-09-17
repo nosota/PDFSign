@@ -152,6 +152,21 @@ class AppDelegate: FlutterAppDelegate {
           }
           result(nil)
 
+        case "setProtectionState":
+          let args = call.arguments as? [String: Any] ?? [:]
+          let isProtected = args["protected"] as? Bool ?? false
+          let label = args["label"] as? String
+          let tooltip = args["tooltip"] as? String
+          DispatchQueue.main.async {
+            if let window = controller.view.window,
+               let toolbarHelper = toolbarHelpers[ObjectIdentifier(window)],
+               toolbarHelper.owns(window) {
+              toolbarHelper.setProtectionState(
+                protected: isProtected, label: label, tooltip: tooltip)
+            }
+          }
+          result(nil)
+
         case "setHistoryEnabled":
           // Grey each half of the undo control out on its own
           let args = call.arguments as? [String: Any] ?? [:]
@@ -704,6 +719,7 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
   private var methodChannel: FlutterMethodChannel?
   private let shareItemIdentifier = NSToolbarItem.Identifier("ShareItem")
   private let deleteItemIdentifier = NSToolbarItem.Identifier("DeleteItem")
+  private let protectItemIdentifier = NSToolbarItem.Identifier("ProtectItem")
   private let rotateGroupIdentifier = NSToolbarItem.Identifier("RotateGroup")
   private let historyGroupIdentifier = NSToolbarItem.Identifier("HistoryGroup")
   private let zOrderGroupIdentifier = NSToolbarItem.Identifier("ZOrderGroup")
@@ -729,6 +745,12 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
   /// Kept so a request that arrived before the toolbar existed is not lost:
   /// the Dart listener is edge-triggered and will not repeat it.
   private var deleteEnabled = false
+
+  /// Whether the document has any protection, which is what the lock shows.
+  private var documentProtected = false
+
+  private var protectLabel = "Protect"
+  private var protectTooltip = "Set this document's passwords and permissions"
 
   /// Whether each half of the undo control has a step to take.
   ///
@@ -850,6 +872,7 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
       zOrderGroupIdentifier,
       rotateGroupIdentifier,
       deleteItemIdentifier,
+      protectItemIdentifier,
       shareItemIdentifier,
       .flexibleSpace,
       .space,
@@ -869,8 +892,11 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
       rotateGroupIdentifier,
       .flexibleSpace,
       deleteItemIdentifier,
-      // Deleting the selected object and sharing the document are unrelated
-      // actions; a fixed gap keeps them from reading as one control.
+      // Deleting the selected object, protecting the document and sharing it
+      // are three unrelated actions; fixed gaps keep them from reading as one
+      // control.
+      .space,
+      protectItemIdentifier,
       .space,
       shareItemIdentifier,
     ]
@@ -945,6 +971,45 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
       item.paletteLabel = historyLabels[index]
       item.toolTip = historyLabels[index]
     }
+  }
+
+  /// The lock, open or closed according to what the document carries.
+  private func makeProtectItem() -> NSToolbarItem {
+    let item = makeSymbolItem(
+      identifier: "ProtectItem",
+      symbol: documentProtected ? "lock" : "lock.open",
+      label: protectLabel,
+      action: #selector(protectClicked)
+    )
+    item.toolTip = protectTooltip
+    return item
+  }
+
+  /// Shows the lock closed or open, and replaces its localized texts.
+  ///
+  /// The document's protection is the one thing in this toolbar a reader
+  /// cannot see by looking at the page, so the button carries it.
+  func setProtectionState(protected: Bool, label: String?, tooltip: String?) {
+    documentProtected = protected
+    if let label = label { protectLabel = label }
+    if let tooltip = tooltip { protectTooltip = tooltip }
+
+    guard let item = window?.toolbar?.items.first(where: {
+      $0.itemIdentifier == protectItemIdentifier
+    }) else { return }
+
+    item.label = protectLabel
+    item.paletteLabel = protectLabel
+    item.toolTip = protectTooltip
+    if #available(macOS 11.0, *) {
+      item.image = NSImage(
+        systemSymbolName: protected ? "lock" : "lock.open",
+        accessibilityDescription: protectLabel)
+    }
+  }
+
+  @objc func protectClicked() {
+    methodChannel?.invokeMethod("onProtectPressed", arguments: nil)
   }
 
   @objc func undoClicked() {
@@ -1101,6 +1166,10 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
     itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
     willBeInsertedIntoToolbar flag: Bool
   ) -> NSToolbarItem? {
+    if itemIdentifier == protectItemIdentifier {
+      return makeProtectItem()
+    }
+
     if itemIdentifier == historyGroupIdentifier {
       return makeHistoryGroup()
     }
