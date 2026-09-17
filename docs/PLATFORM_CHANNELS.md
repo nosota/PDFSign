@@ -290,6 +290,14 @@ The lock keeps the same picture whichever way it is drawn — only the symbol
 changes, closed for a document that asks for a password or withholds anything,
 open for one that does not.
 
+**The title bar is transparent, deliberately.** With an opaque one AppKit
+inserts a `BackdropView` beside the Flutter view and hangs it 32 pt over the
+top of the content. It draws nothing there and it hit-tests, so it swallows
+every click in that strip — the read-only notice's button could not be pressed
+at all, and an object resting against the top of the viewport could not be
+picked up. Nothing is drawn under the title bar here, so the backdrop has
+nothing to blur.
+
 The toolbar is built by AppKit before Flutter has resolved a locale, so it
 starts with English texts. `setRotateLabels`, `setHistoryEnabled`,
 `setZOrderEnabled` and `setProtectionState` carry localized texts alongside

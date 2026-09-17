@@ -829,6 +829,17 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
     toolbar.displayMode = .iconOnly
     toolbar.allowsUserCustomization = false
     window.toolbar = toolbar
+    // Keeps the toolbar's backdrop out of the content view.
+    //
+    // With an opaque title bar AppKit inserts a `BackdropView` as a sibling of
+    // the Flutter view and hangs it 32 pt over the top of the content —
+    // measured on macOS 26 by dumping the window's view hierarchy. It is
+    // invisible there but it hit-tests, so it swallows every click in that
+    // strip: the read-only notice's button could not be pressed at all, and
+    // an object resting against the top of the viewport could not be picked
+    // up. Nothing is drawn under the title bar here, so the backdrop has
+    // nothing to blur and taking it away costs nothing.
+    window.titlebarAppearsTransparent = true
 
     // Apply whatever Dart asked for while the toolbar did not yet exist.
     setDeleteButtonEnabled(deleteEnabled, label: nil, tooltip: nil)

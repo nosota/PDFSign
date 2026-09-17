@@ -299,6 +299,18 @@ final class PDFSignToolbarHelperTests: XCTestCase {
     XCTAssertEqual(share, protect + 2)
   }
 
+  func testShouldLeaveTheTopOfTheContentClickable() {
+    // AppKit hangs the toolbar's backdrop 32 pt over the top of the content
+    // view when the title bar is opaque. It draws nothing there but it
+    // hit-tests, so every click in that strip is swallowed before Flutter
+    // sees it — the read-only notice's button could not be pressed at all.
+    // A transparent title bar keeps that view out.
+    XCTAssertTrue(
+      window.titlebarAppearsTransparent,
+      "an opaque title bar puts a backdrop over the top of the document"
+    )
+  }
+
   // MARK: - Delete follows the selection
 
   func testShouldStartDisabledBecauseNothingIsSelected() {

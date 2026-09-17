@@ -3,6 +3,12 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Fixed
+
+- The **Enter owner password** button on the read-only notice can be pressed. Nothing in the top 32 points of a document window could be clicked at all: AppKit hangs the toolbar's backdrop over the content there, and it swallows the click before the app sees it. The same strip also held the top edge of an object resting against the top of the view and of the first image in the library
+
 ## [1.4.0] — 2026-09-17
 
 ### Added

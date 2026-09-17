@@ -606,7 +606,7 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 | `flutter analyze` | 1203 issues: 0 errors, **0 warnings**, 1203 info |
 | Unit tests | **204** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry, the writer, reading and writing protected documents, permission bits, restacking and the undo history |
 | Widget tests | **118** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation, the password prompt, the read-only notice, the protection panel, restacking and what each action records in the history |
-| Native tests | **46** — the toolbar's fixed item set and layout, the enabled state of Delete, undo/redo and restacking, the lock's two faces, window cascading and the CoreGraphics security probe (`macos/RunnerTests`) |
+| Native tests | **47** — the toolbar's fixed item set and layout, the enabled state of Delete, undo/redo and restacking, the lock's two faces, window cascading, the CoreGraphics security probe, and the title bar that keeps the toolbar's backdrop off the document (`macos/RunnerTests`) |
 | Integration tests | **none** |
 | Golden tests | **none** |
 | CI | none |
