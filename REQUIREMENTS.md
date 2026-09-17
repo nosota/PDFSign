@@ -31,7 +31,7 @@ Architecture detail is kept out of this document; see [docs/ARCHITECTURE.md](doc
 | Product name | PDFSign |
 | Bundle identifier | `com.ivanvaganov.pdfsign` |
 | Dart package name | `pdfsign` |
-| Version | 1.3.0+2 (`pubspec.yaml`) — `Info.plist` reads both through `$(FLUTTER_BUILD_NAME)` / `$(FLUTTER_BUILD_NUMBER)`; the About panel shows the version alone (see §2.4) |
+| Version | 1.3.2+3 (`pubspec.yaml`) — `Info.plist` reads both through `$(FLUTTER_BUILD_NAME)` / `$(FLUTTER_BUILD_NUMBER)`; the About panel shows the version alone (see §2.4) |
 | License | Proprietary |
 
 ### 1.2 Description

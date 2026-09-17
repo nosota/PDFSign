@@ -3,7 +3,11 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
-## [Unreleased]
+## [1.3.2] — 2026-09-17
+
+### Fixed
+
+- Dragging a library image by its grip reorders the list again, from the first movement. A change made after 1.3.0 was tagged had asked the grip to be held first, which left reordering looking broken
 
 ### Added
 
