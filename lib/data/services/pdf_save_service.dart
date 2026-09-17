@@ -11,6 +11,7 @@ import 'package:uuid/uuid.dart';
 import 'package:pdfsign/core/errors/failure.dart';
 import 'package:pdfsign/core/errors/failures.dart';
 import 'package:pdfsign/core/utils/page_rotation_transform.dart';
+import 'package:pdfsign/domain/entities/document_protection.dart';
 import 'package:pdfsign/domain/entities/pdf_page_info.dart';
 import 'package:pdfsign/domain/entities/placed_image.dart';
 
@@ -41,10 +42,14 @@ class PdfSaveService {
     required List<PdfPageInfo> pages,
     required String outputPath,
     String? password,
+    DocumentProtection? protection,
   }) async {
     try {
       final document = PdfDocument(inputBytes: originalBytes, password: password);
       await _apply(document, placedImages, pages);
+      if (protection != null) {
+        _protect(document, protection);
+      }
 
       final savedBytes = await document.save();
       document.dispose();
@@ -56,6 +61,79 @@ class PdfSaveService {
     }
   }
 
+  /// Writes [protection] into [document].
+  ///
+  /// Called after the objects are placed and before the document is written,
+  /// so that what is saved carries the protection the reader asked for rather
+  /// than the one the file arrived with. The password the original was *read*
+  /// with is a different thing and has already done its work by now.
+  void _protect(PdfDocument document, DocumentProtection protection) {
+    final security = document.security;
+
+    security.algorithm = _algorithmFor(protection.algorithm);
+    security.userPassword = protection.userPassword;
+    security.ownerPassword = protection.ownerPassword;
+    _setPermissions(security, protection.permissions);
+  }
+
+  /// Leaves the document's permissions exactly as [permissions] describes.
+  ///
+  /// The library's permission set can be added to and taken from but not
+  /// cleared, so what is no longer wanted is removed one at a time. Reading
+  /// the current set first is what makes this an assignment rather than an
+  /// accumulation: without it, permissions could only ever be granted.
+  void _setPermissions(
+    PdfSecurity security,
+    Set<DocumentPermission> permissions,
+  ) {
+    final wanted = <PdfPermissionsFlags>{
+      for (final permission in permissions) ..._flagsFor(permission),
+    };
+
+    final current = <PdfPermissionsFlags>[];
+    security.permissions.forEach(current.add);
+    for (final flag in current) {
+      if (flag != PdfPermissionsFlags.none && !wanted.contains(flag)) {
+        security.permissions.remove(flag);
+      }
+    }
+    security.permissions.addAll(wanted.toList());
+  }
+
+  /// The bits one permission stands for.
+  static List<PdfPermissionsFlags> _flagsFor(DocumentPermission permission) =>
+      switch (permission) {
+        DocumentPermission.printing => [
+            PdfPermissionsFlags.print,
+            PdfPermissionsFlags.fullQualityPrint,
+          ],
+        DocumentPermission.copying => [
+            PdfPermissionsFlags.copyContent,
+            PdfPermissionsFlags.accessibilityCopyContent,
+          ],
+        DocumentPermission.pageAssembly => [
+            PdfPermissionsFlags.assembleDocument,
+          ],
+        DocumentPermission.annotations => [
+            PdfPermissionsFlags.editAnnotations,
+          ],
+        DocumentPermission.changingContent => [
+            PdfPermissionsFlags.editContent,
+          ],
+        DocumentPermission.formFilling => [PdfPermissionsFlags.fillFields],
+      };
+
+  /// AES-256 for protection this app adds; a document that already has an
+  /// algorithm keeps it, so the readers it was made for can still open it.
+  static PdfEncryptionAlgorithm _algorithmFor(DocumentEncryption? encryption) =>
+      switch (encryption) {
+        DocumentEncryption.rc4x40 => PdfEncryptionAlgorithm.rc4x40Bit,
+        DocumentEncryption.rc4x128 => PdfEncryptionAlgorithm.rc4x128Bit,
+        DocumentEncryption.aes128 => PdfEncryptionAlgorithm.aesx128Bit,
+        DocumentEncryption.aes256 => PdfEncryptionAlgorithm.aesx256Bit,
+        null => PdfEncryptionAlgorithm.aesx256Bit,
+      };
+
   /// Creates a temporary copy of the PDF with images embedded, for sharing.
   ///
   /// The copy carries the original document's protection, so a shared
@@ -65,6 +143,7 @@ class PdfSaveService {
     required List<PlacedImage> placedImages,
     required List<PdfPageInfo> pages,
     String? password,
+    DocumentProtection? protection,
   }) async {
     try {
       final tempDir = await getTemporaryDirectory();
@@ -74,6 +153,7 @@ class PdfSaveService {
         pages: pages,
         outputPath: '${tempDir.path}/${_uuid.v4()}.pdf',
         password: password,
+        protection: protection,
       );
     } catch (e) {
       return Left(StorageFailure(message: 'Failed to create temp PDF: $e'));
