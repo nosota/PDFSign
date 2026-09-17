@@ -17,7 +17,12 @@ class AddImageButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     return Container(
-      height: SidebarConstants.addButtonHeight,
+      // A minimum rather than a height: the label is one line in English and
+      // two in Dutch, Russian and Filipino, and a fixed height cut the second
+      // one off. The bar keeps its usual size wherever the label fits.
+      constraints: const BoxConstraints(
+        minHeight: SidebarConstants.addButtonHeight,
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       decoration: BoxDecoration(
         border: Border(
@@ -31,7 +36,7 @@ class AddImageButton extends ConsumerWidget {
         child: TextButton.icon(
           onPressed: () => _pickImages(context, ref),
           icon: const Icon(Icons.add, size: 18),
-          label: Text(l10n.addImage),
+          label: Text(l10n.addImage, textAlign: TextAlign.center),
           style: TextButton.styleFrom(
             foregroundColor: Theme.of(context).colorScheme.primary,
           ),

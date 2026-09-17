@@ -3,6 +3,12 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Fixed
+
+- The **Add Image** button at the foot of the library shows its whole label. In Russian, Dutch and Filipino the label takes two lines, and the bar's fixed height cut the second one off; it now grows to fit and keeps its usual height everywhere the label fits on one line
+
 ## [1.5.2] — 2026-09-17
 
 ### Fixed
