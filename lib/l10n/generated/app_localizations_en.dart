@@ -380,6 +380,21 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get unsupportedProtection =>
       'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+
+  @override
+  String get menuBringToFront => 'Bring to Front';
+
+  @override
+  String get menuBringForward => 'Bring Forward';
+
+  @override
+  String get menuSendBackward => 'Send Backward';
+
+  @override
+  String get menuSendToBack => 'Send to Back';
+
+  @override
+  String get zOrderGroupLabel => 'Arrange';
 }
 
 /// The translations for English, as used in Australia (`en_AU`).

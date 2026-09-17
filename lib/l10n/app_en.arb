@@ -471,5 +471,25 @@
   "unsupportedProtection": "This document's protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.",
   "@unsupportedProtection": {
     "description": "Shown for a PDF protected by a means the app cannot open"
+  },
+  "menuBringToFront": "Bring to Front",
+  "@menuBringToFront": {
+    "description": "Edit menu item that puts the selected object in front of the others on its page"
+  },
+  "menuBringForward": "Bring Forward",
+  "@menuBringForward": {
+    "description": "Edit menu item that moves the selected object one place towards the front"
+  },
+  "menuSendBackward": "Send Backward",
+  "@menuSendBackward": {
+    "description": "Edit menu item that moves the selected object one place towards the back"
+  },
+  "menuSendToBack": "Send to Back",
+  "@menuSendToBack": {
+    "description": "Edit menu item that puts the selected object behind the others on its page"
+  },
+  "zOrderGroupLabel": "Arrange",
+  "@zOrderGroupLabel": {
+    "description": "Label of the toolbar control that restacks the selected object"
   }
 }

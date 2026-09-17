@@ -48,6 +48,10 @@ class AppMenuBar extends ConsumerStatefulWidget {
     this.onCut,
     this.onCopy,
     this.onPaste,
+    this.onBringToFront,
+    this.onBringForward,
+    this.onSendBackward,
+    this.onSendToBack,
     this.onRotateLeft,
     this.onRotateRight,
     this.includeViewMenu = false,
@@ -150,6 +154,14 @@ class AppMenuBar extends ConsumerStatefulWidget {
   final VoidCallback? onPaste;
 
   /// Turns the page in view a quarter turn anticlockwise.
+  /// Restacking the selected object within its page.
+  ///
+  /// Enabled together with Delete: both act on whatever is selected.
+  final VoidCallback? onBringToFront;
+  final VoidCallback? onBringForward;
+  final VoidCallback? onSendBackward;
+  final VoidCallback? onSendToBack;
+
   final VoidCallback? onRotateLeft;
 
   /// Turns the page in view a quarter turn clockwise.
@@ -484,6 +496,52 @@ class _AppMenuBarState extends ConsumerState<AppMenuBar> {
                 meta: true,
               ),
               onSelected: widget.onRotateRight,
+            ),
+          ],
+        ),
+      if (widget.onBringToFront != null)
+        PlatformMenuItemGroup(
+          members: [
+            PlatformMenuItem(
+              label: widget.localizations.menuBringToFront,
+              shortcut: const SingleActivator(
+                LogicalKeyboardKey.keyF,
+                meta: true,
+                shift: true,
+              ),
+              onSelected:
+                  widget.isDeleteEnabled ? widget.onBringToFront : null,
+            ),
+            PlatformMenuItem(
+              label: widget.localizations.menuBringForward,
+              shortcut: const SingleActivator(
+                LogicalKeyboardKey.keyF,
+                meta: true,
+                shift: true,
+                alt: true,
+              ),
+              onSelected:
+                  widget.isDeleteEnabled ? widget.onBringForward : null,
+            ),
+            PlatformMenuItem(
+              label: widget.localizations.menuSendBackward,
+              shortcut: const SingleActivator(
+                LogicalKeyboardKey.keyB,
+                meta: true,
+                shift: true,
+                alt: true,
+              ),
+              onSelected:
+                  widget.isDeleteEnabled ? widget.onSendBackward : null,
+            ),
+            PlatformMenuItem(
+              label: widget.localizations.menuSendToBack,
+              shortcut: const SingleActivator(
+                LogicalKeyboardKey.keyB,
+                meta: true,
+                shift: true,
+              ),
+              onSelected: widget.isDeleteEnabled ? widget.onSendToBack : null,
             ),
           ],
         ),

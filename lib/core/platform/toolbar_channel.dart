@@ -12,6 +12,11 @@ class ToolbarChannel {
   static VoidCallback? _onDeletePressed;
   static VoidCallback? _onRotateLeftPressed;
   static VoidCallback? _onRotateRightPressed;
+  /// One callback per direction the selected object can be restacked.
+  ///
+  /// Keyed by the order the segments sit in: to the back, back one, forward
+  /// one, to the front.
+  static final List<VoidCallback?> _onRestack = List.filled(4, null);
   static bool _initialized = false;
 
   /// Initializes the toolbar channel.
@@ -49,6 +54,33 @@ class ToolbarChannel {
   /// Pass null to unregister the callback.
   static void setOnRotateRightPressed(VoidCallback? callback) {
     _onRotateRightPressed = callback;
+  }
+
+  /// Sets the callbacks for the four restacking segments, in the order they
+  /// sit in the control: to the back, back one, forward one, to the front.
+  static void setOnRestackPressed(List<VoidCallback?> callbacks) {
+    for (var i = 0; i < _onRestack.length; i++) {
+      _onRestack[i] = i < callbacks.length ? callbacks[i] : null;
+    }
+  }
+
+  /// Greys the restacking control out when nothing is selected.
+  ///
+  /// [labels] are the four segment names, in the same order.
+  static Future<void> setZOrderEnabled(
+    bool enabled, {
+    List<String>? labels,
+  }) async {
+    try {
+      await _channel.invokeMethod('setZOrderEnabled', {
+        'enabled': enabled,
+        if (labels != null) 'labels': labels,
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print('ToolbarChannel: Failed to set z-order enabled: $e');
+      }
+    }
   }
 
   /// Sets the localized texts of the rotate control.
@@ -127,6 +159,14 @@ class ToolbarChannel {
         _onRotateLeftPressed?.call();
       case 'onRotateRightPressed':
         _onRotateRightPressed?.call();
+      case 'onSendToBackPressed':
+        _onRestack[0]?.call();
+      case 'onSendBackwardPressed':
+        _onRestack[1]?.call();
+      case 'onBringForwardPressed':
+        _onRestack[2]?.call();
+      case 'onBringToFrontPressed':
+        _onRestack[3]?.call();
       default:
         if (kDebugMode) {
           print('ToolbarChannel: Unknown method ${call.method}');

@@ -814,6 +814,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.'**
   String get unsupportedProtection;
+
+  /// Edit menu item that puts the selected object in front of the others on its page
+  ///
+  /// In en, this message translates to:
+  /// **'Bring to Front'**
+  String get menuBringToFront;
+
+  /// Edit menu item that moves the selected object one place towards the front
+  ///
+  /// In en, this message translates to:
+  /// **'Bring Forward'**
+  String get menuBringForward;
+
+  /// Edit menu item that moves the selected object one place towards the back
+  ///
+  /// In en, this message translates to:
+  /// **'Send Backward'**
+  String get menuSendBackward;
+
+  /// Edit menu item that puts the selected object behind the others on its page
+  ///
+  /// In en, this message translates to:
+  /// **'Send to Back'**
+  String get menuSendToBack;
+
+  /// Label of the toolbar control that restacks the selected object
+  ///
+  /// In en, this message translates to:
+  /// **'Arrange'**
+  String get zOrderGroupLabel;
 }
 
 class _AppLocalizationsDelegate

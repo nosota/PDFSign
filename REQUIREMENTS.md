@@ -255,10 +255,15 @@ One circular handle on a 20 pt stem above the top edge. Free rotation with ±180
 Below the visually lowest edge, showing `W × H` in cm or inches to one decimal. Clicking toggles the unit and broadcasts the change to every open window.
 
 #### FR-5.8 — Delete
-`Delete` / `Backspace` (suppressed while a text field has focus), **Edit → Delete** (`Cmd+Backspace`), or the Delete button in the native toolbar, which appears only while something is selected.
+`Delete` / `Backspace` (suppressed while a text field has focus), **Edit → Delete** (`Cmd+Backspace`), or the Delete button in the native toolbar, which is greyed out while nothing is selected rather than taken away — an item set that never changes is one that never moves the controls around it.
 
-#### FR-5.9 — Copy / paste
-`Cmd+C` remembers the selected object's id; `Cmd+V` duplicates it offset by (20, 20) and selects the copy. This is an in-window mechanism, not the system clipboard, so it does not carry objects to another document.
+#### FR-5.9 — Cut / copy / paste
+Through the **system pasteboard** (ADR-0009), so an object can be carried to another PDFSign window and an image copied in another application can be pasted onto the page. `Cmd+X` / `Cmd+C` / `Cmd+V`, and **Edit → Cut / Copy / Paste**. While a text field holds the keyboard the action is handed to the field instead.
+
+#### FR-5.10 — Restacking
+**Bring to Front** (`Shift+Cmd+F`), **Bring Forward** (`Opt+Shift+Cmd+F`), **Send Backward** (`Opt+Shift+Cmd+B`) and **Send to Back** (`Shift+Cmd+B`), from **Edit** or from the four-part control at the left of the toolbar. Enabled whenever something is selected.
+
+Objects carry no depth of their own: the order they are drawn in is the order they sit in `placedImagesProvider`, on screen (`placed_image_overlay.dart`) and in the written file (`pdf_save_service.dart`) alike. Restacking is therefore a move within that list, and the two cannot disagree. A move reaches only the places its own page occupies, so the objects of other pages keep their order however the list is interleaved; a move that changes nothing leaves the list identical, which is what keeps an empty entry out of the undo history.
 
 ---
 
@@ -589,7 +594,6 @@ Specified in v1.0 (or implied by leftover code) but **absent from the product**.
 
 | # | Feature | Evidence of the gap |
 |---|---------|---------------------|
-| 12.1 | **Z-order management** (bring to front / send to back / forward / backward) | `PlacedImage` has no z-index; paint order is insertion order. TODO → V1.0 |
 | 12.2 | **Undo / redo**, 50 levels | No command stack anywhere. TODO → V1.1 |
 | 12.4 | **Paste dialog** with "Add to Signatures / Stamps / Don't add" and "Don't ask again" | No dialog. A pasted image goes onto the page and is deliberately not added to the library (ADR-0009) |
 | 12.5 | **Signatures / Stamps split** in the library | One flat list |

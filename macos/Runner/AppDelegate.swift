@@ -152,6 +152,20 @@ class AppDelegate: FlutterAppDelegate {
           }
           result(nil)
 
+        case "setZOrderEnabled":
+          // Grey the restacking control out when there is nothing selected
+          let args = call.arguments as? [String: Any] ?? [:]
+          let enabled = args["enabled"] as? Bool ?? false
+          let labels = args["labels"] as? [String]
+          DispatchQueue.main.async {
+            if let window = controller.view.window,
+               let toolbarHelper = toolbarHelpers[ObjectIdentifier(window)],
+               toolbarHelper.owns(window) {
+              toolbarHelper.setZOrderEnabled(enabled, labels: labels)
+            }
+          }
+          result(nil)
+
         case "setRotateLabels":
           let args = call.arguments as? [String: Any] ?? [:]
           let left = args["left"] as? String
@@ -673,6 +687,7 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
   private let shareItemIdentifier = NSToolbarItem.Identifier("ShareItem")
   private let deleteItemIdentifier = NSToolbarItem.Identifier("DeleteItem")
   private let rotateGroupIdentifier = NSToolbarItem.Identifier("RotateGroup")
+  private let zOrderGroupIdentifier = NSToolbarItem.Identifier("ZOrderGroup")
 
   /// Localized texts for the rotate control, replaced from Dart.
   ///
@@ -695,6 +710,17 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
   /// Kept so a request that arrived before the toolbar existed is not lost:
   /// the Dart listener is edge-triggered and will not repeat it.
   private var deleteEnabled = false
+
+  /// Whether the restacking control has an object to act on.
+  ///
+  /// Kept for the same reason as the Delete one: the Dart listener is
+  /// edge-triggered, so a request that arrives before the toolbar exists
+  /// would otherwise be lost.
+  private var zOrderEnabled = false
+
+  private var zOrderLabels = [
+    "Send to Back", "Send Backward", "Bring Forward", "Bring to Front",
+  ]
 
   private var deleteLabel: String = "Delete"
   private var deleteTooltip: String = "Delete selected object"
@@ -791,6 +817,7 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
 
   func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
     return [
+      zOrderGroupIdentifier,
       rotateGroupIdentifier,
       deleteItemIdentifier,
       shareItemIdentifier,
@@ -804,6 +831,9 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
     // than taken away: an item set that never changes is an item set that
     // never moves the controls around it.
     return [
+      // Restacking sits before the page turns: it acts on the object, and the
+      // turns act on the page under it.
+      zOrderGroupIdentifier,
       rotateGroupIdentifier,
       .flexibleSpace,
       deleteItemIdentifier,
@@ -834,18 +864,99 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
   }
 
   /// Builds the two-segment rotate control.
+  /// The control that moves the selected object through its page's stack.
+  ///
+  /// Four segments in the order they move the object: to the back, back one,
+  /// forward one, to the front. Reading left to right therefore reads bottom
+  /// to top, which is the same direction the arrows point.
+  private func makeZOrderGroup() -> NSToolbarItem {
+    let group = NSToolbarItemGroup(itemIdentifier: zOrderGroupIdentifier)
+    group.label = zOrderLabel
+    group.paletteLabel = zOrderLabel
+
+    let symbols = [
+      "arrow.down.to.line", "arrow.down", "arrow.up", "arrow.up.to.line",
+    ]
+    let actions = [
+      #selector(sendToBackClicked), #selector(sendBackwardClicked),
+      #selector(bringForwardClicked), #selector(bringToFrontClicked),
+    ]
+    let identifiers = [
+      "SendToBackItem", "SendBackwardItem", "BringForwardItem",
+      "BringToFrontItem",
+    ]
+
+    group.subitems = (0..<4).map { index in
+      let item = makeSymbolItem(
+        identifier: identifiers[index],
+        symbol: symbols[index],
+        label: zOrderLabels[index],
+        action: actions[index]
+      )
+      item.isEnabled = zOrderEnabled
+      return item
+    }
+
+    if #available(macOS 10.15, *) {
+      group.controlRepresentation = .expanded
+      group.selectionMode = .momentary
+    }
+    return group
+  }
+
+  /// Greys the restacking control out when there is nothing selected.
+  func setZOrderEnabled(_ enabled: Bool, labels: [String]?) {
+    if let labels = labels, labels.count == 4 {
+      zOrderLabels = labels
+    }
+    zOrderEnabled = enabled
+
+    guard let group = window?.toolbar?.items.first(where: {
+      $0.itemIdentifier == zOrderGroupIdentifier
+    }) as? NSToolbarItemGroup else { return }
+
+    group.label = zOrderLabel
+    for (index, item) in group.subitems.enumerated() {
+      item.isEnabled = enabled
+      if index < zOrderLabels.count {
+        item.label = zOrderLabels[index]
+        item.paletteLabel = zOrderLabels[index]
+        item.toolTip = zOrderLabels[index]
+      }
+    }
+  }
+
+  /// What the whole control is called, as against its four segments.
+  private var zOrderLabel = "Arrange"
+
+  @objc func sendToBackClicked() {
+    methodChannel?.invokeMethod("onSendToBackPressed", arguments: nil)
+  }
+
+  @objc func sendBackwardClicked() {
+    methodChannel?.invokeMethod("onSendBackwardPressed", arguments: nil)
+  }
+
+  @objc func bringForwardClicked() {
+    methodChannel?.invokeMethod("onBringForwardPressed", arguments: nil)
+  }
+
+  @objc func bringToFrontClicked() {
+    methodChannel?.invokeMethod("onBringToFrontPressed", arguments: nil)
+  }
+
   private func makeRotateGroup() -> NSToolbarItem {
     let group = NSToolbarItemGroup(itemIdentifier: rotateGroupIdentifier)
     group.label = rotateLeftLabel
     group.paletteLabel = rotateLeftLabel
     group.subitems = [
-      makeRotateItem(
+      makeSymbolItem(
         identifier: "RotateLeftItem",
         symbol: "rotate.left",
         label: rotateLeftLabel,
         action: #selector(rotateLeftClicked)
       ),
-      makeRotateItem(
+      makeSymbolItem(
         identifier: "RotateRightItem",
         symbol: "rotate.right",
         label: rotateRightLabel,
@@ -862,7 +973,7 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
     return group
   }
 
-  private func makeRotateItem(
+  private func makeSymbolItem(
     identifier: String,
     symbol: String,
     label: String,
@@ -875,9 +986,12 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
 
     if #available(macOS 11.0, *) {
       item.image = NSImage(systemSymbolName: symbol, accessibilityDescription: label)
-    } else {
-      // The symbol set arrived in Big Sur; older systems get the closest
-      // template AppKit has always shipped.
+    }
+    if item.image == nil {
+      // The symbol set arrived in Big Sur, and a symbol added after that is
+      // missing on the systems before it. Either way a button with no picture
+      // at all would be worse than the closest template AppKit has always
+      // shipped.
       item.image = NSImage(named: NSImage.refreshTemplateName)
     }
 
@@ -893,6 +1007,10 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
     itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
     willBeInsertedIntoToolbar flag: Bool
   ) -> NSToolbarItem? {
+    if itemIdentifier == zOrderGroupIdentifier {
+      return makeZOrderGroup()
+    }
+
     if itemIdentifier == rotateGroupIdentifier {
       return makeRotateGroup()
     }

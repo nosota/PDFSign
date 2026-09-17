@@ -21,6 +21,7 @@ import 'package:pdfsign/domain/entities/pdf_page_info.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/pdf_save_service_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/restack_selected.dart';
 import 'package:pdfsign/presentation/providers/editor/rotate_page.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_clipboard.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
@@ -114,6 +115,12 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     ToolbarChannel.setOnDeletePressed(_handleDeleteSelected);
     ToolbarChannel.setOnRotateLeftPressed(_handleRotateLeft);
     ToolbarChannel.setOnRotateRightPressed(_handleRotateRight);
+    ToolbarChannel.setOnRestackPressed([
+      () => _restack(ZOrderMove.toBack),
+      () => _restack(ZOrderMove.backward),
+      () => _restack(ZOrderMove.forward),
+      () => _restack(ZOrderMove.toFront),
+    ]);
     // Delay toolbar setup to ensure native window is fully ready
     Future.delayed(const Duration(milliseconds: 200), () async {
       await ToolbarChannel.setupToolbar();
@@ -203,6 +210,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     ToolbarChannel.setOnDeletePressed(null);
     ToolbarChannel.setOnRotateLeftPressed(null);
     ToolbarChannel.setOnRotateRightPressed(null);
+    ToolbarChannel.setOnRestackPressed(const [null, null, null, null]);
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
     WindowBroadcast.setOnSaveAll(null);
@@ -498,6 +506,13 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
             tooltip: l10n?.deleteButtonTooltip,
           );
 
+          // Restacking acts on the selected object, so it follows the same
+          // signal.
+          ToolbarChannel.setZOrderEnabled(
+            hasSelection,
+            labels: l10n == null ? null : _zOrderLabels(l10n),
+          );
+
           // Update menu state for Edit > Delete
           _updateMenuState();
         },
@@ -539,6 +554,16 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
         break;
     }
   }
+
+  void _restack(ZOrderMove move) => restackSelected(ref, move);
+
+  /// The four segment names, in the order the control puts them.
+  static List<String> _zOrderLabels(AppLocalizations l10n) => [
+        l10n.menuSendToBack,
+        l10n.menuSendBackward,
+        l10n.menuBringForward,
+        l10n.menuBringToFront,
+      ];
 
   void _handleRotateLeft() => rotateCurrentPage(ref, -1);
 
@@ -588,6 +613,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     ToolbarChannel.setRotateLabels(
       left: l10n.menuRotateLeft,
       right: l10n.menuRotateRight,
+    );
+    ToolbarChannel.setZOrderEnabled(
+      ref.read(editorSelectionProvider) != null,
+      labels: _zOrderLabels(l10n),
     );
   }
 
@@ -947,6 +976,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
               onCut: _handleCut,
               onCopy: _handleCopy,
               onPaste: _handlePaste,
+              onBringToFront: () => _restack(ZOrderMove.toFront),
+              onBringForward: () => _restack(ZOrderMove.forward),
+              onSendBackward: () => _restack(ZOrderMove.backward),
+              onSendToBack: () => _restack(ZOrderMove.toBack),
               onRotateLeft: _handleRotateLeft,
               onRotateRight: _handleRotateRight,
               includeViewMenu: true,

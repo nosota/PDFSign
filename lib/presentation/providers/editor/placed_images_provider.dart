@@ -139,6 +139,59 @@ class PlacedImages extends _$PlacedImages {
     );
   }
 
+  /// Brings [id] in front of everything else on its page.
+  void bringToFront(String id) => _restack(id, (at, count) => count - 1);
+
+  /// Moves [id] one place towards the front of its page.
+  void bringForward(String id) => _restack(id, (at, count) => at + 1);
+
+  /// Moves [id] one place towards the back of its page.
+  void sendBackward(String id) => _restack(id, (at, count) => at - 1);
+
+  /// Sends [id] behind everything else on its page.
+  void sendToBack(String id) => _restack(id, (at, count) => 0);
+
+  /// Moves [id] to the place [destination] picks among its page's objects.
+  ///
+  /// There is no depth stored on an object: the order objects are drawn in is
+  /// the order they sit in this list, on the screen and in the saved file
+  /// alike. Restacking is therefore a move within the list, and the two agree
+  /// without anything having to keep them in step.
+  ///
+  /// Only the places already occupied by this page's objects are written to,
+  /// so objects on other pages cannot be disturbed however the list is
+  /// interleaved. Asking for a move that changes nothing — to the front of
+  /// something already at the front — leaves the state identical, which is
+  /// what keeps an empty step out of the undo history.
+  void _restack(String id, int Function(int at, int count) destination) {
+    final places = [
+      for (var i = 0; i < state.length; i++)
+        if (state[i].pageIndex == _pageOf(id)) i,
+    ];
+    final at = places.indexWhere((place) => state[place].id == id);
+    if (at < 0) return;
+
+    final to = destination(at, places.length);
+    if (to == at || to < 0 || to >= places.length) return;
+
+    final onPage = [for (final place in places) state[place]];
+    onPage.insert(to, onPage.removeAt(at));
+
+    final next = [...state];
+    for (var k = 0; k < places.length; k++) {
+      next[places[k]] = onPage[k];
+    }
+    state = next;
+  }
+
+  /// The page [id] sits on, or -1 when nothing has that id.
+  int _pageOf(String id) {
+    for (final image in state) {
+      if (image.id == id) return image.pageIndex;
+    }
+    return -1;
+  }
+
   /// Gets images for a specific page.
   List<PlacedImage> getImagesForPage(int pageIndex) {
     return state.where((img) => img.pageIndex == pageIndex).toList();

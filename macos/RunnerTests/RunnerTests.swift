@@ -88,18 +88,82 @@ final class PDFSignToolbarHelperTests: XCTestCase {
     XCTAssertEqual(deleteItemCount(), 1)
   }
 
-  func testShouldLayOutRotationDeleteAndShareInThatOrder() {
+  func testShouldLayOutRestackingRotationDeleteAndShareInThatOrder() {
     XCTAssertEqual(
       identifiers(),
       [
+        "ZOrderGroup",
         "RotateGroup",
         "NSToolbarFlexibleSpaceItem",
         "DeleteItem",
         "NSToolbarSpaceItem",
         "ShareItem",
       ],
-      "rotation leads; Delete stands on its own, apart from Share"
+      "restacking acts on the object and leads the page turns that follow it; "
+        + "Delete stands on its own, apart from Share"
     )
+  }
+
+  /// The restacking control.
+  private func zOrderGroup() -> NSToolbarItemGroup? {
+    return (window.toolbar?.items ?? []).first {
+      $0.itemIdentifier.rawValue == "ZOrderGroup"
+    } as? NSToolbarItemGroup
+  }
+
+  func testShouldBuildRestackingAsAFourSegmentGroup() {
+    let group = zOrderGroup()
+
+    XCTAssertNotNil(group, "the restacking control must be a group")
+    XCTAssertEqual(
+      group?.subitems.map { $0.itemIdentifier.rawValue },
+      [
+        "SendToBackItem", "SendBackwardItem", "BringForwardItem",
+        "BringToFrontItem",
+      ],
+      "left to right reads back to front, the way the arrows point"
+    )
+  }
+
+  func testShouldStartRestackingDisabledBecauseNothingIsSelected() {
+    XCTAssertEqual(zOrderGroup()?.subitems.allSatisfy { !$0.isEnabled }, true)
+  }
+
+  func testShouldEnableRestackingWhenSomethingIsSelected() {
+    helper.setZOrderEnabled(true, labels: nil)
+
+    XCTAssertEqual(zOrderGroup()?.subitems.allSatisfy { $0.isEnabled }, true)
+  }
+
+  func testShouldDisableRestackingAgainWhenTheSelectionClears() {
+    helper.setZOrderEnabled(true, labels: nil)
+    helper.setZOrderEnabled(false, labels: nil)
+
+    XCTAssertEqual(zOrderGroup()?.subitems.allSatisfy { !$0.isEnabled }, true)
+  }
+
+  func testShouldTakeLocalizedRestackingTexts() {
+    helper.setZOrderEnabled(
+      true, labels: ["Назад", "На шаг назад", "На шаг вперёд", "Вперёд"])
+
+    XCTAssertEqual(
+      zOrderGroup()?.subitems.map { $0.label },
+      ["Назад", "На шаг назад", "На шаг вперёд", "Вперёд"]
+    )
+  }
+
+  func testShouldKeepRestackingTextsWhenNoneAreGiven() {
+    helper.setZOrderEnabled(
+      true, labels: ["Назад", "На шаг назад", "На шаг вперёд", "Вперёд"])
+    helper.setZOrderEnabled(false, labels: nil)
+
+    XCTAssertEqual(zOrderGroup()?.subitems.first?.label, "Назад")
+  }
+
+  func testShouldGiveEverySegmentAPicture() {
+    // A symbol that does not exist on the system in hand yields no image at
+    // all, and a toolbar button with nothing in it is a button nobody can use.
+    XCTAssertEqual(zOrderGroup()?.subitems.allSatisfy { $0.image != nil }, true)
   }
 
   /// Deleting the selected object and sharing the document are unrelated, and
