@@ -500,8 +500,8 @@
   "@menuRedo": {
     "description": "Edit menu item that takes the document one step forward"
   },
-  "holdToReorder": "Hold to reorder",
-  "@holdToReorder": {
-    "description": "Tooltip on the grip beside a library image, which reorders the list when held"
+  "dragToReorder": "Drag to reorder",
+  "@dragToReorder": {
+    "description": "Tooltip on the grip beside a library image, which is dragged to reorder the list"
   }
 }

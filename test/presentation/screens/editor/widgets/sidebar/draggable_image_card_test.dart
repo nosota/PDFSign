@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -114,21 +113,8 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  group('dragging an image out of the library', () {
-    testWidgets('should carry it to the page, not rearrange the library',
-        (tester) async {
-      // The grip is 28 points wide in a sidebar of two hundred, and beginning
-      // a drag a few points too far left used to rearrange the library — which
-      // every window shares and nothing can undo.
-      final result = await pumpSidebar(tester);
-
-      await dragToPage(tester, tester.getCenter(grip()));
-
-      expect(result.dropped, ['first']);
-      expect(result.reorders, isEmpty);
-    });
-
-    testWidgets('should carry it to the page from the thumbnail too',
+  group('dragging the image itself', () {
+    testWidgets('should carry it to the page and leave the order alone',
         (tester) async {
       final result = await pumpSidebar(tester);
 
@@ -139,14 +125,16 @@ void main() {
     });
   });
 
-  group('rearranging the library', () {
-    testWidgets('should need the grip to be held first', (tester) async {
+  group('dragging the grip', () {
+    testWidgets('should rearrange the library', (tester) async {
+      // The grip is the one part of the card that reorders rather than
+      // carrying the image out. It does so from the first movement: this is
+      // the whole of what it is for, and asking for a hold as well made it
+      // look broken.
       final result = await pumpSidebar(tester);
 
       final gesture = await tester.startGesture(tester.getCenter(grip()));
-      // Held still first: that is what tells the list this is a rearrangement
-      // and not an image on its way to the page.
-      await tester.pump(kLongPressTimeout + const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 20));
       // Past the middle of the card below, and no further: a pointer taken
       // outside the list is a different gesture again.
       for (var i = 0; i < 6; i++) {

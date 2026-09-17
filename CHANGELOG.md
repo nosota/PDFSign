@@ -5,9 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
-### Fixed
+### Added
 
-- Dragging an image out of the library no longer rearranges the library by accident. The grip beside the thumbnail is 28 points wide in a panel of two hundred, and a drag that began a few points too far left silently reordered a list every window shares and nothing can undo. The grip now carries the image to the page like the rest of the card, and reorders only when held first — it says so on hover
+- The grip beside a library image says what it is for when the pointer rests on it
 
 ## [1.3.0] — 2026-09-17
 

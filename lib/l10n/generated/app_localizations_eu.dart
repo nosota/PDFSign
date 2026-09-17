@@ -379,5 +379,5 @@ class AppLocalizationsEu extends AppLocalizations {
   String get menuRedo => 'Redo';
 
   @override
-  String get holdToReorder => 'Hold to reorder';
+  String get dragToReorder => 'Drag to reorder';
 }

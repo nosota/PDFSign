@@ -857,11 +857,11 @@ abstract class AppLocalizations {
   /// **'Redo'**
   String get menuRedo;
 
-  /// Tooltip on the grip beside a library image, which reorders the list when held
+  /// Tooltip on the grip beside a library image, which is dragged to reorder the list
   ///
   /// In en, this message translates to:
-  /// **'Hold to reorder'**
-  String get holdToReorder;
+  /// **'Drag to reorder'**
+  String get dragToReorder;
 }
 
 class _AppLocalizationsDelegate

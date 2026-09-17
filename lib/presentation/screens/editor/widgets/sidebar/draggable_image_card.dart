@@ -48,7 +48,7 @@ class DraggableSidebarImage {
   }
 }
 
-/// Image card: drag it onto the document, hold its grip to reorder the list.
+/// Image card with grip handle for reordering and draggable image for PDF.
 ///
 /// Structure:
 /// ```
@@ -56,23 +56,17 @@ class DraggableSidebarImage {
 /// │ ⋮⋮ │   🖼 image.png       │
 /// │    │                      │
 /// │grip│  ← drag = to PDF     │
+/// │    │   Comment text...    │
 /// └────┴──────────────────────┘
-/// │        Comment text...    │
-/// └───────────────────────────┘
 /// ```
 ///
-/// The grip and the thumbnail are both inside the drag to the document, so a
-/// drag that begins anywhere on the row carries the image to the page. The
-/// grip additionally reorders the list, but only after being **held**.
+/// - Drag the grip (⋮⋮): reorder within the sidebar
+/// - Drag the image: carry it out onto the page
+/// - Comment field: inline editable text below the image
 ///
-/// The two used to be separated by position alone — grip reorders, thumbnail
-/// carries — and the grip is 28 points wide against a sidebar of two hundred.
-/// Beginning a drag a few points too far left silently rearranged the library,
-/// which is shared by every open window and has no undo. A hold is a small
-/// price for the reader who reorders; catching the other case is worth it.
-///
-/// The comment field is left outside the drag: it is a text field, and a drag
-/// across it belongs to selecting its text.
+/// The two are told apart by where the drag begins, and nothing else. The
+/// grip says what it is for on hover; it is the one part of the card that
+/// does not carry the image out.
 class DraggableImageCard extends ConsumerWidget {
   const DraggableImageCard({
     required this.image,
@@ -89,70 +83,70 @@ class DraggableImageCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dragData = DraggableSidebarImage.fromSidebarImage(image);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Grip and thumbnail together: a drag beginning anywhere across them
-        // carries the image to the page.
-        Draggable<DraggableSidebarImage>(
-          data: dragData,
-          // Anchor the drag to the pointer rather than to the point grabbed
-          // inside the thumbnail. With the default childDragAnchorStrategy,
-          // DragTargetDetails.offset reports the feedback's top-left corner,
-          // not the cursor, which made PdfDropTarget place the image up and to
-          // the left of the drop point. The feedback is re-centred on the
-          // pointer in _buildDragFeedback().
-          dragAnchorStrategy: pointerDragAnchorStrategy,
-          feedback: _buildDragFeedback(context),
-          childWhenDragging: Opacity(
-            opacity: 0.3,
-            child: _row(const _GripHandle(), selected: false),
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Grip handle for reordering
+          ReorderableDragStartListener(
+            index: index,
+            child: const _GripHandle(),
           ),
-          child: _row(
-            // Held rather than grabbed: an immediate listener here would take
-            // every drag that began a few points too far left and turn it into
-            // a rearrangement of the library.
-            ReorderableDelayedDragStartListener(
-              index: index,
-              child: const _GripHandle(),
-            ),
-            selected: isSelected,
-          ),
-        ),
 
-        // Comment field
-        Padding(
-          padding: const EdgeInsets.only(right: 8, bottom: 4),
-          child: ImageCommentField(
-            comment: image.comment,
-            onCommentChanged: (comment) {
-              ref
-                  .read(sidebarImagesProvider.notifier)
-                  .updateComment(image.id, comment);
-            },
-            onEditingStarted: () {
-              // Clear PDF object selection when editing sidebar comment
-              ref.read(editorSelectionProvider.notifier).clear();
-            },
+          // Image + comment area
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Image area for dragging to PDF
+                Draggable<DraggableSidebarImage>(
+                  data: dragData,
+                  // Anchor the drag to the pointer rather than to the point
+                  // grabbed inside the thumbnail. With the default
+                  // childDragAnchorStrategy, DragTargetDetails.offset reports
+                  // the feedback's top-left corner, not the cursor, which made
+                  // PdfDropTarget place the image up and to the left of the
+                  // drop point. The feedback is re-centred on the pointer in
+                  // _buildDragFeedback().
+                  dragAnchorStrategy: pointerDragAnchorStrategy,
+                  feedback: _buildDragFeedback(context),
+                  childWhenDragging: Opacity(
+                    opacity: 0.3,
+                    child: ImageThumbnailCard(
+                      image: image,
+                      isSelected: false,
+                    ),
+                  ),
+                  child: ImageThumbnailCard(
+                    image: image,
+                    isSelected: isSelected,
+                  ),
+                ),
+
+                // Comment field
+                Padding(
+                  padding: const EdgeInsets.only(right: 8, bottom: 4),
+                  child: ImageCommentField(
+                    comment: image.comment,
+                    onCommentChanged: (comment) {
+                      ref
+                          .read(sidebarImagesProvider.notifier)
+                          .updateComment(image.id, comment);
+                    },
+                    onEditingStarted: () {
+                      // Clear PDF object selection when editing sidebar comment
+                      ref.read(editorSelectionProvider.notifier).clear();
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
-
-  /// The grip beside the thumbnail.
-  Widget _row(Widget grip, {required bool selected}) => IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            grip,
-            Expanded(
-              child: ImageThumbnailCard(image: image, isSelected: selected),
-            ),
-          ],
-        ),
-      );
 
   /// Builds the drag ghost, centred on the pointer.
   ///
@@ -210,11 +204,12 @@ class _GripHandleState extends State<_GripHandle> {
     final baseColor = theme.colorScheme.onSurfaceVariant;
 
     return Tooltip(
-      // The hold is not something a reader can see; the grip has to say so.
-      message: AppLocalizations.of(context)?.holdToReorder ?? '',
+      // Which of the card's two drags this one is, said where the reader
+      // looks before deciding to grab.
+      message: AppLocalizations.of(context)?.dragToReorder ?? '',
       // Shown on hover and nothing else. Left to itself a tooltip also waits
-      // for a long press — the very gesture the grip needs — and takes it,
-      // which stopped the list being reordered at all. Measured, then fixed.
+      // for a long press of its own and takes the gesture, which is a fight
+      // the grip does not need to be in.
       triggerMode: TooltipTriggerMode.manual,
       child: MouseRegion(
         cursor: SystemMouseCursors.grab,

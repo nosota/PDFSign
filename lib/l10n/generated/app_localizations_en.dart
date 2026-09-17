@@ -403,7 +403,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuRedo => 'Redo';
 
   @override
-  String get holdToReorder => 'Hold to reorder';
+  String get dragToReorder => 'Drag to reorder';
 }
 
 /// The translations for English, as used in Australia (`en_AU`).
