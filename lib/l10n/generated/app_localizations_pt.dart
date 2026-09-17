@@ -395,6 +395,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get menuRedo => 'Redo';
+
+  @override
+  String get holdToReorder => 'Hold to reorder';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).

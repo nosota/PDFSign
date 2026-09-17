@@ -375,6 +375,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get menuRedo => 'Redo';
+
+  @override
+  String get holdToReorder => 'Hold to reorder';
 }
 
 /// The translations for Chinese, as used in China (`zh_CN`).

@@ -856,6 +856,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Redo'**
   String get menuRedo;
+
+  /// Tooltip on the grip beside a library image, which reorders the list when held
+  ///
+  /// In en, this message translates to:
+  /// **'Hold to reorder'**
+  String get holdToReorder;
 }
 
 class _AppLocalizationsDelegate

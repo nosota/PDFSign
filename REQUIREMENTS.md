@@ -180,7 +180,9 @@ Every added image is copied to `~/Library/Application Support/<bundle-id>/images
 Metadata lives in Isar (collection `SidebarImageModel`). Every window subscribes to `watchImages()`, so an addition, deletion, or reorder in one window appears in all the others immediately, with no explicit message passing (ADR-0006).
 
 #### FR-3.5 — Reordering
-The list is a `ReorderableListView`. Dragging works **only from the grip handle** (`⋮⋮`); dragging the image body starts a drag-to-PDF instead. The drag proxy uses a Figma-style scale + opacity effect.
+The list is a `ReorderableListView`. Reordering is started from the grip (`⋮⋮`) and **only after it is held** — a tooltip on hover says so. A quick drag from anywhere on the card, the grip included, carries the image to the page instead (FR-4.1).
+
+Position alone used to separate the two, and the grip is 28 points wide against a panel of two hundred: a drag that began a few points too far left silently rearranged a library that every window shares and that nothing can undo. The hold costs the reader who reorders a moment; it saves the one who did not mean to.
 
 #### FR-3.6 — Comments
 Each card carries an inline editable comment below the thumbnail. `Enter` saves, `Esc` cancels, tapping outside saves. Long comments get a tooltip after 500 ms.
@@ -196,7 +198,7 @@ Default 200 px, range 150–400 px, dragged by a 4 px handle. The width is per-w
 ### 3.4 Placing Objects
 
 #### FR-4.1 — Drag from sidebar to page
-Dragging an image body onto a page creates a `PlacedImage` at the drop point (`pdf_drop_target.dart`).
+Dragging a card onto a page creates a `PlacedImage` at the drop point (`pdf_drop_target.dart`). The grip is inside the drag, so a drag beginning on it carries the image too; only the comment field is left out, since a drag across a text field belongs to selecting its text.
 
 #### FR-4.2 — Default size
 25 % of page width, aspect ratio preserved, capped at 90 % of either page dimension. The object is centred on the cursor and clamped inside the page.

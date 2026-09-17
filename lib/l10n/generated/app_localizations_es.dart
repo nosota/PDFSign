@@ -395,6 +395,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get menuRedo => 'Redo';
+
+  @override
+  String get holdToReorder => 'Hold to reorder';
 }
 
 /// The translations for Spanish Castilian, as used in Argentina (`es_AR`).

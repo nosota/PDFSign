@@ -401,6 +401,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get menuRedo => 'Redo';
+
+  @override
+  String get holdToReorder => 'Hold to reorder';
 }
 
 /// The translations for English, as used in Australia (`en_AU`).
