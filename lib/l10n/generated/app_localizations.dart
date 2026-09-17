@@ -797,6 +797,18 @@ abstract class AppLocalizations {
   /// **'Owner password'**
   String get ownerPasswordFieldLabel;
 
+  /// Heading of the dialog that asks for the owner password before the protection panel opens
+  ///
+  /// In en, this message translates to:
+  /// **'Only the owner may change this document\'s protection'**
+  String get protectionIsTheOwnersTitle;
+
+  /// Button that accepts the owner password and goes on to the protection panel
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueButton;
+
   /// Explanation of the memory cost of opening a large encrypted PDF
   ///
   /// In en, this message translates to:

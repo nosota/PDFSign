@@ -317,7 +317,11 @@ Closing a dirty window shows a Save / Discard dialog. Close All and Quit show a 
 #### FR-6.9 — Setting the document's protection
 **File → Protect Document…** (`Shift+Cmd+L`) and the lock in the native toolbar, between Delete and Share. The lock is drawn closed while the document asks for a password or withholds anything, and open while it does not — including while that is only what the reader has *asked* for and not yet saved.
 
-A document that is already protected and whose owner rights are not held asks for the owner password first, through the same dialog the read-only notice uses (FR-1.9). Without it the panel would be offering to change protection on behalf of someone who cannot.
+A document that **withholds something or asks for a password to open**, and was not opened with the owner's, asks for the owner password first — protection somebody set is theirs to change. The dialog is the one the read-only notice uses (FR-1.9) and says why it is asking: *Only the owner may change this document's protection*, which is a different reason from *This document does not allow changes* and must not borrow its words.
+
+A document that is encrypted but **withholds nothing** — no password to open, every permission granted — opens the panel straight away. Such encryption restricts nobody, and it cannot be told apart from what this app leaves behind itself when protection is removed (§13.16): asking there would be asking for a password that may not exist, and no answer would do.
+
+The password is accepted only if it turns out to be the **owner's**. A document may permit changes and still keep its protection to itself, so a test of whether editing is now allowed would pass the user password and let a reader set passwords on a document that is not theirs to set them on.
 
 **The panel** carries, in the order macOS's own sheet does:
 
@@ -599,9 +603,9 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 
 | Aspect | State |
 |--------|-------|
-| `flutter analyze` | 1201 issues: 0 errors, **0 warnings**, 1201 info |
-| Unit tests | **195** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry, the writer, reading and writing protected documents, permission bits, restacking and the undo history |
-| Widget tests | **116** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation, the password prompt, the read-only notice, the protection panel, restacking and what each action records in the history |
+| `flutter analyze` | 1203 issues: 0 errors, **0 warnings**, 1203 info |
+| Unit tests | **204** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry, the writer, reading and writing protected documents, permission bits, restacking and the undo history |
+| Widget tests | **118** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation, the password prompt, the read-only notice, the protection panel, restacking and what each action records in the history |
 | Native tests | **46** — the toolbar's fixed item set and layout, the enabled state of Delete, undo/redo and restacking, the lock's two faces, window cascading and the CoreGraphics security probe (`macos/RunnerTests`) |
 | Integration tests | **none** |
 | Golden tests | **none** |
@@ -727,6 +731,8 @@ An image pasted from another application is stored in `pasted/` in app support a
 
 Pressing Remove on a document that had no protection at all encrypts it in this same open way, and at AES-256, since there is no algorithm to inherit.
 
+This is why the owner-password gate in FR-6.9 turns on what a document *withholds* rather than on whether it is encrypted: a file this app removed protection from is encrypted, opens freely and grants everything, and is indistinguishable from someone else's document with an owner password and no restrictions. Gating on encryption would lock the reader out of their own file with a question nothing could answer.
+
 Taking the dictionary out would mean writing the document's objects into a fresh `PdfDocument`, which loses everything Syncfusion does not carry across — form fields, annotations, bookmarks, tagging. That is a worse trade than an empty `/Encrypt`, so it was not made. `qpdf --decrypt` is the honest way out for a reader who needs one, and the panel does not pretend otherwise.
 
 ---
@@ -735,6 +741,7 @@ Taking the dictionary out would mean writing the document's objects into a fresh
 
 | Version | Date | Change |
 |---------|------|--------|
+| 2.3 | 2026-09-17 | FR-6.9: the owner-password gate turns on what a document withholds, not on whether it is encrypted, and says which of the two reasons it is asking for. |
 | 2.2 | 2026-09-17 | Setting a document's protection (FR-6.9, ADR-0013) and its one limitation (§13.16); FR-6.7 extended to protection; §3.9 shortcuts and FR-2.9 corrected against the menu, which has had no Reload command since 1.2.0; §10 figures remeasured. |
 | 2.1 | 2026-09-17 | Protected documents (FR-1.8, FR-1.9, §2.4), object restacking (FR-5.10) and undo/redo (FR-5.11); §12.1, §12.2 and §12.3 closed; FR-5.8 and FR-5.9 corrected against the implementation. |
 | 2.0 | 2026-09-15 | Rewritten against the implementation. Removed unbuilt requirements to §12, added §13 technical debt, corrected platform scope, dependencies, entity model, storage map, and localization figures. |

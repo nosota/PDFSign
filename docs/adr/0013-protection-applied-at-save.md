@@ -76,3 +76,11 @@ already prefers the pending value when it opens.
 - The algorithm follows the document: one that arrived AES-128 is written back
   AES-128, so the readers it was made for can still open it. Protection this
   app adds to a document that had none is AES-256.
+- **Encryption alone cannot be what the app reacts to.** Because a file this
+  app has removed protection from is still encrypted, "is it encrypted" no
+  longer separates a protected document from an open one. What the lock shows,
+  and whether the owner password is asked for, therefore turn on what the
+  document *withholds* — see `DocumentSecurity.protectionNeedsOwnerPassword`.
+  A document that withholds nothing is treated as open however it is
+  encrypted, which is the only reading under which this app's own output
+  behaves like what it says it is.

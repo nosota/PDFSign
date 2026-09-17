@@ -14,6 +14,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - **Remove Protection** clears both passwords and grants everything. The saved file opens for anyone with nothing withheld; it remains an encrypted PDF, because the writer has no way to take the encryption dictionary out
 - Nothing is written until the document is saved: setting protection marks the document unsaved, ⌘Z takes it back, and Save, Save As and Share all carry it. A document that arrived AES-128 is written back AES-128; protection added to one that had none is AES-256
 
+### Fixed
+
+- Pressing the lock on a document that opens freely and permits everything no longer demands an owner password and no longer says "This document does not allow changes" about a document that plainly does. The password is asked for only when the document withholds something or asks for one to open, and the dialog now says which of the two reasons it is asking for
+- A password given to change a document's protection is accepted only if it is the owner's. A document can permit changes and still keep its protection to itself, and the user password used to pass that test
+
 ## [1.3.2] — 2026-09-17
 
 ### Fixed

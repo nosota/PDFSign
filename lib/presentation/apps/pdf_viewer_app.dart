@@ -580,10 +580,16 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     final document = ref.read(pdfDocumentProvider).documentOrNull;
     if (context == null || document == null) return;
 
-    if (document.security.isProtected && !document.security.hasOwnerRights) {
+    // Protection somebody else set is theirs to change. A document that
+    // withholds nothing is nobody's to defend — and cannot be told apart from
+    // one this app removed protection from itself (REQUIREMENTS §13.16).
+    if (document.security.protectionNeedsOwnerPassword) {
+      final l10n = _l10n;
       final unlocked = await OwnerPasswordDialog.show(
         context,
-        onSubmit: ref.read(pdfDocumentProvider.notifier).unlockEditing,
+        onSubmit: ref.read(pdfDocumentProvider.notifier).unlockOwnerRights,
+        title: l10n?.protectionIsTheOwnersTitle,
+        confirmLabel: l10n?.continueButton,
       );
       if (!unlocked || !mounted) return;
     }

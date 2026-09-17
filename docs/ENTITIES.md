@@ -442,6 +442,12 @@ document carries `DocumentSecurity.unprotected()`.
 | `hasOwnerRights` | `bool` | Whether the password given was the owner's, which grants full access whatever the flags say |
 | `current` | `DocumentProtection?` | The protection as far as it could be read — what the panel starts from |
 
+### Computed Properties
+
+| Property | Description |
+|----------|-------------|
+| `protectionNeedsOwnerPassword` | Whether changing this document's protection is somebody else's business — it withholds something or asks for a password to open, and was not opened with the owner's |
+
 ### Notes
 
 - **`password` lives here and nowhere else.** For as long as the window does:
@@ -452,7 +458,13 @@ document carries `DocumentSecurity.unprotected()`.
   `toString` would put the password in them.
 - `current` is null for a document with no protection *and* for one whose
   protection could not be read back: the password that opens a document does
-  not always reveal the other one.
+  not always reveal the other one. `protectionNeedsOwnerPassword` answers that
+  case conservatively — nothing is known, so it asks.
+- **Encrypted is not the same as protected.** A document may be encrypted,
+  open without a password and withhold nothing; it restricts nobody, and it
+  cannot be told apart from what removing protection leaves behind (§13.16).
+  `protectionNeedsOwnerPassword` is false there, which is what keeps the app
+  from asking for a password that may not exist.
 
 ---
 

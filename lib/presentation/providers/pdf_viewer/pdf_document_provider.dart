@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:pdfsign/core/errors/failure.dart';
 import 'package:pdfsign/core/errors/failures.dart';
+import 'package:pdfsign/domain/entities/document_security.dart';
 import 'package:pdfsign/domain/entities/pdf_document_info.dart';
 import 'package:pdfsign/domain/entities/pdf_page_info.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_page_cache_provider.dart';
@@ -109,16 +110,34 @@ class PdfDocument extends _$PdfDocument {
   /// The document is left exactly as it was when the password is turned down.
   /// The reader is looking at it while they try; a wrong guess must not take
   /// it away from them.
-  Future<bool> unlockEditing(String ownerPassword) async {
+  Future<bool> unlockEditing(String ownerPassword) =>
+      _reopenWith(ownerPassword, (security) => security.allowsEditing);
+
+  /// Re-opens the document with the owner password, for changing its
+  /// protection.
+  ///
+  /// Owner rights are what is being asked for here, not the ability to edit:
+  /// a document may permit changes and still keep its protection to itself,
+  /// and the user password would pass a test of editing while leaving the
+  /// reader no more entitled to set the passwords than before.
+  Future<bool> unlockOwnerRights(String ownerPassword) =>
+      _reopenWith(ownerPassword, (security) => security.hasOwnerRights);
+
+  /// Re-opens the document with [password], keeping the result only if
+  /// [accepts] is satisfied by what it opened with.
+  Future<bool> _reopenWith(
+    String password,
+    bool Function(DocumentSecurity security) accepts,
+  ) async {
     final current = state.documentOrNull;
     if (current == null) return false;
 
     final result = await ref
         .read(pdfDocumentRepositoryProvider)
-        .openProtectedDocument(current.filePath, ownerPassword);
+        .openProtectedDocument(current.filePath, password);
 
     return result.fold((_) => false, (document) {
-      if (!document.security.allowsEditing) return false;
+      if (!accepts(document.security)) return false;
       state.maybeMap(
         loaded: (loaded) => state = loaded.copyWith(document: document),
         orElse: () {},

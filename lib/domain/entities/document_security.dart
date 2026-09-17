@@ -59,6 +59,25 @@ class DocumentSecurity extends Equatable {
   /// password; when true, there is nothing further to ask for.
   final bool hasOwnerRights;
 
+  /// Whether changing this document's protection is the owner's business.
+  ///
+  /// True for a document that withholds something or asks for a password to
+  /// open, and was not opened with the owner's. Such protection is somebody's
+  /// decision and this app will not quietly undo it.
+  ///
+  /// False for a document that withholds nothing, **even though it is
+  /// encrypted**. Encryption that grants every permission and opens without a
+  /// password restricts nobody, and it cannot be told apart from what this app
+  /// leaves behind itself: removing protection writes empty passwords and a
+  /// full set of permissions, because the writer cannot take the encryption
+  /// dictionary out (REQUIREMENTS §13.16). Asking for an owner password there
+  /// would be asking for one that does not exist, and no answer would do.
+  ///
+  /// Null [current] means the protection could not be read at all, which is
+  /// answered conservatively: ask.
+  bool get protectionNeedsOwnerPassword =>
+      isProtected && !hasOwnerRights && !(current?.isOpen ?? false);
+
   @override
   List<Object?> get props => [
         isProtected,

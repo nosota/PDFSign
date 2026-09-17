@@ -42,6 +42,8 @@ class PdfDocument extends _$PdfDocument {
 |--------|-----------|-------------|
 | `openDocument` | `Future<void> openDocument(String filePath, {int? initialPage})` | Opens PDF from file path; `initialPage` (clamped to the valid range) restores a page position, used after Save As |
 | `openProtectedDocument` | `Future<void> openProtectedDocument(String filePath, String password)` | Opens password-protected PDF |
+| `unlockEditing` | `Future<bool> unlockEditing(String ownerPassword)` | Re-opens with the owner password to lift a restriction; true only when editing is now allowed |
+| `unlockOwnerRights` | `Future<bool> unlockOwnerRights(String ownerPassword)` | Re-opens for a change of protection; true only when the password turned out to be the owner's |
 | `closeDocument` | `Future<void> closeDocument()` | Closes current document |
 | `reloadDocument` | `Future<int?> reloadDocument()` | Reloads document, preserves current page |
 | `setScale` | `bool setScale(double newScale)` | Sets zoom scale, returns true if changed |
@@ -53,6 +55,12 @@ class PdfDocument extends _$PdfDocument {
 | `nextPage` | `void nextPage()` | Goes to next page |
 | `previousPage` | `void previousPage()` | Goes to previous page |
 | `updateViewport` | `void updateViewport(double width, double height)` | Updates viewport dimensions |
+
+Both unlock methods leave the document exactly as it was when the password is
+turned down — the reader is looking at it while they guess — and they ask
+different questions on purpose. Editing may already be allowed on a document
+whose protection is still somebody else's to set, so a test of editing would
+accept a password that grants no owner rights at all.
 
 **Dependencies:**
 - `pdfDocumentRepositoryProvider`

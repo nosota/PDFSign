@@ -345,6 +345,13 @@ class AppLocalizationsKa extends AppLocalizations {
   String get ownerPasswordFieldLabel => 'Owner password';
 
   @override
+  String get protectionIsTheOwnersTitle =>
+      'Only the owner may change this document\'s protection';
+
+  @override
+  String get continueButton => 'Continue';
+
+  @override
   String largeProtectedDocumentBody(String size) {
     return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
   }

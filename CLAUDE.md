@@ -241,7 +241,7 @@ go_router, mime
 
 ## Testing
 
-The project has 311 Dart tests (page-column geometry, drag-and-drop placement, dirty-state policy, the close-everything flow, cut/copy/paste, protected documents, writing protection and permission bits, the protection panel, object restacking, the undo history, dragging out of the library) and 46 native tests (`macos/RunnerTests`, toolbar item management and validation, document-window placement, PDF encryption detection, the restacking, undo and lock controls). Everything else is uncovered, which remains the largest known risk (CODE_REVIEW §5.3). The following is the target state, and applies to code you add or change:
+The project has 322 Dart tests (page-column geometry, drag-and-drop placement, dirty-state policy, the close-everything flow, cut/copy/paste, protected documents, writing protection and permission bits, the protection panel, object restacking, the undo history, dragging out of the library) and 46 native tests (`macos/RunnerTests`, toolbar item management and validation, document-window placement, PDF encryption detection, the restacking, undo and lock controls). Everything else is uncovered, which remains the largest known risk (CODE_REVIEW §5.3). The following is the target state, and applies to code you add or change:
 
 - New business logic (providers, repositories, services, coordinate math) ships with unit tests.
 - Test file mirrors source structure; one test file per source file.
@@ -263,7 +263,7 @@ Enforced bar, verified with `flutter analyze`:
 
 - **0 errors** — currently met.
 - **0 warnings** — currently met. Do not regress it.
-- Info-level lints: 1201 at last count. Not a merge gate, but do not increase the count in files you touch.
+- Info-level lints: 1203 at last count. Not a merge gate, but do not increase the count in files you touch.
 
 ### Import Convention
 

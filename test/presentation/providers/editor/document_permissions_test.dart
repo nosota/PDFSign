@@ -198,6 +198,61 @@ void main() {
       );
     });
   });
+
+  group('claiming the owner rights in order to set the protection', () {
+    /// Permits every change, and still keeps its protection to itself.
+    const editableButOwned = DocumentSecurity.protected(
+      password: null,
+      allowsEditing: true,
+      hasOwnerRights: false,
+    );
+
+    test('should refuse a password that grants no owner rights', () async {
+      // Editing was allowed before the password was given, so a test of
+      // editing would pass one that is not the owner's and let a reader set
+      // passwords on a document that is not theirs to set them on.
+      await open(editableButOwned);
+
+      final accepted = await container
+          .read(pdfDocumentProvider.notifier)
+          .unlockOwnerRights('open-me');
+
+      expect(accepted, isFalse);
+      expect(
+        container.read(pdfDocumentProvider).documentOrNull!.security,
+        editableButOwned,
+      );
+    });
+
+    test('should accept the owner password', () async {
+      await open(editableButOwned);
+
+      repository.security = _ownerRights;
+      final accepted = await container
+          .read(pdfDocumentProvider.notifier)
+          .unlockOwnerRights('own-me');
+
+      expect(accepted, isTrue);
+      expect(
+        container.read(pdfDocumentProvider).documentOrNull!.security
+            .hasOwnerRights,
+        isTrue,
+      );
+    });
+
+    test('should leave the document alone when the password is wrong',
+        () async {
+      await open(editableButOwned);
+      repository.refuse = true;
+
+      final accepted = await container
+          .read(pdfDocumentProvider.notifier)
+          .unlockOwnerRights('wrong');
+
+      expect(accepted, isFalse);
+      expect(container.read(pdfDocumentProvider).isLoaded, isTrue);
+    });
+  });
 }
 
 class _FakeRepository implements PdfDocumentRepository {
