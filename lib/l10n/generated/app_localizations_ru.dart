@@ -326,158 +326,158 @@ class AppLocalizationsRu extends AppLocalizations {
   String get deleteButtonTooltip => 'Удалить выбранный объект';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Документ защищён';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'Введите пароль, чтобы открыть его.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Пароль';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Открыть';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'Документ не разрешает изменения';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Его можно читать и печатать, но владелец не разрешил вносить изменения. Введите пароль владельца, чтобы редактировать документ.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Ввести пароль владельца';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Пароль владельца';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Печать…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Печать текущей страницы';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Печатать этот документ может только владелец';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Документ не разрешает печать.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Не удалось напечатать документ.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Изменить защиту документа может только владелец';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Продолжить';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Защищённый документ показывается из памяти, а его объём — $size. Открытие займёт примерно столько же.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Отправленная копия сохраняет пароль документа.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Такой вид защиты не поддерживается. PDFSign открывает документы, защищённые паролем, но не сертификатом.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'На передний план';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Переместить вперёд';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Переместить назад';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'На задний план';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Порядок';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Отменить';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Повторить';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Перетащите, чтобы изменить порядок';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Защита документа';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen =>
+      'Запрашивать пароль при открытии документа';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Подтверждение';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Разрешения';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Разрешить следующие действия без ввода пароля владельца.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Печать';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Копирование текста и графики';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly => 'Вставка, удаление и поворот страниц';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Добавление аннотаций и подписей';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Изменение документа';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'Заполнение существующих полей форм';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Изменение документа включает аннотирование и заполнение форм — они разрешаются вместе с ним.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Пароль владельца';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Снять защиту';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Применить';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Пароли не совпадают';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Введите пароль';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Для ограничений нужен пароль владельца. Без него их может снять кто угодно.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Без пункта „Изменение документа“ этот файл нельзя будет подписать здесь снова, если не ввести пароль владельца.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Защитить документ…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Защита';
 
   @override
-  String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+  String get protectButtonTooltip => 'Задать пароли и разрешения документа';
 }

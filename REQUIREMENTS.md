@@ -569,8 +569,9 @@ Material 3, light only. There is no dark theme and no theme switch.
 
 ## 6. Localization
 
-- **66** `.arb` files in `lib/l10n/`, **74** message keys, generated into `lib/l10n/generated/`.
-- **58** locales are selectable in Settings and registered in `MaterialApp.supportedLocales`.
+- **66** `.arb` files in `lib/l10n/`, **137** message keys, generated into `lib/l10n/generated/`.
+- **Every file carries every key.** The 48 strings added by the protected-document, restacking, undo and printing work, and the 15 that had been left in English since earlier releases — the View menu, Go to Page, the rotations, cut/copy/paste, the image-limit and clipboard messages — were translated into all 65 languages on 2026-09-17.
+- **62** locales are selectable in Settings and registered in `MaterialApp.supportedLocales`.
 - RTL is supported for `ar`, `he`, `fa`. The editor forces LTR layout direction so panels keep their sides; text inside widgets still renders RTL.
 - Changing the language applies immediately in all open windows via broadcast.
 
@@ -619,7 +620,7 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 
 | Aspect | State |
 |--------|-------|
-| `flutter analyze` | 1241 issues: 0 errors, **0 warnings**, 1241 info |
+| `flutter analyze` | 1245 issues: 0 errors, **0 warnings**, 1245 info |
 | Unit tests | **229** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry, the writer, reading and writing protected documents, permission bits, restacking, the undo history, and what printing composes, sends and refuses |
 | Widget tests | **120** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation, the password prompt, the read-only notice, the protection panel, restacking and what each action records in the history |
 | Native tests | **55** — the toolbar's fixed item set and layout, the enabled state of Delete, undo/redo and restacking, the lock's two faces, window cascading, the CoreGraphics security probe, the title bar that keeps the toolbar's backdrop off the document, and what may be printed (`macos/RunnerTests`) |
@@ -694,8 +695,10 @@ Specified in v1.0 (or implied by leftover code) but **absent from the product**.
 ### 13.4 `logger` is a declared but unused dependency
 Diagnostics go through `kDebugMode` + `print()`, which `CLAUDE.md` prohibits and which is the source of many lints.
 
-### 13.5 Three translations are unreachable
-`app_ja.arb`, `app_ko.arb`, `app_zh.arb`, `app_zh_CN.arb`, and `app_zh_TW.arb` are translated and code-generated, but `ja`, `ko`, and `zh` are **missing from `supportedLocales`**. Since `MaterialApp.supportedLocales` is built from that same list, Japanese, Korean, and Chinese are neither selectable in Settings nor picked up from the system locale — those users fall back to English.
+### 13.5 Three translations are unreachable — **closed**
+Japanese, Korean, Chinese (Simplified) and Chinese (Traditional) were translated and code-generated but missing from `supportedLocales`, so they were neither selectable nor picked up from the system locale. They were added on 2026-09-17 and are now reachable.
+
+`app_es.arb`, `app_pt.arb` and `app_zh.arb` remain outside the list on purpose: the regional files (`es_ES`, `es_AR`, `es_MX`, `pt_BR`, `pt_PT`, `zh_CN`, `zh_TW`) are what a reader chooses, and the bare files stand behind them as fallbacks.
 
 ### 13.6 Hardcoded UI strings
 Localized and unused: `savePdfAs`, `savedTo`, `noOriginalPdfStored`, `incorrectPassword`, `removeFromList`, `fileAccessDenied`, `saveFailed`. The corresponding UI uses English literals — `PageIndicator` ("Page N of M"), the sidebar empty state, the viewer's empty/error/password states, and every save-failure snackbar.
@@ -757,6 +760,7 @@ Taking the dictionary out would mean writing the document's objects into a fresh
 
 | Version | Date | Change |
 |---------|------|--------|
+| 2.5 | 2026-09-17 | Localization completed: every `.arb` file carries every key, §13.5 closed, §6 figures remeasured. |
 | 2.4 | 2026-09-17 | Printing (FR-6.10): the system's panel, the document as the reader sees it, the print permission honoured, and the page in view as a pre-filled range. |
 | 2.3 | 2026-09-17 | FR-6.9: the owner-password gate turns on what a document withholds, not on whether it is encrypted, and says which of the two reasons it is asking for. |
 | 2.2 | 2026-09-17 | Setting a document's protection (FR-6.9, ADR-0013) and its one limitation (§13.16); FR-6.7 extended to protection; §3.9 shortcuts and FR-2.9 corrected against the menu, which has had no Reload command since 1.2.0; §10 figures remeasured. |

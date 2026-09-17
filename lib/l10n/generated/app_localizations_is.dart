@@ -102,48 +102,48 @@ class AppLocalizationsIs extends AppLocalizations {
   String get menuDelete => 'Eyða';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Skoða';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Sláðu inn blaðsíðunúmer (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Blaðsíðunúmer';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Sláðu inn gilda tölu';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'Blaðsíðan verður að vera á bilinu 1 til $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Snúa til vinstri';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Snúa til hægri';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Klippa';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Afrita';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Líma';
 
   @override
   String imagesTooLarge(int count, String limit) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images are',
-      one: 'image is',
+      other: 'myndir eru',
+      one: 'mynd er',
     );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Ekki bætt við: $count $_temp0 stærri en $limit';
   }
 
   @override
@@ -151,10 +151,10 @@ class AppLocalizationsIs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images are',
-      one: 'image is',
+      other: 'myndir eru',
+      one: 'mynd er',
     );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Ekki bætt við: $count $_temp0 stærri en $limit dílar';
   }
 
   @override
@@ -162,17 +162,17 @@ class AppLocalizationsIs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images',
-      one: 'image',
+      other: 'myndir',
+      one: 'mynd',
     );
-    return 'Not added: $count $_temp0';
+    return 'Ekki bætt við: $count $_temp0';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'Klippiborðið er ekki tiltækt';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Ekki tókst að bæta þessari mynd við';
 
   @override
   String get menuQuit => 'Hætta í PDFSign';
@@ -320,158 +320,158 @@ class AppLocalizationsIs extends AppLocalizations {
   String get deleteButtonTooltip => 'Eyða völdum hlut';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Þetta skjal er varið';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'Sláðu inn lykilorðið til að opna það.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Lykilorð';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Opna';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'Þetta skjal leyfir ekki breytingar';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Það má lesa og prenta, en eigandinn hefur ekki leyft breytingar. Sláðu inn lykilorð eigandans til að breyta því.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Sláðu inn lykilorð eigandans';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Lykilorð eigandans';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Prenta…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Prenta núverandi síðu';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Aðeins eigandinn má prenta þetta skjal';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Þetta skjal leyfir ekki prentun.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Ekki tókst að prenta skjalið.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Aðeins eigandinn má breyta vörn þessa skjals';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Halda áfram';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Varið skjal birtist úr minni, og þetta er $size að stærð. Að opna það notar álíka mikið minni.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Deilda eintakið heldur lykilorði skjalsins.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Vörn þessa skjals er ekki studd. PDFSign opnar skjöl sem varin eru með lykilorði, ekki þau sem varin eru með skilríki.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Færa fremst';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Færa framar';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Færa aftar';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Færa aftast';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Raða';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Afturkalla';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Endurtaka';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Dragðu til að breyta röðinni';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Verja skjal';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'Krefjast lykilorðs til að opna skjalið';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Staðfesting';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Heimildir';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Leyfa eftirfarandi breytingar án þess að slá inn lykilorð eigandans.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Prentun';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Afritun texta eða myndefnis';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly => 'Innsetning, eyðing og snúningur síðna';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Viðbót skýringa og undirskrifta';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Breyting á skjalinu';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'Útfylling fyrirliggjandi eyðublaðsreita';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Breyting á skjalinu nær yfir skýringar og útfyllingu eyðublaða — þær eru leyfðar með henni.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Lykilorð eigandans';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Fjarlægja vörn';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Nota';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Lykilorðin stemma ekki';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Sláðu inn lykilorð';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Takmarkanir krefjast lykilorðs eigandans. Án þess getur hver sem er fjarlægt þær.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Án „Breytingar á skjalinu“ verður ekki hægt að undirrita þessa skrá hér aftur án lykilorðs eigandans.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Verja skjal…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Verja';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Stilltu lykilorð og heimildir þessa skjals';
 }

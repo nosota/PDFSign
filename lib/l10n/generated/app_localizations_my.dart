@@ -63,7 +63,7 @@ class AppLocalizationsMy extends AppLocalizations {
   String get ok => 'OK';
 
   @override
-  String get menuFile => 'File';
+  String get menuFile => 'ဖိုင်';
 
   @override
   String get menuOpen => 'Phwint...';
@@ -102,77 +102,59 @@ class AppLocalizationsMy extends AppLocalizations {
   String get menuDelete => 'ဖျက်';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'ကြည့်ရှုမှု';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'စာမျက်နှာနံပါတ် ထည့်ပါ (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'စာမျက်နှာနံပါတ်';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'မှန်ကန်သော ဂဏန်း ထည့်ပါ';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'စာမျက်နှာသည် 1 နှင့် $total အကြား ဖြစ်ရမည်';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'ဘယ်ဘက်လှည့်';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'ညာဘက်လှည့်';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'ဖြတ်';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'ကူးယူ';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'ကပ်';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'မထည့်နိုင်ပါ - ပုံ $count ခုသည် $limit ထက် ကြီးသည်';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'မထည့်နိုင်ပါ - ပုံ $count ခုသည် $limit ပစ်ဆယ်ထက် ကြီးသည်';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'မထည့်နိုင်ပါ - ပုံ $count ခု';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'ကလစ်ဘုတ် ကို အသုံးမပြုနိုင်ပါ';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'ဤပုံကို ထည့်၍ မရပါ';
 
   @override
   String get menuQuit => 'PDFSign မှထွက်ရန်';
@@ -320,158 +302,159 @@ class AppLocalizationsMy extends AppLocalizations {
   String get deleteButtonTooltip => 'ရွေးချယ်ထားသော အရာဝတ္ထုကို ဖျက်ရန်';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'ဤစာရွက်စာတမ်းကို ကာကွယ်ထားသည်';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'ဖွင့်ရန် စကားဝှက် ထည့်ပါ။';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'စကားဝှက်';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'ဖွင့်';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'ဤစာရွက်စာတမ်းသည် ပြင်ဆင်ခွင့် မပေးပါ';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'ဖတ်ရှုနိုင်၊ ပုံနှိပ်နိုင်သော်လည်း ပိုင်ရှင်က ပြင်ဆင်ခွင့် မပေးထားပါ။ တည်းဖြတ်ရန် ပိုင်ရှင်၏ စကားဝှက်ကို ထည့်ပါ။';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'ပိုင်ရှင်၏ စကားဝှက် ထည့်ပါ';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'ပိုင်ရှင်၏ စကားဝှက်';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'ပုံနှိပ်…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'လက်ရှိစာမျက်နှာ ပုံနှိပ်';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'ဤစာရွက်စာတမ်းကို ပိုင်ရှင်သာ ပုံနှိပ်နိုင်သည်';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'ဤစာရွက်စာတမ်းသည် ပုံနှိပ်ခွင့် မပေးပါ။';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'စာရွက်စာတမ်းကို ပုံနှိပ်၍ မရပါ။';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'ဤစာရွက်စာတမ်း၏ ကာကွယ်မှုကို ပိုင်ရှင်သာ ပြောင်းနိုင်သည်';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'ဆက်လက်';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'ကာကွယ်ထားသော စာရွက်စာတမ်းကို မှတ်ဉာဏ်မှ ပြသပြီး ဤဖိုင်၏ အရွယ်အစားမှာ $size ဖြစ်သည်။ ဖွင့်ရန် ထိုမျှလောက် မှတ်ဉာဏ် သုံးမည်။';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'မျှဝေထားသော မိတ္တူသည် စာရွက်စာတမ်း၏ စကားဝှက်ကို ဆက်လက်ထားရှိသည်။';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'ဤစာရွက်စာတမ်း၏ ကာကွယ်မှုကို မပံ့ပိုးပါ။ PDFSign သည် စကားဝှက်ဖြင့် ကာကွယ်ထားသော ဖိုင်များကို ဖွင့်ပြီး လက်မှတ်ဖြင့် ကာကွယ်ထားသည်များကို မဖွင့်နိုင်ပါ။';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'ရှေ့ဆုံးသို့ ရွှေ့';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'ရှေ့သို့ ရွှေ့';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'နောက်သို့ ရွှေ့';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'နောက်ဆုံးသို့ ရွှေ့';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'စီစဉ်';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'နောက်ပြန်';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'ပြန်လုပ်';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'အစီအစဉ် ပြောင်းရန် ဆွဲပါ';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'စာရွက်စာတမ်း ကာကွယ်ရန်';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'စာရွက်စာတမ်း ဖွင့်ရန် စကားဝှက် တောင်းပါ';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'အတည်ပြုချက်';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'ခွင့်ပြုချက်များ';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'ပိုင်ရှင်၏ စကားဝှက် မထည့်ဘဲ အောက်ပါ ပြင်ဆင်မှုများကို ခွင့်ပြုပါ။';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'ပုံနှိပ်ခြင်း';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'စာသား သို့မဟုတ် ဂရပ်ဖစ် ကူးယူခြင်း';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly =>
+      'စာမျက်နှာ ထည့်ခြင်း၊ ဖျက်ခြင်းနှင့် လှည့်ခြင်း';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'မှတ်ချက် သို့မဟုတ် လက်မှတ် ထည့်ခြင်း';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'စာရွက်စာတမ်း ပြင်ဆင်ခြင်း';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'ရှိပြီးသား ဖောင်အကွက်များ ဖြည့်ခြင်း';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'စာရွက်စာတမ်း ပြင်ဆင်ခြင်းတွင် မှတ်ချက်ပေးခြင်းနှင့် ဖောင်ဖြည့်ခြင်းလည်း ပါဝင်ပြီး ၎င်းတို့ကိုလည်း အတူတကွ ခွင့်ပြုသည်။';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'ပိုင်ရှင်၏ စကားဝှက်';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'ကာကွယ်မှု ဖယ်ရှား';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'အသုံးပြု';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'စကားဝှက်များ မကိုက်ညီပါ';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'စကားဝှက် ထည့်ပါ';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'ကန့်သတ်ချက်များအတွက် ပိုင်ရှင်၏ စကားဝှက် လိုအပ်သည်။ ၎င်းမရှိလျှင် မည်သူမဆို ဖယ်ရှားနိုင်သည်။';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      '“စာရွက်စာတမ်း ပြင်ဆင်ခြင်း” မပါလျှင် ပိုင်ရှင်၏ စကားဝှက်မရှိဘဲ ဤဖိုင်ကို ဤနေရာတွင် ထပ်မံ လက်မှတ်ထိုး၍ မရပါ။';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'စာရွက်စာတမ်း ကာကွယ်ရန်…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'ကာကွယ်';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'ဤစာရွက်စာတမ်း၏ စကားဝှက်များနှင့် ခွင့်ပြုချက်များကို သတ်မှတ်ပါ';
 }

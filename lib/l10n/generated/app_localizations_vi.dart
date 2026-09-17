@@ -102,77 +102,59 @@ class AppLocalizationsVi extends AppLocalizations {
   String get menuDelete => 'Xóa';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Hiển thị';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Nhập số trang (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Số trang';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Hãy nhập một số hợp lệ';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'Trang phải nằm trong khoảng từ 1 đến $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Xoay sang trái';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Xoay sang phải';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Cắt';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Sao chép';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Dán';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Không thêm được: $count ảnh vượt quá $limit';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Không thêm được: $count ảnh vượt quá $limit pixel';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'Không thêm được: $count ảnh';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'Không dùng được bảng nháp';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Không thể thêm ảnh này';
 
   @override
   String get menuQuit => 'Thoát PDFSign';
@@ -319,158 +301,157 @@ class AppLocalizationsVi extends AppLocalizations {
   String get deleteButtonTooltip => 'Xóa đối tượng đã chọn';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Tài liệu này được bảo vệ';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'Hãy nhập mật khẩu để mở tài liệu.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Mật khẩu';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Mở';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'Tài liệu này không cho phép thay đổi';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Có thể đọc và in tài liệu, nhưng chủ sở hữu không cho phép thay đổi. Hãy nhập mật khẩu của chủ sở hữu để chỉnh sửa.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Nhập mật khẩu của chủ sở hữu';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Mật khẩu của chủ sở hữu';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'In…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'In trang hiện tại';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Chỉ chủ sở hữu mới có thể in tài liệu này';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Tài liệu này không cho phép in.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Không thể in tài liệu.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Chỉ chủ sở hữu mới có thể thay đổi bảo vệ của tài liệu này';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Tiếp tục';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Tài liệu được bảo vệ sẽ hiển thị từ bộ nhớ, và tài liệu này có dung lượng $size. Việc mở nó sẽ dùng khoảng chừng ấy bộ nhớ.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Bản sao được chia sẻ vẫn giữ mật khẩu của tài liệu.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Bảo vệ của tài liệu này không được hỗ trợ. PDFSign mở các tài liệu được bảo vệ bằng mật khẩu, không mở tài liệu được bảo vệ bằng chứng chỉ.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Đưa lên trên cùng';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Đưa lên trên';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Đưa xuống dưới';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Đưa xuống dưới cùng';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Sắp xếp';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Hoàn tác';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Làm lại';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Kéo để thay đổi thứ tự';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Bảo vệ tài liệu';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'Yêu cầu mật khẩu để mở tài liệu';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Xác nhận';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Quyền';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Cho phép những thay đổi sau mà không cần nhập mật khẩu của chủ sở hữu.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'In';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Sao chép văn bản hoặc đồ họa';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly => 'Chèn, xóa và xoay trang';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Thêm chú thích hoặc chữ ký';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Thay đổi tài liệu';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'Điền vào các trường biểu mẫu hiện có';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Thay đổi tài liệu bao gồm chú thích và điền biểu mẫu — chúng được cho phép cùng với nó.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Mật khẩu của chủ sở hữu';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Gỡ bảo vệ';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Áp dụng';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Mật khẩu không khớp';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Hãy nhập mật khẩu';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Các hạn chế cần mật khẩu của chủ sở hữu. Không có mật khẩu đó, bất kỳ ai cũng có thể gỡ bỏ chúng.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Nếu không có “Thay đổi tài liệu”, tệp này sẽ không thể được ký lại ở đây nếu thiếu mật khẩu của chủ sở hữu.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Bảo vệ tài liệu…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Bảo vệ';
 
   @override
-  String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+  String get protectButtonTooltip => 'Đặt mật khẩu và quyền cho tài liệu này';
 }

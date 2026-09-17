@@ -120,48 +120,48 @@ class AppLocalizationsEs extends AppLocalizations {
   String get menuDelete => 'Eliminar';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Visualización';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Introduce el número de página (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Número de página';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Escribe un número válido';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'La página debe estar entre 1 y $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Girar a la izquierda';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Girar a la derecha';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Cortar';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Copiar';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Pegar';
 
   @override
   String imagesTooLarge(int count, String limit) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images are',
-      one: 'image is',
+      other: 'imágenes superan',
+      one: 'imagen supera',
     );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'No se añadió: $count $_temp0 $limit';
   }
 
   @override
@@ -169,10 +169,10 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images are',
-      one: 'image is',
+      other: 'imágenes superan',
+      one: 'imagen supera',
     );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'No se añadió: $count $_temp0 $limit píxeles';
   }
 
   @override
@@ -180,17 +180,17 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images',
-      one: 'image',
+      other: 'imágenes',
+      one: 'imagen',
     );
-    return 'Not added: $count $_temp0';
+    return 'No se añadió: $count $_temp0';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'El portapapeles no está disponible';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'No se pudo añadir esa imagen';
 
   @override
   String get menuQuit => 'Salir de PDFSign';
@@ -338,160 +338,163 @@ class AppLocalizationsEs extends AppLocalizations {
   String get deleteButtonTooltip => 'Eliminar objeto seleccionado';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Este documento está protegido';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'Introduce su contraseña para abrirlo.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Contraseña';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Abrir';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'Este documento no permite cambios';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Se puede leer e imprimir, pero su propietario no ha permitido modificarlo. Introduce la contraseña del propietario para editarlo.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Introducir la contraseña del propietario';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Contraseña del propietario';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Imprimir…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Imprimir la página actual';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Solo el propietario puede imprimir este documento';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Este documento no permite imprimir.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'No se pudo imprimir el documento.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Solo el propietario puede cambiar la protección de este documento';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Continuar';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Un documento protegido se muestra desde la memoria, y este ocupa $size. Abrirlo usará aproximadamente esa misma cantidad.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'La copia compartida conserva la contraseña del documento.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'La protección de este documento no es compatible. PDFSign abre documentos protegidos con contraseña, no los protegidos con un certificado.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Traer al frente';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Traer adelante';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Enviar atrás';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Enviar al fondo';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Organizar';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Deshacer';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Rehacer';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Arrastra para cambiar el orden';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Proteger documento';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen =>
+      'Solicitar contraseña para abrir el documento';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Confirmación';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Permisos';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Permitir los siguientes cambios sin introducir la contraseña del propietario.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Impresión';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Copia de texto o gráficos';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly =>
+      'Inserción, eliminación o rotación de páginas';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Adición de anotaciones o firmas';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Modificación del documento';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling =>
+      'Relleno de campos de formulario existentes';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'La modificación del documento incluye anotar y rellenar formularios: ambos se permiten con ella.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Contraseña del propietario';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Quitar protección';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Aplicar';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Las contraseñas no coinciden';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Introduce una contraseña';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Las restricciones necesitan una contraseña del propietario. Sin ella, cualquiera puede levantarlas.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Sin «Modificación del documento», este archivo no podrá firmarse aquí de nuevo sin la contraseña del propietario.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Proteger documento…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Proteger';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Definir las contraseñas y los permisos de este documento';
 }
 
 /// The translations for Spanish Castilian, as used in Argentina (`es_AR`).
@@ -610,48 +613,48 @@ class AppLocalizationsEsAr extends AppLocalizationsEs {
   String get menuDelete => 'Eliminar';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Visualización';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Ingresa el número de página (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Número de página';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Escribe un número válido';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'La página debe estar entre 1 y $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Girar a la izquierda';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Girar a la derecha';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Cortar';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Copiar';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Pegar';
 
   @override
   String imagesTooLarge(int count, String limit) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images are',
-      one: 'image is',
+      other: 'imágenes superan',
+      one: 'imagen supera',
     );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'No se agregó: $count $_temp0 $limit';
   }
 
   @override
@@ -659,10 +662,10 @@ class AppLocalizationsEsAr extends AppLocalizationsEs {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images are',
-      one: 'image is',
+      other: 'imágenes superan',
+      one: 'imagen supera',
     );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'No se agregó: $count $_temp0 $limit píxeles';
   }
 
   @override
@@ -670,17 +673,17 @@ class AppLocalizationsEsAr extends AppLocalizationsEs {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images',
-      one: 'image',
+      other: 'imágenes',
+      one: 'imagen',
     );
-    return 'Not added: $count $_temp0';
+    return 'No se agregó: $count $_temp0';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'El portapapeles no está disponible';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'No se pudo agregar esa imagen';
 
   @override
   String get menuQuit => 'Salir de PDFSign';
@@ -826,6 +829,165 @@ class AppLocalizationsEsAr extends AppLocalizationsEs {
 
   @override
   String get deleteButtonTooltip => 'Eliminar objeto seleccionado';
+
+  @override
+  String get documentProtectedTitle => 'Este documento está protegido';
+
+  @override
+  String get documentProtectedBody => 'Ingresa su contraseña para abrirlo.';
+
+  @override
+  String get passwordFieldLabel => 'Contraseña';
+
+  @override
+  String get openDocumentButton => 'Abrir';
+
+  @override
+  String get documentReadOnlyTitle => 'Este documento no permite cambios';
+
+  @override
+  String get documentReadOnlyBody =>
+      'Se puede leer e imprimir, pero su propietario no ha permitido modificarlo. Ingresa la contraseña del propietario para editarlo.';
+
+  @override
+  String get enterOwnerPassword => 'Ingresar la contraseña del propietario';
+
+  @override
+  String get ownerPasswordFieldLabel => 'Contraseña del propietario';
+
+  @override
+  String get menuPrint => 'Imprimir…';
+
+  @override
+  String get menuPrintCurrentPage => 'Imprimir la página actual';
+
+  @override
+  String get printingIsTheOwnersTitle =>
+      'Solo el propietario puede imprimir este documento';
+
+  @override
+  String get printingNotAllowed => 'Este documento no permite imprimir.';
+
+  @override
+  String get printingFailed => 'No se pudo imprimir el documento.';
+
+  @override
+  String get protectionIsTheOwnersTitle =>
+      'Solo el propietario puede cambiar la protección de este documento';
+
+  @override
+  String get continueButton => 'Continuar';
+
+  @override
+  String largeProtectedDocumentBody(String size) {
+    return 'Un documento protegido se muestra desde la memoria, y este ocupa $size. Abrirlo usará aproximadamente esa misma cantidad.';
+  }
+
+  @override
+  String get shareProtectedNotice =>
+      'La copia compartida conserva la contraseña del documento.';
+
+  @override
+  String get unsupportedProtection =>
+      'La protección de este documento no es compatible. PDFSign abre documentos protegidos con contraseña, no los protegidos con un certificado.';
+
+  @override
+  String get menuBringToFront => 'Traer al frente';
+
+  @override
+  String get menuBringForward => 'Traer adelante';
+
+  @override
+  String get menuSendBackward => 'Enviar atrás';
+
+  @override
+  String get menuSendToBack => 'Enviar al fondo';
+
+  @override
+  String get zOrderGroupLabel => 'Organizar';
+
+  @override
+  String get menuUndo => 'Deshacer';
+
+  @override
+  String get menuRedo => 'Rehacer';
+
+  @override
+  String get dragToReorder => 'Arrastra para cambiar el orden';
+
+  @override
+  String get protectDocumentTitle => 'Proteger documento';
+
+  @override
+  String get requirePasswordToOpen =>
+      'Solicitar contraseña para abrir el documento';
+
+  @override
+  String get verifyFieldLabel => 'Confirmación';
+
+  @override
+  String get permissionsHeading => 'Permisos';
+
+  @override
+  String get permissionsNote =>
+      'Permitir los siguientes cambios sin ingresar la contraseña del propietario.';
+
+  @override
+  String get permissionPrinting => 'Impresión';
+
+  @override
+  String get permissionCopying => 'Copia de texto o gráficos';
+
+  @override
+  String get permissionPageAssembly =>
+      'Inserción, eliminación o rotación de páginas';
+
+  @override
+  String get permissionAnnotations => 'Adición de anotaciones o firmas';
+
+  @override
+  String get permissionChangingContent => 'Modificación del documento';
+
+  @override
+  String get permissionFormFilling =>
+      'Relleno de campos de formulario existentes';
+
+  @override
+  String get changingContentIncludes =>
+      'La modificación del documento incluye anotar y rellenar formularios: ambos se permiten con ella.';
+
+  @override
+  String get ownerPasswordHeading => 'Contraseña del propietario';
+
+  @override
+  String get removeProtection => 'Quitar protección';
+
+  @override
+  String get applyButton => 'Aplicar';
+
+  @override
+  String get passwordsDoNotMatch => 'Las contraseñas no coinciden';
+
+  @override
+  String get passwordCannotBeEmpty => 'Ingresa una contraseña';
+
+  @override
+  String get restrictionsNeedOwnerPassword =>
+      'Las restricciones necesitan una contraseña del propietario. Sin ella, cualquiera puede levantarlas.';
+
+  @override
+  String get signingNeedsChangingContent =>
+      'Sin «Modificación del documento», este archivo no podrá firmarse aquí de nuevo sin la contraseña del propietario.';
+
+  @override
+  String get menuProtectDocument => 'Proteger documento…';
+
+  @override
+  String get protectButtonLabel => 'Proteger';
+
+  @override
+  String get protectButtonTooltip =>
+      'Definir las contraseñas y los permisos de este documento';
 }
 
 /// The translations for Spanish Castilian, as used in Spain (`es_ES`).
@@ -944,48 +1106,48 @@ class AppLocalizationsEsEs extends AppLocalizationsEs {
   String get menuDelete => 'Eliminar';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Visualización';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Introduce el número de página (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Número de página';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Escribe un número válido';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'La página debe estar entre 1 y $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Girar a la izquierda';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Girar a la derecha';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Cortar';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Copiar';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Pegar';
 
   @override
   String imagesTooLarge(int count, String limit) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images are',
-      one: 'image is',
+      other: 'imágenes superan',
+      one: 'imagen supera',
     );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'No se añadió: $count $_temp0 $limit';
   }
 
   @override
@@ -993,10 +1155,10 @@ class AppLocalizationsEsEs extends AppLocalizationsEs {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images are',
-      one: 'image is',
+      other: 'imágenes superan',
+      one: 'imagen supera',
     );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'No se añadió: $count $_temp0 $limit píxeles';
   }
 
   @override
@@ -1004,17 +1166,17 @@ class AppLocalizationsEsEs extends AppLocalizationsEs {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images',
-      one: 'image',
+      other: 'imágenes',
+      one: 'imagen',
     );
-    return 'Not added: $count $_temp0';
+    return 'No se añadió: $count $_temp0';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'El portapapeles no está disponible';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'No se pudo añadir esa imagen';
 
   @override
   String get menuQuit => 'Salir de PDFSign';
@@ -1160,6 +1322,165 @@ class AppLocalizationsEsEs extends AppLocalizationsEs {
 
   @override
   String get deleteButtonTooltip => 'Eliminar objeto seleccionado';
+
+  @override
+  String get documentProtectedTitle => 'Este documento está protegido';
+
+  @override
+  String get documentProtectedBody => 'Introduce su contraseña para abrirlo.';
+
+  @override
+  String get passwordFieldLabel => 'Contraseña';
+
+  @override
+  String get openDocumentButton => 'Abrir';
+
+  @override
+  String get documentReadOnlyTitle => 'Este documento no permite cambios';
+
+  @override
+  String get documentReadOnlyBody =>
+      'Se puede leer e imprimir, pero su propietario no ha permitido modificarlo. Introduce la contraseña del propietario para editarlo.';
+
+  @override
+  String get enterOwnerPassword => 'Introducir la contraseña del propietario';
+
+  @override
+  String get ownerPasswordFieldLabel => 'Contraseña del propietario';
+
+  @override
+  String get menuPrint => 'Imprimir…';
+
+  @override
+  String get menuPrintCurrentPage => 'Imprimir la página actual';
+
+  @override
+  String get printingIsTheOwnersTitle =>
+      'Solo el propietario puede imprimir este documento';
+
+  @override
+  String get printingNotAllowed => 'Este documento no permite imprimir.';
+
+  @override
+  String get printingFailed => 'No se pudo imprimir el documento.';
+
+  @override
+  String get protectionIsTheOwnersTitle =>
+      'Solo el propietario puede cambiar la protección de este documento';
+
+  @override
+  String get continueButton => 'Continuar';
+
+  @override
+  String largeProtectedDocumentBody(String size) {
+    return 'Un documento protegido se muestra desde la memoria, y este ocupa $size. Abrirlo usará aproximadamente esa misma cantidad.';
+  }
+
+  @override
+  String get shareProtectedNotice =>
+      'La copia compartida conserva la contraseña del documento.';
+
+  @override
+  String get unsupportedProtection =>
+      'La protección de este documento no es compatible. PDFSign abre documentos protegidos con contraseña, no los protegidos con un certificado.';
+
+  @override
+  String get menuBringToFront => 'Traer al frente';
+
+  @override
+  String get menuBringForward => 'Traer adelante';
+
+  @override
+  String get menuSendBackward => 'Enviar atrás';
+
+  @override
+  String get menuSendToBack => 'Enviar al fondo';
+
+  @override
+  String get zOrderGroupLabel => 'Organizar';
+
+  @override
+  String get menuUndo => 'Deshacer';
+
+  @override
+  String get menuRedo => 'Rehacer';
+
+  @override
+  String get dragToReorder => 'Arrastra para cambiar el orden';
+
+  @override
+  String get protectDocumentTitle => 'Proteger documento';
+
+  @override
+  String get requirePasswordToOpen =>
+      'Solicitar contraseña para abrir el documento';
+
+  @override
+  String get verifyFieldLabel => 'Confirmación';
+
+  @override
+  String get permissionsHeading => 'Permisos';
+
+  @override
+  String get permissionsNote =>
+      'Permitir los siguientes cambios sin introducir la contraseña del propietario.';
+
+  @override
+  String get permissionPrinting => 'Impresión';
+
+  @override
+  String get permissionCopying => 'Copia de texto o gráficos';
+
+  @override
+  String get permissionPageAssembly =>
+      'Inserción, eliminación o rotación de páginas';
+
+  @override
+  String get permissionAnnotations => 'Adición de anotaciones o firmas';
+
+  @override
+  String get permissionChangingContent => 'Modificación del documento';
+
+  @override
+  String get permissionFormFilling =>
+      'Relleno de campos de formulario existentes';
+
+  @override
+  String get changingContentIncludes =>
+      'La modificación del documento incluye anotar y rellenar formularios: ambos se permiten con ella.';
+
+  @override
+  String get ownerPasswordHeading => 'Contraseña del propietario';
+
+  @override
+  String get removeProtection => 'Quitar protección';
+
+  @override
+  String get applyButton => 'Aplicar';
+
+  @override
+  String get passwordsDoNotMatch => 'Las contraseñas no coinciden';
+
+  @override
+  String get passwordCannotBeEmpty => 'Introduce una contraseña';
+
+  @override
+  String get restrictionsNeedOwnerPassword =>
+      'Las restricciones necesitan una contraseña del propietario. Sin ella, cualquiera puede levantarlas.';
+
+  @override
+  String get signingNeedsChangingContent =>
+      'Sin «Modificación del documento», este archivo no podrá firmarse aquí de nuevo sin la contraseña del propietario.';
+
+  @override
+  String get menuProtectDocument => 'Proteger documento…';
+
+  @override
+  String get protectButtonLabel => 'Proteger';
+
+  @override
+  String get protectButtonTooltip =>
+      'Definir las contraseñas y los permisos de este documento';
 }
 
 /// The translations for Spanish Castilian, as used in Mexico (`es_MX`).
@@ -1278,48 +1599,48 @@ class AppLocalizationsEsMx extends AppLocalizationsEs {
   String get menuDelete => 'Eliminar';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Visualización';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Ingresa el número de página (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Número de página';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Escribe un número válido';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'La página debe estar entre 1 y $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Girar a la izquierda';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Girar a la derecha';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Cortar';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Copiar';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Pegar';
 
   @override
   String imagesTooLarge(int count, String limit) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images are',
-      one: 'image is',
+      other: 'imágenes superan',
+      one: 'imagen supera',
     );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'No se agregó: $count $_temp0 $limit';
   }
 
   @override
@@ -1327,10 +1648,10 @@ class AppLocalizationsEsMx extends AppLocalizationsEs {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images are',
-      one: 'image is',
+      other: 'imágenes superan',
+      one: 'imagen supera',
     );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'No se agregó: $count $_temp0 $limit píxeles';
   }
 
   @override
@@ -1338,17 +1659,17 @@ class AppLocalizationsEsMx extends AppLocalizationsEs {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images',
-      one: 'image',
+      other: 'imágenes',
+      one: 'imagen',
     );
-    return 'Not added: $count $_temp0';
+    return 'No se agregó: $count $_temp0';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'El portapapeles no está disponible';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'No se pudo agregar esa imagen';
 
   @override
   String get menuQuit => 'Salir de PDFSign';
@@ -1494,4 +1815,163 @@ class AppLocalizationsEsMx extends AppLocalizationsEs {
 
   @override
   String get deleteButtonTooltip => 'Eliminar objeto seleccionado';
+
+  @override
+  String get documentProtectedTitle => 'Este documento está protegido';
+
+  @override
+  String get documentProtectedBody => 'Ingresa su contraseña para abrirlo.';
+
+  @override
+  String get passwordFieldLabel => 'Contraseña';
+
+  @override
+  String get openDocumentButton => 'Abrir';
+
+  @override
+  String get documentReadOnlyTitle => 'Este documento no permite cambios';
+
+  @override
+  String get documentReadOnlyBody =>
+      'Se puede leer e imprimir, pero su propietario no ha permitido modificarlo. Ingresa la contraseña del propietario para editarlo.';
+
+  @override
+  String get enterOwnerPassword => 'Ingresar la contraseña del propietario';
+
+  @override
+  String get ownerPasswordFieldLabel => 'Contraseña del propietario';
+
+  @override
+  String get menuPrint => 'Imprimir…';
+
+  @override
+  String get menuPrintCurrentPage => 'Imprimir la página actual';
+
+  @override
+  String get printingIsTheOwnersTitle =>
+      'Solo el propietario puede imprimir este documento';
+
+  @override
+  String get printingNotAllowed => 'Este documento no permite imprimir.';
+
+  @override
+  String get printingFailed => 'No se pudo imprimir el documento.';
+
+  @override
+  String get protectionIsTheOwnersTitle =>
+      'Solo el propietario puede cambiar la protección de este documento';
+
+  @override
+  String get continueButton => 'Continuar';
+
+  @override
+  String largeProtectedDocumentBody(String size) {
+    return 'Un documento protegido se muestra desde la memoria, y este ocupa $size. Abrirlo usará aproximadamente esa misma cantidad.';
+  }
+
+  @override
+  String get shareProtectedNotice =>
+      'La copia compartida conserva la contraseña del documento.';
+
+  @override
+  String get unsupportedProtection =>
+      'La protección de este documento no es compatible. PDFSign abre documentos protegidos con contraseña, no los protegidos con un certificado.';
+
+  @override
+  String get menuBringToFront => 'Traer al frente';
+
+  @override
+  String get menuBringForward => 'Traer adelante';
+
+  @override
+  String get menuSendBackward => 'Enviar atrás';
+
+  @override
+  String get menuSendToBack => 'Enviar al fondo';
+
+  @override
+  String get zOrderGroupLabel => 'Organizar';
+
+  @override
+  String get menuUndo => 'Deshacer';
+
+  @override
+  String get menuRedo => 'Rehacer';
+
+  @override
+  String get dragToReorder => 'Arrastra para cambiar el orden';
+
+  @override
+  String get protectDocumentTitle => 'Proteger documento';
+
+  @override
+  String get requirePasswordToOpen =>
+      'Solicitar contraseña para abrir el documento';
+
+  @override
+  String get verifyFieldLabel => 'Confirmación';
+
+  @override
+  String get permissionsHeading => 'Permisos';
+
+  @override
+  String get permissionsNote =>
+      'Permitir los siguientes cambios sin ingresar la contraseña del propietario.';
+
+  @override
+  String get permissionPrinting => 'Impresión';
+
+  @override
+  String get permissionCopying => 'Copia de texto o gráficos';
+
+  @override
+  String get permissionPageAssembly =>
+      'Inserción, eliminación o rotación de páginas';
+
+  @override
+  String get permissionAnnotations => 'Adición de anotaciones o firmas';
+
+  @override
+  String get permissionChangingContent => 'Modificación del documento';
+
+  @override
+  String get permissionFormFilling =>
+      'Relleno de campos de formulario existentes';
+
+  @override
+  String get changingContentIncludes =>
+      'La modificación del documento incluye anotar y rellenar formularios: ambos se permiten con ella.';
+
+  @override
+  String get ownerPasswordHeading => 'Contraseña del propietario';
+
+  @override
+  String get removeProtection => 'Quitar protección';
+
+  @override
+  String get applyButton => 'Aplicar';
+
+  @override
+  String get passwordsDoNotMatch => 'Las contraseñas no coinciden';
+
+  @override
+  String get passwordCannotBeEmpty => 'Ingresa una contraseña';
+
+  @override
+  String get restrictionsNeedOwnerPassword =>
+      'Las restricciones necesitan una contraseña del propietario. Sin ella, cualquiera puede levantarlas.';
+
+  @override
+  String get signingNeedsChangingContent =>
+      'Sin «Modificación del documento», este archivo no podrá firmarse aquí de nuevo sin la contraseña del propietario.';
+
+  @override
+  String get menuProtectDocument => 'Proteger documento…';
+
+  @override
+  String get protectButtonLabel => 'Proteger';
+
+  @override
+  String get protectButtonTooltip =>
+      'Definir las contraseñas y los permisos de este documento';
 }

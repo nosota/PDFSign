@@ -120,48 +120,48 @@ class AppLocalizationsNl extends AppLocalizations {
   String get menuDelete => 'Verwijderen';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Weergave';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Voer een paginanummer in (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Paginanummer';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Voer een geldig getal in';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'De pagina moet tussen 1 en $total liggen';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Draai naar links';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Draai naar rechts';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Knip';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Kopieer';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Plak';
 
   @override
   String imagesTooLarge(int count, String limit) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images are',
-      one: 'image is',
+      other: 'afbeeldingen zijn',
+      one: 'afbeelding is',
     );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Niet toegevoegd: $count $_temp0 groter dan $limit';
   }
 
   @override
@@ -169,10 +169,10 @@ class AppLocalizationsNl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images are',
-      one: 'image is',
+      other: 'afbeeldingen zijn',
+      one: 'afbeelding is',
     );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Niet toegevoegd: $count $_temp0 groter dan $limit pixels';
   }
 
   @override
@@ -180,17 +180,17 @@ class AppLocalizationsNl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images',
-      one: 'image',
+      other: 'afbeeldingen',
+      one: 'afbeelding',
     );
-    return 'Not added: $count $_temp0';
+    return 'Niet toegevoegd: $count $_temp0';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'Het klembord is niet beschikbaar';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Die afbeelding kon niet worden toegevoegd';
 
   @override
   String get menuQuit => 'Stop PDFSign';
@@ -338,158 +338,162 @@ class AppLocalizationsNl extends AppLocalizations {
   String get deleteButtonTooltip => 'Geselecteerd object verwijderen';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Dit document is beveiligd';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody =>
+      'Voer het wachtwoord in om het te openen.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Wachtwoord';
 
   @override
   String get openDocumentButton => 'Open';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'Dit document staat geen wijzigingen toe';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Het kan worden gelezen en afgedrukt, maar de eigenaar heeft wijzigingen niet toegestaan. Voer het eigenaarswachtwoord in om het te bewerken.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Voer het eigenaarswachtwoord in';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Eigenaarswachtwoord';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Druk af…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Druk de huidige pagina af';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Alleen de eigenaar mag dit document afdrukken';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Dit document staat afdrukken niet toe.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Het document kon niet worden afgedrukt.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Alleen de eigenaar mag de beveiliging van dit document wijzigen';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Ga door';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Een beveiligd document wordt vanuit het geheugen getoond, en dit document is $size groot. Het openen gebruikt ongeveer evenveel geheugen.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'De gedeelde kopie behoudt het wachtwoord van het document.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'De beveiliging van dit document wordt niet ondersteund. PDFSign opent documenten die met een wachtwoord zijn beveiligd, niet die met een certificaat.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Plaats vooraan';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Plaats naar voren';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Plaats naar achteren';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Plaats achteraan';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Schik';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Herstel';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Voer opnieuw uit';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Sleep om de volgorde te wijzigen';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Document beveiligen';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen =>
+      'Wachtwoord vereisen om het document te openen';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Bevestiging';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Bevoegdheden';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Sta de volgende wijzigingen toe zonder het eigenaarswachtwoord in te voeren.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Afdrukken';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Kopiëren van tekst of afbeeldingen';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly =>
+      'Invoegen, verwijderen of draaien van pagina’s';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations =>
+      'Toevoegen van aantekeningen of handtekeningen';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Wijzigen van het document';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'Invullen van bestaande formuliervelden';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Het wijzigen van het document omvat aantekeningen en het invullen van formulieren; die worden er samen mee toegestaan.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Eigenaarswachtwoord';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Beveiliging verwijderen';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Pas toe';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'De wachtwoorden komen niet overeen';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Voer een wachtwoord in';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Beperkingen vereisen een eigenaarswachtwoord. Zonder dat kan iedereen ze opheffen.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Zonder ‘Wijzigen van het document’ kan dit bestand hier niet opnieuw worden ondertekend zonder het eigenaarswachtwoord.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Beveilig document…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Beveilig';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Stel de wachtwoorden en bevoegdheden van dit document in';
 }

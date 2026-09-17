@@ -102,77 +102,59 @@ class AppLocalizationsKa extends AppLocalizations {
   String get menuDelete => 'წაშლა';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'ხედი';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'შეიყვანეთ გვერდის ნომერი (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'გვერდის ნომერი';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'შეიყვანეთ სწორი რიცხვი';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'გვერდი უნდა იყოს 1-სა და $total-ს შორის';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'მარცხნივ შემობრუნება';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'მარჯვნივ შემობრუნება';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'ამოჭრა';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'კოპირება';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'ჩასმა';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'არ დაემატა: $count სურათი აღემატება $limit-ს';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'არ დაემატა: $count სურათი აღემატება $limit პიქსელს';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'არ დაემატა: $count სურათი';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'ბუფერი მიუწვდომელია';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'ამ სურათის დამატება ვერ მოხერხდა';
 
   @override
   String get menuQuit => 'გასვლა PDFSign-დან';
@@ -320,158 +302,158 @@ class AppLocalizationsKa extends AppLocalizations {
   String get deleteButtonTooltip => 'არჩეული ობიექტის წაშლა';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'ეს დოკუმენტი დაცულია';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'გასახსნელად შეიყვანეთ პაროლი.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'პაროლი';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'გახსნა';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'ეს დოკუმენტი ცვლილებებს არ უშვებს';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'მისი წაკითხვა და დაბეჭდვა შესაძლებელია, მაგრამ მფლობელს ცვლილებები არ დაუშვია. რედაქტირებისთვის შეიყვანეთ მფლობელის პაროლი.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'მფლობელის პაროლის შეყვანა';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'მფლობელის პაროლი';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'ბეჭდვა…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'მიმდინარე გვერდის ბეჭდვა';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'ამ დოკუმენტის დაბეჭდვა მხოლოდ მფლობელს შეუძლია';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'ეს დოკუმენტი ბეჭდვას არ უშვებს.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'დოკუმენტის დაბეჭდვა ვერ მოხერხდა.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'ამ დოკუმენტის დაცვის შეცვლა მხოლოდ მფლობელს შეუძლია';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'გაგრძელება';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'დაცული დოკუმენტი მეხსიერებიდან ნაჩვენებია, ხოლო ამის ზომაა $size. მისი გახსნა დაახლოებით იმდენივე მეხსიერებას გამოიყენებს.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'გაზიარებული ასლი ინარჩუნებს დოკუმენტის პაროლს.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'ამ დოკუმენტის დაცვა მხარდაუჭერელია. PDFSign ხსნის პაროლით დაცულ დოკუმენტებს და არა სერტიფიკატით დაცულებს.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'წინ წამოწევა';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'წინ გადატანა';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'უკან გადატანა';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'ბოლოში გადატანა';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'განლაგება';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'დაბრუნება';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'გამეორება';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'გადაათრიეთ თანმიმდევრობის შესაცვლელად';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'დოკუმენტის დაცვა';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'დოკუმენტის გასახსნელად პაროლის მოთხოვნა';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'დადასტურება';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'ნებართვები';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'დაუშვით შემდეგი ცვლილებები მფლობელის პაროლის შეყვანის გარეშე.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'ბეჭდვა';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'ტექსტის ან გრაფიკის კოპირება';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly => 'გვერდების ჩასმა, წაშლა და შემობრუნება';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'შენიშვნებისა და ხელმოწერების დამატება';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'დოკუმენტის შეცვლა';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'არსებული ფორმის ველების შევსება';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'დოკუმენტის შეცვლა მოიცავს შენიშვნებსა და ფორმების შევსებას — ისინი მასთან ერთად დაიშვება.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'მფლობელის პაროლი';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'დაცვის მოხსნა';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'გამოყენება';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'პაროლები არ ემთხვევა';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'შეიყვანეთ პაროლი';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'შეზღუდვებს სჭირდება მფლობელის პაროლი. მის გარეშე მათ ნებისმიერი მოხსნის.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      '„დოკუმენტის შეცვლის“ გარეშე ამ ფაილს აქ ხელახლა ვერ მოაწერთ ხელს მფლობელის პაროლის გარეშე.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'დოკუმენტის დაცვა…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'დაცვა';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'განსაზღვრეთ ამ დოკუმენტის პაროლები და ნებართვები';
 }

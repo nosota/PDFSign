@@ -102,77 +102,59 @@ class AppLocalizationsMs extends AppLocalizations {
   String get menuDelete => 'Padam';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Paparan';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Masukkan nombor halaman (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Nombor halaman';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Masukkan nombor yang sah';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'Halaman mesti antara 1 dan $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Putar ke kiri';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Putar ke kanan';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Potong';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Salin';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Tampal';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Tidak ditambah: $count imej melebihi $limit';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Tidak ditambah: $count imej melebihi $limit piksel';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'Tidak ditambah: $count imej';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'Papan keratan tidak tersedia';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Imej ini tidak dapat ditambah';
 
   @override
   String get menuQuit => 'Keluar PDFSign';
@@ -319,158 +301,160 @@ class AppLocalizationsMs extends AppLocalizations {
   String get deleteButtonTooltip => 'Padam objek yang dipilih';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Dokumen ini dilindungi';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody =>
+      'Masukkan kata laluannya untuk membukanya.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Kata laluan';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Buka';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'Dokumen ini tidak membenarkan perubahan';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Ia boleh dibaca dan dicetak, tetapi pemiliknya tidak membenarkan perubahan. Masukkan kata laluan pemilik untuk menyuntingnya.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Masukkan kata laluan pemilik';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Kata laluan pemilik';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Cetak…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Cetak halaman semasa';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Hanya pemilik boleh mencetak dokumen ini';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Dokumen ini tidak membenarkan pencetakan.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Dokumen tidak dapat dicetak.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Hanya pemilik boleh mengubah perlindungan dokumen ini';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Teruskan';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Dokumen yang dilindungi dipaparkan daripada memori, dan saiz dokumen ini ialah $size. Membukanya akan menggunakan lebih kurang sebanyak itu.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Salinan yang dikongsi mengekalkan kata laluan dokumen.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Perlindungan dokumen ini tidak disokong. PDFSign membuka dokumen yang dilindungi kata laluan, bukan yang dilindungi sijil.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Bawa ke hadapan sekali';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Bawa ke hadapan';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Hantar ke belakang';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Hantar ke belakang sekali';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Susun';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Buat asal';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Buat semula';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Seret untuk menukar susunan';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Lindungi dokumen';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'Minta kata laluan untuk membuka dokumen';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Pengesahan';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Kebenaran';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Benarkan perubahan berikut tanpa memasukkan kata laluan pemilik.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Pencetakan';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Penyalinan teks atau grafik';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly =>
+      'Penyisipan, pemadaman dan pemutaran halaman';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Penambahan anotasi atau tandatangan';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Perubahan dokumen';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'Pengisian medan borang sedia ada';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Perubahan dokumen merangkumi anotasi dan pengisian borang — kedua-duanya dibenarkan bersamanya.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Kata laluan pemilik';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Buang perlindungan';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Guna';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Kata laluan tidak sepadan';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Masukkan kata laluan';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Sekatan memerlukan kata laluan pemilik. Tanpanya, sesiapa sahaja boleh menanggalkannya.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Tanpa “Perubahan dokumen”, fail ini tidak boleh ditandatangani semula di sini tanpa kata laluan pemilik.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Lindungi dokumen…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Lindungi';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Tetapkan kata laluan dan kebenaran dokumen ini';
 }

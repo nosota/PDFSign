@@ -84,7 +84,7 @@ class AppLocalizationsHy extends AppLocalizations {
   String get menuSaveAs => 'Pakhpanel orpes...';
 
   @override
-  String get menuSaveAll => 'Save All';
+  String get menuSaveAll => 'Պահել բոլորը';
 
   @override
   String get menuShare => 'Kisel...';
@@ -96,83 +96,65 @@ class AppLocalizationsHy extends AppLocalizations {
   String get menuCloseAll => 'Pakers bolory';
 
   @override
-  String get menuEdit => 'Edit';
+  String get menuEdit => 'Խմբագրել';
 
   @override
-  String get menuDelete => 'Delete';
+  String get menuDelete => 'Ջնջել';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Տեսք';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Մուտքագրեք էջի համարը (1–$total).';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Էջի համարը';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Մուտքագրեք վավեր թիվ';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'Էջը պետք է լինի 1-ի և $total-ի միջև';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Պտտել ձախ';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Պտտել աջ';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Կտրել';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Պատճենել';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Տեղադրել';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Չավելացված պատկերներ՝ $count — գերազանցում են $limit';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Չավելացված պատկերներ՝ $count — գերազանցում են $limit փիքսել';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'Չավելացված պատկերներ՝ $count';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'Փոխանակման հիշողությունը հասանելի չէ';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Այս պատկերը չհաջողվեց ավելացնել';
 
   @override
   String get menuQuit => 'Yelk PDFSign-its';
@@ -199,7 +181,7 @@ class AppLocalizationsHy extends AppLocalizations {
   String get closeAllDialogCancel => 'Chygarkvel';
 
   @override
-  String get saveFailedDialogTitle => 'Save Failed';
+  String get saveFailedDialogTitle => 'Պահումը ձախողվեց';
 
   @override
   String saveFailedDialogMessage(int count) {
@@ -207,7 +189,7 @@ class AppLocalizationsHy extends AppLocalizations {
   }
 
   @override
-  String get saveFailedDialogClose => 'Close Anyway';
+  String get saveFailedDialogClose => 'Այնուամենայնիվ փակել';
 
   @override
   String get saveChangesTitle => 'Pakhpanel pokhutyyunnery?';
@@ -311,167 +293,171 @@ class AppLocalizationsHy extends AppLocalizations {
 
   @override
   String get waitingForFolderPermission =>
-      'Waiting for folder access permission...';
+      'Սպասում է թղթապանակի հասանելիության թույլտվությանը…';
 
   @override
-  String get deleteButtonLabel => 'Delete';
+  String get deleteButtonLabel => 'Ջնջել';
 
   @override
-  String get deleteButtonTooltip => 'Delete selected object';
+  String get deleteButtonTooltip => 'Ջնջել ընտրված օբյեկտը';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Այս փաստաթուղթը պաշտպանված է';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody =>
+      'Մուտքագրեք գաղտնաբառը՝ այն բացելու համար։';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Գաղտնաբառ';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Բացել';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle =>
+      'Այս փաստաթուղթը փոփոխություններ չի թույլատրում';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Այն կարելի է կարդալ և տպել, սակայն սեփականատերը փոփոխություններ չի թույլատրել։ Խմբագրելու համար մուտքագրեք սեփականատիրոջ գաղտնաբառը։';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Մուտքագրել սեփականատիրոջ գաղտնաբառը';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Սեփականատիրոջ գաղտնաբառը';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Տպել…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Տպել ընթացիկ էջը';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Այս փաստաթուղթը կարող է տպել միայն սեփականատերը';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Այս փաստաթուղթը տպելը չի թույլատրում։';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Փաստաթուղթը չհաջողվեց տպել։';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Այս փաստաթղթի պաշտպանությունը կարող է փոխել միայն սեփականատերը';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Շարունակել';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Պաշտպանված փաստաթուղթը ցուցադրվում է հիշողությունից, իսկ սա զբաղեցնում է $size։ Բացելը կսպառի մոտավորապես նույնքան։';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Ուղարկված պատճենը պահպանում է փաստաթղթի գաղտնաբառը։';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Այս փաստաթղթի պաշտպանությունը չի աջակցվում։ PDFSign-ը բացում է գաղտնաբառով պաշտպանված փաստաթղթեր, ոչ թե վկայագրով պաշտպանվածները։';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Տեղափոխել առաջին պլան';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Տեղափոխել առաջ';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Տեղափոխել հետ';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Տեղափոխել վերջին պլան';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Դասավորել';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Հետարկել';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Կրկնել';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Քաշեք՝ հերթականությունը փոխելու համար';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Փաստաթղթի պաշտպանություն';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen =>
+      'Պահանջել գաղտնաբառ փաստաթուղթը բացելու համար';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Հաստատում';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Թույլտվություններ';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Թույլատրել հետևյալ փոփոխությունները՝ առանց սեփականատիրոջ գաղտնաբառի։';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Տպում';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Տեքստի կամ գրաֆիկայի պատճենում';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly => 'Էջերի ավելացում, ջնջում և պտտում';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations =>
+      'Ծանոթագրությունների և ստորագրությունների ավելացում';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Փաստաթղթի փոփոխում';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'Առկա ձևաթղթերի դաշտերի լրացում';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Փաստաթղթի փոփոխումը ներառում է ծանոթագրելը և ձևաթղթերի լրացումը — դրանք թույլատրվում են դրա հետ միասին։';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Սեփականատիրոջ գաղտնաբառը';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Հեռացնել պաշտպանությունը';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Կիրառել';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Գաղտնաբառերը չեն համընկնում';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Մուտքագրեք գաղտնաբառ';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Սահմանափակումները պահանջում են սեփականատիրոջ գաղտնաբառ։ Առանց դրա դրանք կարող է հեռացնել ցանկացած մեկը։';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Առանց «Փաստաթղթի փոփոխում» կետի այս ֆայլն այստեղ այլևս հնարավոր չի լինի ստորագրել առանց սեփականատիրոջ գաղտնաբառի։';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Պաշտպանել փաստաթուղթը…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Պաշտպանել';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Սահմանեք այս փաստաթղթի գաղտնաբառերն ու թույլտվությունները';
 }

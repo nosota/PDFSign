@@ -102,77 +102,59 @@ class AppLocalizationsTa extends AppLocalizations {
   String get menuDelete => 'நீக்கு';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'காட்சி';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'பக்க எண்ணை உள்ளிடவும் (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'பக்க எண்';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'செல்லுபடியாகும் எண்ணை உள்ளிடவும்';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'பக்கம் 1 முதல் $total வரை இருக்க வேண்டும்';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'இடப்புறம் சுழற்று';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'வலப்புறம் சுழற்று';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'வெட்டு';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'நகலெடு';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'ஒட்டு';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'சேர்க்கப்படவில்லை: $count படங்கள் $limit அளவை மீறுகின்றன';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'சேர்க்கப்படவில்லை: $count படங்கள் $limit பிக்சல்களை மீறுகின்றன';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'சேர்க்கப்படவில்லை: $count படங்கள்';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'இடைநிலைப் பலகை கிடைக்கவில்லை';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'இந்தப் படத்தைச் சேர்க்க முடியவில்லை';
 
   @override
   String get menuQuit => 'PDFSign-இலிருந்து வெளியேறு';
@@ -320,158 +302,162 @@ class AppLocalizationsTa extends AppLocalizations {
   String get deleteButtonTooltip => 'தேர்ந்தெடுக்கப்பட்ட பொருளை நீக்கு';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'இந்த ஆவணம் பாதுகாக்கப்பட்டுள்ளது';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'இதைத் திறக்க கடவுச்சொல்லை உள்ளிடவும்.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'கடவுச்சொல்';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'திற';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'இந்த ஆவணம் மாற்றங்களை அனுமதிக்கவில்லை';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'இதைப் படிக்கவும் அச்சிடவும் முடியும், ஆனால் உரிமையாளர் மாற்றங்களை அனுமதிக்கவில்லை. திருத்த உரிமையாளரின் கடவுச்சொல்லை உள்ளிடவும்.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'உரிமையாளரின் கடவுச்சொல்லை உள்ளிடவும்';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'உரிமையாளரின் கடவுச்சொல்';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'அச்சிடு…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'தற்போதைய பக்கத்தை அச்சிடு';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'இந்த ஆவணத்தை உரிமையாளர் மட்டுமே அச்சிட முடியும்';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'இந்த ஆவணம் அச்சிடுவதை அனுமதிக்கவில்லை.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'ஆவணத்தை அச்சிட முடியவில்லை.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'இந்த ஆவணத்தின் பாதுகாப்பை உரிமையாளர் மட்டுமே மாற்ற முடியும்';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'தொடர்க';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'பாதுகாக்கப்பட்ட ஆவணம் நினைவகத்திலிருந்து காட்டப்படுகிறது; இதன் அளவு $size. இதைத் திறக்க ஏறக்குறைய அதே அளவு நினைவகம் தேவைப்படும்.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'பகிரப்பட்ட நகல் ஆவணத்தின் கடவுச்சொல்லைத் தக்கவைக்கிறது.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'இந்த ஆவணத்தின் பாதுகாப்பு ஆதரிக்கப்படவில்லை. PDFSign கடவுச்சொல்லால் பாதுகாக்கப்பட்ட ஆவணங்களைத் திறக்கும், சான்றிதழால் பாதுகாக்கப்பட்டவற்றை அல்ல.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'முன்னுக்குக் கொண்டுவா';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'முன்னால் நகர்த்து';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'பின்னால் நகர்த்து';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'பின்னுக்கு அனுப்பு';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'வரிசைப்படுத்து';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'செயல்தவிர்';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'மீண்டும் செய்';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'வரிசையை மாற்ற இழுக்கவும்';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'ஆவணத்தைப் பாதுகாக்கவும்';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen =>
+      'ஆவணத்தைத் திறக்க கடவுச்சொல் கேட்கப்படட்டும்';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'உறுதிப்படுத்தல்';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'அனுமதிகள்';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'உரிமையாளரின் கடவுச்சொல் இல்லாமல் பின்வரும் மாற்றங்களை அனுமதிக்கவும்.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'அச்சிடுதல்';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'உரை அல்லது வரைபடங்களை நகலெடுத்தல்';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly =>
+      'பக்கங்களைச் சேர்த்தல், நீக்குதல், சுழற்றுதல்';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations =>
+      'குறிப்புகள் அல்லது கையொப்பங்களைச் சேர்த்தல்';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'ஆவணத்தை மாற்றுதல்';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling =>
+      'ஏற்கெனவே உள்ள படிவப் புலங்களை நிரப்புதல்';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'ஆவணத்தை மாற்றுதலில் குறிப்பிடுதலும் படிவங்களை நிரப்புதலும் அடங்கும் — அவையும் சேர்ந்தே அனுமதிக்கப்படும்.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'உரிமையாளரின் கடவுச்சொல்';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'பாதுகாப்பை நீக்கு';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'பயன்படுத்து';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'கடவுச்சொற்கள் பொருந்தவில்லை';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'கடவுச்சொல்லை உள்ளிடவும்';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'கட்டுப்பாடுகளுக்கு உரிமையாளரின் கடவுச்சொல் தேவை. அது இல்லாவிட்டால் யார் வேண்டுமானாலும் அவற்றை நீக்கலாம்.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      '“ஆவணத்தை மாற்றுதல்” இல்லாமல், உரிமையாளரின் கடவுச்சொல் இன்றி இந்தக் கோப்பில் மீண்டும் இங்கே கையொப்பமிட முடியாது.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'ஆவணத்தைப் பாதுகாக்கவும்…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'பாதுகாப்பு';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'இந்த ஆவணத்தின் கடவுச்சொற்களையும் அனுமதிகளையும் அமைக்கவும்';
 }

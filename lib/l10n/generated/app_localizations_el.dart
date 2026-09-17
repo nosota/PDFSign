@@ -102,77 +102,59 @@ class AppLocalizationsEl extends AppLocalizations {
   String get menuDelete => 'Διαγραφή';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Προβολή';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Εισαγάγετε αριθμό σελίδας (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Αριθμός σελίδας';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Εισαγάγετε έγκυρο αριθμό';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'Η σελίδα πρέπει να είναι μεταξύ 1 και $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Περιστροφή αριστερά';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Περιστροφή δεξιά';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Αποκοπή';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Αντιγραφή';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Επικόλληση';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Δεν προστέθηκαν εικόνες: $count — υπερβαίνουν τα $limit';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Δεν προστέθηκαν εικόνες: $count — υπερβαίνουν τα $limit pixel';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'Δεν προστέθηκαν εικόνες: $count';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'Το πρόχειρο δεν είναι διαθέσιμο';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Δεν ήταν δυνατή η προσθήκη αυτής της εικόνας';
 
   @override
   String get menuQuit => 'Τερματισμός PDFSign';
@@ -320,158 +302,162 @@ class AppLocalizationsEl extends AppLocalizations {
   String get deleteButtonTooltip => 'Διαγραφή επιλεγμένου αντικειμένου';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Αυτό το έγγραφο προστατεύεται';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody =>
+      'Εισαγάγετε τον κωδικό πρόσβασης για να το ανοίξετε.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Κωδικός πρόσβασης';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Άνοιγμα';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'Αυτό το έγγραφο δεν επιτρέπει αλλαγές';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Μπορεί να διαβαστεί και να εκτυπωθεί, αλλά ο κάτοχός του δεν επέτρεψε αλλαγές. Εισαγάγετε τον κωδικό του κατόχου για να το επεξεργαστείτε.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Εισαγωγή κωδικού κατόχου';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Κωδικός κατόχου';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Εκτύπωση…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Εκτύπωση τρέχουσας σελίδας';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Μόνο ο κάτοχος μπορεί να εκτυπώσει αυτό το έγγραφο';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed =>
+      'Αυτό το έγγραφο δεν επιτρέπει την εκτύπωση.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Δεν ήταν δυνατή η εκτύπωση του εγγράφου.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Μόνο ο κάτοχος μπορεί να αλλάξει την προστασία αυτού του εγγράφου';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Συνέχεια';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Ένα προστατευμένο έγγραφο εμφανίζεται από τη μνήμη, και αυτό καταλαμβάνει $size. Το άνοιγμά του θα χρησιμοποιήσει περίπου τόση μνήμη.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Το κοινόχρηστο αντίγραφο διατηρεί τον κωδικό του εγγράφου.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Η προστασία αυτού του εγγράφου δεν υποστηρίζεται. Το PDFSign ανοίγει έγγραφα που προστατεύονται με κωδικό, όχι με πιστοποιητικό.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Μεταφορά εμπρός';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Μεταφορά ένα επίπεδο εμπρός';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Μεταφορά ένα επίπεδο πίσω';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Μεταφορά πίσω';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Τακτοποίηση';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Αναίρεση';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Επανάληψη';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Σύρετε για αλλαγή σειράς';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Προστασία εγγράφου';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen =>
+      'Απαίτηση κωδικού για το άνοιγμα του εγγράφου';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Επιβεβαίωση';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Δικαιώματα';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Να επιτρέπονται οι παρακάτω αλλαγές χωρίς εισαγωγή του κωδικού κατόχου.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Εκτύπωση';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Αντιγραφή κειμένου ή γραφικών';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly =>
+      'Εισαγωγή, διαγραφή και περιστροφή σελίδων';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Προσθήκη σχολίων και υπογραφών';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Αλλαγή του εγγράφου';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'Συμπλήρωση υπαρχόντων πεδίων φόρμας';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Η αλλαγή του εγγράφου περιλαμβάνει τα σχόλια και τη συμπλήρωση φορμών — επιτρέπονται μαζί της.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Κωδικός κατόχου';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Αφαίρεση προστασίας';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Εφαρμογή';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Οι κωδικοί δεν ταιριάζουν';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Εισαγάγετε κωδικό';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Οι περιορισμοί απαιτούν κωδικό κατόχου. Χωρίς αυτόν, οποιοσδήποτε μπορεί να τους άρει.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Χωρίς την «Αλλαγή του εγγράφου», αυτό το αρχείο δεν θα μπορεί να υπογραφεί ξανά εδώ χωρίς τον κωδικό κατόχου.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Προστασία εγγράφου…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Προστασία';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Ορίστε τους κωδικούς και τα δικαιώματα αυτού του εγγράφου';
 }

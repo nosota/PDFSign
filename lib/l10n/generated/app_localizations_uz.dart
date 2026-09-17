@@ -102,77 +102,59 @@ class AppLocalizationsUz extends AppLocalizations {
   String get menuDelete => 'O\'chirish';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Ko‘rinish';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Sahifa raqamini kiriting (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Sahifa raqami';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'To‘g‘ri son kiriting';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'Sahifa 1 bilan $total orasida bo‘lishi kerak';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Chapga burish';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'O‘ngga burish';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Qirqib olish';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Nusxalash';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Qo‘yish';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Qo‘shilmadi: $count ta rasm $limit dan katta';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Qo‘shilmadi: $count ta rasm $limit pikseldan katta';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'Qo‘shilmadi: $count ta rasm';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'Almashish buferi mavjud emas';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Bu rasmni qo‘shib bo‘lmadi';
 
   @override
   String get menuQuit => 'PDFSign-dan chiqish';
@@ -320,158 +302,160 @@ class AppLocalizationsUz extends AppLocalizations {
   String get deleteButtonTooltip => 'Tanlangan obyektni o\'chirish';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Bu hujjat himoyalangan';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'Uni ochish uchun parolni kiriting.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Parol';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Ochish';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle =>
+      'Bu hujjat o‘zgartirishga ruxsat bermaydi';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Uni o‘qish va chop etish mumkin, ammo egasi o‘zgartirishga ruxsat bermagan. Tahrirlash uchun egasining parolini kiriting.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Egasining parolini kiritish';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Egasining paroli';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Chop etish…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Joriy sahifani chop etish';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Bu hujjatni faqat egasi chop eta oladi';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Bu hujjat chop etishga ruxsat bermaydi.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Hujjatni chop etib bo‘lmadi.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Bu hujjatning himoyasini faqat egasi o‘zgartira oladi';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Davom etish';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Himoyalangan hujjat xotiradan ko‘rsatiladi, bu hujjatning hajmi esa $size. Uni ochish taxminan shuncha xotira ishlatadi.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Ulashilgan nusxa hujjat parolini saqlab qoladi.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Bu hujjatning himoyasi qo‘llab-quvvatlanmaydi. PDFSign parol bilan himoyalangan hujjatlarni ochadi, sertifikat bilan himoyalanganlarini emas.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Eng oldinga';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Oldinga surish';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Orqaga surish';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Eng orqaga';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Tartiblash';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Bekor qilish';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Qaytarish';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Tartibni o‘zgartirish uchun torting';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Hujjatni himoyalash';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'Hujjatni ochish uchun parol so‘ralsin';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Tasdiqlash';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Ruxsatlar';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Quyidagi o‘zgarishlarga egasining parolisiz ruxsat berilsin.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Chop etish';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Matn yoki grafikadan nusxa olish';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly =>
+      'Sahifalarni qo‘shish, o‘chirish va burish';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Izoh va imzolar qo‘shish';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Hujjatni o‘zgartirish';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'Mavjud shakl maydonlarini to‘ldirish';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Hujjatni o‘zgartirish izoh qoldirish va shakllarni to‘ldirishni ham qamrab oladi — ular u bilan birga ruxsat etiladi.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Egasining paroli';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Himoyani olib tashlash';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Qo‘llash';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Parollar mos kelmadi';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Parol kiriting';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Cheklovlar uchun egasining paroli kerak. Usiz ularni istalgan kishi olib tashlashi mumkin.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      '“Hujjatni o‘zgartirish” bo‘lmasa, bu faylni egasining parolisiz bu yerda qayta imzolab bo‘lmaydi.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Hujjatni himoyalash…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Himoyalash';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Bu hujjatning parollari va ruxsatlarini belgilang';
 }

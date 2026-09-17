@@ -102,77 +102,59 @@ class AppLocalizationsTh extends AppLocalizations {
   String get menuDelete => 'ลบ';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'มุมมอง';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'ป้อนหมายเลขหน้า (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'หมายเลขหน้า';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'โปรดป้อนตัวเลขที่ถูกต้อง';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'หน้าต้องอยู่ระหว่าง 1 ถึง $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'หมุนซ้าย';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'หมุนขวา';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'ตัด';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'คัดลอก';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'วาง';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'ไม่ได้เพิ่ม: รูปภาพ $count รูปมีขนาดเกิน $limit';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'ไม่ได้เพิ่ม: รูปภาพ $count รูปมีขนาดเกิน $limit พิกเซล';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'ไม่ได้เพิ่ม: รูปภาพ $count รูป';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'ใช้คลิปบอร์ดไม่ได้';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'ไม่สามารถเพิ่มรูปภาพนี้ได้';
 
   @override
   String get menuQuit => 'ออกจาก PDFSign';
@@ -319,158 +301,156 @@ class AppLocalizationsTh extends AppLocalizations {
   String get deleteButtonTooltip => 'ลบวัตถุที่เลือก';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'เอกสารนี้ได้รับการป้องกัน';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'ป้อนรหัสผ่านเพื่อเปิดเอกสาร';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'รหัสผ่าน';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'เปิด';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'เอกสารนี้ไม่อนุญาตให้แก้ไข';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'อ่านและพิมพ์ได้ แต่เจ้าของไม่อนุญาตให้แก้ไข ป้อนรหัสผ่านของเจ้าของเพื่อแก้ไขเอกสาร';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'ป้อนรหัสผ่านของเจ้าของ';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'รหัสผ่านของเจ้าของ';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'พิมพ์…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'พิมพ์หน้าปัจจุบัน';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'เฉพาะเจ้าของเท่านั้นที่พิมพ์เอกสารนี้ได้';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'เอกสารนี้ไม่อนุญาตให้พิมพ์';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'ไม่สามารถพิมพ์เอกสารได้';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'เฉพาะเจ้าของเท่านั้นที่เปลี่ยนการป้องกันของเอกสารนี้ได้';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'ดำเนินการต่อ';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'เอกสารที่ได้รับการป้องกันจะแสดงจากหน่วยความจำ และเอกสารนี้มีขนาด $size การเปิดจะใช้หน่วยความจำประมาณเท่านี้';
   }
 
   @override
-  String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+  String get shareProtectedNotice => 'สำเนาที่แบ่งปันยังคงมีรหัสผ่านของเอกสาร';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'ไม่รองรับการป้องกันของเอกสารนี้ PDFSign เปิดเอกสารที่ป้องกันด้วยรหัสผ่าน ไม่ใช่เอกสารที่ป้องกันด้วยใบรับรอง';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'ย้ายไปด้านหน้าสุด';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'ย้ายไปด้านหน้า';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'ย้ายไปด้านหลัง';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'ย้ายไปด้านหลังสุด';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'จัดเรียง';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'เลิกทำ';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'ทำซ้ำ';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'ลากเพื่อเปลี่ยนลำดับ';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'ป้องกันเอกสาร';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'ต้องใช้รหัสผ่านเพื่อเปิดเอกสาร';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'ยืนยัน';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'สิทธิ์';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'อนุญาตการเปลี่ยนแปลงต่อไปนี้โดยไม่ต้องป้อนรหัสผ่านของเจ้าของ';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'การพิมพ์';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'การคัดลอกข้อความหรือกราฟิก';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly => 'การแทรก ลบ และหมุนหน้า';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'การเพิ่มคำอธิบายประกอบหรือลายเซ็น';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'การเปลี่ยนแปลงเอกสาร';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'การกรอกช่องแบบฟอร์มที่มีอยู่';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'การเปลี่ยนแปลงเอกสารรวมถึงการใส่คำอธิบายประกอบและการกรอกแบบฟอร์ม ซึ่งได้รับอนุญาตไปพร้อมกัน';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'รหัสผ่านของเจ้าของ';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'ลบการป้องกัน';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'ใช้';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'รหัสผ่านไม่ตรงกัน';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'ป้อนรหัสผ่าน';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'ข้อจำกัดต้องมีรหัสผ่านของเจ้าของ หากไม่มี ใครก็สามารถยกเลิกข้อจำกัดได้';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'หากไม่มี “การเปลี่ยนแปลงเอกสาร” จะไม่สามารถลงลายเซ็นไฟล์นี้ที่นี่ได้อีกหากไม่มีรหัสผ่านของเจ้าของ';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'ป้องกันเอกสาร…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'ป้องกัน';
 
   @override
-  String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+  String get protectButtonTooltip => 'ตั้งรหัสผ่านและสิทธิ์ของเอกสารนี้';
 }

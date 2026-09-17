@@ -189,7 +189,8 @@ Each window runs a **separate Flutter engine with isolated Dart memory** (ADR-00
 
 - All user-facing strings go in `lib/l10n/app_en.arb` and are consumed via `AppLocalizations`. **No hardcoded UI strings.**
 - `flutter gen-l10n` output in `lib/l10n/generated/` is generated — never edit it by hand.
-- A new locale requires: an `.arb` file **and** an entry in `supportedLocales` in `locale_preference_provider.dart`. Adding only the `.arb` leaves the translation unreachable — this is exactly why `ja`, `ko`, and `zh` are currently dead (REQUIREMENTS.md §13.5).
+- A new locale requires: an `.arb` file **and** an entry in `supportedLocales` in `locale_preference_provider.dart`. Adding only the `.arb` leaves the translation unreachable — that is what kept `ja`, `ko` and `zh` dead until 2026-09-17 (REQUIREMENTS.md §13.5, now closed).
+- **A new string goes into every `.arb` file, not only `app_en.arb`.** All 66 files carry all 137 keys as of 2026-09-17; leaving a key out of a locale shows that locale's reader an English string in the middle of their own language.
 - RTL (`ar`, `he`, `fa`) must keep working.
 - Existing hardcoded strings are listed in REQUIREMENTS.md §13.6. Fix them when you touch the surrounding code; the keys already exist.
 
@@ -263,7 +264,7 @@ Enforced bar, verified with `flutter analyze`:
 
 - **0 errors** — currently met.
 - **0 warnings** — currently met. Do not regress it.
-- Info-level lints: 1241 at last count. Not a merge gate, but do not increase the count in files you touch.
+- Info-level lints: 1245 at last count. Not a merge gate, but do not increase the count in files you touch.
 
 ### Import Convention
 

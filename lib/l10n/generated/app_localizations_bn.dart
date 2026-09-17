@@ -63,7 +63,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get ok => 'Thik ache';
 
   @override
-  String get menuFile => 'File';
+  String get menuFile => 'ফাইল';
 
   @override
   String get menuOpen => 'Khulun...';
@@ -102,77 +102,59 @@ class AppLocalizationsBn extends AppLocalizations {
   String get menuDelete => 'মুছুন';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'দৃশ্য';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'পৃষ্ঠার নম্বর লিখুন (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'পৃষ্ঠার নম্বর';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'বৈধ সংখ্যা লিখুন';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'পৃষ্ঠা 1 থেকে $total-এর মধ্যে হতে হবে';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'বাঁ দিকে ঘোরান';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'ডান দিকে ঘোরান';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'কাটুন';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'কপি করুন';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'পেস্ট করুন';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'যোগ করা হয়নি: $countটি ছবি $limit ছাড়িয়ে গেছে';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'যোগ করা হয়নি: $countটি ছবি $limit পিক্সেল ছাড়িয়ে গেছে';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'যোগ করা হয়নি: $countটি ছবি';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'ক্লিপবোর্ড পাওয়া যাচ্ছে না';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'এই ছবিটি যোগ করা যায়নি';
 
   @override
   String get menuQuit => 'PDFSign থেকে প্রস্থান';
@@ -320,158 +302,158 @@ class AppLocalizationsBn extends AppLocalizations {
   String get deleteButtonTooltip => 'নির্বাচিত বস্তু মুছুন';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'এই নথিটি সুরক্ষিত';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'এটি খুলতে পাসওয়ার্ড লিখুন।';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'পাসওয়ার্ড';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'খুলুন';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'এই নথিতে পরিবর্তনের অনুমতি নেই';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'এটি পড়া ও মুদ্রণ করা যায়, তবে মালিক পরিবর্তনের অনুমতি দেননি। সম্পাদনা করতে মালিকের পাসওয়ার্ড লিখুন।';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'মালিকের পাসওয়ার্ড লিখুন';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'মালিকের পাসওয়ার্ড';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'মুদ্রণ…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'বর্তমান পৃষ্ঠা মুদ্রণ করুন';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'এই নথিটি কেবল মালিকই মুদ্রণ করতে পারেন';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'এই নথিতে মুদ্রণের অনুমতি নেই।';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'নথিটি মুদ্রণ করা যায়নি।';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'এই নথির সুরক্ষা কেবল মালিকই পরিবর্তন করতে পারেন';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'চালিয়ে যান';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'সুরক্ষিত নথি স্মৃতি থেকে দেখানো হয়, আর এটির আকার $size। এটি খুলতে প্রায় ততটাই স্মৃতি লাগবে।';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'ভাগ করা অনুলিপিটি নথির পাসওয়ার্ড ধরে রাখে।';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'এই নথির সুরক্ষা সমর্থিত নয়। PDFSign পাসওয়ার্ড দিয়ে সুরক্ষিত নথি খোলে, সনদ দিয়ে সুরক্ষিত নথি নয়।';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'সবার সামনে আনুন';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'সামনে আনুন';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'পিছনে পাঠান';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'সবার পিছনে পাঠান';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'সাজান';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'পূর্বাবস্থায় ফিরুন';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'পুনরায় করুন';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'ক্রম বদলাতে টেনে আনুন';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'নথি সুরক্ষিত করুন';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'নথি খুলতে পাসওয়ার্ড চাওয়া হোক';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'নিশ্চিতকরণ';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'অনুমতি';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'মালিকের পাসওয়ার্ড না দিয়েই নিচের পরিবর্তনগুলির অনুমতি দিন।';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'মুদ্রণ';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'লেখা বা ছবি কপি করা';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly => 'পৃষ্ঠা যোগ, মুছে ফেলা ও ঘোরানো';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'টীকা বা স্বাক্ষর যোগ করা';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'নথি পরিবর্তন করা';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'বিদ্যমান ফর্ম ক্ষেত্র পূরণ করা';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'নথি পরিবর্তনের মধ্যে টীকা দেওয়া ও ফর্ম পূরণ করাও পড়ে — সেগুলিও একসঙ্গে অনুমোদিত হয়।';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'মালিকের পাসওয়ার্ড';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'সুরক্ষা সরান';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'প্রয়োগ করুন';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'পাসওয়ার্ড দুটি মিলছে না';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'পাসওয়ার্ড লিখুন';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'বিধিনিষেধের জন্য মালিকের পাসওয়ার্ড দরকার। সেটি ছাড়া যে কেউ সেগুলি তুলে দিতে পারে।';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      '“নথি পরিবর্তন করা” ছাড়া মালিকের পাসওয়ার্ড না দিলে এই ফাইলে এখানে আর স্বাক্ষর করা যাবে না।';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'নথি সুরক্ষিত করুন…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'সুরক্ষা';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'এই নথির পাসওয়ার্ড ও অনুমতি নির্ধারণ করুন';
 }

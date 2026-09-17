@@ -102,77 +102,59 @@ class AppLocalizationsJa extends AppLocalizations {
   String get menuDelete => '削除';
 
   @override
-  String get menuView => 'View';
+  String get menuView => '表示';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'ページ番号を入力してください（1–$total）:';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'ページ番号';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => '有効な数字を入力してください';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'ページは 1 から $total の間で指定してください';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => '左に回転';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => '右に回転';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'カット';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'コピー';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'ペースト';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return '追加されませんでした：$count 件の画像が $limit を超えています';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return '追加されませんでした：$count 件の画像が $limit ピクセルを超えています';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return '追加されませんでした：$count 件の画像';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'クリップボードを使用できません';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'この画像は追加できませんでした';
 
   @override
   String get menuQuit => 'PDFSignを終了';
@@ -318,158 +300,152 @@ class AppLocalizationsJa extends AppLocalizations {
   String get deleteButtonTooltip => '選択したオブジェクトを削除';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'この書類は保護されています';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => '開くにはパスワードを入力してください。';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'パスワード';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => '開く';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'この書類は変更を許可していません';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      '閲覧と印刷はできますが、所有者が変更を許可していません。編集するには所有者パスワードを入力してください。';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => '所有者パスワードを入力';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => '所有者パスワード';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'プリント…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => '現在のページをプリント';
 
   @override
-  String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+  String get printingIsTheOwnersTitle => 'この書類をプリントできるのは所有者だけです';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'この書類はプリントを許可していません。';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => '書類をプリントできませんでした。';
 
   @override
-  String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+  String get protectionIsTheOwnersTitle => 'この書類の保護を変更できるのは所有者だけです';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => '続ける';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return '保護された書類はメモリから表示され、この書類のサイズは $size です。開くと同程度のメモリを使用します。';
   }
 
   @override
-  String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+  String get shareProtectedNotice => '共有されたコピーは書類のパスワードを保持します。';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'この書類の保護には対応していません。PDFSign はパスワードで保護された書類を開きますが、証明書で保護された書類には対応していません。';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => '最前面へ移動';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => '前面へ移動';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => '背面へ移動';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => '最背面へ移動';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => '配置';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => '取り消す';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'やり直す';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'ドラッグして順序を変更';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => '書類を保護';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => '書類を開くときにパスワードを要求';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => '確認';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'アクセス権';
 
   @override
-  String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+  String get permissionsNote => '所有者パスワードを入力しなくても次の変更を許可します。';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'プリント';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'テキストまたはグラフィックのコピー';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly => 'ページの挿入、削除、回転';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => '注釈または署名の追加';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => '書類の変更';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => '既存のフォームフィールドへの入力';
 
   @override
-  String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+  String get changingContentIncludes => '書類の変更には注釈とフォームへの入力が含まれ、これらも併せて許可されます。';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => '所有者パスワード';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => '保護を解除';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => '適用';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'パスワードが一致しません';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'パスワードを入力してください';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      '制限には所有者パスワードが必要です。パスワードがなければ、誰でも制限を解除できます。';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      '「書類の変更」を許可しない場合、所有者パスワードなしでこのファイルにここで再び署名することはできません。';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => '書類を保護…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => '保護';
 
   @override
-  String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+  String get protectButtonTooltip => 'この書類のパスワードとアクセス権を設定します';
 }

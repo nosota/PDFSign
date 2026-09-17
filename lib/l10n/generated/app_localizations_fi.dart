@@ -120,48 +120,48 @@ class AppLocalizationsFi extends AppLocalizations {
   String get menuDelete => 'Poista';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Näytä';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Anna sivunumero (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Sivunumero';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Anna kelvollinen luku';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'Sivun on oltava välillä 1–$total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Käännä vasemmalle';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Käännä oikealle';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Leikkaa';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Kopioi';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Sijoita';
 
   @override
   String imagesTooLarge(int count, String limit) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images are',
-      one: 'image is',
+      other: 'kuvaa on',
+      one: 'kuva on',
     );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Ei lisätty: $count $_temp0 suurempi kuin $limit';
   }
 
   @override
@@ -169,10 +169,10 @@ class AppLocalizationsFi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images are',
-      one: 'image is',
+      other: 'kuvaa on',
+      one: 'kuva on',
     );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Ei lisätty: $count $_temp0 suurempi kuin $limit kuvapistettä';
   }
 
   @override
@@ -180,17 +180,17 @@ class AppLocalizationsFi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images',
-      one: 'image',
+      other: 'kuvaa',
+      one: 'kuva',
     );
-    return 'Not added: $count $_temp0';
+    return 'Ei lisätty: $count $_temp0';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'Leikepöytä ei ole käytettävissä';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Kuvaa ei voitu lisätä';
 
   @override
   String get menuQuit => 'Lopeta PDFSign';
@@ -338,158 +338,161 @@ class AppLocalizationsFi extends AppLocalizations {
   String get deleteButtonTooltip => 'Poista valittu kohde';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Tämä dokumentti on suojattu';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'Avaa se antamalla salasana.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Salasana';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Avaa';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'Tämä dokumentti ei salli muutoksia';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Sitä voi lukea ja tulostaa, mutta omistaja ei ole sallinut muutoksia. Anna omistajan salasana, jotta voit muokata sitä.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Anna omistajan salasana';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Omistajan salasana';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Tulosta…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Tulosta nykyinen sivu';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Vain omistaja voi tulostaa tämän dokumentin';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Tämä dokumentti ei salli tulostamista.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Dokumenttia ei voitu tulostaa.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Vain omistaja voi muuttaa tämän dokumentin suojausta';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Jatka';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Suojattu dokumentti näytetään muistista, ja tämän koko on $size. Sen avaaminen käyttää suunnilleen saman verran muistia.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Jaettu kopio säilyttää dokumentin salasanan.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Tämän dokumentin suojausta ei tueta. PDFSign avaa salasanalla suojattuja dokumentteja, ei varmenteella suojattuja.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Siirrä eteen';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Siirrä eteenpäin';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Siirrä taaksepäin';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Siirrä taakse';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Järjestä';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Kumoa';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Tee uudelleen';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Muuta järjestystä vetämällä';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Suojaa dokumentti';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'Vaadi salasana dokumentin avaamiseen';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Vahvistus';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Käyttöoikeudet';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Salli seuraavat muutokset ilman omistajan salasanaa.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Tulostus';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Tekstin tai grafiikan kopiointi';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly =>
+      'Sivujen lisääminen, poistaminen ja kääntäminen';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations =>
+      'Merkintöjen ja allekirjoitusten lisääminen';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Dokumentin muuttaminen';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling =>
+      'Olemassa olevien lomakekenttien täyttäminen';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Dokumentin muuttaminen kattaa merkinnät ja lomakkeiden täyttämisen — ne sallitaan sen mukana.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Omistajan salasana';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Poista suojaus';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Käytä';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Salasanat eivät täsmää';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Anna salasana';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Rajoitukset vaativat omistajan salasanan. Ilman sitä kuka tahansa voi poistaa ne.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Ilman kohtaa ”Dokumentin muuttaminen” tätä tiedostoa ei voi allekirjoittaa täällä uudelleen ilman omistajan salasanaa.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Suojaa dokumentti…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Suojaa';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Määritä tämän dokumentin salasanat ja käyttöoikeudet';
 }

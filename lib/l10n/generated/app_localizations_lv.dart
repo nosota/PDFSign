@@ -102,77 +102,59 @@ class AppLocalizationsLv extends AppLocalizations {
   String get menuDelete => 'Dzēst';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Skats';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Ievadiet lappuses numuru (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Lappuses numurs';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Ievadiet derīgu skaitli';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'Lappusei jābūt no 1 līdz $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Pagriezt pa kreisi';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Pagriezt pa labi';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Izgriezt';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Kopēt';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Ielīmēt';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Nav pievienoti attēli: $count — pārsniedz $limit';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Nav pievienoti attēli: $count — pārsniedz $limit pikseļu';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'Nav pievienoti attēli: $count';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'Starpliktuve nav pieejama';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Šo attēlu neizdevās pievienot';
 
   @override
   String get menuQuit => 'Iziet no PDFSign';
@@ -319,158 +301,159 @@ class AppLocalizationsLv extends AppLocalizations {
   String get deleteButtonTooltip => 'Dzēst atlasīto objektu';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Šis dokuments ir aizsargāts';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'Ievadiet paroli, lai to atvērtu.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Parole';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Atvērt';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'Šis dokuments neļauj veikt izmaiņas';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'To var lasīt un drukāt, taču īpašnieks nav atļāvis izmaiņas. Ievadiet īpašnieka paroli, lai to rediģētu.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Ievadiet īpašnieka paroli';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Īpašnieka parole';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Drukāt…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Drukāt pašreizējo lappusi';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Šo dokumentu drīkst drukāt tikai īpašnieks';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Šis dokuments neļauj drukāt.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Dokumentu neizdevās izdrukāt.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Šī dokumenta aizsardzību drīkst mainīt tikai īpašnieks';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Turpināt';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Aizsargāts dokuments tiek rādīts no atmiņas, un šis aizņem $size. Tā atvēršana izmantos aptuveni tikpat.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Kopīgotā kopija saglabā dokumenta paroli.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Šī dokumenta aizsardzība netiek atbalstīta. PDFSign atver ar paroli aizsargātus dokumentus, nevis tos, kas aizsargāti ar sertifikātu.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Novietot priekšplānā';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Pārvietot uz priekšu';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Pārvietot atpakaļ';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Novietot fonā';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Kārtot';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Atsaukt';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Atcelt atsaukšanu';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Velciet, lai mainītu secību';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Dokumenta aizsardzība';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'Pieprasīt paroli dokumenta atvēršanai';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Apstiprinājums';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Atļaujas';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Atļaut tālāk norādītās izmaiņas, neievadot īpašnieka paroli.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Drukāšana';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Teksta vai grafikas kopēšana';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly =>
+      'Lappušu ievietošana, dzēšana un pagriešana';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Anotāciju un parakstu pievienošana';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Dokumenta mainīšana';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'Esošo veidlapu lauku aizpildīšana';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Dokumenta mainīšana ietver anotēšanu un veidlapu aizpildīšanu — tās tiek atļautas kopā ar to.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Īpašnieka parole';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Noņemt aizsardzību';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Lietot';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Paroles nesakrīt';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Ievadiet paroli';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Ierobežojumiem nepieciešama īpašnieka parole. Bez tās tos var noņemt jebkurš.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Bez „Dokumenta mainīšanas“ šo failu šeit nevarēs parakstīt vēlreiz bez īpašnieka paroles.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Aizsargāt dokumentu…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Aizsargāt';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Iestatiet šī dokumenta paroles un atļaujas';
 }

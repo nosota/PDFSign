@@ -102,77 +102,59 @@ class AppLocalizationsAz extends AppLocalizations {
   String get menuDelete => 'Sil';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Görünüş';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Səhifə nömrəsini daxil edin (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Səhifə nömrəsi';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Düzgün rəqəm daxil edin';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'Səhifə 1 ilə $total arasında olmalıdır';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Sola çevir';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Sağa çevir';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Kəs';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Kopyala';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Yapışdır';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Əlavə edilmədi: $count şəkil $limit həddini aşır';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Əlavə edilmədi: $count şəkil $limit piksel həddini aşır';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'Əlavə edilmədi: $count şəkil';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'Mübadilə buferi əlçatan deyil';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Bu şəkil əlavə edilə bilmədi';
 
   @override
   String get menuQuit => 'PDFSign-dan çıx';
@@ -320,158 +302,159 @@ class AppLocalizationsAz extends AppLocalizations {
   String get deleteButtonTooltip => 'Seçilmiş obyekti sil';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Bu sənəd qorunur';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'Onu açmaq üçün parolu daxil edin.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Parol';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Aç';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'Bu sənəd dəyişikliyə icazə vermir';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Onu oxumaq və çap etmək olar, lakin sahibi dəyişikliyə icazə verməyib. Redaktə etmək üçün sahib parolunu daxil edin.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Sahib parolunu daxil et';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Sahib parolu';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Çap et…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Cari səhifəni çap et';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Bu sənədi yalnız sahibi çap edə bilər';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Bu sənəd çapa icazə vermir.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Sənədi çap etmək mümkün olmadı.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Bu sənədin qorunmasını yalnız sahibi dəyişə bilər';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Davam et';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Qorunan sənəd yaddaşdan göstərilir, bunun ölçüsü isə $size-dır. Onu açmaq təxminən bir o qədər yaddaş tutacaq.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Paylaşılan nüsxə sənədin parolunu saxlayır.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Bu sənədin qorunması dəstəklənmir. PDFSign parolla qorunan sənədləri açır, sertifikatla qorunanları yox.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Ən önə gətir';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Önə gətir';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Arxaya göndər';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Ən arxaya göndər';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Düz';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Geri al';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Təkrarla';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Sıranı dəyişmək üçün dartın';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Sənədin qorunması';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'Sənədi açmaq üçün parol tələb olunsun';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Təsdiq';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'İcazələr';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Aşağıdakı dəyişikliklərə sahib parolu daxil edilmədən icazə verilsin.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Çap';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Mətnin və ya qrafikanın kopyalanması';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly =>
+      'Səhifələrin əlavə edilməsi, silinməsi və çevrilməsi';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Qeydlərin və imzaların əlavə edilməsi';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Sənədin dəyişdirilməsi';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'Mövcud forma sahələrinin doldurulması';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Sənədin dəyişdirilməsi qeyd etməyi və formaların doldurulmasını da əhatə edir — onlar bununla birlikdə icazəlidir.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Sahib parolu';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Qorunmanı sil';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Tətbiq et';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Parollar uyğun gəlmir';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Parol daxil edin';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Məhdudiyyətlər üçün sahib parolu lazımdır. Onsuz onları istənilən şəxs götürə bilər.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      '“Sənədin dəyişdirilməsi” olmadan bu fayl sahib parolu daxil edilmədən burada yenidən imzalana bilməz.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Sənədi qoru…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Qoru';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Bu sənədin parollarını və icazələrini təyin edin';
 }

@@ -102,77 +102,60 @@ class AppLocalizationsSq extends AppLocalizations {
   String get menuDelete => 'Fshi';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Pamja';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Shkruani numrin e faqes (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Numri i faqes';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Shkruani një numër të vlefshëm';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'Faqja duhet të jetë midis 1 dhe $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Rrotullo majtas';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Rrotullo djathtas';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Pri';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Kopjo';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Ngjit';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Nuk u shtuan imazhe: $count — tejkalojnë $limit';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Nuk u shtuan imazhe: $count — tejkalojnë $limit piksel';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'Nuk u shtuan imazhe: $count';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable =>
+      'Kujtesa e fragmenteve nuk është e disponueshme';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Ky imazh nuk mund të shtohej';
 
   @override
   String get menuQuit => 'Dil nga PDFSign';
@@ -320,158 +303,160 @@ class AppLocalizationsSq extends AppLocalizations {
   String get deleteButtonTooltip => 'Fshi objektin e zgjedhur';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Ky dokument është i mbrojtur';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'Shkruani fjalëkalimin për ta hapur.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Fjalëkalimi';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Hap';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'Ky dokument nuk lejon ndryshime';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Mund të lexohet dhe të printohet, por pronari nuk ka lejuar ndryshime. Shkruani fjalëkalimin e pronarit për ta redaktuar.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Shkruani fjalëkalimin e pronarit';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Fjalëkalimi i pronarit';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Printo…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Printo faqen aktuale';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Vetëm pronari mund ta printojë këtë dokument';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Ky dokument nuk lejon printimin.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Dokumenti nuk mund të printohej.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Vetëm pronari mund të ndryshojë mbrojtjen e këtij dokumenti';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Vazhdo';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Një dokument i mbrojtur shfaqet nga memoria dhe ky zë $size. Hapja e tij do të përdorë përafërsisht po aq.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Kopja e ndarë ruan fjalëkalimin e dokumentit.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Mbrojtja e këtij dokumenti nuk mbështetet. PDFSign hap dokumente të mbrojtura me fjalëkalim, jo ato të mbrojtura me certifikatë.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Sill përpara të gjithave';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Sill përpara';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Dërgo prapa';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Dërgo prapa të gjithave';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Rendit';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Zhbëj';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Ribëj';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Tërhiqni për të ndryshuar radhën';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Mbrojtja e dokumentit';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen =>
+      'Kërko fjalëkalim për hapjen e dokumentit';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Konfirmimi';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Lejet';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Lejo ndryshimet e mëposhtme pa shkruar fjalëkalimin e pronarit.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Printimi';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Kopjimi i tekstit ose i grafikës';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly => 'Futja, fshirja dhe rrotullimi i faqeve';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Shtimi i shënimeve dhe i nënshkrimeve';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Ndryshimi i dokumentit';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling =>
+      'Plotësimi i fushave ekzistuese të formularëve';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Ndryshimi i dokumentit përfshin shënimet dhe plotësimin e formularëve — ato lejohen bashkë me të.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Fjalëkalimi i pronarit';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Hiq mbrojtjen';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Zbato';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Fjalëkalimet nuk përputhen';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Shkruani një fjalëkalim';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Kufizimet kërkojnë një fjalëkalim pronari. Pa të, kushdo mund t’i heqë.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Pa „Ndryshimin e dokumentit”, ky skedar nuk do të mund të nënshkruhet përsëri këtu pa fjalëkalimin e pronarit.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Mbro dokumentin…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Mbro';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Cakto fjalëkalimet dhe lejet e këtij dokumenti';
 }

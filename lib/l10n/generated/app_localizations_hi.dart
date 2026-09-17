@@ -63,7 +63,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get ok => 'Theek hai';
 
   @override
-  String get menuFile => 'File';
+  String get menuFile => 'फ़ाइल';
 
   @override
   String get menuOpen => 'Kholein...';
@@ -102,77 +102,59 @@ class AppLocalizationsHi extends AppLocalizations {
   String get menuDelete => 'हटाएं';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'दृश्य';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'पृष्ठ संख्या दर्ज करें (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'पृष्ठ संख्या';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'मान्य संख्या दर्ज करें';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'पृष्ठ 1 और $total के बीच होना चाहिए';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'बाएँ घुमाएँ';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'दाएँ घुमाएँ';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'काटें';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'कॉपी करें';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'पेस्ट करें';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'नहीं जोड़ी गईं: $count छवियाँ $limit से बड़ी हैं';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'नहीं जोड़ी गईं: $count छवियाँ $limit पिक्सेल से बड़ी हैं';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'नहीं जोड़ी गईं: $count छवियाँ';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'क्लिपबोर्ड उपलब्ध नहीं है';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'यह छवि नहीं जोड़ी जा सकी';
 
   @override
   String get menuQuit => 'PDFSign से बाहर निकलें';
@@ -230,7 +212,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get documentSaved => 'Saheja gaya';
 
   @override
-  String get menuSettings => 'Settings...';
+  String get menuSettings => 'सेटिंग्ज़...';
 
   @override
   String get menuWindow => 'विंडो';
@@ -245,7 +227,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get menuBringAllToFront => 'सभी को आगे लाएं';
 
   @override
-  String get settingsTitle => 'Settings';
+  String get settingsTitle => 'सेटिंग्ज़';
 
   @override
   String get settingsLanguage => 'Bhasha';
@@ -320,158 +302,159 @@ class AppLocalizationsHi extends AppLocalizations {
   String get deleteButtonTooltip => 'चयनित ऑब्जेक्ट हटाएं';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'यह दस्तावेज़ सुरक्षित है';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'इसे खोलने के लिए पासवर्ड दर्ज करें।';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'पासवर्ड';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'खोलें';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'यह दस्तावेज़ बदलाव की अनुमति नहीं देता';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'इसे पढ़ा और मुद्रित किया जा सकता है, किंतु स्वामी ने बदलाव की अनुमति नहीं दी है। संपादित करने के लिए स्वामी का पासवर्ड दर्ज करें।';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'स्वामी का पासवर्ड दर्ज करें';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'स्वामी का पासवर्ड';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'प्रिंट करें…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'वर्तमान पृष्ठ प्रिंट करें';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'इस दस्तावेज़ को केवल स्वामी ही प्रिंट कर सकता है';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed =>
+      'यह दस्तावेज़ प्रिंट करने की अनुमति नहीं देता।';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'दस्तावेज़ प्रिंट नहीं किया जा सका।';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'इस दस्तावेज़ की सुरक्षा केवल स्वामी ही बदल सकता है';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'जारी रखें';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'सुरक्षित दस्तावेज़ स्मृति से दिखाया जाता है, और इसका आकार $size है। इसे खोलने में लगभग उतनी ही स्मृति लगेगी।';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'साझा की गई प्रति दस्तावेज़ का पासवर्ड बनाए रखती है।';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'इस दस्तावेज़ की सुरक्षा समर्थित नहीं है। PDFSign पासवर्ड से सुरक्षित दस्तावेज़ खोलता है, प्रमाणपत्र से सुरक्षित नहीं।';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'सबसे आगे लाएँ';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'आगे लाएँ';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'पीछे भेजें';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'सबसे पीछे भेजें';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'क्रम';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'पूर्ववत करें';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'पुनः करें';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'क्रम बदलने के लिए खींचें';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'दस्तावेज़ सुरक्षित करें';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'दस्तावेज़ खोलने के लिए पासवर्ड माँगें';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'पुष्टि';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'अनुमतियाँ';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'स्वामी का पासवर्ड दर्ज किए बिना निम्नलिखित बदलावों की अनुमति दें।';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'प्रिंट करना';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'पाठ या ग्राफ़िक्स की कॉपी करना';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly => 'पृष्ठ जोड़ना, हटाना और घुमाना';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'टिप्पणियाँ या हस्ताक्षर जोड़ना';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'दस्तावेज़ बदलना';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'मौजूदा फ़ॉर्म फ़ील्ड भरना';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'दस्तावेज़ बदलने में टिप्पणी करना और फ़ॉर्म भरना शामिल है — ये उसके साथ ही अनुमत हो जाते हैं।';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'स्वामी का पासवर्ड';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'सुरक्षा हटाएँ';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'लागू करें';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'पासवर्ड मेल नहीं खाते';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'पासवर्ड दर्ज करें';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'प्रतिबंधों के लिए स्वामी का पासवर्ड आवश्यक है। उसके बिना कोई भी उन्हें हटा सकता है।';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      '“दस्तावेज़ बदलना” के बिना, स्वामी के पासवर्ड के बगैर इस फ़ाइल पर यहाँ दोबारा हस्ताक्षर नहीं किए जा सकेंगे।';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'दस्तावेज़ सुरक्षित करें…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'सुरक्षित करें';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'इस दस्तावेज़ के पासवर्ड और अनुमतियाँ निर्धारित करें';
 }

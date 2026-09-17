@@ -102,77 +102,59 @@ class AppLocalizationsKm extends AppLocalizations {
   String get menuDelete => 'លុប';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'ទិដ្ឋភាព';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'បញ្ចូលលេខទំព័រ (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'លេខទំព័រ';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'សូមបញ្ចូលលេខត្រឹមត្រូវ';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'ទំព័រត្រូវស្ថិតនៅចន្លោះ 1 និង $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'បង្វិលទៅឆ្វេង';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'បង្វិលទៅស្តាំ';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'កាត់';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'ចម្លង';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'បិទភ្ជាប់';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'មិនបានបន្ថែម៖ រូបភាព $count ធំជាង $limit';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'មិនបានបន្ថែម៖ រូបភាព $count ធំជាង $limit ភីកសែល';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'មិនបានបន្ថែម៖ រូបភាព $count';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'មិនអាចប្រើក្តារតម្បៀតខ្ទាស់បានទេ';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'មិនអាចបន្ថែមរូបភាពនេះបានទេ';
 
   @override
   String get menuQuit => 'ចាកចេញពី PDFSign';
@@ -319,158 +301,157 @@ class AppLocalizationsKm extends AppLocalizations {
   String get deleteButtonTooltip => 'លុបវត្ថុដែលបានជ្រើសរើស';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'ឯកសារនេះត្រូវបានការពារ';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'សូមបញ្ចូលពាក្យសម្ងាត់ដើម្បីបើកវា។';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'ពាក្យសម្ងាត់';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'បើក';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'ឯកសារនេះមិនអនុញ្ញាតឱ្យកែប្រែទេ';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'អាចអាននិងបោះពុម្ពបាន ប៉ុន្តែម្ចាស់មិនបានអនុញ្ញាតឱ្យកែប្រែទេ។ សូមបញ្ចូលពាក្យសម្ងាត់របស់ម្ចាស់ដើម្បីកែសម្រួល។';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'បញ្ចូលពាក្យសម្ងាត់របស់ម្ចាស់';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'ពាក្យសម្ងាត់របស់ម្ចាស់';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'បោះពុម្ព…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'បោះពុម្ពទំព័រនេះ';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'មានតែម្ចាស់ប៉ុណ្ណោះដែលអាចបោះពុម្ពឯកសារនេះ';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'ឯកសារនេះមិនអនុញ្ញាតឱ្យបោះពុម្ពទេ។';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'មិនអាចបោះពុម្ពឯកសារបានទេ។';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'មានតែម្ចាស់ប៉ុណ្ណោះដែលអាចប្ដូរការការពាររបស់ឯកសារនេះ';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'បន្ត';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'ឯកសារដែលបានការពារត្រូវបង្ហាញពីអង្គចងចាំ ហើយឯកសារនេះមានទំហំ $size។ ការបើកវានឹងប្រើអង្គចងចាំប្រហែលប៉ុណ្ណឹង។';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'ច្បាប់ចម្លងដែលបានចែករំលែករក្សាពាក្យសម្ងាត់របស់ឯកសារ។';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'ការការពាររបស់ឯកសារនេះមិនត្រូវបានគាំទ្រទេ។ PDFSign បើកឯកសារដែលការពារដោយពាក្យសម្ងាត់ មិនមែនឯកសារដែលការពារដោយវិញ្ញាបនបត្រទេ។';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'នាំទៅមុខគេ';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'នាំទៅមុខ';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'បញ្ជូនទៅក្រោយ';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'បញ្ជូនទៅក្រោយគេ';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'រៀបចំ';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'មិនធ្វើវិញ';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'ធ្វើវិញ';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'អូសដើម្បីប្ដូរលំដាប់';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'ការពារឯកសារ';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'ទាមទារពាក្យសម្ងាត់ដើម្បីបើកឯកសារ';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'បញ្ជាក់';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'សិទ្ធិ';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'អនុញ្ញាតការកែប្រែខាងក្រោមដោយមិនបាច់បញ្ចូលពាក្យសម្ងាត់របស់ម្ចាស់។';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'ការបោះពុម្ព';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'ការចម្លងអត្ថបទ ឬក្រាហ្វិក';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly => 'ការបញ្ចូល លុប និងបង្វិលទំព័រ';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'ការបន្ថែមចំណាំ ឬហត្ថលេខា';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'ការកែប្រែឯកសារ';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'ការបំពេញវាលទម្រង់ដែលមានស្រាប់';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'ការកែប្រែឯកសាររួមបញ្ចូលការចំណាំ និងការបំពេញទម្រង់ — ទាំងនោះត្រូវបានអនុញ្ញាតជាមួយវា។';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'ពាក្យសម្ងាត់របស់ម្ចាស់';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'ដកការការពារចេញ';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'អនុវត្ត';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'ពាក្យសម្ងាត់មិនត្រូវគ្នាទេ';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'សូមបញ្ចូលពាក្យសម្ងាត់';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'ការរឹតបន្តឹងត្រូវការពាក្យសម្ងាត់របស់ម្ចាស់។ បើគ្មានវា អ្នកណាក៏អាចដករបស់ទាំងនោះចេញបាន។';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'បើគ្មាន «ការកែប្រែឯកសារ» ទេ ឯកសារនេះនឹងមិនអាចចុះហត្ថលេខាឡើងវិញនៅទីនេះបានទេ បើគ្មានពាក្យសម្ងាត់របស់ម្ចាស់។';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'ការពារឯកសារ…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'ការពារ';
 
   @override
-  String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+  String get protectButtonTooltip => 'កំណត់ពាក្យសម្ងាត់ និងសិទ្ធិរបស់ឯកសារនេះ';
 }

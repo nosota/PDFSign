@@ -102,77 +102,59 @@ class AppLocalizationsLt extends AppLocalizations {
   String get menuDelete => 'Ištrinti';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Rodinys';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Įveskite puslapio numerį (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Puslapio numeris';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Įveskite tinkamą skaičių';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'Puslapis turi būti nuo 1 iki $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Pasukti kairėn';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Pasukti dešinėn';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Iškirpti';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Kopijuoti';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Įklijuoti';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Nepridėta paveikslėlių: $count — viršija $limit';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Nepridėta paveikslėlių: $count — viršija $limit pikselių';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'Nepridėta paveikslėlių: $count';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'Iškarpinė nepasiekiama';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Šio paveikslėlio nepavyko pridėti';
 
   @override
   String get menuQuit => 'Išeiti iš PDFSign';
@@ -320,158 +302,161 @@ class AppLocalizationsLt extends AppLocalizations {
   String get deleteButtonTooltip => 'Ištrinti pasirinktą objektą';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Šis dokumentas yra apsaugotas';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody =>
+      'Įveskite slaptažodį, kad jį atvertumėte.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Slaptažodis';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Atverti';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'Šis dokumentas neleidžia keisti';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Jį galima skaityti ir spausdinti, bet savininkas neleido jo keisti. Įveskite savininko slaptažodį, kad galėtumėte jį redaguoti.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Įveskite savininko slaptažodį';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Savininko slaptažodis';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Spausdinti…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Spausdinti esamą puslapį';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Šį dokumentą spausdinti gali tik savininkas';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Šis dokumentas neleidžia spausdinti.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Dokumento nepavyko išspausdinti.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Šio dokumento apsaugą keisti gali tik savininkas';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Tęsti';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Apsaugotas dokumentas rodomas iš atminties, o šis užima $size. Jį atveriant bus panaudota maždaug tiek pat.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Bendrinama kopija išsaugo dokumento slaptažodį.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Šio dokumento apsauga nepalaikoma. PDFSign atveria slaptažodžiu apsaugotus dokumentus, o ne apsaugotus liudijimu.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Perkelti į priekį';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Pastumti pirmyn';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Pastumti atgal';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Perkelti į galą';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Išdėstyti';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Atšaukti';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Grąžinti';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Vilkite, kad pakeistumėte tvarką';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Dokumento apsauga';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen =>
+      'Reikalauti slaptažodžio dokumentui atverti';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Patvirtinimas';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Leidimai';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Leisti toliau nurodytus keitimus neįvedus savininko slaptažodžio.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Spausdinimas';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Teksto ar grafikos kopijavimas';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly =>
+      'Puslapių įterpimas, šalinimas ir sukimas';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Anotacijų ir parašų pridėjimas';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Dokumento keitimas';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'Esamų formos laukų pildymas';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Dokumento keitimas apima anotavimą ir formų pildymą — jie leidžiami kartu su juo.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Savininko slaptažodis';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Pašalinti apsaugą';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Taikyti';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Slaptažodžiai nesutampa';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Įveskite slaptažodį';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Apribojimams reikia savininko slaptažodžio. Be jo juos gali panaikinti bet kas.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Be „Dokumento keitimo“ šio failo čia nebus galima pasirašyti iš naujo be savininko slaptažodžio.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Apsaugoti dokumentą…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Apsaugoti';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Nustatykite šio dokumento slaptažodžius ir leidimus';
 }

@@ -120,48 +120,48 @@ class AppLocalizationsNb extends AppLocalizations {
   String get menuDelete => 'Slett';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Vis';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Skriv inn sidetall (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Sidetall';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Skriv inn et gyldig tall';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'Siden må være mellom 1 og $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Roter mot venstre';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Roter mot høyre';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Klipp ut';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Kopier';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Lim inn';
 
   @override
   String imagesTooLarge(int count, String limit) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images are',
-      one: 'image is',
+      other: 'bilder er',
+      one: 'bilde er',
     );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Ikke lagt til: $count $_temp0 større enn $limit';
   }
 
   @override
@@ -169,10 +169,10 @@ class AppLocalizationsNb extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images are',
-      one: 'image is',
+      other: 'bilder er',
+      one: 'bilde er',
     );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Ikke lagt til: $count $_temp0 større enn $limit piksler';
   }
 
   @override
@@ -180,17 +180,17 @@ class AppLocalizationsNb extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'images',
-      one: 'image',
+      other: 'bilder',
+      one: 'bilde',
     );
-    return 'Not added: $count $_temp0';
+    return 'Ikke lagt til: $count $_temp0';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'Utklippstavlen er ikke tilgjengelig';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Bildet kunne ikke legges til';
 
   @override
   String get menuQuit => 'Avslutt PDFSign';
@@ -338,158 +338,160 @@ class AppLocalizationsNb extends AppLocalizations {
   String get deleteButtonTooltip => 'Slett valgt objekt';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Dette dokumentet er beskyttet';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'Skriv inn passordet for å åpne det.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Passord';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Åpne';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle =>
+      'Dette dokumentet tillater ikke endringer';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Det kan leses og skrives ut, men eieren har ikke tillatt endringer. Skriv inn eierpassordet for å redigere det.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Skriv inn eierpassordet';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Eierpassord';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Skriv ut…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Skriv ut gjeldende side';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Bare eieren kan skrive ut dette dokumentet';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Dette dokumentet tillater ikke utskrift.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Dokumentet kunne ikke skrives ut.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Bare eieren kan endre beskyttelsen av dette dokumentet';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Fortsett';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Et beskyttet dokument vises fra minnet, og dette er $size stort. Å åpne det bruker omtrent like mye minne.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Den delte kopien beholder passordet til dokumentet.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Beskyttelsen av dette dokumentet støttes ikke. PDFSign åpner dokumenter som er beskyttet med passord, ikke de som er beskyttet med et sertifikat.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Plasser forrest';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Flytt framover';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Flytt bakover';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Plasser bakerst';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Ordne';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Angre';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Gjør om';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Dra for å endre rekkefølgen';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Beskytt dokument';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'Krev passord for å åpne dokumentet';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Bekreftelse';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Tillatelser';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Tillat følgende endringer uten at eierpassordet skrives inn.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Utskrift';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Kopiering av tekst eller grafikk';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly =>
+      'Innsetting, sletting og rotering av sider';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Tillegg av merknader og signaturer';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Endring av dokumentet';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'Utfylling av eksisterende skjemafelt';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Endring av dokumentet omfatter merknader og utfylling av skjemaer — de tillates sammen med den.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Eierpassord';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Fjern beskyttelsen';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Bruk';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Passordene er ikke like';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Skriv inn et passord';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Begrensninger krever et eierpassord. Uten det kan hvem som helst fjerne dem.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Uten «Endring av dokumentet» kan ikke denne filen signeres her igjen uten eierpassordet.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Beskytt dokument…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Beskytt';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Angi passord og tillatelser for dette dokumentet';
 }

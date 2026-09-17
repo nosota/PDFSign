@@ -3,6 +3,16 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Added
+
+- Japanese, Korean, Chinese (Simplified) and Chinese (Traditional) can be chosen in Settings. The translations existed but were not in the list of supported languages, so those readers saw English
+
+### Changed
+
+- Every language is complete. The strings added by the protected-document, restacking, undo and printing work — and fifteen that had been left in English since earlier releases, among them the View menu, Go to Page, the rotations, cut, copy and paste — are now translated in all 65 languages
+
 ## [1.5.0] — 2026-09-17
 
 ### Added

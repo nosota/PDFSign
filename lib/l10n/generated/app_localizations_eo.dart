@@ -102,77 +102,59 @@ class AppLocalizationsEo extends AppLocalizations {
   String get menuDelete => 'Forigi';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Vido';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Enigu paĝnumeron (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Paĝnumero';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Enigu validan numeron';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'La paĝo devas esti inter 1 kaj $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Turni maldekstren';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Turni dekstren';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Eltondi';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Kopii';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Alglui';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Ne aldonitaj: $count bildoj superas $limit';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Ne aldonitaj: $count bildoj superas $limit rastrumerojn';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'Ne aldonitaj: $count bildoj';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'La tondujo ne disponeblas';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Tiun bildon ne eblis aldoni';
 
   @override
   String get menuQuit => 'Eliri PDFSign';
@@ -320,158 +302,159 @@ class AppLocalizationsEo extends AppLocalizations {
   String get deleteButtonTooltip => 'Forigi elektitan objekton';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Ĉi tiu dokumento estas protektita';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'Enigu la pasvorton por malfermi ĝin.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Pasvorto';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Malfermi';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'Ĉi tiu dokumento ne permesas ŝanĝojn';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Ĝin eblas legi kaj presi, sed ĝia posedanto ne permesis ŝanĝojn. Enigu la pasvorton de la posedanto por redakti ĝin.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Enigu la pasvorton de la posedanto';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Pasvorto de la posedanto';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Presi…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Presi la nunan paĝon';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Nur la posedanto rajtas presi ĉi tiun dokumenton';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Ĉi tiu dokumento ne permesas presadon.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'La dokumenton ne eblis presi.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Nur la posedanto rajtas ŝanĝi la protekton de ĉi tiu dokumento';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Daŭrigi';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Protektita dokumento estas montrata el la memoro, kaj ĉi tiu okupas $size. Malfermi ĝin uzos proksimume same multe.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'La kunhavigita kopio konservas la pasvorton de la dokumento.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'La protekto de ĉi tiu dokumento ne estas subtenata. PDFSign malfermas dokumentojn protektitajn per pasvorto, ne tiujn protektitajn per atestilo.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Meti plej antaŭen';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Movi antaŭen';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Movi malantaŭen';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Meti plej malantaŭen';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Aranĝi';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Malfari';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Refari';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Trenu por ŝanĝi la ordon';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Protekti dokumenton';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen =>
+      'Postuli pasvorton por malfermi la dokumenton';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Konfirmo';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Permesoj';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Permesi la jenajn ŝanĝojn sen enigi la pasvorton de la posedanto.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Presado';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Kopiado de teksto aŭ grafikaĵoj';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly => 'Enmeto, forigo kaj turnado de paĝoj';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Aldono de notoj aŭ subskriboj';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Ŝanĝado de la dokumento';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'Plenigo de ekzistantaj formulaj kampoj';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Ŝanĝado de la dokumento inkluzivas notadon kaj plenigon de formularoj — ili estas permesataj kune kun ĝi.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Pasvorto de la posedanto';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Forigi la protekton';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Apliki';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'La pasvortoj ne kongruas';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Enigu pasvorton';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Limigoj postulas pasvorton de la posedanto. Sen ĝi iu ajn povas forigi ilin.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Sen „Ŝanĝado de la dokumento“ ĉi tiu dosiero ne plu subskribeblos ĉi tie sen la pasvorto de la posedanto.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Protekti dokumenton…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Protekti';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Agordu la pasvortojn kaj permesojn de ĉi tiu dokumento';
 }

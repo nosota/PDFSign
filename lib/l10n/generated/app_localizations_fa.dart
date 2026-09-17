@@ -102,77 +102,59 @@ class AppLocalizationsFa extends AppLocalizations {
   String get menuDelete => 'حذف';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'نما';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'شمارهٔ صفحه را وارد کنید (۱–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'شمارهٔ صفحه';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'عدد معتبری وارد کنید';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'صفحه باید بین ۱ و $total باشد';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'چرخش به چپ';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'چرخش به راست';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'برش';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'رونوشت';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'چسباندن';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'افزوده نشد: $count تصویر بزرگ‌تر از $limit است';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'افزوده نشد: $count تصویر بزرگ‌تر از $limit پیکسل است';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'افزوده نشد: $count تصویر';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'حافظهٔ موقت در دسترس نیست';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'افزودن این تصویر ممکن نشد';
 
   @override
   String get menuQuit => 'خروج از PDFSign';
@@ -319,158 +301,158 @@ class AppLocalizationsFa extends AppLocalizations {
   String get deleteButtonTooltip => 'حذف شیء انتخاب شده';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'این سند محافظت‌شده است';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'برای باز کردن آن گذرواژه را وارد کنید.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'گذرواژه';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'باز کردن';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'این سند اجازهٔ تغییر نمی‌دهد';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'می‌توان آن را خواند و چاپ کرد، اما مالک اجازهٔ تغییر نداده است. برای ویرایش، گذرواژهٔ مالک را وارد کنید.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'وارد کردن گذرواژهٔ مالک';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'گذرواژهٔ مالک';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'چاپ…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'چاپ صفحهٔ جاری';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'تنها مالک می‌تواند این سند را چاپ کند';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'این سند اجازهٔ چاپ نمی‌دهد.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'چاپ سند ممکن نشد.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'تنها مالک می‌تواند محافظت این سند را تغییر دهد';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'ادامه';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'سند محافظت‌شده از حافظه نمایش داده می‌شود و اندازهٔ این سند $size است. باز کردن آن تقریباً همین اندازه حافظه مصرف می‌کند.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'نسخهٔ هم‌رسانی‌شده گذرواژهٔ سند را نگه می‌دارد.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'محافظت این سند پشتیبانی نمی‌شود. PDFSign اسناد محافظت‌شده با گذرواژه را باز می‌کند، نه اسناد محافظت‌شده با گواهی.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'انتقال به جلو';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'یک لایه جلوتر';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'یک لایه عقب‌تر';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'انتقال به عقب';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'چیدمان';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'واگرد';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'ازنو';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'برای تغییر ترتیب بکشید';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'محافظت از سند';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'درخواست گذرواژه برای باز کردن سند';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'تأیید';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'مجوزها';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'اجازهٔ تغییرات زیر بدون وارد کردن گذرواژهٔ مالک.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'چاپ';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'رونوشت متن یا گرافیک';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly => 'درج، حذف و چرخش صفحه‌ها';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'افزودن یادداشت و امضا';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'تغییر سند';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'پر کردن فیلدهای موجود فرم';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'تغییر سند شامل یادداشت‌گذاری و پر کردن فرم‌هاست و این‌ها همراه با آن مجاز می‌شوند.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'گذرواژهٔ مالک';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'برداشتن محافظت';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'اعمال';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'گذرواژه‌ها یکسان نیستند';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'گذرواژه‌ای وارد کنید';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'محدودیت‌ها به گذرواژهٔ مالک نیاز دارند. بدون آن هر کسی می‌تواند آن‌ها را بردارد.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'بدون «تغییر سند» این پرونده دیگر بدون گذرواژهٔ مالک در اینجا امضا نخواهد شد.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'محافظت از سند…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'محافظت';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'گذرواژه‌ها و مجوزهای این سند را تعیین کنید';
 }

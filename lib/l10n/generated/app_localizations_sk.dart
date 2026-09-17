@@ -123,77 +123,59 @@ class AppLocalizationsSk extends AppLocalizations {
   String get menuDelete => 'Odstrániť';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Zobrazenie';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Zadajte číslo strany (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Číslo strany';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Zadajte platné číslo';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'Strana musí byť medzi 1 a $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Otočiť doľava';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Otočiť doprava';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Vystrihnúť';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Kopírovať';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Vložiť';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Nepridané obrázky: $count — presahujú $limit';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Nepridané obrázky: $count — presahujú $limit pixelov';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'Nepridané obrázky: $count';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'Schránka nie je k dispozícii';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Tento obrázok sa nepodarilo pridať';
 
   @override
   String get menuQuit => 'Ukončiť PDFSign';
@@ -341,158 +323,158 @@ class AppLocalizationsSk extends AppLocalizations {
   String get deleteButtonTooltip => 'Odstrániť vybraný objekt';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Tento dokument je chránený';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'Zadajte heslo, aby ste ho otvorili.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Heslo';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Otvoriť';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'Tento dokument nedovoľuje zmeny';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Dá sa čítať a tlačiť, ale vlastník nepovolil zmeny. Zadajte heslo vlastníka, aby ste ho mohli upravovať.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Zadať heslo vlastníka';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Heslo vlastníka';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Tlač…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Tlač aktuálnej strany';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Tento dokument smie tlačiť iba vlastník';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Tento dokument nedovoľuje tlač.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Dokument sa nepodarilo vytlačiť.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Ochranu tohto dokumentu smie zmeniť iba vlastník';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Pokračovať';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Chránený dokument sa zobrazuje z pamäte a tento má $size. Otvorenie spotrebuje približne toľko pamäte.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Zdieľaná kópia si ponecháva heslo dokumentu.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Ochrana tohto dokumentu nie je podporovaná. PDFSign otvára dokumenty chránené heslom, nie certifikátom.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Presunúť celkom dopredu';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Presunúť dopredu';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Presunúť dozadu';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Presunúť celkom dozadu';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Usporiadať';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Späť';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Znova';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Potiahnutím zmeníte poradie';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Ochrana dokumentu';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'Vyžadovať heslo na otvorenie dokumentu';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Potvrdenie';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Oprávnenia';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Povoliť nasledujúce zmeny bez zadania hesla vlastníka.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Tlač';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Kopírovanie textu a grafiky';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly => 'Vkladanie, mazanie a otáčanie strán';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Pridávanie poznámok a podpisov';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Zmeny dokumentu';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'Vypĺňanie existujúcich polí formulárov';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Zmeny dokumentu zahŕňajú poznámky a vypĺňanie formulárov — povoľujú sa spolu s nimi.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Heslo vlastníka';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Odstrániť ochranu';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Použiť';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Heslá sa nezhodujú';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Zadajte heslo';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Obmedzenia vyžadujú heslo vlastníka. Bez neho ich môže zrušiť ktokoľvek.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Bez položky „Zmeny dokumentu“ nebude možné tento súbor tu znova podpísať bez hesla vlastníka.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Chrániť dokument…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Ochrana';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Nastaviť heslá a oprávnenia tohto dokumentu';
 }

@@ -102,77 +102,59 @@ class AppLocalizationsMn extends AppLocalizations {
   String get menuDelete => 'Устгах';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Харах';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Хуудасны дугаарыг оруулна уу (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Хуудасны дугаар';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Зөв тоо оруулна уу';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'Хуудас 1-ээс $total хооронд байх ёстой';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Зүүн тийш эргүүлэх';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Баруун тийш эргүүлэх';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Таслах';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Хуулах';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Буулгах';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Нэмэгдээгүй зураг: $count — $limit-аас том байна';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Нэмэгдээгүй зураг: $count — $limit пикселээс том байна';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'Нэмэгдээгүй зураг: $count';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'Санах ойн хавтас боломжгүй байна';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Энэ зургийг нэмж чадсангүй';
 
   @override
   String get menuQuit => 'PDFSign-аас гарах';
@@ -320,158 +302,159 @@ class AppLocalizationsMn extends AppLocalizations {
   String get deleteButtonTooltip => 'Сонгосон объектыг устгах';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Энэ баримт хамгаалагдсан';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'Нээхийн тулд нууц үгээ оруулна уу.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Нууц үг';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Нээх';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle =>
+      'Энэ баримт өөрчлөлт хийхийг зөвшөөрдөггүй';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Үүнийг уншиж, хэвлэж болно, гэвч эзэмшигч нь өөрчлөхийг зөвшөөрөөгүй. Засварлахын тулд эзэмшигчийн нууц үгийг оруулна уу.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Эзэмшигчийн нууц үгийг оруулах';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Эзэмшигчийн нууц үг';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Хэвлэх…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Одоогийн хуудсыг хэвлэх';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Энэ баримтыг зөвхөн эзэмшигч нь хэвлэж чадна';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Энэ баримт хэвлэхийг зөвшөөрдөггүй.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Баримтыг хэвлэж чадсангүй.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Энэ баримтын хамгаалалтыг зөвхөн эзэмшигч нь өөрчилж чадна';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Үргэлжлүүлэх';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Хамгаалагдсан баримтыг санах ойноос харуулдаг бөгөөд энэ нь $size хэмжээтэй. Нээхэд ойролцоогоор төдий хэмжээний санах ой зарцуулагдана.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Хуваалцсан хувь нь баримтын нууц үгийг хадгална.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Энэ баримтын хамгаалалтыг дэмждэггүй. PDFSign нууц үгээр хамгаалагдсан баримтуудыг нээдэг бол гэрчилгээгээр хамгаалагдсаныг нээдэггүй.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Хамгийн урд гаргах';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Урагш шилжүүлэх';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Хойш шилжүүлэх';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Хамгийн ард илгээх';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Эрэмбэлэх';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Буцаах';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Дахин хийх';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Дарааллыг өөрчлөхийн тулд чирнэ үү';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Баримтыг хамгаалах';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'Баримтыг нээхэд нууц үг шаардах';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Баталгаажуулалт';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Зөвшөөрлүүд';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Эзэмшигчийн нууц үг оруулахгүйгээр дараах өөрчлөлтүүдийг зөвшөөрөх.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Хэвлэх';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Текст болон график хуулах';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly => 'Хуудас оруулах, устгах, эргүүлэх';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Тайлбар, гарын үсэг нэмэх';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Баримтыг өөрчлөх';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'Байгаа маягтын талбаруудыг бөглөх';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Баримтыг өөрчлөх нь тайлбар хийх, маягт бөглөхийг багтаадаг — тэдгээр нь үүнтэй хамт зөвшөөрөгдөнө.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Эзэмшигчийн нууц үг';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Хамгаалалтыг арилгах';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Хэрэглэх';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Нууц үгүүд таарахгүй байна';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Нууц үг оруулна уу';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Хязгаарлалтад эзэмшигчийн нууц үг шаардлагатай. Үүнгүйгээр хэн ч тэдгээрийг арилгаж чадна.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      '«Баримтыг өөрчлөх» зөвшөөрөлгүйгээр эзэмшигчийн нууц үггүйгээр энэ файлд энд дахин гарын үсэг зурах боломжгүй.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Баримтыг хамгаалах…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Хамгаалах';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Энэ баримтын нууц үг, зөвшөөрлийг тохируулна уу';
 }

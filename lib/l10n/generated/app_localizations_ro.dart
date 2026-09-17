@@ -102,77 +102,59 @@ class AppLocalizationsRo extends AppLocalizations {
   String get menuDelete => 'Șterge';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Vizualizare';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Introduceți numărul paginii (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Numărul paginii';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Introduceți un număr valid';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'Pagina trebuie să fie între 1 și $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Rotire la stânga';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Rotire la dreapta';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Decupare';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Copiere';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Lipire';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Nu s-au adăugat imagini: $count — depășesc $limit';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Nu s-au adăugat imagini: $count — depășesc $limit pixeli';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'Nu s-au adăugat imagini: $count';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'Clipboardul nu este disponibil';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Această imagine nu a putut fi adăugată';
 
   @override
   String get menuQuit => 'Ieșire din PDFSign';
@@ -320,158 +302,161 @@ class AppLocalizationsRo extends AppLocalizations {
   String get deleteButtonTooltip => 'Șterge obiectul selectat';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Acest document este protejat';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'Introduceți parola pentru a-l deschide.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Parolă';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Deschide';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'Acest document nu permite modificări';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Poate fi citit și tipărit, dar proprietarul nu a permis modificarea lui. Introduceți parola proprietarului pentru a-l edita.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Introduceți parola proprietarului';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Parola proprietarului';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Tipărire…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Tipărirea paginii curente';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Numai proprietarul poate tipări acest document';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Acest document nu permite tipărirea.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Documentul nu a putut fi tipărit.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Numai proprietarul poate schimba protecția acestui document';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Continuă';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Un document protejat este afișat din memorie, iar acesta ocupă $size. Deschiderea lui va folosi aproximativ tot atât.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Copia partajată păstrează parola documentului.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Protecția acestui document nu este acceptată. PDFSign deschide documente protejate prin parolă, nu pe cele protejate printr-un certificat.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Adu în față';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Mută înainte';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Mută înapoi';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Trimite în spate';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Aranjare';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Anulează';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Refă';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Trageți pentru a schimba ordinea';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Protejarea documentului';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen =>
+      'Solicită o parolă pentru deschiderea documentului';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Confirmare';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Permisiuni';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Permite următoarele modificări fără introducerea parolei proprietarului.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Tipărire';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Copierea textului sau a graficii';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly =>
+      'Inserarea, ștergerea și rotirea paginilor';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Adăugarea de adnotări și semnături';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Modificarea documentului';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling =>
+      'Completarea câmpurilor de formular existente';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Modificarea documentului include adnotarea și completarea formularelor — acestea sunt permise odată cu ea.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Parola proprietarului';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Elimină protecția';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Aplică';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Parolele nu coincid';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Introduceți o parolă';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Restricțiile necesită o parolă a proprietarului. Fără ea, oricine le poate elimina.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Fără „Modificarea documentului”, acest fișier nu va mai putea fi semnat aici fără parola proprietarului.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Protejează documentul…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Protejează';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Stabiliți parolele și permisiunile acestui document';
 }

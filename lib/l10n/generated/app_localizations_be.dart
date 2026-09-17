@@ -102,77 +102,59 @@ class AppLocalizationsBe extends AppLocalizations {
   String get menuDelete => 'Выдаліць';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Выгляд';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Увядзіце нумар старонкі (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Нумар старонкі';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Увядзіце правільны лік';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'Старонка мусіць быць ад 1 да $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Павярнуць улева';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Павярнуць управа';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Выразаць';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Капіяваць';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'Уставіць';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Не дададзена выяў: $count — памер перавышае $limit';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Не дададзена выяў: $count — памер перавышае $limit пікселяў';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'Не дададзена выяў: $count';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'Буфер абмену недаступны';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Не ўдалося дадаць выяву';
 
   @override
   String get menuQuit => 'Выхад з PDFSign';
@@ -320,158 +302,157 @@ class AppLocalizationsBe extends AppLocalizations {
   String get deleteButtonTooltip => 'Выдаліць выбраны аб\'ект';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Дакумент абаронены';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'Увядзіце пароль, каб адкрыць яго.';
 
   @override
-  String get passwordFieldLabel => 'Password';
+  String get passwordFieldLabel => 'Пароль';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Адкрыць';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle => 'Дакумент не дазваляе зменаў';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Яго можна чытаць і друкаваць, але ўладальнік не дазволіў уносіць змены. Увядзіце пароль уладальніка, каб рэдагаваць дакумент.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Увесці пароль уладальніка';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Пароль уладальніка';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'Друк…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'Друк бягучай старонкі';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Друкаваць гэты дакумент можа толькі ўладальнік';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed => 'Дакумент не дазваляе друк.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Не ўдалося надрукаваць дакумент.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Змяніць абарону дакумента можа толькі ўладальнік';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Працягнуць';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Абаронены дакумент паказваецца з памяці, а яго памер — $size. Адкрыццё зойме прыкладна столькі ж.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Дасланая копія захоўвае пароль дакумента.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Такі від абароны не падтрымліваецца. PDFSign адкрывае дакументы, абароненыя паролем, але не сертыфікатам.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'На пярэдні план';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Перамясціць наперад';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Перамясціць назад';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'На задні план';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Парадак';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'Адмяніць';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'Паўтарыць';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'Перацягніце, каб змяніць парадак';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Абарона дакумента';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen => 'Запытваць пароль пры адкрыцці дакумента';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Пацвярджэнне';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Дазволы';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Дазволіць наступныя дзеянні без уводу пароля ўладальніка.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Друк';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Капіяванне тэксту і графікі';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly => 'Устаўка, выдаленне і паварот старонак';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Даданне анатацый і подпісаў';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Змяненне дакумента';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling => 'Запаўненне наяўных палёў формаў';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Змяненне дакумента ўключае анатаванне і запаўненне формаў — яны дазваляюцца разам з ім.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Пароль уладальніка';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Зняць абарону';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Ужыць';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Паролі не супадаюць';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Увядзіце пароль';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Для абмежаванняў патрэбны пароль уладальніка. Без яго іх можа зняць хто заўгодна.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Без пункта „Змяненне дакумента“ гэты файл нельга будзе падпісаць тут зноў, калі не ўвесці пароль уладальніка.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Абараніць дакумент…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Абарона';
 
   @override
-  String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+  String get protectButtonTooltip => 'Задаць паролі і дазволы дакумента';
 }

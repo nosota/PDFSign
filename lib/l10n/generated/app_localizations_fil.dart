@@ -102,77 +102,59 @@ class AppLocalizationsFil extends AppLocalizations {
   String get menuDelete => 'Tanggalin';
 
   @override
-  String get menuView => 'View';
+  String get menuView => 'Tingnan';
 
   @override
   String goToPagePrompt(int total) {
-    return 'Enter page number (1-$total):';
+    return 'Ilagay ang numero ng pahina (1–$total):';
   }
 
   @override
-  String get goToPageHint => 'Page number';
+  String get goToPageHint => 'Numero ng pahina';
 
   @override
-  String get goToPageInvalid => 'Please enter a valid number';
+  String get goToPageInvalid => 'Maglagay ng wastong numero';
 
   @override
   String goToPageOutOfRange(int total) {
-    return 'Page must be between 1 and $total';
+    return 'Ang pahina ay dapat nasa pagitan ng 1 at $total';
   }
 
   @override
-  String get menuRotateLeft => 'Rotate Left';
+  String get menuRotateLeft => 'Iikot pakaliwa';
 
   @override
-  String get menuRotateRight => 'Rotate Right';
+  String get menuRotateRight => 'Iikot pakanan';
 
   @override
-  String get menuCut => 'Cut';
+  String get menuCut => 'Gupitin';
 
   @override
-  String get menuCopy => 'Copy';
+  String get menuCopy => 'Kopyahin';
 
   @override
-  String get menuPaste => 'Paste';
+  String get menuPaste => 'I-paste';
 
   @override
   String imagesTooLarge(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit';
+    return 'Hindi naidagdag: $count larawan ang lumampas sa $limit';
   }
 
   @override
   String imagesTooManyPixels(int count, String limit) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images are',
-      one: 'image is',
-    );
-    return 'Not added: $count $_temp0 larger than $limit pixels';
+    return 'Hindi naidagdag: $count larawan ang lumampas sa $limit pixel';
   }
 
   @override
   String imagesNotAdded(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'images',
-      one: 'image',
-    );
-    return 'Not added: $count $_temp0';
+    return 'Hindi naidagdag: $count larawan';
   }
 
   @override
-  String get clipboardUnavailable => 'The clipboard is unavailable';
+  String get clipboardUnavailable => 'Hindi magamit ang clipboard';
 
   @override
-  String get pasteImageFailed => 'That image could not be added';
+  String get pasteImageFailed => 'Hindi naidagdag ang larawang ito';
 
   @override
   String get menuQuit => 'Lumabas sa PDFSign';
@@ -320,158 +302,163 @@ class AppLocalizationsFil extends AppLocalizations {
   String get deleteButtonTooltip => 'Tanggalin ang napiling bagay';
 
   @override
-  String get documentProtectedTitle => 'This document is protected';
+  String get documentProtectedTitle => 'Protektado ang dokumentong ito';
 
   @override
-  String get documentProtectedBody => 'Enter its password to open it.';
+  String get documentProtectedBody => 'Ilagay ang password nito upang buksan.';
 
   @override
   String get passwordFieldLabel => 'Password';
 
   @override
-  String get openDocumentButton => 'Open';
+  String get openDocumentButton => 'Buksan';
 
   @override
-  String get documentReadOnlyTitle => 'This document does not allow changes';
+  String get documentReadOnlyTitle =>
+      'Hindi pinapayagan ng dokumentong ito ang mga pagbabago';
 
   @override
   String get documentReadOnlyBody =>
-      'It can be read and printed, but its owner has not allowed it to be changed. Enter the owner password to edit it.';
+      'Mababasa at maipi-print ito, ngunit hindi pinayagan ng may-ari ang mga pagbabago. Ilagay ang password ng may-ari upang i-edit ito.';
 
   @override
-  String get enterOwnerPassword => 'Enter owner password';
+  String get enterOwnerPassword => 'Ilagay ang password ng may-ari';
 
   @override
-  String get ownerPasswordFieldLabel => 'Owner password';
+  String get ownerPasswordFieldLabel => 'Password ng may-ari';
 
   @override
-  String get menuPrint => 'Print…';
+  String get menuPrint => 'I-print…';
 
   @override
-  String get menuPrintCurrentPage => 'Print Current Page';
+  String get menuPrintCurrentPage => 'I-print ang kasalukuyang pahina';
 
   @override
   String get printingIsTheOwnersTitle =>
-      'Only the owner may print this document';
+      'Ang may-ari lamang ang makapagpi-print ng dokumentong ito';
 
   @override
-  String get printingNotAllowed => 'This document does not allow printing.';
+  String get printingNotAllowed =>
+      'Hindi pinapayagan ng dokumentong ito ang pag-print.';
 
   @override
-  String get printingFailed => 'The document could not be printed.';
+  String get printingFailed => 'Hindi na-print ang dokumento.';
 
   @override
   String get protectionIsTheOwnersTitle =>
-      'Only the owner may change this document\'s protection';
+      'Ang may-ari lamang ang makapagbabago ng proteksiyon ng dokumentong ito';
 
   @override
-  String get continueButton => 'Continue';
+  String get continueButton => 'Magpatuloy';
 
   @override
   String largeProtectedDocumentBody(String size) {
-    return 'A protected document has to be held in memory to be shown, and this one is $size. Opening it will use about that much.';
+    return 'Ipinapakita mula sa memorya ang isang protektadong dokumento, at ang laki nito ay $size. Halos ganoon din karami ang gagamitin sa pagbubukas nito.';
   }
 
   @override
   String get shareProtectedNotice =>
-      'The shared copy keeps the document\'s password.';
+      'Pinapanatili ng ibinahaging kopya ang password ng dokumento.';
 
   @override
   String get unsupportedProtection =>
-      'This document\'s protection is not supported. PDFSign opens password-protected documents, not those protected by a certificate.';
+      'Hindi suportado ang proteksiyon ng dokumentong ito. Binubuksan ng PDFSign ang mga dokumentong protektado ng password, hindi ang mga protektado ng sertipiko.';
 
   @override
-  String get menuBringToFront => 'Bring to Front';
+  String get menuBringToFront => 'Dalhin sa pinakaharap';
 
   @override
-  String get menuBringForward => 'Bring Forward';
+  String get menuBringForward => 'Dalhin sa harap';
 
   @override
-  String get menuSendBackward => 'Send Backward';
+  String get menuSendBackward => 'Dalhin sa likod';
 
   @override
-  String get menuSendToBack => 'Send to Back';
+  String get menuSendToBack => 'Dalhin sa pinakalikod';
 
   @override
-  String get zOrderGroupLabel => 'Arrange';
+  String get zOrderGroupLabel => 'Ayusin';
 
   @override
-  String get menuUndo => 'Undo';
+  String get menuUndo => 'I-undo';
 
   @override
-  String get menuRedo => 'Redo';
+  String get menuRedo => 'I-redo';
 
   @override
-  String get dragToReorder => 'Drag to reorder';
+  String get dragToReorder => 'I-drag upang baguhin ang pagkakasunod-sunod';
 
   @override
-  String get protectDocumentTitle => 'Protect Document';
+  String get protectDocumentTitle => 'Protektahan ang dokumento';
 
   @override
-  String get requirePasswordToOpen => 'Require Password To Open Document';
+  String get requirePasswordToOpen =>
+      'Humingi ng password upang buksan ang dokumento';
 
   @override
-  String get verifyFieldLabel => 'Verify';
+  String get verifyFieldLabel => 'Kumpirmasyon';
 
   @override
-  String get permissionsHeading => 'Permissions';
+  String get permissionsHeading => 'Mga pahintulot';
 
   @override
   String get permissionsNote =>
-      'Allow the following changes to be made without entering the owner password.';
+      'Payagan ang mga sumusunod na pagbabago nang hindi inilalagay ang password ng may-ari.';
 
   @override
-  String get permissionPrinting => 'Printing';
+  String get permissionPrinting => 'Pag-print';
 
   @override
-  String get permissionCopying => 'Copying Text or Graphics';
+  String get permissionCopying => 'Pagkopya ng teksto o grapiks';
 
   @override
-  String get permissionPageAssembly => 'Inserting, Deleting, or Rotating Pages';
+  String get permissionPageAssembly =>
+      'Pagpasok, pagtanggal at pag-ikot ng mga pahina';
 
   @override
-  String get permissionAnnotations => 'Adding Annotations or Signatures';
+  String get permissionAnnotations => 'Pagdaragdag ng mga anotasyon o lagda';
 
   @override
-  String get permissionChangingContent => 'Changing the Document';
+  String get permissionChangingContent => 'Pagbabago ng dokumento';
 
   @override
-  String get permissionFormFilling => 'Filling Existing Form Fields';
+  String get permissionFormFilling =>
+      'Pagpuno sa mga umiiral na patlang ng form';
 
   @override
   String get changingContentIncludes =>
-      'Changing the document includes annotating and filling in forms, so those are granted with it.';
+      'Kasama sa pagbabago ng dokumento ang pag-anotasyon at pagpuno ng mga form — pinapayagan ang mga ito kasabay nito.';
 
   @override
-  String get ownerPasswordHeading => 'Owner Password';
+  String get ownerPasswordHeading => 'Password ng may-ari';
 
   @override
-  String get removeProtection => 'Remove Protection';
+  String get removeProtection => 'Alisin ang proteksiyon';
 
   @override
-  String get applyButton => 'Apply';
+  String get applyButton => 'Ilapat';
 
   @override
-  String get passwordsDoNotMatch => 'The passwords do not match';
+  String get passwordsDoNotMatch => 'Hindi magkatugma ang mga password';
 
   @override
-  String get passwordCannotBeEmpty => 'Enter a password';
+  String get passwordCannotBeEmpty => 'Maglagay ng password';
 
   @override
   String get restrictionsNeedOwnerPassword =>
-      'Restrictions need an owner password. Without one, anyone can lift them.';
+      'Kailangan ng mga paghihigpit ang password ng may-ari. Kung wala ito, maaaring alisin ng sinuman ang mga ito.';
 
   @override
   String get signingNeedsChangingContent =>
-      'Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.';
+      'Kung wala ang “Pagbabago ng dokumento”, hindi na muling malalagdaan dito ang file na ito nang walang password ng may-ari.';
 
   @override
-  String get menuProtectDocument => 'Protect Document…';
+  String get menuProtectDocument => 'Protektahan ang dokumento…';
 
   @override
-  String get protectButtonLabel => 'Protect';
+  String get protectButtonLabel => 'Protektahan';
 
   @override
   String get protectButtonTooltip =>
-      'Set this document\'s passwords and permissions';
+      'Itakda ang mga password at pahintulot ng dokumentong ito';
 }
