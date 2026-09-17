@@ -3,13 +3,12 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
-## [Unreleased]
+## [1.3.0] — 2026-09-17
 
 ### Added
 
 - Undo and Redo, fifty steps deep: Edit → Undo (⌘Z) / Redo (⇧⌘Z), and a two-part control at the left of the toolbar, each half live only while there is a step that way. Covers placing, moving, resizing, rotating, deleting, cutting, pasting, restacking and turning a page. A whole drag is one step rather than one per frame, and a drag that went nowhere is none. Undoing past a save is allowed and marks the document unsaved again; ⌘Z while typing in a text field belongs to the field
 - Objects can be restacked within their page: Bring to Front, Bring Forward, Send Backward, Send to Back, from a four-part control at the left of the toolbar or from the Edit menu (⇧⌘F, ⌥⇧⌘F, ⌥⇧⌘B, ⇧⌘B). The order they are drawn in on screen is the order they are written into the file, so what overlaps what is the same in both
-
 - Password-protected documents can be opened, signed, saved and shared. The password is asked for once, kept only while the window is open, and never written anywhere; Save, Save As and Share all keep the document's own protection, so the saved or shared file still needs the same password. Documents that carry only an owner password — readable by anyone, restricted in what may be done with them — now open at all, where before they were refused
 - A document whose permissions forbid changes is opened read-only: nothing can be dropped or pasted onto it, its pages cannot be turned, and it cannot be saved. A notice says why, and takes the owner password to lift it
 - A protected document large enough for its memory to matter says so when it opens, because it is shown from memory rather than from the file

@@ -31,7 +31,7 @@ Architecture detail is kept out of this document; see [docs/ARCHITECTURE.md](doc
 | Product name | PDFSign |
 | Bundle identifier | `com.ivanvaganov.pdfsign` |
 | Dart package name | `pdfsign` |
-| Version | 1.2.0+1 (`pubspec.yaml`) — `Info.plist` reads both through `$(FLUTTER_BUILD_NAME)` / `$(FLUTTER_BUILD_NUMBER)`; the About panel shows the version alone (see §2.4) |
+| Version | 1.3.0+2 (`pubspec.yaml`) — `Info.plist` reads both through `$(FLUTTER_BUILD_NAME)` / `$(FLUTTER_BUILD_NUMBER)`; the About panel shows the version alone (see §2.4) |
 | License | Proprietary |
 
 ### 1.2 Description
@@ -688,5 +688,6 @@ An image pasted from another application is stored in `pasted/` in app support a
 
 | Version | Date | Change |
 |---------|------|--------|
+| 2.1 | 2026-09-17 | Protected documents (FR-1.8, FR-1.9, §2.4), object restacking (FR-5.10) and undo/redo (FR-5.11); §12.1, §12.2 and §12.3 closed; FR-5.8 and FR-5.9 corrected against the implementation. |
 | 2.0 | 2026-09-15 | Rewritten against the implementation. Removed unbuilt requirements to §12, added §13 technical debt, corrected platform scope, dependencies, entity model, storage map, and localization figures. |
 | 1.0 | 2025-11-29 | Original pre-implementation specification (cross-platform, Signatures/Stamps tabs, z-order, undo/redo, `com.nosota.pdfsign`). Superseded. |
