@@ -218,19 +218,25 @@ Deletes the selected object across three providers at once: removes it from `pla
 **File:** `lib/presentation/providers/editor/document_dirty_provider.dart`
 
 Whether the document has changes that are not in the file yet. **Derived, not
-flagged** (ADR-0008): it compares the current objects with the baseline, so
+flagged** (ADR-0008): it compares the current state with the baseline, so
 move, resize and rotate count as changes, and moving an object back where it
 was reports clean again.
 
 ```dart
 @Riverpod(keepAlive: true)
-bool documentDirty(DocumentDirtyRef ref) {
-  return !listEquals(
-    ref.watch(placedImagesProvider),
-    ref.watch(savedPlacedImagesProvider),
-  );
-}
+bool documentDirty(DocumentDirtyRef ref) =>
+    !listEquals(
+      ref.watch(placedImagesProvider),
+      ref.watch(savedPlacedImagesProvider),
+    ) ||
+    ref.watch(hasUnsavedPageRotationProvider) ||
+    ref.watch(protectionChangedProvider);
 ```
+
+Three things can be unsaved, and each is measured against its own baseline: the
+objects against `SavedPlacedImages`, a page's turn against the `/Rotate` it was
+read with (`hasUnsavedPageRotation`), and the protection against
+`SavedProtection`.
 
 There is nothing to call: consumers just read or listen to the `bool`.
 
@@ -424,6 +430,140 @@ drift apart.
 
 **Cross-window.** Nothing is broadcast: the system clipboard is already shared
 between windows, and between applications.
+
+---
+
+### EditorHistory
+
+**File:** `lib/presentation/providers/editor/editor_history.dart`
+
+The undo history of one window's document: fifty `EditorSnapshot`s, and nothing
+else (ADR-0012). It does not read or write the providers the snapshots come
+from — that coordination lives in `history_actions.dart`.
+
+Its state is a `HistoryDepth` (`canUndo`, `canRedo`), which is all the menu and
+the toolbar need to know.
+
+**Public Methods:**
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `begin` | `void begin(EditorSnapshot Function() before)` | Opens a step. Idempotent while one is open, and **lazy** — a gesture may call it on every frame and the snapshot is only built once |
+| `commit` | `void commit(EditorSnapshot after)` | Closes the open step, dropping it if nothing changed |
+| `abandon` | `void abandon()` | Drops the open step |
+| `undo` / `redo` | `EditorSnapshot? undo(EditorSnapshot current)` | The snapshot to restore, or null when there is none that way |
+| `clear` | `void clear()` | Forgets everything; the document has been replaced |
+
+`EditorSnapshot` holds the objects, the turn of every page, the selection, and
+the pending protection. `describesSameDocumentAs` compares everything except
+the selection — selecting is not a change to the document.
+
+---
+
+### History actions
+
+**File:** `lib/presentation/providers/editor/history_actions.dart`
+
+Top-level helpers over `EditorHistory`, `PlacedImages`, `PdfDocument`,
+`EditorSelection` and `PendingProtection` — several pieces of state moved
+together, which is where `CLAUDE.md` puts this kind of work.
+
+```dart
+recordHistoryStep(ref, () => /* an action that happens at once */);
+
+beginHistoryStep(ref);   // a gesture starts
+// … many frames …
+endHistoryStep(ref);     // kept only if something actually changed
+```
+
+| Function | Does |
+|----------|------|
+| `currentSnapshot(ref)` | The document as it stands |
+| `recordHistoryStep(ref, change)` | Runs `change` as one undoable step |
+| `beginHistoryStep(ref)` / `endHistoryStep(ref)` | One step for a whole gesture |
+| `undoEdit(ref)` / `redoEdit(ref)` | Travel one step; return whether there was one |
+| `clearHistory(ref)` | Forget the history — the document has been replaced |
+
+**Dispatches on focus**, like the clipboard does: while a text field holds the
+keyboard, `undoEdit` hands it an `UndoTextIntent` instead. ⌘Z in the middle of
+typing a comment should take back a letter, not the object placed before the
+reader started typing.
+
+Pages are *turned* back to a snapshot's angles through the same transform an
+ordinary turn uses, rather than assigned: the snapshot deliberately does not
+carry what the file says each rotation is, because that is the baseline a save
+writes against.
+
+---
+
+### restackSelected
+
+**File:** `lib/presentation/providers/editor/restack_selected.dart`
+
+```dart
+restackSelected(ref, ZOrderMove.toFront);
+```
+
+Moves the selected object through the stack of **its own page**
+(`ZOrderMove.toBack | backward | forward | toFront`). Returns whether anything
+moved, so a caller can stay quiet when there was nothing to do: no selection, a
+document that forbids changes, or an object already as far as the move goes.
+
+Objects carry no depth of their own — the order they are drawn in is the order
+they sit in `PlacedImages`, on screen and in the written file alike, so a
+restack is a move within that list. A move reaches only the places its own page
+occupies, and one that changes nothing leaves the list identical, which is what
+keeps an empty entry out of the history.
+
+---
+
+### PendingProtection
+
+**File:** `lib/presentation/providers/editor/document_protection_provider.dart`
+
+The protection the reader asked the panel for, not yet written to the file
+(FR-6.9, ADR-0013). Null means the panel has not been used and the document's
+own protection stands.
+
+**Public Methods:**
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `set` | `void set(DocumentProtection protection)` | Records what the panel answered |
+| `clear` | `void clear()` | Forgets it |
+
+It **stays set after a save to the same file**: the bytes a save starts from
+still carry the old protection, so the next save has to apply this one again.
+Save As clears it, because the new file already carries it.
+
+---
+
+### SavedProtection
+
+**File:** `lib/presentation/providers/editor/document_protection_provider.dart`
+
+The protection as of the last write — the baseline `PendingProtection` is
+measured against, in the same shape as `SavedPlacedImages`.
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `markSaved` | `void markSaved(DocumentProtection? protection)` | Records what was just written |
+| `reset` | `void reset()` | A document whose protection has not been changed here |
+
+---
+
+### protectionChanged / documentIsProtected
+
+**File:** `lib/presentation/providers/editor/document_protection_provider.dart`
+
+```dart
+final dirty = ref.watch(protectionChangedProvider);   // pending != saved
+final locked = ref.watch(documentIsProtectedProvider); // what the lock shows
+```
+
+`documentIsProtected` prefers the pending protection to the document's own: the
+lock in the toolbar should say what the file **will** carry, not what is still
+on disk.
 
 ---
 
@@ -683,17 +823,29 @@ PdfDataSourceProvider ─► PdfDocumentRepositoryProvider
                          ├─► PdfPageImageProvider
                          └─► VisiblePagesProvider
 
+PlacedImages ────────┬─► DocumentDirty ─► GlobalDirtyState
+SavedPlacedImages ───┤
+PdfDocument ─────────┤   (hasUnsavedPageRotation)
+PendingProtection ───┤
+SavedProtection ─────┘   (protectionChanged)
+
+PendingProtection ─► DocumentIsProtected ◄─ PdfDocument
+
 Independent Providers:
 ├── EditorSelection
 ├── PlacedImages
+├── EditorHistory
+├── PendingProtection
+├── SavedProtection
 ├── SidebarSelection
 ├── SidebarWidth
-├── DocumentDirty
-├── GlobalDirtyState
 ├── OriginalPdfStorage
 ├── PdfSaveService
 └── PermissionRetry
 ```
+
+`EditorHistory` is independent on purpose: it holds snapshots and never reaches
+for the providers they came from. `history_actions.dart` is what joins them.
 
 ---
 

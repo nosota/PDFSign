@@ -25,10 +25,18 @@ Service for saving PDFs with placed images embedded. Uses Syncfusion PDF library
 
 | Method | Signature | Description |
 |--------|-----------|-------------|
-| `savePdf` | `Future<Either<Failure, String>> savePdf({required String originalPath, required List<PlacedImage> placedImages, String? outputPath})` | Saves PDF with images from file path |
-| `savePdfFromBytes` | `Future<Either<Failure, String>> savePdfFromBytes({required Uint8List originalBytes, required List<PlacedImage> placedImages, required String outputPath})` | Saves PDF with images from bytes |
-| `createTempPdfWithImages` | `Future<Either<Failure, String>> createTempPdfWithImages({required String originalPath, required List<PlacedImage> placedImages})` | Creates temp PDF for sharing |
-| `createTempPdfWithImagesFromBytes` | `Future<Either<Failure, String>> createTempPdfWithImagesFromBytes({required Uint8List originalBytes, required List<PlacedImage> placedImages})` | Creates temp PDF from bytes |
+| `savePdfFromBytes` | `Future<Either<Failure, String>> savePdfFromBytes({required Uint8List originalBytes, required List<PlacedImage> placedImages, required List<PdfPageInfo> pages, required String outputPath, String? password, DocumentProtection? protection})` | Writes the document with the objects embedded |
+| `createTempPdfWithImagesFromBytes` | `Future<Either<Failure, String>> createTempPdfWithImagesFromBytes({required Uint8List originalBytes, required List<PlacedImage> placedImages, required List<PdfPageInfo> pages, String? password, DocumentProtection? protection})` | The same, into a temp file, for sharing |
+
+Both take **bytes, never a path**: every save starts from the original bytes
+cached at open time (ADR-0002). The path-based variants were removed with that
+rule.
+
+| Parameter | What it is for |
+|-----------|----------------|
+| `pages` | The pages **as the reader sees them** — their turn, and the sides it gives them. Objects are positioned against that view, so without it they cannot be placed into the file's own space |
+| `password` | The one the document was opened with. Needed to read `originalBytes` at all when the document is protected |
+| `protection` | What the document is to be written with (FR-6.9). Null leaves the document's own protection alone, which it keeps by itself |
 
 ### Implementation Details
 
@@ -59,10 +67,31 @@ if (placedImage.rotation != 0) {
 }
 ```
 
+**Protection (`_protect`):**
+
+Applied after the objects are placed and before the document is written, so
+what is saved carries the protection the reader asked for rather than the one
+the file arrived with. The password the original was *read* with is a different
+thing and has already done its work by then (ADR-0013).
+
+`_setPermissions` reads the document's current flags back and **removes** what
+is no longer wanted before adding what is. The library's permission set can be
+added to and taken from but not cleared; without reading it first, permissions
+could only ever be granted.
+
+An algorithm of null means AES-256. A document that arrived with one keeps it,
+so the readers it was made for can still open it.
+
+**Left alone deliberately:** a document opened with no `protection` given keeps
+its own. Measured across RC4-40, RC4-128, AES-128 and AES-256, the written
+document keeps its algorithm, its permissions and **both** of its original
+passwords — including the owner password, which cannot be recovered from a
+document opened with the user one. Nothing here has to put the protection back,
+and nothing here may take it off.
+
 **Error Handling:**
 
-- Returns `FileNotFoundFailure` if original PDF not found
-- Returns `StorageFailure` for any save errors
+- Returns `StorageFailure` for any save errors, including a wrong password
 - Skips images with missing files (doesn't fail entire save)
 
 ---

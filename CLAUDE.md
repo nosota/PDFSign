@@ -2,7 +2,7 @@
 
 This file defines **enforceable rules and invariants** for the PDFSign project. It contains policy only. Architecture, explanations, and the inventory of current technical debt live in `docs/` and `REQUIREMENTS.md`.
 
-**Last aligned with the codebase:** 2026-09-15.
+**Last aligned with the codebase:** 2026-09-17.
 
 A rule here is binding on **new and modified code**. Where existing code violates a rule, the violation is named explicitly as a *grandfathered exception* — touching such a file is an invitation to fix it, not a licence to extend it.
 
@@ -241,7 +241,7 @@ go_router, mime
 
 ## Testing
 
-The project has 282 Dart tests (page-column geometry, drag-and-drop placement, dirty-state policy, the close-everything flow, cut/copy/paste, protected documents, object restacking, the undo history, dragging out of the library) and 43 native tests (`macos/RunnerTests`, toolbar item management, document-window placement, PDF encryption detection, the restacking and undo controls). Everything else is uncovered, which remains the largest known risk (CODE_REVIEW §5.3). The following is the target state, and applies to code you add or change:
+The project has 311 Dart tests (page-column geometry, drag-and-drop placement, dirty-state policy, the close-everything flow, cut/copy/paste, protected documents, writing protection and permission bits, the protection panel, object restacking, the undo history, dragging out of the library) and 46 native tests (`macos/RunnerTests`, toolbar item management and validation, document-window placement, PDF encryption detection, the restacking, undo and lock controls). Everything else is uncovered, which remains the largest known risk (CODE_REVIEW §5.3). The following is the target state, and applies to code you add or change:
 
 - New business logic (providers, repositories, services, coordinate math) ships with unit tests.
 - Test file mirrors source structure; one test file per source file.
@@ -263,15 +263,15 @@ Enforced bar, verified with `flutter analyze`:
 
 - **0 errors** — currently met.
 - **0 warnings** — currently met. Do not regress it.
-- Info-level lints: 1025 at last count. Not a merge gate, but do not increase the count in files you touch.
+- Info-level lints: 1201 at last count. Not a merge gate, but do not increase the count in files you touch.
 
 ### Import Convention
 
 Use **`package:pdfsign/...` imports** throughout. This matches 100% of the existing code.
 
-> **Nothing currently enforces this.** `analysis_options.yaml` sets `always_use_package_imports: error` under `analyzer.errors` (line 21), but that key only overrides the *severity* of a diagnostic — the rule is absent from `linter.rules`, so it never runs and the override is a no-op. Meanwhile `prefer_relative_imports` **is** enabled in `linter.rules` (line 152) and argues the opposite, producing 328 of the 1025 info lints.
+> **Nothing currently enforces this.** `analysis_options.yaml` sets `always_use_package_imports: error` under `analyzer.errors` (line 21), but that key only overrides the *severity* of a diagnostic — the rule is absent from `linter.rules`, so it never runs and the override is a no-op. Meanwhile `prefer_relative_imports` **is** enabled in `linter.rules` (line 152) and argues the opposite, producing 391 of the 1201 info lints.
 >
-> Until that is resolved: ignore those 328 diagnostics, and do **not** "fix" them by converting imports to relative paths. To make the stated policy real, add `always_use_package_imports` to `linter.rules` and remove `prefer_relative_imports` from it.
+> Until that is resolved: ignore those 391 diagnostics, and do **not** "fix" them by converting imports to relative paths. To make the stated policy real, add `always_use_package_imports` to `linter.rules` and remove `prefer_relative_imports` from it.
 
 ---
 

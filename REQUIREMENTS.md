@@ -154,8 +154,8 @@ A floating pill showing `Page N of M` appears while scrolling or on page change,
 #### FR-2.8 — Go to page
 `Cmd+G` opens a dialog accepting a page number, clamped to the valid range.
 
-#### FR-2.9 — Reload
-`Cmd+R` closes and reopens the document, restoring the current page.
+#### FR-2.9 — Reopening in place
+The document is closed and reopened in the same window, restoring the page in view. It happens by itself where a window has to turn to different bytes: after Save As, and after an owner password lifts a restriction (FR-1.9). There is no longer a reader-facing Reload command — `Cmd+R` has meant Rotate Right since 1.2.0, and the menu item went with it.
 
 ---
 
@@ -307,10 +307,44 @@ A document counts as changed when its current set of placed objects differs
 from the set that was last written to the file — including position, size and
 rotation. The state is derived from that comparison rather than flagged per
 operation, so moving an object back where it was reports the document clean
-again (ADR-0008).
+again (ADR-0008). A change of protection (FR-6.9) counts the same way and
+against its own baseline: asking for the protection the document already has
+leaves it clean.
 
 #### FR-6.8 — Close with unsaved changes
 Closing a dirty window shows a Save / Discard dialog. Close All and Quit show a consolidated Save All / Don't Save / Cancel dialog reporting how many documents are affected; if saves fail afterwards, a second dialog offers "Close Anyway".
+
+#### FR-6.9 — Setting the document's protection
+**File → Protect Document…** (`Shift+Cmd+L`) and the lock in the native toolbar, between Delete and Share. The lock is drawn closed while the document asks for a password or withholds anything, and open while it does not — including while that is only what the reader has *asked* for and not yet saved.
+
+A document that is already protected and whose owner rights are not held asks for the owner password first, through the same dialog the read-only notice uses (FR-1.9). Without it the panel would be offering to change protection on behalf of someone who cannot.
+
+**The panel** carries, in the order macOS's own sheet does:
+
+| Control | Meaning |
+|---------|---------|
+| Require Password To Open Document | The user password. The field pair is disabled until it is ticked |
+| Printing | `print` + `fullQualityPrint` |
+| Copying | `copyContent` + `accessibilityCopyContent` |
+| Page Assembly | `assembleDocument` |
+| Annotations | `editAnnotations` |
+| Changing the Document | `editContent` |
+| Form Filling | `fillFields` |
+| Owner password | Required by any restriction; what lifts them all |
+
+Each password is typed twice, because a document locked with a mistyped password is a document nobody can open.
+
+**Changing the Document carries Annotations and Form Filling with it.** Bit 4 of `/P` subsumes bits 6 and 9 — measured in Acrobat DC's Security tab, which reports annotating and form filling as allowed whenever `editContent` is granted regardless of their own bits. While it is ticked the other two are held ticked and cannot be cleared, so the panel and the written file never say different things.
+
+**Changing the Document is a box of its own,** which Apple's sheet does not have: it folds that permission in with the others. It is the one permission PDFSign itself needs in order to place a signature, and a reader who cannot see it cannot tell why their own app stopped being able to sign a document they protected. Withholding it is allowed and warned about.
+
+The panel refuses to close on: a required password that is empty, a pair that does not match, and any restriction without an owner password — restrictions nobody holds the password to are restrictions anyone can lift, which is worse than none because they look like protection.
+
+**Remove Protection** answers a wholly open document: no passwords, every permission granted. See §13.16 for the one thing that cannot be taken back off.
+
+**Nothing is written until the document is saved** (ADR-0013). The choice becomes a pending change like any other: it marks the document unsaved, `Cmd+Z` takes it back, and Save, Save As and Share all write it. The encryption algorithm follows the document — one that arrived AES-128 is written back AES-128 — and protection added to a document that had none is AES-256.
+
+Passwords set here live in memory for as long as the window does, under the same rule as the one a document was opened with (FR-1.8): never logged, never written to Recent Files, preferences or the database, never broadcast to another window, and deliberately absent from `toString`.
 
 ---
 
@@ -374,12 +408,16 @@ There are no other settings. In particular there is no clipboard-behaviour secti
 | `Cmd+Opt+W` | Close All | all |
 | `Cmd+Q` | Quit (with save prompt) | all |
 | `Cmd+,` | Settings | all |
+| `Shift+Cmd+L` | Protect Document… | PDF window |
+| `Cmd+Z` / `Shift+Cmd+Z` | Undo / Redo | PDF window; belongs to a focused text field |
 | `Cmd+Backspace` | Delete object (Edit menu) | PDF window |
 | `Delete` / `Backspace` | Delete object | PDF window, unless a text field has focus |
-| `Cmd+C` / `Cmd+V` | Copy / paste object | PDF viewer |
+| `Cmd+X` / `Cmd+C` / `Cmd+V` | Cut / copy / paste object | PDF viewer |
 | `Cmd+V` | Paste image into library | sidebar focused |
+| `Cmd+L` / `Cmd+R` | Rotate the page in view left / right | PDF window |
+| `Shift+Cmd+F` / `Opt+Shift+Cmd+F` | Bring to Front / Bring Forward | PDF window, with something selected |
+| `Shift+Cmd+B` / `Opt+Shift+Cmd+B` | Send to Back / Send Backward | PDF window, with something selected |
 | `Cmd+G` | Go to page | PDF window |
-| `Cmd+R` | Reload document | PDF window |
 | `Cmd+0` | Fit Width | PDF window |
 | `Cmd+=` / `Cmd+-` | Zoom in / out | PDF window |
 | `Cmd+M` | Minimize | all |
@@ -387,7 +425,7 @@ There are no other settings. In particular there is no clipboard-behaviour secti
 | `Home` / `End` | First / last page | PDF window |
 | Arrows | Scroll by 50 px | PDF window |
 
-The macOS app menu provides About, Settings…, and Quit PDFSign. The Edit menu exists only in PDF windows and contains only Delete.
+The macOS app menu provides About, Settings…, and Quit PDFSign. The Edit and View menus exist only in PDF windows; Edit holds Undo, Redo, Cut, Copy, Paste, the two rotations, the four restacking commands and Delete, and File holds Protect Document… between Save All and Share.
 
 ---
 
@@ -561,15 +599,15 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 
 | Aspect | State |
 |--------|-------|
-| `flutter analyze` | 1025 issues: 0 errors, **0 warnings**, 1025 info |
-| Unit tests | **122** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry and the writer |
-| Widget tests | **67** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation |
-| Native tests | **16** — the toolbar's fixed item set and layout, Delete's enabled state, the helper registry (`macos/RunnerTests`) |
+| `flutter analyze` | 1201 issues: 0 errors, **0 warnings**, 1201 info |
+| Unit tests | **195** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry, the writer, reading and writing protected documents, permission bits, restacking and the undo history |
+| Widget tests | **116** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation, the password prompt, the read-only notice, the protection panel, restacking and what each action records in the history |
+| Native tests | **46** — the toolbar's fixed item set and layout, the enabled state of Delete, undo/redo and restacking, the lock's two faces, window cascading and the CoreGraphics security probe (`macos/RunnerTests`) |
 | Integration tests | **none** |
 | Golden tests | **none** |
 | CI | none |
 
-The largest info groups are `prefer_relative_imports`, `prefer_expression_function_bodies`, `always_put_control_body_on_new_line` and `avoid_catches_without_on_clauses`; see the Import Convention note in `CLAUDE.md` for why the first group cannot be acted on as things stand.
+The largest info groups remain `prefer_relative_imports`, `prefer_expression_function_bodies`, `always_put_control_body_on_new_line` and `avoid_catches_without_on_clauses`; see the Import Convention note in `CLAUDE.md` for why the first group cannot be acted on as things stand.
 
 The analyzer is clean of warnings: the last three — a lint removed in Dart 3.7
 still listed in `analysis_options.yaml`, and two unreachable private methods in
@@ -684,12 +722,20 @@ An image pasted from another application is stored in `pasted/` in app support a
 ### 13.15 The Syncfusion license key is committed
 `TODO.md` contains a Syncfusion community license key in plain text. It should be removed from the repository and from history.
 
+### 13.16 Protection cannot be taken all the way off
+`PdfSecurity` can be given passwords and permission flags but has no way to remove the `/Encrypt` dictionary from a document. **Remove Protection** (FR-6.9) therefore writes empty passwords and every permission granted: the saved file opens for anyone, in any reader, with nothing withheld, and that is what the reader asked for — but it is still an encrypted PDF, and a tool that reports on encryption (CoreGraphics `isEncrypted`, `qpdf --show-encryption`) will still say it is one.
+
+Pressing Remove on a document that had no protection at all encrypts it in this same open way, and at AES-256, since there is no algorithm to inherit.
+
+Taking the dictionary out would mean writing the document's objects into a fresh `PdfDocument`, which loses everything Syncfusion does not carry across — form fields, annotations, bookmarks, tagging. That is a worse trade than an empty `/Encrypt`, so it was not made. `qpdf --decrypt` is the honest way out for a reader who needs one, and the panel does not pretend otherwise.
+
 ---
 
 ## 14. Document History
 
 | Version | Date | Change |
 |---------|------|--------|
+| 2.2 | 2026-09-17 | Setting a document's protection (FR-6.9, ADR-0013) and its one limitation (§13.16); FR-6.7 extended to protection; §3.9 shortcuts and FR-2.9 corrected against the menu, which has had no Reload command since 1.2.0; §10 figures remeasured. |
 | 2.1 | 2026-09-17 | Protected documents (FR-1.8, FR-1.9, §2.4), object restacking (FR-5.10) and undo/redo (FR-5.11); §12.1, §12.2 and §12.3 closed; FR-5.8 and FR-5.9 corrected against the implementation. |
 | 2.0 | 2026-09-15 | Rewritten against the implementation. Removed unbuilt requirements to §12, added §13 technical debt, corrected platform scope, dependencies, entity model, storage map, and localization figures. |
 | 1.0 | 2025-11-29 | Original pre-implementation specification (cross-platform, Signatures/Stamps tabs, z-order, undo/redo, `com.nosota.pdfsign`). Superseded. |

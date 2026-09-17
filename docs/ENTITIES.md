@@ -12,6 +12,8 @@ lib/domain/entities/
 ├── sidebar_image.dart      # Image in sidebar library
 ├── recent_file.dart        # Recently opened file
 ├── window_info.dart        # Application window info
+├── document_security.dart  # A document's protection, and what opened it
+├── document_protection.dart      # Passwords and permissions to write
 ├── clipboard_placed_object.dart  # A placed object on the clipboard
 └── clipboard_contents.dart       # What the clipboard holds for the editor
 ```
@@ -32,7 +34,8 @@ Information about a loaded PDF document.
 | `fileName` | `String` | File name extracted from path |
 | `pageCount` | `int` | Total number of pages |
 | `pages` | `List<PdfPageInfo>` | Info about each page |
-| `isPasswordProtected` | `bool` | Whether document required password (default: `false`) |
+| `security` | `DocumentSecurity` | The document's protection and what it took to open it (default: `DocumentSecurity.unprotected()`) |
+| `isPasswordProtected` | `bool` | Computed — `security.isProtected` |
 
 ### Methods
 
@@ -48,7 +51,6 @@ final docInfo = PdfDocumentInfo(
   fileName: 'document.pdf',
   pageCount: 10,
   pages: [...],
-  isPasswordProtected: false,
 );
 
 // Access page dimensions
@@ -418,3 +420,83 @@ What a clipboard read found: an optional `ClipboardPlacedObject` and an
 optional `ClipboardImage` (bytes plus `ClipboardImageFormat`). Both null means
 the clipboard holds nothing the editor can use — text, files, or nothing at
 all. That is `isEmpty`, not a failure.
+
+
+---
+
+## DocumentSecurity
+
+**File:** `lib/domain/entities/document_security.dart`
+
+What an open document's protection allows, and what it took to open it. Built
+by `ProtectedPdfReader` when a document turns out to be encrypted; every other
+document carries `DocumentSecurity.unprotected()`.
+
+### Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `isProtected` | `bool` | Whether the document is encrypted |
+| `password` | `String?` | The password it was opened with; null for one that needed none |
+| `allowsEditing` | `bool` | Whether its content may be changed — false opens the document read-only (FR-1.9) |
+| `hasOwnerRights` | `bool` | Whether the password given was the owner's, which grants full access whatever the flags say |
+| `current` | `DocumentProtection?` | The protection as far as it could be read — what the panel starts from |
+
+### Notes
+
+- **`password` lives here and nowhere else.** For as long as the window does:
+  never written to disk, never logged, never put in Recent Files, never
+  broadcast to another window (FR-1.8).
+- **`toString` deliberately omits it.** This object is reachable from the
+  document info that gets interpolated into diagnostics, and a default
+  `toString` would put the password in them.
+- `current` is null for a document with no protection *and* for one whose
+  protection could not be read back: the password that opens a document does
+  not always reveal the other one.
+
+---
+
+## DocumentProtection
+
+**File:** `lib/domain/entities/document_protection.dart`
+
+The passwords and permissions a document is to be **written** with — what the
+panel answers and what `PdfSaveService` applies (FR-6.9, ADR-0013).
+
+### Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `userPassword` | `String` | Opens the document. Empty means anyone may read it |
+| `ownerPassword` | `String` | Lifts every restriction. Required by any restriction at all |
+| `permissions` | `Set<DocumentPermission>` | What is granted without the owner password. Unmodifiable |
+| `algorithm` | `DocumentEncryption?` | Null means the writer chooses — AES-256 |
+
+### Computed Properties
+
+| Property | Description |
+|----------|-------------|
+| `requiresPasswordToOpen` | `userPassword` is not empty |
+| `restrictsAnything` | Something is withheld |
+| `isOpen` | Neither — what the lock in the toolbar reads to decide its face |
+
+### Enums
+
+`DocumentPermission`: `printing`, `copying`, `pageAssembly`, `annotations`,
+`changingContent`, `formFilling`.
+
+`DocumentEncryption`: `rc4x40`, `rc4x128`, `aes128`, `aes256`.
+
+### Notes
+
+- **The constructor closes the set over what one permission implies.**
+  `changingContent` carries `annotations` and `formFilling` with it, because
+  bit 4 of `/P` subsumes bits 6 and 9 — measured in Acrobat, which reports both
+  as allowed whenever changing is. Two protections that differ only in bits the
+  file cannot express are therefore equal, which is what keeps the document
+  from reporting itself dirty over a difference nobody can see.
+- `DocumentProtection.none()` is a document with no passwords and everything
+  granted. What **Remove Protection** answers, and as close to unprotected as
+  a written file can get (§13.16).
+- **`toString` omits both passwords**, for the same reason `DocumentSecurity`
+  does.

@@ -3,6 +3,17 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Added
+
+- A document's protection can be set from the app: **File → Protect Document…** (⇧⌘L) and a lock in the toolbar, between Delete and Share. It sets the password that opens the document, the owner password that lifts every restriction, and six permissions — printing, copying, page assembly, annotations, changing the document and form filling. Each password is typed twice
+- The lock shows how the document stands: closed while it asks for a password or withholds something, open while it does not
+- **Changing the Document** is a checkbox of its own, which macOS's own sheet does not have. It is the permission PDFSign needs in order to place a signature, and withholding it is warned about. It carries annotations and form filling with it, because the PDF bit it writes subsumes theirs
+- A protected document asks for its owner password before its protection can be changed, since without it nobody may change it
+- **Remove Protection** clears both passwords and grants everything. The saved file opens for anyone with nothing withheld; it remains an encrypted PDF, because the writer has no way to take the encryption dictionary out
+- Nothing is written until the document is saved: setting protection marks the document unsaved, ⌘Z takes it back, and Save, Save As and Share all carry it. A document that arrived AES-128 is written back AES-128; protection added to one that had none is AES-256
+
 ## [1.3.2] — 2026-09-17
 
 ### Fixed

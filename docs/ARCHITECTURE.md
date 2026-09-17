@@ -75,6 +75,8 @@ PDFSign uses **Riverpod** with code generation (`riverpod_annotation`).
 - **SidebarImages** — Image library with multi-window sync
 - **EditorSelection** — Selected placed image
 - **DocumentDirty** — Unsaved changes tracking
+- **EditorHistory** — Snapshots for undo and redo
+- **PendingProtection** — Passwords and permissions asked for, not yet written
 
 See [PROVIDERS.md](PROVIDERS.md) for complete documentation.
 
@@ -115,6 +117,9 @@ See [PLATFORM_CHANNELS.md](PLATFORM_CHANNELS.md) for native integration details.
 |-----------|---------|
 | Viewing/Rendering | pdfx |
 | Saving with images | Syncfusion PDF |
+| Reading a protected document | Syncfusion PDF, rendered from a decrypted copy (ADR-0011) |
+| Writing passwords and permissions | Syncfusion PDF |
+| Telling whether a file is encrypted | CoreGraphics, over `com.pdfsign/pdf_security` |
 
 ### Rendering Pipeline
 
@@ -137,11 +142,26 @@ instance alive across scroll ticks and pointer moves.
 
 ### Save Pipeline
 
-1. Read original PDF bytes (from OriginalPdfStorage)
-2. Open with Syncfusion PDF
-3. For each page with images, draw images using `graphics.drawImage()`
-4. Save to output path
-5. Images are permanently embedded (not metadata)
+1. Read original PDF bytes (from `OriginalPdfStorage`)
+2. Open with Syncfusion PDF, with the password the document was opened with
+3. For each page with images, draw images using `graphics.drawImage()`, mapping
+   the page as displayed onto the page as stored (`PageRotationTransform`)
+4. Write each page's turn as its `/Rotate` (ADR-0010)
+5. Apply the pending protection, if the reader asked for one (ADR-0013)
+6. Save to output path
+
+Images are permanently embedded, not metadata. A document opened with a
+password keeps its protection by itself: the writer carries the algorithm, the
+permissions and both passwords across without being asked.
+
+### Opening Pipeline
+
+1. Ask CoreGraphics whether the file is encrypted
+2. **Not encrypted** — open it straight from the file with pdfx, as before, so
+   a large plain document is never pulled into memory
+3. **Encrypted** — open it with Syncfusion, ask for a password if one is
+   needed, and render from a copy with its passwords cleared, held in memory
+   and never written to disk (ADR-0011)
 
 ## Documentation
 
@@ -172,3 +192,4 @@ Design decisions are documented as Architecture Decision Records in [adr/](adr/)
 | [ADR-0010](adr/0010-page-rotation-via-rotate.md) | Page rotation written as `/Rotate`, with the editor working in the page as displayed |
 | [ADR-0011](adr/0011-protected-pdfs-decrypted-in-memory.md) | Protected PDFs opened with the writer and rendered from a decrypted copy held in memory |
 | [ADR-0012](adr/0012-undo-history-as-snapshots.md) | Undo and redo as snapshots of the editable state rather than a command per action |
+| [ADR-0013](adr/0013-protection-applied-at-save.md) | A change of a document's passwords and permissions is held until the document is saved |

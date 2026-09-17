@@ -13,10 +13,13 @@ lib/core/platform/
 ├── open_pdf_files_channel.dart     # Open file tracking
 ├── window_list_channel.dart        # Window menu operations
 ├── toolbar_channel.dart            # Native toolbar
-└── file_open_handler.dart          # Finder file open requests
+├── file_open_handler.dart          # Finder file open requests
+└── pdf_security_channel.dart       # Whether a PDF is encrypted
 ```
 
-Native implementations are in `macos/Runner/AppDelegate.swift`.
+Native implementations are in `macos/Runner/AppDelegate.swift`, except the PDF
+security probe (`macos/Runner/PdfFileSecurity.swift`) and window placement
+(`macos/Runner/WindowCascade.swift`).
 
 ---
 
@@ -222,6 +225,9 @@ Handles native macOS toolbar in PDF viewer windows.
 | `setupToolbar` | - | - | Request toolbar setup for current window |
 | `setDeleteButtonEnabled` | `enabled`, `label`, `tooltip` | - | Enable or grey out Delete, with localized texts |
 | `setRotateLabels` | `left`, `right` | - | Localized texts for the rotate control |
+| `setHistoryEnabled` | `canUndo`, `canRedo`, `labels` | - | Greys each half of the undo control on its own |
+| `setZOrderEnabled` | `enabled`, `labels`, `groupLabel` | - | Greys the four-segment restacking control |
+| `setProtectionState` | `protected`, `label`, `tooltip` | - | Which way the lock is drawn, and its texts |
 
 ### Native → Dart Methods
 
@@ -231,6 +237,9 @@ Handles native macOS toolbar in PDF viewer windows.
 | `onDeletePressed` | - | Delete toolbar button was clicked |
 | `onRotateLeftPressed` | - | Left half of the rotate control was clicked |
 | `onRotateRightPressed` | - | Right half of the rotate control was clicked |
+| `onUndoPressed` / `onRedoPressed` | - | A half of the undo control was clicked |
+| `onSendToBackPressed`, `onSendBackwardPressed`, `onBringForwardPressed`, `onBringToFrontPressed` | - | A segment of the restacking control was clicked |
+| `onProtectPressed` | - | The lock was clicked |
 
 ### Callback Setters
 
@@ -239,13 +248,22 @@ ToolbarChannel.setOnSharePressed(VoidCallback? callback);
 ToolbarChannel.setOnDeletePressed(VoidCallback? callback);
 ToolbarChannel.setOnRotateLeftPressed(VoidCallback? callback);
 ToolbarChannel.setOnRotateRightPressed(VoidCallback? callback);
+ToolbarChannel.setOnProtectPressed(VoidCallback? callback);
+ToolbarChannel.setOnHistoryPressed(undo: ..., redo: ...);
+ToolbarChannel.setOnRestackPressed([toBack, backward, forward, toFront]);
 ```
 
 ### Item layout
 
 ```
-[ rotate ⟲ ⟳ ][ flexible space ][ Delete ][ gap ][ Share ]
+[ ⟲ undo ⟳ ][ ⇱ restack ⇲ ][ rotate ⟲ ⟳ ][ flexible space ][ Delete ][ gap ][ 🔒 ][ gap ][ Share ]
 ```
+
+Left to right: undo and redo, the four restacking segments, the two page
+turns, then Delete, the lock and Share. Restacking sits before the page turns
+because it acts on the object and the turns act on the page under it. The lock
+stands between Delete and Share, separated from both by a fixed space: it is a
+property of the file, and the thing worth settling before handing it on.
 
 The item set never changes. Delete is **greyed out** when nothing is selected
 rather than taken away: an earlier version inserted and removed it, which moved
@@ -253,17 +271,30 @@ the controls beside it every time the selection changed, and which twice put
 NSToolbar into a state that aborted the process. A fixed item set cannot drift,
 cannot duplicate an item, and cannot shift anything.
 
-Rotation is an `NSToolbarItemGroup` of two segments — one control, not two
-buttons. Delete stands on its own: a fixed space separates it from Share,
-because deleting the selected object and sharing the document are unrelated
-actions and two icons side by side read as one control.
+Rotation, undo and restacking are each an `NSToolbarItemGroup` of segments —
+one control, not two or four buttons. Delete stands on its own: fixed spaces
+separate it from the lock and the lock from Share, because deleting an object,
+protecting a document and sharing it are unrelated actions, and icons side by
+side read as one control.
 
-Measured on the running app: with and without a selection the four icons occupy
+Measured on the running app: with and without a selection the icons occupy
 exactly the same columns, and only the trash's colour changes.
 
+**A group validates its own subitems.** Setting `autovalidates = false` on a
+subitem does not stop `NSToolbarItemGroup` from enabling it again, so
+`validateToolbarItem(_:)` answers with the state Dart last pushed rather than
+`true`. Four tests hold that: restoring the unconditional `true` makes them
+fail.
+
+The lock keeps the same picture whichever way it is drawn — only the symbol
+changes, closed for a document that asks for a password or withholds anything,
+open for one that does not.
+
 The toolbar is built by AppKit before Flutter has resolved a locale, so it
-starts with English texts. `setRotateLabels` corrects them once the toolbar
-exists and again whenever the language changes.
+starts with English texts. `setRotateLabels`, `setHistoryEnabled`,
+`setZOrderEnabled` and `setProtectionState` carry localized texts alongside
+their state and correct them once the toolbar exists, and again whenever the
+language changes.
 
 ### Usage Example
 
@@ -289,6 +320,52 @@ void _handleShare() {
 - Only PDF viewer windows should call `setupToolbar()`
 - Settings and Welcome windows do not have toolbar
 - `init()` should be called once from main app
+
+---
+
+## PdfSecurityChannel
+
+**File:** `lib/core/platform/pdf_security_channel.dart`
+**Channel:** `com.pdfsign/pdf_security`
+**Native:** `macos/Runner/PdfFileSecurity.swift`
+
+Reads what a PDF file says about its own protection, **before anything opens
+it**. What decides whether a document takes the ordinary route or the protected
+one (FR-1.8, ADR-0011).
+
+### Dart → Native Methods
+
+| Method | Arguments | Returns | Description |
+|--------|-----------|---------|-------------|
+| `inspect` | the file path, as a bare `String` | `{isEncrypted: bool, isUnlocked: bool}`, or nil | What CoreGraphics makes of the file |
+
+```dart
+final security = await PdfSecurityChannel.inspect(path);
+// null  → no answer; go on and let the renderer speak for itself
+// isEncrypted    → the file carries encryption of any kind
+// needsPassword  → encrypted and not already unlocked by an empty user password
+```
+
+### Why CoreGraphics
+
+Neither PDF library can answer this. The renderer (pdfx) refuses every
+encrypted file on macOS without saying why; the writer (syncfusion) has no
+public way to report that a document was encrypted at all — `security.algorithm`
+returns a default value for a plain file, which cannot be told from a real one.
+CoreGraphics is the authority the renderer itself answers to, which makes its
+verdict the one that predicts what the renderer will do.
+
+### Notes
+
+- **nil is not "unencrypted".** A file the system cannot parse as a PDF gets no
+  answer, which is a different thing and is reported as such; `inspect` returns
+  null and the caller goes on.
+- A document carrying **only an owner password** comes back
+  `isEncrypted: true, isUnlocked: true` — an empty user password already opened
+  it. It needs nothing from the reader, but its permissions still apply
+  (FR-1.9).
+- Registered for **every** engine, main window and sub-windows alike: any
+  window may be the one that opens a document.
 
 ---
 
@@ -357,6 +434,7 @@ func applicationDidFinishLaunching(_ notification: Notification) {
         setupWindowListChannel(binaryMessenger: controller.engine.binaryMessenger)
         setupToolbarChannel(binaryMessenger: controller.engine.binaryMessenger)
         setupFileHandlerChannel(binaryMessenger: controller.engine.binaryMessenger)
+        setupPdfSecurityChannel(binaryMessenger: controller.engine.binaryMessenger)
     }
 }
 ```
@@ -410,3 +488,4 @@ This prevents channel errors from crashing the app while maintaining functionali
 | `com.pdfsign/window_list` | Window menu | Dart → Native |
 | `com.pdfsign/toolbar` | Native toolbar | Bidirectional |
 | `com.pdfsign/file_handler` | Finder file open | Bidirectional |
+| `com.pdfsign/pdf_security` | Whether a file is encrypted, before it is opened | Dart → Native |
