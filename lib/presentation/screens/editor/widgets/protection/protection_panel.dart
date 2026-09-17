@@ -160,9 +160,9 @@ class _ProtectionPanelState extends State<ProtectionPanel> {
                 verifyLabel: l10n.verifyFieldLabel,
                 fieldKey: 'open',
               ),
-              const Divider(height: Spacing.spacing24),
+              const Divider(height: Spacing.spacing16),
               _permissionsSection(l10n),
-              const Divider(height: Spacing.spacing24),
+              const Divider(height: Spacing.spacing16),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -237,17 +237,18 @@ class _ProtectionPanelState extends State<ProtectionPanel> {
           l10n.permissionsNote,
           style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
         ),
-        for (final permission in DocumentPermission.values)
-          CheckboxListTile(
-            key: ProtectionPanel.permissionKey(permission),
-            contentPadding: EdgeInsets.zero,
-            dense: true,
-            controlAffinity: ListTileControlAffinity.leading,
-            value: _permissions.contains(permission),
-            title: Text(_nameOf(permission, l10n)),
-            onChanged: _impliedBy(permission)
-                ? null
-                : (granted) => _togglePermission(permission, granted ?? false),
+        // Two columns. Six of these down one side push the owner password
+        // off the bottom of the window, and a panel that refuses to go on
+        // without a field nobody can see is a panel nobody can use.
+        for (var row = 0; row < 3; row++)
+          Row(
+            children: [
+              for (final permission in [
+                DocumentPermission.values[row * 2],
+                DocumentPermission.values[row * 2 + 1],
+              ])
+                Expanded(child: _permissionBox(permission, l10n)),
+            ],
           ),
         if (_permissions.contains(DocumentPermission.changingContent))
           Text(
@@ -266,6 +267,23 @@ class _ProtectionPanelState extends State<ProtectionPanel> {
       ],
     );
   }
+
+  Widget _permissionBox(DocumentPermission permission, AppLocalizations l10n) =>
+      CheckboxListTile(
+        key: ProtectionPanel.permissionKey(permission),
+        contentPadding: EdgeInsets.zero,
+        dense: true,
+        visualDensity: VisualDensity.compact,
+        controlAffinity: ListTileControlAffinity.leading,
+        value: _permissions.contains(permission),
+        title: Text(
+          _nameOf(permission, l10n),
+          style: const TextStyle(fontSize: 13),
+        ),
+        onChanged: _impliedBy(permission)
+            ? null
+            : (granted) => _togglePermission(permission, granted ?? false),
+      );
 
   String _nameOf(DocumentPermission permission, AppLocalizations l10n) =>
       switch (permission) {

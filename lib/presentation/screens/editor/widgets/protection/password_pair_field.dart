@@ -56,12 +56,14 @@ class PasswordPairField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    // Side by side rather than one above the other: the panel has two of
+    // these pairs and six permissions to show, and stacked fields pushed the
+    // owner password off the bottom of the window.
+    return Row(
       children: [
-        _field(controller.password, label, verify: false),
-        const SizedBox(height: Spacing.spacing8),
-        _field(controller.verify, verifyLabel, verify: true),
+        Expanded(child: _field(controller.password, label, verify: false)),
+        const SizedBox(width: Spacing.spacing8),
+        Expanded(child: _field(controller.verify, verifyLabel, verify: true)),
       ],
     );
   }
