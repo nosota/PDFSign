@@ -525,6 +525,31 @@ keeps an empty entry out of the history.
 
 ---
 
+### printDocument
+
+**File:** `lib/presentation/providers/editor/print_document.dart`
+
+```dart
+final outcome = await printDocument(ref);                          // every page
+final outcome = await printDocument(ref, scope: PrintScope.currentPage);
+```
+
+Not a provider — a coordinator over the document, the objects, the original
+bytes and the pending protection, in the same shape as `EditorClipboard`. It
+composes what a save would write and hands it to `PrintChannel`.
+
+| Function | Does |
+|----------|------|
+| `printDocument(ref, {scope})` | Prints the document as the reader sees it; returns a `PrintOutcome` |
+| `mayPrint(security, pending)` | Whether printing is the reader's to do — the check that decides whether to ask for the owner password |
+| `passwordFor(security, pending)` | The password that opens the composed bytes: the owner's first, because it is what prints a document nobody else may |
+
+`PrintOutcome.cancelled` is silent by design: closing the panel is an ordinary
+thing to do. The permission is checked here to ask rather than fail, and again
+natively against the document itself.
+
+---
+
 ### PendingProtection
 
 **File:** `lib/presentation/providers/editor/document_protection_provider.dart`

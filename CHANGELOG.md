@@ -3,6 +3,14 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Added
+
+- Printing: **File → Print…** (⌘P) and **Print Current Page** (⌥⌘P). The document goes to the printer as it is on screen — objects embedded, pages turned — through the panel macOS shows for PDFs, so copies, page range, paper, orientation, scaling, layout, presets, the preview and Save as PDF all come from the system. Pages are shrunk to fit the paper rather than clipped, and turned to suit it
+- A document that withholds printing asks for its owner password first and prints once it is given. The permission is checked against the document itself before anything is sent
+- Nothing is written to disk on the way: the document is composed in memory and handed to the system from there
+
 ## [1.4.2] — 2026-09-17
 
 ### Fixed

@@ -120,6 +120,7 @@ See [PLATFORM_CHANNELS.md](PLATFORM_CHANNELS.md) for native integration details.
 | Reading a protected document | Syncfusion PDF, rendered from a decrypted copy (ADR-0011) |
 | Writing passwords and permissions | Syncfusion PDF |
 | Telling whether a file is encrypted | CoreGraphics, over `com.pdfsign/pdf_security` |
+| Printing | PDFKit's print operation and the system panel, over `com.pdfsign/print` |
 
 ### Rendering Pipeline
 
@@ -153,6 +154,15 @@ instance alive across scroll ticks and pointer moves.
 Images are permanently embedded, not metadata. A document opened with a
 password keeps its protection by itself: the writer carries the algorithm, the
 permissions and both passwords across without being asked.
+
+### Print Pipeline
+
+1. Ask whether printing is the reader's to do; a document that withholds it
+   asks for the owner password first
+2. Compose the document in memory — the same bytes a save would write
+3. Hand them to `PDFDocument(data:)` natively, with the password that opens
+   them; the document's own `allowsPrinting` decides again
+4. Run the system's print panel as a sheet on the window that asked
 
 ### Opening Pipeline
 

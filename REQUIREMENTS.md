@@ -314,6 +314,20 @@ leaves it clean.
 #### FR-6.8 — Close with unsaved changes
 Closing a dirty window shows a Save / Discard dialog. Close All and Quit show a consolidated Save All / Don't Save / Cancel dialog reporting how many documents are affected; if saves fail afterwards, a second dialog offers "Close Anyway".
 
+#### FR-6.10 — Printing
+**File → Print…** (`Cmd+P`) prints the document as the reader sees it: the objects are embedded and the pages carry the turns they were given, so what comes out of the printer is what a save would have written. **Print Current Page** (`Opt+Cmd+P`) is the same panel with its range pre-filled with the page in view.
+
+The panel is **the system's own**, built by PDFKit from the document
+(`PDFDocument.printOperation(for:scalingMode:autoRotate:)`): copies, page range, paper size, orientation, scaling, layout, two-sided, presets, the preview and the PDF menu all come from macOS, along with the printer's own settings. Nothing of that is rebuilt here. Neither PDF library in the project can print — pdfx renders and syncfusion writes files — so printing comes from the platform, and it needs no new dependency: Quartz is already linked.
+
+Pages are scaled **down to fit** the paper and rotated to suit it, so a page larger than the sheet is shrunk rather than clipped and a landscape page is not cut off. The panel opens on **every page** unless Print Current Page asked otherwise: printing one page when the reader meant the document is a worse mistake than an extra click. It opens on a *copy* of the shared print settings, so a range chosen for one job is not the next one's default.
+
+**Nothing is written to disk on the way.** The bytes go to the system from memory, which is what ADR-0011 asks of a decrypted document. What the printing system spools afterwards is outside the app, exactly as it is for Preview.
+
+**Printing is one of the things a document's permissions speak about.** A document that withholds it asks for the owner password first, through the dialog the protection panel uses, saying *Only the owner may print this document*. The permission is checked twice: once here, to ask rather than fail, and once natively against the document itself, so a document that forbids printing is refused even if something upstream forgot to ask.
+
+**Known and deliberate:** the panel's **PDF → Save as PDF** writes an unprotected copy of what is being printed. That is the system's behaviour, not this app's, and it is reachable only by someone who is allowed to print the document in the first place.
+
 #### FR-6.9 — Setting the document's protection
 **File → Protect Document…** (`Shift+Cmd+L`) and the lock in the native toolbar, between Delete and Share. The lock is drawn closed while the document asks for a password or withholds anything, and open while it does not — including while that is only what the reader has *asked* for and not yet saved.
 
@@ -412,6 +426,8 @@ There are no other settings. In particular there is no clipboard-behaviour secti
 | `Cmd+Opt+W` | Close All | all |
 | `Cmd+Q` | Quit (with save prompt) | all |
 | `Cmd+,` | Settings | all |
+| `Cmd+P` | Print… | PDF window |
+| `Opt+Cmd+P` | Print Current Page | PDF window |
 | `Shift+Cmd+L` | Protect Document… | PDF window |
 | `Cmd+Z` / `Shift+Cmd+Z` | Undo / Redo | PDF window; belongs to a focused text field |
 | `Cmd+Backspace` | Delete object (Edit menu) | PDF window |
@@ -429,7 +445,7 @@ There are no other settings. In particular there is no clipboard-behaviour secti
 | `Home` / `End` | First / last page | PDF window |
 | Arrows | Scroll by 50 px | PDF window |
 
-The macOS app menu provides About, Settings…, and Quit PDFSign. The Edit and View menus exist only in PDF windows; Edit holds Undo, Redo, Cut, Copy, Paste, the two rotations, the four restacking commands and Delete, and File holds Protect Document… between Save All and Share.
+The macOS app menu provides About, Settings…, and Quit PDFSign. The Edit and View menus exist only in PDF windows; Edit holds Undo, Redo, Cut, Copy, Paste, the two rotations, the four restacking commands and Delete, and File holds Protect Document… between Save All and Share, and Print… after it.
 
 ---
 
@@ -603,10 +619,10 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 
 | Aspect | State |
 |--------|-------|
-| `flutter analyze` | 1206 issues: 0 errors, **0 warnings**, 1206 info |
-| Unit tests | **204** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry, the writer, reading and writing protected documents, permission bits, restacking and the undo history |
+| `flutter analyze` | 1241 issues: 0 errors, **0 warnings**, 1241 info |
+| Unit tests | **229** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry, the writer, reading and writing protected documents, permission bits, restacking, the undo history, and what printing composes, sends and refuses |
 | Widget tests | **120** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation, the password prompt, the read-only notice, the protection panel, restacking and what each action records in the history |
-| Native tests | **47** — the toolbar's fixed item set and layout, the enabled state of Delete, undo/redo and restacking, the lock's two faces, window cascading, the CoreGraphics security probe, and the title bar that keeps the toolbar's backdrop off the document (`macos/RunnerTests`) |
+| Native tests | **55** — the toolbar's fixed item set and layout, the enabled state of Delete, undo/redo and restacking, the lock's two faces, window cascading, the CoreGraphics security probe, the title bar that keeps the toolbar's backdrop off the document, and what may be printed (`macos/RunnerTests`) |
 | Integration tests | **none** |
 | Golden tests | **none** |
 | CI | none |
@@ -741,6 +757,7 @@ Taking the dictionary out would mean writing the document's objects into a fresh
 
 | Version | Date | Change |
 |---------|------|--------|
+| 2.4 | 2026-09-17 | Printing (FR-6.10): the system's panel, the document as the reader sees it, the print permission honoured, and the page in view as a pre-filled range. |
 | 2.3 | 2026-09-17 | FR-6.9: the owner-password gate turns on what a document withholds, not on whether it is encrypted, and says which of the two reasons it is asking for. |
 | 2.2 | 2026-09-17 | Setting a document's protection (FR-6.9, ADR-0013) and its one limitation (§13.16); FR-6.7 extended to protection; §3.9 shortcuts and FR-2.9 corrected against the menu, which has had no Reload command since 1.2.0; §10 figures remeasured. |
 | 2.1 | 2026-09-17 | Protected documents (FR-1.8, FR-1.9, §2.4), object restacking (FR-5.10) and undo/redo (FR-5.11); §12.1, §12.2 and §12.3 closed; FR-5.8 and FR-5.9 corrected against the implementation. |

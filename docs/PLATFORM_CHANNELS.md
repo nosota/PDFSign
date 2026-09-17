@@ -14,11 +14,13 @@ lib/core/platform/
 ├── window_list_channel.dart        # Window menu operations
 ├── toolbar_channel.dart            # Native toolbar
 ├── file_open_handler.dart          # Finder file open requests
-└── pdf_security_channel.dart       # Whether a PDF is encrypted
+├── pdf_security_channel.dart       # Whether a PDF is encrypted
+└── print_channel.dart              # The system print panel
 ```
 
 Native implementations are in `macos/Runner/AppDelegate.swift`, except the PDF
-security probe (`macos/Runner/PdfFileSecurity.swift`) and window placement
+security probe (`macos/Runner/PdfFileSecurity.swift`), printing
+(`macos/Runner/DocumentPrinter.swift`) and window placement
 (`macos/Runner/WindowCascade.swift`).
 
 ---
@@ -377,6 +379,45 @@ verdict the one that predicts what the renderer will do.
 
 ---
 
+## PrintChannel
+
+**File:** `lib/core/platform/print_channel.dart`
+**Channel:** `com.pdfsign/print`
+**Native:** `macos/Runner/DocumentPrinter.swift`
+
+Hands a document held in memory to the system's print panel (FR-6.10).
+
+### Dart → Native Methods
+
+| Method | Arguments | Returns | Description |
+|--------|-----------|---------|-------------|
+| `print` | `bytes`, `jobName`, optional `firstPage`, `lastPage`, `password` | `"printed"` / `"cancelled"` / `"notAllowed"` / `"unreadable"` | Shows the panel and answers what came of it |
+
+```dart
+final outcome = await PrintChannel.printDocument(
+  bytes: composed,          // the document as the reader sees it
+  jobName: 'contract.pdf',  // what the print queue shows
+  firstPage: 4, lastPage: 4, // omitted for the whole document
+  password: ownerPassword,   // only when the document needs one
+);
+```
+
+### Notes
+
+- **Bytes, never a path.** Printing is the one thing handed to the system
+  whole, and a decrypted document must not be written to a file of its own
+  (ADR-0011). What the printing system spools afterwards is outside the app.
+- **The document's own permissions decide.** The native side reads
+  `allowsPrinting` from the PDF rather than trusting the caller; the owner
+  password raises the rights, on a locked document and on one that opens
+  freely but restricts what may be done with it.
+- The panel is a **sheet on the window that asked**, so each window prints its
+  own document, and it opens on a **copy** of `NSPrintInfo.shared` — one job's
+  page range does not become the next one's default.
+- Registered for every engine, main window and sub-windows alike.
+
+---
+
 ## FileOpenHandler
 
 **File:** `lib/core/platform/file_open_handler.dart`
@@ -443,6 +484,7 @@ func applicationDidFinishLaunching(_ notification: Notification) {
         setupToolbarChannel(binaryMessenger: controller.engine.binaryMessenger)
         setupFileHandlerChannel(binaryMessenger: controller.engine.binaryMessenger)
         setupPdfSecurityChannel(binaryMessenger: controller.engine.binaryMessenger)
+        setupPrintChannel(controller: controller)
     }
 }
 ```
@@ -497,3 +539,4 @@ This prevents channel errors from crashing the app while maintaining functionali
 | `com.pdfsign/toolbar` | Native toolbar | Bidirectional |
 | `com.pdfsign/file_handler` | Finder file open | Bidirectional |
 | `com.pdfsign/pdf_security` | Whether a file is encrypted, before it is opened | Dart → Native |
+| `com.pdfsign/print` | The system print panel | Dart → Native |

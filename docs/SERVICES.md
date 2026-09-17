@@ -25,10 +25,15 @@ Service for saving PDFs with placed images embedded. Uses Syncfusion PDF library
 
 | Method | Signature | Description |
 |--------|-----------|-------------|
-| `savePdfFromBytes` | `Future<Either<Failure, String>> savePdfFromBytes({required Uint8List originalBytes, required List<PlacedImage> placedImages, required List<PdfPageInfo> pages, required String outputPath, String? password, DocumentProtection? protection})` | Writes the document with the objects embedded |
+| `composePdfBytes` | `Future<Either<Failure, Uint8List>> composePdfBytes({required Uint8List originalBytes, required List<PlacedImage> placedImages, required List<PdfPageInfo> pages, String? password, DocumentProtection? protection})` | The document as the reader sees it, in memory — what a save would write |
+| `savePdfFromBytes` | `Future<Either<Failure, String>> savePdfFromBytes({required Uint8List originalBytes, required List<PlacedImage> placedImages, required List<PdfPageInfo> pages, required String outputPath, String? password, DocumentProtection? protection})` | Writes those bytes to a file |
 | `createTempPdfWithImagesFromBytes` | `Future<Either<Failure, String>> createTempPdfWithImagesFromBytes({required Uint8List originalBytes, required List<PlacedImage> placedImages, required List<PdfPageInfo> pages, String? password, DocumentProtection? protection})` | The same, into a temp file, for sharing |
 
-Both take **bytes, never a path**: every save starts from the original bytes
+`composePdfBytes` is the one place objects, page turns and protection are
+written, so a save, a shared copy and a print job cannot come out differently.
+Printing takes those bytes and never touches the disk (FR-6.10, ADR-0011).
+
+Both saving methods take **bytes, never a path**: every save starts from the original bytes
 cached at open time (ADR-0002). The path-based variants were removed with that
 rule.
 
