@@ -159,6 +159,12 @@ extension PdfViewerStateX on PdfViewerState {
         orElse: () => null,
       );
 
+  /// The page the reader is looking at, if a document is loaded.
+  int? get currentPageOrNull => maybeMap(
+        loaded: (state) => state.currentPage,
+        orElse: () => null,
+      );
+
   /// Returns the current scale if loaded.
   double? get scaleOrNull => maybeMap(
         loaded: (state) => state.scale,

@@ -363,6 +363,22 @@ class AppLocalizationsSv extends AppLocalizations {
   String get ownerPasswordFieldLabel => 'Owner password';
 
   @override
+  String get menuPrint => 'Print…';
+
+  @override
+  String get menuPrintCurrentPage => 'Print Current Page';
+
+  @override
+  String get printingIsTheOwnersTitle =>
+      'Only the owner may print this document';
+
+  @override
+  String get printingNotAllowed => 'This document does not allow printing.';
+
+  @override
+  String get printingFailed => 'The document could not be printed.';
+
+  @override
   String get protectionIsTheOwnersTitle =>
       'Only the owner may change this document\'s protection';
 

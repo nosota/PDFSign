@@ -454,6 +454,26 @@
   "@ownerPasswordFieldLabel": {
     "description": "Label of the owner password field"
   },
+  "menuPrint": "Print…",
+  "@menuPrint": {
+    "description": "File menu item that opens the print panel"
+  },
+  "menuPrintCurrentPage": "Print Current Page",
+  "@menuPrintCurrentPage": {
+    "description": "File menu item that opens the print panel on the page in view"
+  },
+  "printingIsTheOwnersTitle": "Only the owner may print this document",
+  "@printingIsTheOwnersTitle": {
+    "description": "Heading of the dialog that asks for the owner password before printing"
+  },
+  "printingNotAllowed": "This document does not allow printing.",
+  "@printingNotAllowed": {
+    "description": "Message shown when a document withholds printing"
+  },
+  "printingFailed": "The document could not be printed.",
+  "@printingFailed": {
+    "description": "Message shown when printing could not be started"
+  },
   "protectionIsTheOwnersTitle": "Only the owner may change this document's protection",
   "@protectionIsTheOwnersTitle": {
     "description": "Heading of the dialog that asks for the owner password before the protection panel opens"

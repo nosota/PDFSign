@@ -49,6 +49,8 @@ class AppMenuBar extends ConsumerStatefulWidget {
     this.onCopy,
     this.onPaste,
     this.onProtect,
+    this.onPrint,
+    this.onPrintCurrentPage,
     this.onUndo,
     this.onRedo,
     this.canUndo = false,
@@ -160,6 +162,11 @@ class AppMenuBar extends ConsumerStatefulWidget {
 
   /// Opens the panel that sets the document's passwords and permissions.
   final VoidCallback? onProtect;
+
+  /// Opens the system's print panel, on the whole document or on the page in
+  /// view.
+  final VoidCallback? onPrint;
+  final VoidCallback? onPrintCurrentPage;
 
   /// Taking the document a step back or forward through its history.
   final VoidCallback? onUndo;
@@ -395,6 +402,34 @@ class _AppMenuBarState extends ConsumerState<AppMenuBar> {
             PlatformMenuItem(
               label: widget.localizations.menuShare,
               onSelected: widget.onShare,
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Printing comes after sharing: both hand the document on, and printing
+    // is the one that leaves the machine.
+    if (widget.onPrint != null) {
+      items.add(
+        PlatformMenuItemGroup(
+          members: [
+            PlatformMenuItem(
+              label: widget.localizations.menuPrint,
+              shortcut: const SingleActivator(
+                LogicalKeyboardKey.keyP,
+                meta: true,
+              ),
+              onSelected: widget.onPrint,
+            ),
+            PlatformMenuItem(
+              label: widget.localizations.menuPrintCurrentPage,
+              shortcut: const SingleActivator(
+                LogicalKeyboardKey.keyP,
+                meta: true,
+                alt: true,
+              ),
+              onSelected: widget.onPrintCurrentPage,
             ),
           ],
         ),

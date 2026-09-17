@@ -797,6 +797,36 @@ abstract class AppLocalizations {
   /// **'Owner password'**
   String get ownerPasswordFieldLabel;
 
+  /// File menu item that opens the print panel
+  ///
+  /// In en, this message translates to:
+  /// **'Print…'**
+  String get menuPrint;
+
+  /// File menu item that opens the print panel on the page in view
+  ///
+  /// In en, this message translates to:
+  /// **'Print Current Page'**
+  String get menuPrintCurrentPage;
+
+  /// Heading of the dialog that asks for the owner password before printing
+  ///
+  /// In en, this message translates to:
+  /// **'Only the owner may print this document'**
+  String get printingIsTheOwnersTitle;
+
+  /// Message shown when a document withholds printing
+  ///
+  /// In en, this message translates to:
+  /// **'This document does not allow printing.'**
+  String get printingNotAllowed;
+
+  /// Message shown when printing could not be started
+  ///
+  /// In en, this message translates to:
+  /// **'The document could not be printed.'**
+  String get printingFailed;
+
   /// Heading of the dialog that asks for the owner password before the protection panel opens
   ///
   /// In en, this message translates to:

@@ -30,7 +30,9 @@ import 'package:pdfsign/presentation/providers/editor/editor_clipboard.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/global_dirty_state_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/original_pdf_provider.dart';
+import 'package:pdfsign/core/platform/print_channel.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/print_document.dart';
 import 'package:pdfsign/presentation/providers/editor/size_unit_preference_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/page_jump_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
@@ -609,6 +611,49 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     );
   }
 
+  /// Prints the document as the reader sees it.
+  ///
+  /// A document that withholds printing asks for the owner password first,
+  /// the same gate the protection panel uses: printing is one of the things
+  /// its permissions speak about, and the app honours them.
+  Future<void> _handlePrint({
+    PrintScope scope = PrintScope.wholeDocument,
+  }) async {
+    final document = ref.read(pdfDocumentProvider).documentOrNull;
+    if (document == null) return;
+
+    if (!mayPrint(document.security, ref.read(pendingProtectionProvider))) {
+      final context = _navigatorKey.currentContext;
+      if (context == null) return;
+      final texts = _l10n;
+      final unlocked = await OwnerPasswordDialog.show(
+        context,
+        onSubmit: ref.read(pdfDocumentProvider.notifier).unlockOwnerRights,
+        title: texts?.printingIsTheOwnersTitle,
+        confirmLabel: texts?.continueButton,
+      );
+      if (!unlocked || !mounted) return;
+    }
+
+    final outcome = await printDocument(ref, scope: scope);
+    if (!mounted) return;
+
+    final l10n = _l10n;
+    if (l10n == null) return;
+    switch (outcome) {
+      // Closing the panel is an ordinary thing to do, and a job that went to
+      // the printer speaks for itself.
+      case PrintOutcome.printed:
+      case PrintOutcome.cancelled:
+        break;
+      case PrintOutcome.notAllowed:
+        _showSnackBar(Text(l10n.printingNotAllowed));
+      case PrintOutcome.unreadable:
+      case PrintOutcome.unavailable:
+        _showSnackBar(Text(l10n.printingFailed));
+    }
+  }
+
   void _handleUndo() => undoEdit(ref);
 
   void _handleRedo() => redoEdit(ref);
@@ -1094,6 +1139,9 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
               onCopy: _handleCopy,
               onPaste: _handlePaste,
               onProtect: _handleProtect,
+              onPrint: _handlePrint,
+              onPrintCurrentPage: () =>
+                  _handlePrint(scope: PrintScope.currentPage),
               onUndo: _handleUndo,
               onRedo: _handleRedo,
               canUndo: menuState.canUndo,
