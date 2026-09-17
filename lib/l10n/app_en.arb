@@ -503,5 +503,81 @@
   "dragToReorder": "Drag to reorder",
   "@dragToReorder": {
     "description": "Tooltip on the grip beside a library image, which is dragged to reorder the list"
+  },
+  "protectDocumentTitle": "Protect Document",
+  "@protectDocumentTitle": {
+    "description": "Title of the panel that sets a document's passwords and permissions"
+  },
+  "requirePasswordToOpen": "Require Password To Open Document",
+  "@requirePasswordToOpen": {
+    "description": "Checkbox that makes the document ask for a password before it can be read"
+  },
+  "verifyFieldLabel": "Verify",
+  "@verifyFieldLabel": {
+    "description": "Label of the field where a password is typed a second time"
+  },
+  "permissionsHeading": "Permissions",
+  "@permissionsHeading": {
+    "description": "Heading above the list of what may be done without the owner password"
+  },
+  "permissionsNote": "Allow the following changes to be made without entering the owner password.",
+  "@permissionsNote": {
+    "description": "Explains what the permission checkboxes mean"
+  },
+  "permissionPrinting": "Printing",
+  "@permissionPrinting": {
+    "description": "Permission to print the document"
+  },
+  "permissionCopying": "Copying Text or Graphics",
+  "@permissionCopying": {
+    "description": "Permission to copy content out of the document"
+  },
+  "permissionPageAssembly": "Inserting, Deleting, or Rotating Pages",
+  "@permissionPageAssembly": {
+    "description": "Permission to rearrange the document's pages"
+  },
+  "permissionAnnotations": "Adding Annotations or Signatures",
+  "@permissionAnnotations": {
+    "description": "Permission to annotate and sign"
+  },
+  "permissionChangingContent": "Changing the Document",
+  "@permissionChangingContent": {
+    "description": "Permission to change the content of the document"
+  },
+  "permissionFormFilling": "Filling Existing Form Fields",
+  "@permissionFormFilling": {
+    "description": "Permission to fill in form fields"
+  },
+  "changingContentIncludes": "Changing the document includes annotating and filling in forms, so those are granted with it.",
+  "@changingContentIncludes": {
+    "description": "Explains why two checkboxes are ticked and unavailable"
+  },
+  "ownerPasswordHeading": "Owner Password",
+  "@ownerPasswordHeading": {
+    "description": "Heading above the owner password fields"
+  },
+  "removeProtection": "Remove Protection",
+  "@removeProtection": {
+    "description": "Button that clears both passwords and permits everything"
+  },
+  "applyButton": "Apply",
+  "@applyButton": {
+    "description": "Button that accepts the protection panel"
+  },
+  "passwordsDoNotMatch": "The passwords do not match",
+  "@passwordsDoNotMatch": {
+    "description": "Shown when a password and its verification differ"
+  },
+  "passwordCannotBeEmpty": "Enter a password",
+  "@passwordCannotBeEmpty": {
+    "description": "Shown when a password is required but was left blank"
+  },
+  "restrictionsNeedOwnerPassword": "Restrictions need an owner password. Without one, anyone can lift them.",
+  "@restrictionsNeedOwnerPassword": {
+    "description": "Shown when permissions are withheld but no owner password was given"
+  },
+  "signingNeedsChangingContent": "Without “Changing the Document”, this file cannot be signed here again unless the owner password is given.",
+  "@signingNeedsChangingContent": {
+    "description": "Warns that the app itself will be shut out of the document it is protecting"
   }
 }
