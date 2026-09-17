@@ -157,8 +157,7 @@ class AppMenuBar extends ConsumerStatefulWidget {
   /// Pastes onto the page, or into the field that has focus.
   final VoidCallback? onPaste;
 
-  /// Turns the page in view a quarter turn anticlockwise.
-  /// Taking the document a step back or forward.
+  /// Taking the document a step back or forward through its history.
   final VoidCallback? onUndo;
   final VoidCallback? onRedo;
 
@@ -174,6 +173,7 @@ class AppMenuBar extends ConsumerStatefulWidget {
   final VoidCallback? onSendBackward;
   final VoidCallback? onSendToBack;
 
+  /// Turns the page in view a quarter turn anticlockwise.
   final VoidCallback? onRotateLeft;
 
   /// Turns the page in view a quarter turn clockwise.

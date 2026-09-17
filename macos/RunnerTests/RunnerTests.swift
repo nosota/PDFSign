@@ -151,6 +151,50 @@ final class PDFSignToolbarHelperTests: XCTestCase {
     XCTAssertEqual(historyGroup()?.subitems.allSatisfy { $0.image != nil }, true)
   }
 
+  /// A group validates its own subitems, whatever the subitems say, so the
+  /// answer given here is what actually decides whether they light up.
+  func testShouldNotValidateUndoIntoLifeWithNothingToUndo() {
+    guard let undo = historyGroup()?.subitems.first,
+      let redo = historyGroup()?.subitems.last
+    else { return XCTFail("no history group") }
+
+    XCTAssertFalse(helper.validateToolbarItem(undo))
+    XCTAssertFalse(helper.validateToolbarItem(redo))
+  }
+
+  func testShouldValidateEachDirectionByItself() {
+    helper.setHistoryEnabled(canUndo: true, canRedo: false, labels: nil)
+    guard let undo = historyGroup()?.subitems.first,
+      let redo = historyGroup()?.subitems.last
+    else { return XCTFail("no history group") }
+
+    XCTAssertTrue(helper.validateToolbarItem(undo))
+    XCTAssertFalse(helper.validateToolbarItem(redo))
+  }
+
+  func testShouldNotValidateRestackingIntoLifeWithNothingSelected() {
+    guard let segments = zOrderGroup()?.subitems else {
+      return XCTFail("no restacking group")
+    }
+
+    XCTAssertTrue(segments.allSatisfy { !helper.validateToolbarItem($0) })
+  }
+
+  func testShouldValidateRestackingOnceSomethingIsSelected() {
+    helper.setZOrderEnabled(true, labels: nil, groupLabel: nil)
+    guard let segments = zOrderGroup()?.subitems else {
+      return XCTFail("no restacking group")
+    }
+
+    XCTAssertTrue(segments.allSatisfy { helper.validateToolbarItem($0) })
+  }
+
+  func testShouldTakeALocalizedNameForTheRestackingControl() {
+    helper.setZOrderEnabled(true, labels: nil, groupLabel: "Порядок")
+
+    XCTAssertEqual(zOrderGroup()?.label, "Порядок")
+  }
+
   func testShouldBuildRestackingAsAFourSegmentGroup() {
     let group = zOrderGroup()
 
@@ -170,21 +214,22 @@ final class PDFSignToolbarHelperTests: XCTestCase {
   }
 
   func testShouldEnableRestackingWhenSomethingIsSelected() {
-    helper.setZOrderEnabled(true, labels: nil)
+    helper.setZOrderEnabled(true, labels: nil, groupLabel: nil)
 
     XCTAssertEqual(zOrderGroup()?.subitems.allSatisfy { $0.isEnabled }, true)
   }
 
   func testShouldDisableRestackingAgainWhenTheSelectionClears() {
-    helper.setZOrderEnabled(true, labels: nil)
-    helper.setZOrderEnabled(false, labels: nil)
+    helper.setZOrderEnabled(true, labels: nil, groupLabel: nil)
+    helper.setZOrderEnabled(false, labels: nil, groupLabel: nil)
 
     XCTAssertEqual(zOrderGroup()?.subitems.allSatisfy { !$0.isEnabled }, true)
   }
 
   func testShouldTakeLocalizedRestackingTexts() {
     helper.setZOrderEnabled(
-      true, labels: ["Назад", "На шаг назад", "На шаг вперёд", "Вперёд"])
+      true, labels: ["Назад", "На шаг назад", "На шаг вперёд", "Вперёд"],
+      groupLabel: nil)
 
     XCTAssertEqual(
       zOrderGroup()?.subitems.map { $0.label },
@@ -194,8 +239,9 @@ final class PDFSignToolbarHelperTests: XCTestCase {
 
   func testShouldKeepRestackingTextsWhenNoneAreGiven() {
     helper.setZOrderEnabled(
-      true, labels: ["Назад", "На шаг назад", "На шаг вперёд", "Вперёд"])
-    helper.setZOrderEnabled(false, labels: nil)
+      true, labels: ["Назад", "На шаг назад", "На шаг вперёд", "Вперёд"],
+      groupLabel: nil)
+    helper.setZOrderEnabled(false, labels: nil, groupLabel: nil)
 
     XCTAssertEqual(zOrderGroup()?.subitems.first?.label, "Назад")
   }

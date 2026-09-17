@@ -173,11 +173,13 @@ class AppDelegate: FlutterAppDelegate {
           let args = call.arguments as? [String: Any] ?? [:]
           let enabled = args["enabled"] as? Bool ?? false
           let labels = args["labels"] as? [String]
+          let groupLabel = args["groupLabel"] as? String
           DispatchQueue.main.async {
             if let window = controller.view.window,
                let toolbarHelper = toolbarHelpers[ObjectIdentifier(window)],
                toolbarHelper.owns(window) {
-              toolbarHelper.setZOrderEnabled(enabled, labels: labels)
+              toolbarHelper.setZOrderEnabled(
+                enabled, labels: labels, groupLabel: groupLabel)
             }
           }
           result(nil)
@@ -994,9 +996,12 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
   }
 
   /// Greys the restacking control out when there is nothing selected.
-  func setZOrderEnabled(_ enabled: Bool, labels: [String]?) {
+  func setZOrderEnabled(_ enabled: Bool, labels: [String]?, groupLabel: String?) {
     if let labels = labels, labels.count == 4 {
       zOrderLabels = labels
+    }
+    if let groupLabel = groupLabel {
+      zOrderLabel = groupLabel
     }
     zOrderEnabled = enabled
 
@@ -1176,9 +1181,25 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
 
   // MARK: - NSToolbarItemValidation
 
-  /// Always enable toolbar items (visibility is controlled by show/hide).
+  /// Answers for an item the toolbar asks about on its own.
+  ///
+  /// The standalone items opt out of validation (`autovalidates = false`), but
+  /// a group cannot: `NSToolbarItemGroup` validates its subitems for itself,
+  /// and an unconditional "yes" here would light Undo up with nothing to undo
+  /// and the restacking arrows with nothing selected — sending presses Dart
+  /// then drops in silence.
   @objc func validateToolbarItem(_ item: NSToolbarItem) -> Bool {
-    return true
+    switch item.itemIdentifier.rawValue {
+    case "UndoItem":
+      return canUndo
+    case "RedoItem":
+      return canRedo
+    case "SendToBackItem", "SendBackwardItem", "BringForwardItem",
+      "BringToFrontItem":
+      return zOrderEnabled
+    default:
+      return true
+    }
   }
 }
 

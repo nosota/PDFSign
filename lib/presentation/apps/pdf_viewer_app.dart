@@ -520,6 +520,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
           ToolbarChannel.setZOrderEnabled(
             hasSelection,
             labels: l10n == null ? null : _zOrderLabels(l10n),
+            groupLabel: l10n?.zOrderGroupLabel,
           );
 
           // Update menu state for Edit > Delete
@@ -630,6 +631,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     ToolbarChannel.setZOrderEnabled(
       ref.read(editorSelectionProvider) != null,
       labels: _zOrderLabels(l10n),
+      groupLabel: l10n.zOrderGroupLabel,
     );
     final history = ref.read(editorHistoryProvider);
     ToolbarChannel.setHistoryEnabled(

@@ -113,11 +113,14 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     if (path != null && path.isNotEmpty) {
       // Schedule the document load after the first frame
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        // Inside the callback with the rest: this runs from `initState`, and
+        // writing to a provider while the widget tree is building is what
+        // Riverpod refuses.
+        clearHistory(ref);
         ref.read(pdfDocumentProvider.notifier).openDocument(path);
         // Set up listener for permission retry handling
         _setupPermissionRetryListener();
       });
-      clearHistory(ref);
     }
   }
 

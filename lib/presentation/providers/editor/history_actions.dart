@@ -44,7 +44,7 @@ void recordHistoryStep(WidgetRef ref, void Function() change) {
 ///
 /// Idempotent while a step is open: a gesture may call it on every frame.
 void beginHistoryStep(WidgetRef ref) =>
-    ref.read(editorHistoryProvider.notifier).begin(currentSnapshot(ref));
+    ref.read(editorHistoryProvider.notifier).begin(() => currentSnapshot(ref));
 
 /// Closes the open step, keeping it only if the document actually changed.
 void endHistoryStep(WidgetRef ref) =>

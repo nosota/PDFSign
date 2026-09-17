@@ -99,11 +99,14 @@ class EditorHistory extends _$EditorHistory {
   @visibleForTesting
   int get redoDepth => _future.length;
 
-  /// Opens a step, remembering [before] as the state to come back to.
+  /// Opens a step, remembering the state to come back to.
   ///
   /// Idempotent while a step is open, so a gesture that reports every frame
-  /// can call it on each one without needing to know it is the first.
-  void begin(EditorSnapshot before) => _open ??= before;
+  /// can call it on each one without needing to know it is the first. [before]
+  /// is a function rather than a value because of that: a resize reports on
+  /// every frame of the drag, and building a snapshot to throw away each time
+  /// would allocate a list the length of the document per frame.
+  void begin(EditorSnapshot Function() before) => _open ??= before();
 
   /// Closes the open step.
   ///

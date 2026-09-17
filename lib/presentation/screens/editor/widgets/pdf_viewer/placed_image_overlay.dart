@@ -592,6 +592,13 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
         );
   }
 
+  /// Ends a resize: one history step for the whole gesture, and the library
+  /// keeps the size for the next time this image is dragged out.
+  void _handleResizeEnd() {
+    endHistoryStep(ref);
+    _rememberSizeForLibrary();
+  }
+
   /// Records the size the reader just settled on, against the library image
   /// this object came from.
   ///
@@ -601,13 +608,6 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
   /// Does nothing for an object with no library row — an image pasted from
   /// another application is stored with the document and has nothing to
   /// remember against.
-  /// Ends a resize: one history step for the gesture, and the library keeps
-  /// the size for the next time this image is dragged out.
-  void _handleResizeEnd() {
-    endHistoryStep(ref);
-    _rememberSizeForLibrary();
-  }
-
   void _rememberSizeForLibrary() {
     final sourceImageId = widget.image.sourceImageId;
     if (sourceImageId == null) return;

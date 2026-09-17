@@ -164,9 +164,10 @@ class PlacedImages extends _$PlacedImages {
   /// something already at the front — leaves the state identical, which is
   /// what keeps an empty step out of the undo history.
   void _restack(String id, int Function(int at, int count) destination) {
+    final page = _pageOf(id);
     final places = [
       for (var i = 0; i < state.length; i++)
-        if (state[i].pageIndex == _pageOf(id)) i,
+        if (state[i].pageIndex == page) i,
     ];
     final at = places.indexWhere((place) => state[place].id == id);
     if (at < 0) return;

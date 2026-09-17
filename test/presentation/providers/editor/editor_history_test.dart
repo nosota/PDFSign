@@ -54,7 +54,7 @@ void main() {
   group('making a step', () {
     test('should be able to go back afterwards', () {
       history()
-        ..begin(snapshot())
+        ..begin(() => snapshot())
         ..commit(snapshot(count: 1));
 
       expect(depth().canUndo, isTrue);
@@ -65,7 +65,7 @@ void main() {
       // A drag that went nowhere, or an object sent to a front it was already
       // at. An entry for it would make the next undo appear to do nothing.
       history()
-        ..begin(snapshot(count: 1))
+        ..begin(() => snapshot(count: 1))
         ..commit(snapshot(count: 1));
 
       expect(depth().canUndo, isFalse);
@@ -73,7 +73,7 @@ void main() {
 
     test('should not count a change of selection as a step', () {
       history()
-        ..begin(snapshot(count: 1, selected: 'object-0'))
+        ..begin(() => snapshot(count: 1, selected: 'object-0'))
         ..commit(snapshot(count: 1));
 
       expect(depth().canUndo, isFalse);
@@ -85,9 +85,9 @@ void main() {
       // it cannot tell which frame is the first.
       final start = snapshot();
       history()
-        ..begin(start)
-        ..begin(snapshot(count: 1))
-        ..begin(snapshot(count: 2))
+        ..begin(() => start)
+        ..begin(() => snapshot(count: 1))
+        ..begin(() => snapshot(count: 2))
         ..commit(snapshot(count: 3));
 
       expect(history().undo(snapshot(count: 3)), start);
@@ -95,7 +95,7 @@ void main() {
 
     test('should keep an abandoned step out of the history', () {
       history()
-        ..begin(snapshot())
+        ..begin(() => snapshot())
         ..abandon()
         ..commit(snapshot(count: 1));
 
@@ -108,7 +108,7 @@ void main() {
       final before = snapshot();
       final after = snapshot(count: 1);
       history()
-        ..begin(before)
+        ..begin(() => before)
         ..commit(after);
 
       expect(history().undo(after), before);
@@ -120,7 +120,7 @@ void main() {
       final before = snapshot();
       final after = snapshot(count: 1);
       history()
-        ..begin(before)
+        ..begin(() => before)
         ..commit(after);
       history().undo(after);
 
@@ -138,13 +138,13 @@ void main() {
       // The reader has taken another road; the one they turned off cannot be
       // rejoined from here.
       history()
-        ..begin(snapshot())
+        ..begin(() => snapshot())
         ..commit(snapshot(count: 1));
       history().undo(snapshot(count: 1));
       expect(depth().canRedo, isTrue);
 
       history()
-        ..begin(snapshot())
+        ..begin(() => snapshot())
         ..commit(snapshot(count: 2));
 
       expect(depth().canRedo, isFalse);
@@ -154,10 +154,10 @@ void main() {
       // ⌘Z in the middle of a drag: the drag's own step must not be committed
       // afterwards on top of the state the undo restored.
       history()
-        ..begin(snapshot())
+        ..begin(() => snapshot())
         ..commit(snapshot(count: 1));
       history()
-        ..begin(snapshot(count: 1))
+        ..begin(() => snapshot(count: 1))
         ..undo(snapshot(count: 1))
         ..commit(snapshot(count: 5));
 
@@ -169,7 +169,7 @@ void main() {
     test('should keep the last fifty steps and no more', () {
       for (var i = 0; i < historyDepthLimit + 10; i++) {
         history()
-          ..begin(snapshot(count: i))
+          ..begin(() => snapshot(count: i))
           ..commit(snapshot(count: i + 1));
       }
 
@@ -179,7 +179,7 @@ void main() {
     test('should drop the oldest first', () {
       for (var i = 0; i < historyDepthLimit + 1; i++) {
         history()
-          ..begin(snapshot(count: i))
+          ..begin(() => snapshot(count: i))
           ..commit(snapshot(count: i + 1));
       }
 
@@ -200,7 +200,7 @@ void main() {
   group('forgetting everything', () {
     test('should leave nowhere to go in either direction', () {
       history()
-        ..begin(snapshot())
+        ..begin(() => snapshot())
         ..commit(snapshot(count: 1));
       history().undo(snapshot(count: 1));
 
@@ -216,7 +216,7 @@ void main() {
   group('a page that was turned', () {
     test('should be a step of its own', () {
       history()
-        ..begin(snapshot(rotations: [0, 0]))
+        ..begin(() => snapshot(rotations: [0, 0]))
         ..commit(snapshot(rotations: [90, 0]));
 
       expect(depth().canUndo, isTrue);

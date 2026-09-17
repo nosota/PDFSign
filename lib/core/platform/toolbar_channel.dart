@@ -103,11 +103,13 @@ class ToolbarChannel {
   static Future<void> setZOrderEnabled(
     bool enabled, {
     List<String>? labels,
+    String? groupLabel,
   }) async {
     try {
       await _channel.invokeMethod('setZOrderEnabled', {
         'enabled': enabled,
         if (labels != null) 'labels': labels,
+        if (groupLabel != null) 'groupLabel': groupLabel,
       });
     } catch (e) {
       if (kDebugMode) {
