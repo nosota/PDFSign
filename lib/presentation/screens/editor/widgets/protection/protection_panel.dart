@@ -106,18 +106,16 @@ class _ProtectionPanelState extends State<ProtectionPanel> {
 
   void _apply(AppLocalizations l10n) {
     if (_requireOpenPassword && _open.text.isEmpty) {
-      return setState(() => _complaint = l10n.passwordCannotBeEmpty);
+      return _refuse(l10n.passwordCannotBeEmpty, _open);
     }
     if (_requireOpenPassword && !_open.matches) {
-      return setState(() => _complaint = l10n.passwordsDoNotMatch);
+      return _refuse(l10n.passwordsDoNotMatch, _open);
     }
     if (!_owner.matches) {
-      return setState(() => _complaint = l10n.passwordsDoNotMatch);
+      return _refuse(l10n.passwordsDoNotMatch, _owner);
     }
     if (_restricts && _owner.text.isEmpty) {
-      return setState(
-        () => _complaint = l10n.restrictionsNeedOwnerPassword,
-      );
+      return _refuse(l10n.restrictionsNeedOwnerPassword, _owner);
     }
 
     Navigator.of(context).pop(
@@ -130,6 +128,16 @@ class _ProtectionPanelState extends State<ProtectionPanel> {
     );
   }
 
+  /// Says [complaint] and puts the reader in the field that would settle it.
+  ///
+  /// Focusing the field scrolls it into view, which matters: the panel is
+  /// taller than a small window, and a complaint about a password nobody can
+  /// see is no better than none.
+  void _refuse(String complaint, PasswordPairController field) {
+    setState(() => _complaint = complaint);
+    field.requestFocus();
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -138,54 +146,22 @@ class _ProtectionPanelState extends State<ProtectionPanel> {
       title: Text(l10n.protectDocumentTitle),
       content: SizedBox(
         width: 460,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CheckboxListTile(
-                contentPadding: EdgeInsets.zero,
-                controlAffinity: ListTileControlAffinity.leading,
-                value: _requireOpenPassword,
-                title: Text(l10n.requirePasswordToOpen),
-                onChanged: (on) => setState(() {
-                  _requireOpenPassword = on ?? false;
-                  _complaint = null;
-                }),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(child: _fields(context, l10n)),
+            // The complaint stands outside the scrolling part on purpose: it
+            // answers a button press, and a panel that refuses out of sight
+            // looks like a panel that did nothing.
+            if (_complaint != null) ...[
+              const SizedBox(height: Spacing.spacing12),
+              Text(
+                _complaint!,
+                style: const TextStyle(color: AppColors.error),
               ),
-              PasswordPairField(
-                controller: _open,
-                enabled: _requireOpenPassword,
-                label: l10n.passwordFieldLabel,
-                verifyLabel: l10n.verifyFieldLabel,
-                fieldKey: 'open',
-              ),
-              const Divider(height: Spacing.spacing16),
-              _permissionsSection(l10n),
-              const Divider(height: Spacing.spacing16),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  l10n.ownerPasswordHeading,
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-              ),
-              const SizedBox(height: Spacing.spacing8),
-              PasswordPairField(
-                controller: _owner,
-                label: l10n.passwordFieldLabel,
-                verifyLabel: l10n.verifyFieldLabel,
-                fieldKey: 'owner',
-              ),
-              if (_complaint != null) ...[
-                const SizedBox(height: Spacing.spacing12),
-                Text(
-                  _complaint!,
-                  style: const TextStyle(color: AppColors.error),
-                ),
-              ],
             ],
-          ),
+          ],
         ),
       ),
       // Removing protection stands apart from accepting the panel: it is the
@@ -216,6 +192,51 @@ class _ProtectionPanelState extends State<ProtectionPanel> {
       ],
     );
   }
+
+  /// Everything the panel asks for, in one scrolling column.
+  Widget _fields(BuildContext context, AppLocalizations l10n) =>
+      SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              controlAffinity: ListTileControlAffinity.leading,
+              value: _requireOpenPassword,
+              title: Text(l10n.requirePasswordToOpen),
+              onChanged: (on) => setState(() {
+                _requireOpenPassword = on ?? false;
+                _complaint = null;
+              }),
+            ),
+            PasswordPairField(
+              controller: _open,
+              enabled: _requireOpenPassword,
+              label: l10n.passwordFieldLabel,
+              verifyLabel: l10n.verifyFieldLabel,
+              fieldKey: 'open',
+            ),
+            const Divider(height: Spacing.spacing16),
+            _permissionsSection(l10n),
+            const Divider(height: Spacing.spacing16),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                l10n.ownerPasswordHeading,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+            ),
+            const SizedBox(height: Spacing.spacing8),
+            PasswordPairField(
+              controller: _owner,
+              label: l10n.passwordFieldLabel,
+              verifyLabel: l10n.verifyFieldLabel,
+              fieldKey: 'owner',
+            ),
+          ],
+        ),
+      );
 
   Widget _permissionsSection(AppLocalizations l10n) {
     final withholdsChanges =

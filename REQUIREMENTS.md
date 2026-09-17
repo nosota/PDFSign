@@ -342,7 +342,7 @@ Each password is typed twice, because a document locked with a mistyped password
 
 **Changing the Document is a box of its own,** which Apple's sheet does not have: it folds that permission in with the others. It is the one permission PDFSign itself needs in order to place a signature, and a reader who cannot see it cannot tell why their own app stopped being able to sign a document they protected. Withholding it is allowed and warned about.
 
-The panel refuses to close on: a required password that is empty, a pair that does not match, and any restriction without an owner password — restrictions nobody holds the password to are restrictions anyone can lift, which is worse than none because they look like protection.
+The panel refuses to close on: a required password that is empty, a pair that does not match, and any restriction without an owner password — restrictions nobody holds the password to are restrictions anyone can lift, which is worse than none because they look like protection. It says which, **above the buttons rather than inside the scrolling part**, and focuses the field that would settle it, which scrolls that field into view: a panel that refuses out of sight looks like a panel that did nothing.
 
 **Remove Protection** answers a wholly open document: no passwords, every permission granted. See §13.16 for the one thing that cannot be taken back off.
 
@@ -603,9 +603,9 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 
 | Aspect | State |
 |--------|-------|
-| `flutter analyze` | 1203 issues: 0 errors, **0 warnings**, 1203 info |
+| `flutter analyze` | 1206 issues: 0 errors, **0 warnings**, 1206 info |
 | Unit tests | **204** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry, the writer, reading and writing protected documents, permission bits, restacking and the undo history |
-| Widget tests | **118** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation, the password prompt, the read-only notice, the protection panel, restacking and what each action records in the history |
+| Widget tests | **120** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation, the password prompt, the read-only notice, the protection panel, restacking and what each action records in the history |
 | Native tests | **47** — the toolbar's fixed item set and layout, the enabled state of Delete, undo/redo and restacking, the lock's two faces, window cascading, the CoreGraphics security probe, and the title bar that keeps the toolbar's backdrop off the document (`macos/RunnerTests`) |
 | Integration tests | **none** |
 | Golden tests | **none** |

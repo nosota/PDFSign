@@ -3,6 +3,12 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Fixed
+
+- The protection panel says why it refused where the reader is looking: the message now stands above the buttons instead of at the end of the scrolling part, where it could be out of sight on a short window and the panel looked as though Apply had done nothing. The field that would settle it is focused too, which scrolls it into view
+
 ## [1.4.1] — 2026-09-17
 
 ### Fixed

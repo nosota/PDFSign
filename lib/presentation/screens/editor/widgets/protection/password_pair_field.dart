@@ -11,6 +11,10 @@ class PasswordPairController {
   final TextEditingController password = TextEditingController();
   final TextEditingController verify = TextEditingController();
 
+  /// The first field's focus, so a panel that refuses can put the reader in
+  /// the field that would settle it — which also scrolls it into view.
+  final FocusNode focus = FocusNode();
+
   /// What was typed in the first field.
   String get text => password.text;
 
@@ -23,9 +27,13 @@ class PasswordPairController {
   /// Whether the two fields agree.
   bool get matches => password.text == verify.text;
 
+  /// Puts the keyboard in the first field.
+  void requestFocus() => focus.requestFocus();
+
   void dispose() {
     password.dispose();
     verify.dispose();
+    focus.dispose();
   }
 }
 
@@ -61,7 +69,14 @@ class PasswordPairField extends StatelessWidget {
     // owner password off the bottom of the window.
     return Row(
       children: [
-        Expanded(child: _field(controller.password, label, verify: false)),
+        Expanded(
+          child: _field(
+            controller.password,
+            label,
+            verify: false,
+            focusNode: controller.focus,
+          ),
+        ),
         const SizedBox(width: Spacing.spacing8),
         Expanded(child: _field(controller.verify, verifyLabel, verify: true)),
       ],
@@ -72,10 +87,12 @@ class PasswordPairField extends StatelessWidget {
     TextEditingController controller,
     String label, {
     required bool verify,
+    FocusNode? focusNode,
   }) =>
       TextField(
         key: keyFor(fieldKey, verify: verify),
         controller: controller,
+        focusNode: focusNode,
         enabled: enabled,
         obscureText: true,
         decoration: InputDecoration(

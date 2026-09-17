@@ -144,6 +144,51 @@ void main() {
       expect(find.byType(ProtectionPanel), findsOneWidget);
     });
 
+    testWidgets('should say why where the reader is looking', (tester) async {
+      // The panel is taller than a small window, and a complaint inside the
+      // scrolling part sits below the fold: the reader presses Apply, nothing
+      // appears to happen, and the reason is out of sight.
+      await tester.binding.setSurfaceSize(const Size(700, 560));
+      await openPanel(tester);
+      await tapKey(
+          tester, ProtectionPanel.permissionKey(DocumentPermission.printing));
+
+      await tapKey(tester, ProtectionPanel.applyKey);
+
+      final complaint = find.text(l10nOf(tester).restrictionsNeedOwnerPassword);
+      expect(complaint, findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(SingleChildScrollView),
+          matching: complaint,
+        ),
+        findsNothing,
+        reason: 'inside the scroll area the complaint can be out of sight',
+      );
+      expect(
+        tester.getRect(complaint).bottom <= tester.getRect(find.byType(ProtectionPanel)).bottom,
+        isTrue,
+        reason: 'the complaint has to be within the panel, not below it',
+      );
+    });
+
+    testWidgets('should put the reader in the field that would settle it',
+        (tester) async {
+      // Saying what is wrong is half of it; the field to fix it in is below
+      // the fold on a small window, and focusing scrolls it into view.
+      await tester.binding.setSurfaceSize(const Size(700, 560));
+      await openPanel(tester);
+      await tapKey(
+          tester, ProtectionPanel.permissionKey(DocumentPermission.printing));
+
+      await tapKey(tester, ProtectionPanel.applyKey);
+
+      final owner = tester.widget<TextField>(
+        passwordField('owner', verify: false),
+      );
+      expect(owner.focusNode?.hasFocus, isTrue);
+    });
+
     testWidgets('should refuse restrictions with no owner password',
         (tester) async {
       // Restrictions nobody holds the password to are restrictions anyone can
