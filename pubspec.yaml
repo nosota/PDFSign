@@ -1,7 +1,7 @@
 name: pdfsign
 description: A cross-platform PDF signature and stamp application
 publish_to: 'none'
-version: 1.5.2+9
+version: 1.5.3+10
 
 environment:
   sdk: '>=3.5.0 <4.0.0'
