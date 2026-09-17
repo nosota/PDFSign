@@ -36,6 +36,7 @@ class AppDelegate: FlutterAppDelegate {
     setupOpenPdfFilesChannel(binaryMessenger: mainController.engine.binaryMessenger)
     setupWindowListChannel(binaryMessenger: mainController.engine.binaryMessenger)
     setupPdfSecurityChannel(binaryMessenger: mainController.engine.binaryMessenger)
+    setupPrintChannel(controller: mainController)
 
     // Setup file handler channel for Finder integration
     fileHandlerChannel = FlutterMethodChannel(
@@ -86,6 +87,7 @@ class AppDelegate: FlutterAppDelegate {
       setupOpenPdfFilesChannel(binaryMessenger: controller.engine.binaryMessenger)
       setupWindowListChannel(binaryMessenger: controller.engine.binaryMessenger)
       setupPdfSecurityChannel(binaryMessenger: controller.engine.binaryMessenger)
+      setupPrintChannel(controller: controller)
 
       // Setup window lifecycle channel for sub-windows
       // This handles window close events and allows Flutter to control closing

@@ -44,6 +44,38 @@ class PdfSaveService {
     String? password,
     DocumentProtection? protection,
   }) async {
+    final composed = await composePdfBytes(
+      originalBytes: originalBytes,
+      placedImages: placedImages,
+      pages: pages,
+      password: password,
+      protection: protection,
+    );
+
+    return composed.fold(Left.new, (bytes) async {
+      try {
+        await File(outputPath).writeAsBytes(bytes);
+        return Right(outputPath);
+      } catch (e) {
+        return Left(StorageFailure(message: 'Failed to save PDF: $e'));
+      }
+    });
+  }
+
+  /// The document as the reader sees it, in memory.
+  ///
+  /// The one place objects, page turns and protection are written, so a save,
+  /// a shared copy and a print job cannot come out differently. Nothing here
+  /// touches the disk: printing hands these bytes straight to the system, and
+  /// a decrypted copy of a protected document must never be written out
+  /// (ADR-0011).
+  Future<Either<Failure, Uint8List>> composePdfBytes({
+    required Uint8List originalBytes,
+    required List<PlacedImage> placedImages,
+    required List<PdfPageInfo> pages,
+    String? password,
+    DocumentProtection? protection,
+  }) async {
     try {
       final document = PdfDocument(inputBytes: originalBytes, password: password);
       await _apply(document, placedImages, pages);
@@ -51,13 +83,11 @@ class PdfSaveService {
         _protect(document, protection);
       }
 
-      final savedBytes = await document.save();
+      final composed = Uint8List.fromList(await document.save());
       document.dispose();
-
-      await File(outputPath).writeAsBytes(savedBytes);
-      return Right(outputPath);
+      return Right(composed);
     } catch (e) {
-      return Left(StorageFailure(message: 'Failed to save PDF: $e'));
+      return Left(StorageFailure(message: 'Failed to compose PDF: $e'));
     }
   }
 
