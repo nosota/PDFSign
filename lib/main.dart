@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +13,8 @@ import 'package:pdfsign/data/models/sidebar_image_model.dart';
 import 'package:pdfsign/data/repositories/pasted_image_storage_impl.dart';
 import 'package:pdfsign/presentation/apps/pdf_viewer_app.dart';
 import 'package:pdfsign/presentation/apps/settings_app.dart';
+import 'package:pdfsign/presentation/providers/locale_preference_provider.dart';
+import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/apps/welcome_app.dart';
 import 'package:pdfsign/presentation/providers/data_source_providers.dart';
 import 'package:pdfsign/presentation/providers/shared_preferences_provider.dart';
@@ -111,16 +115,46 @@ Future<void> _runPdfViewerWindow(
   );
 }
 
+/// What the settings window is called, in the reader's language.
+///
+/// [stored] is the saved language preference; null or `system` means the one
+/// the system asks for. A language this app does not have falls back to
+/// English, exactly as the rest of the interface does.
+Future<String> settingsWindowTitle(String? stored) async {
+  final chosen = localeFromPreference(stored) ??
+      _supportedSystemLocale() ??
+      const Locale('en');
+  final localizations = await AppLocalizations.delegate.load(chosen);
+  return localizations.settingsTitle;
+}
+
+/// The system's locale, if this app speaks it.
+Locale? _supportedSystemLocale() {
+  final system = PlatformDispatcher.instance.locale;
+  for (final supported in allSupportedLocales) {
+    if (supported.languageCode == system.languageCode &&
+        supported.countryCode == system.countryCode) {
+      return supported;
+    }
+  }
+  for (final supported in allSupportedLocales) {
+    if (supported.languageCode == system.languageCode) return supported;
+  }
+  return null;
+}
+
 /// Runs a settings window (sub window).
 Future<void> _runSettingsWindow() async {
-  // Get localized title (fallback to English)
-  const title = 'Settings';
+  // The title goes on the window itself, before any widget exists to read a
+  // localization from, so the strings are loaded by hand here. Left in
+  // English, it was the one word of the window a reader never saw in their
+  // own language.
+  final sharedPrefs = await SharedPreferences.getInstance();
+  final title = await settingsWindowTitle(sharedPrefs.getString(localeKey));
 
-  // Initialize window for settings
   await WindowManagerService.instance.initializeSettingsWindow(title: title);
 
   // Pre-initialize dependencies
-  final sharedPrefs = await SharedPreferences.getInstance();
   final isar = await _initializeIsar();
 
   runApp(

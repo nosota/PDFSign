@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pdfsign/core/window/window_broadcast.dart';
 import 'package:pdfsign/presentation/providers/shared_preferences_provider.dart';
 
-const _key = 'locale_preference';
+/// Where the language preference is kept.
+const localeKey = 'locale_preference';
+const _key = localeKey;
 
 /// Supported locales with their display names.
 class SupportedLocale {
@@ -118,6 +120,19 @@ bool isRtlLocale(Locale? locale) {
   return rtlLanguageCodes.contains(locale.languageCode);
 }
 
+/// The locale a stored preference names, or null for the system's own.
+///
+/// A top-level function so that code without a widget tree — the settings
+/// window, which needs a localized title before anything is built — can ask
+/// the same question the provider does.
+Locale? localeFromPreference(String? stored) {
+  if (stored == null || stored == 'system') return null;
+  for (final supported in supportedLocales) {
+    if (supported.code == stored) return supported.locale;
+  }
+  return null;
+}
+
 /// Provider for managing the preferred locale.
 ///
 /// Persists the preference in SharedPreferences.
@@ -168,16 +183,5 @@ class LocalePreferenceNotifier extends Notifier<String?> {
 
   /// Gets the actual Locale to use.
   /// Returns null if system default should be used.
-  Locale? getLocale() {
-    if (state == null) {
-      return null; // Let Flutter use system locale
-    }
-    // Find the locale in supported locales
-    for (final supported in supportedLocales) {
-      if (supported.code == state) {
-        return supported.locale;
-      }
-    }
-    return null;
-  }
+  Locale? getLocale() => localeFromPreference(state);
 }

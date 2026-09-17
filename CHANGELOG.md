@@ -3,6 +3,12 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Fixed
+
+- The Settings window is called what it is called in the reader's language. Its title is set on the window itself, before anything is built that could read a translation, so it said "Settings" in all 65 languages
+
 ## [1.5.1] — 2026-09-17
 
 ### Added

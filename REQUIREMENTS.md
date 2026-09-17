@@ -621,7 +621,7 @@ No formal performance budgets are enforced, and there is no profiling harness. T
 | Aspect | State |
 |--------|-------|
 | `flutter analyze` | 1245 issues: 0 errors, **0 warnings**, 1245 info |
-| Unit tests | **298** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry, the writer, reading and writing protected documents, permission bits, restacking, the undo history, what printing composes, sends and refuses, and that every language carries every string |
+| Unit tests | **303** — page-column geometry (`PdfPageLayout`), placement rules, dirty-state policy, the clipboard payload codec, image import limits, page-rotation geometry, the writer, reading and writing protected documents, permission bits, restacking, the undo history, what printing composes, sends and refuses, and that every language carries every string |
 | Widget tests | **120** — drop placement, off-page snapping, drag feedback, the close-everything flow, cut/copy/paste, page rotation, the password prompt, the read-only notice, the protection panel, restacking and what each action records in the history |
 | Native tests | **55** — the toolbar's fixed item set and layout, the enabled state of Delete, undo/redo and restacking, the lock's two faces, window cascading, the CoreGraphics security probe, the title bar that keeps the toolbar's backdrop off the document, and what may be printed (`macos/RunnerTests`) |
 | Integration tests | **none** |
@@ -702,6 +702,8 @@ Japanese, Korean, Chinese (Simplified) and Chinese (Traditional) were translated
 
 ### 13.6 Hardcoded UI strings
 Localized and unused: `savePdfAs`, `savedTo`, `noOriginalPdfStored`, `incorrectPassword`, `removeFromList`, `fileAccessDenied`, `saveFailed`. The corresponding UI uses English literals — `PageIndicator` ("Page N of M"), the sidebar empty state, the viewer's empty/error/password states, and every save-failure snackbar.
+
+The Settings window's own title was one of these until 2026-09-17: it is set on the native window before any widget exists, so it read "Settings" in every language. It now loads the strings by hand (`settingsWindowTitle`).
 
 ### 13.7 Placed objects are clipped to the page
 `PdfPageItem` wraps each page in `clipBehavior: Clip.antiAlias`. An object near a page edge has its handles — especially the rotation handle above the top edge — clipped. `PlacedImage`'s doc comment mentions cross-page objects; they are not supported.
