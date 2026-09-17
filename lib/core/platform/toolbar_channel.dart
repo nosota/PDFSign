@@ -17,6 +17,8 @@ class ToolbarChannel {
   /// Keyed by the order the segments sit in: to the back, back one, forward
   /// one, to the front.
   static final List<VoidCallback?> _onRestack = List.filled(4, null);
+  static VoidCallback? _onUndoPressed;
+  static VoidCallback? _onRedoPressed;
   static bool _initialized = false;
 
   /// Initializes the toolbar channel.
@@ -54,6 +56,37 @@ class ToolbarChannel {
   /// Pass null to unregister the callback.
   static void setOnRotateRightPressed(VoidCallback? callback) {
     _onRotateRightPressed = callback;
+  }
+
+  /// Sets the callbacks for the two halves of the undo control.
+  static void setOnHistoryPressed({
+    VoidCallback? undo,
+    VoidCallback? redo,
+  }) {
+    _onUndoPressed = undo;
+    _onRedoPressed = redo;
+  }
+
+  /// Greys each half of the undo control out on its own.
+  ///
+  /// A document can have somewhere to go back to and nowhere to come forward
+  /// from, so the two are set together but stand apart.
+  static Future<void> setHistoryEnabled({
+    required bool canUndo,
+    required bool canRedo,
+    List<String>? labels,
+  }) async {
+    try {
+      await _channel.invokeMethod('setHistoryEnabled', {
+        'canUndo': canUndo,
+        'canRedo': canRedo,
+        if (labels != null) 'labels': labels,
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print('ToolbarChannel: Failed to set history enabled: $e');
+      }
+    }
   }
 
   /// Sets the callbacks for the four restacking segments, in the order they
@@ -159,6 +192,10 @@ class ToolbarChannel {
         _onRotateLeftPressed?.call();
       case 'onRotateRightPressed':
         _onRotateRightPressed?.call();
+      case 'onUndoPressed':
+        _onUndoPressed?.call();
+      case 'onRedoPressed':
+        _onRedoPressed?.call();
       case 'onSendToBackPressed':
         _onRestack[0]?.call();
       case 'onSendBackwardPressed':

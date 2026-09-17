@@ -241,7 +241,7 @@ go_router, mime
 
 ## Testing
 
-The project has 249 Dart tests (page-column geometry, drag-and-drop placement, dirty-state policy, the close-everything flow, cut/copy/paste, protected documents, object restacking) and 34 native tests (`macos/RunnerTests`, toolbar item management, document-window placement, PDF encryption detection, the restacking control). Everything else is uncovered, which remains the largest known risk (CODE_REVIEW §5.3). The following is the target state, and applies to code you add or change:
+The project has 280 Dart tests (page-column geometry, drag-and-drop placement, dirty-state policy, the close-everything flow, cut/copy/paste, protected documents, object restacking, the undo history) and 38 native tests (`macos/RunnerTests`, toolbar item management, document-window placement, PDF encryption detection, the restacking and undo controls). Everything else is uncovered, which remains the largest known risk (CODE_REVIEW §5.3). The following is the target state, and applies to code you add or change:
 
 - New business logic (providers, repositories, services, coordinate math) ships with unit tests.
 - Test file mirrors source structure; one test file per source file.

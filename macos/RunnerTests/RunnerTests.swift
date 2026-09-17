@@ -92,6 +92,7 @@ final class PDFSignToolbarHelperTests: XCTestCase {
     XCTAssertEqual(
       identifiers(),
       [
+        "HistoryGroup",
         "ZOrderGroup",
         "RotateGroup",
         "NSToolbarFlexibleSpaceItem",
@@ -100,7 +101,7 @@ final class PDFSignToolbarHelperTests: XCTestCase {
         "ShareItem",
       ],
       "restacking acts on the object and leads the page turns that follow it; "
-        + "Delete stands on its own, apart from Share"
+        + "Delete stands on its own, apart from Share; undo leads, because it undoes what any of them just did"
     )
   }
 
@@ -109,6 +110,45 @@ final class PDFSignToolbarHelperTests: XCTestCase {
     return (window.toolbar?.items ?? []).first {
       $0.itemIdentifier.rawValue == "ZOrderGroup"
     } as? NSToolbarItemGroup
+  }
+
+  /// The undo control.
+  private func historyGroup() -> NSToolbarItemGroup? {
+    return (window.toolbar?.items ?? []).first {
+      $0.itemIdentifier.rawValue == "HistoryGroup"
+    } as? NSToolbarItemGroup
+  }
+
+  func testShouldBuildHistoryAsATwoSegmentGroup() {
+    XCTAssertEqual(
+      historyGroup()?.subitems.map { $0.itemIdentifier.rawValue },
+      ["UndoItem", "RedoItem"]
+    )
+  }
+
+  func testShouldStartWithNowhereToGo() {
+    XCTAssertEqual(historyGroup()?.subitems.allSatisfy { !$0.isEnabled }, true)
+  }
+
+  func testShouldEnableEachDirectionOnItsOwn() {
+    // A document can have somewhere to go back to and nowhere to come forward
+    // from; one control, two answers.
+    helper.setHistoryEnabled(canUndo: true, canRedo: false, labels: nil)
+
+    XCTAssertEqual(historyGroup()?.subitems.first?.isEnabled, true)
+    XCTAssertEqual(historyGroup()?.subitems.last?.isEnabled, false)
+  }
+
+  func testShouldTakeLocalizedHistoryTexts() {
+    helper.setHistoryEnabled(
+      canUndo: true, canRedo: true, labels: ["Отменить", "Повторить"])
+
+    XCTAssertEqual(
+      historyGroup()?.subitems.map { $0.label }, ["Отменить", "Повторить"])
+  }
+
+  func testShouldGiveBothHistorySegmentsAPicture() {
+    XCTAssertEqual(historyGroup()?.subitems.allSatisfy { $0.image != nil }, true)
   }
 
   func testShouldBuildRestackingAsAFourSegmentGroup() {

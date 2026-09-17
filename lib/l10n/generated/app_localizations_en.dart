@@ -395,6 +395,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get zOrderGroupLabel => 'Arrange';
+
+  @override
+  String get menuUndo => 'Undo';
+
+  @override
+  String get menuRedo => 'Redo';
 }
 
 /// The translations for English, as used in Australia (`en_AU`).

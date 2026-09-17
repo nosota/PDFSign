@@ -171,3 +171,4 @@ Design decisions are documented as Architecture Decision Records in [adr/](adr/)
 | [ADR-0009](adr/0009-clipboard-via-the-system-pasteboard.md) | Cut/copy/paste through the system pasteboard, driven from the Edit menu |
 | [ADR-0010](adr/0010-page-rotation-via-rotate.md) | Page rotation written as `/Rotate`, with the editor working in the page as displayed |
 | [ADR-0011](adr/0011-protected-pdfs-decrypted-in-memory.md) | Protected PDFs opened with the writer and rendered from a decrypted copy held in memory |
+| [ADR-0012](adr/0012-undo-history-as-snapshots.md) | Undo and redo as snapshots of the editable state rather than a command per action |

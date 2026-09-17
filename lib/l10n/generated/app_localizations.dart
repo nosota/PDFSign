@@ -844,6 +844,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Arrange'**
   String get zOrderGroupLabel;
+
+  /// Edit menu item that takes the document one step back
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get menuUndo;
+
+  /// Edit menu item that takes the document one step forward
+  ///
+  /// In en, this message translates to:
+  /// **'Redo'**
+  String get menuRedo;
 }
 
 class _AppLocalizationsDelegate

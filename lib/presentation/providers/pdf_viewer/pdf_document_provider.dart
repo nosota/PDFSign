@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:pdfsign/core/errors/failure.dart';
 import 'package:pdfsign/core/errors/failures.dart';
 import 'package:pdfsign/domain/entities/pdf_document_info.dart';
+import 'package:pdfsign/domain/entities/pdf_page_info.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_page_cache_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_viewer_state.dart';
 import 'package:pdfsign/presentation/providers/repository_providers.dart';
@@ -287,6 +288,41 @@ class PdfDocument extends _$PdfDocument {
         rotated[index] = pages[index].rotated(quarterTurns);
         state = current.copyWith(
           document: current.document.copyWith(pages: rotated),
+        );
+      },
+      orElse: () {},
+    );
+  }
+
+  /// Turns every page back to the angle it is shown at in [rotations].
+  ///
+  /// For restoring a snapshot. Each page is *turned* to its angle rather than
+  /// told what its angle is, so the sides it is displayed at are recomputed
+  /// the same way an ordinary turn recomputes them. What the file says the
+  /// rotation is stays untouched, which is what keeps the saved baseline —
+  /// and so the document's clean-or-dirty answer — honest.
+  ///
+  /// Does nothing when [rotations] does not describe this document, which can
+  /// only mean it belongs to one that is no longer open.
+  void restoreRotations(List<int> rotations) {
+    state.maybeMap(
+      loaded: (current) {
+        final pages = current.document.pages;
+        if (rotations.length != pages.length) return;
+
+        var turned = false;
+        final restored = <PdfPageInfo>[];
+        for (var i = 0; i < pages.length; i++) {
+          final quarterTurns = ((rotations[i] - pages[i].rotation) ~/ 90) % 4;
+          restored.add(
+            quarterTurns == 0 ? pages[i] : pages[i].rotated(quarterTurns),
+          );
+          turned |= quarterTurns != 0;
+        }
+        if (!turned) return;
+
+        state = current.copyWith(
+          document: current.document.copyWith(pages: restored),
         );
       },
       orElse: () {},

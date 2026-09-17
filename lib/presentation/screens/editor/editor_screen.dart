@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:pdfsign/core/platform/sub_window_channel.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/history_actions.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/permission_retry_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_viewer.dart';
@@ -116,6 +117,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
         // Set up listener for permission retry handling
         _setupPermissionRetryListener();
       });
+      clearHistory(ref);
     }
   }
 
@@ -197,6 +199,10 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         ref.read(permissionRetryProvider.notifier).state = false;
+        // A different document, even if it is this one saved under a new
+        // name: steps belonging to what was here before would put back
+        // objects the new file never had.
+        clearHistory(ref);
         ref.read(pdfDocumentProvider.notifier).openDocument(
               path,
               initialPage: initialPage,

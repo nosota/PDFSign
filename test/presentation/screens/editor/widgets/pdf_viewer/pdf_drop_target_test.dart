@@ -14,6 +14,7 @@ import 'package:pdfsign/domain/entities/placed_image.dart';
 import 'package:pdfsign/domain/entities/sidebar_image.dart';
 import 'package:pdfsign/domain/repositories/pdf_document_repository.dart';
 import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/editor_history.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/providers/repository_providers.dart';
@@ -239,6 +240,27 @@ void main() {
   /// calculator does not expect, the expectations below break.
   Rect renderedPageRect(WidgetTester tester, int pageIndex) =>
       tester.getRect(find.byType(PdfPageItem).at(pageIndex));
+
+  group('the undo history', () {
+    testWidgets('should take one step for a drop, and take it back',
+        (tester) async {
+      final container = buildContainer();
+      final document = _document(const [_a4]);
+
+      await pumpEditor(
+        tester,
+        container,
+        document: document,
+        image: buildImage(),
+        viewportWidth: 600,
+        viewportHeight: 500,
+      );
+
+      await dragToViewer(tester, renderedPageRect(tester, 0).center);
+      expect(container.read(placedImagesProvider), hasLength(1));
+      expect(container.read(editorHistoryProvider.notifier).undoDepth, 1);
+    });
+  });
 
   group('a document that does not allow changes', () {
     testWidgets('should refuse the drop and stay empty', (tester) async {

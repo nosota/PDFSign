@@ -21,6 +21,8 @@ import 'package:pdfsign/domain/entities/pdf_page_info.dart';
 import 'package:pdfsign/l10n/generated/app_localizations.dart';
 import 'package:pdfsign/presentation/providers/editor/document_dirty_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/pdf_save_service_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/editor_history.dart';
+import 'package:pdfsign/presentation/providers/editor/history_actions.dart';
 import 'package:pdfsign/presentation/providers/editor/restack_selected.dart';
 import 'package:pdfsign/presentation/providers/editor/rotate_page.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_clipboard.dart';
@@ -92,6 +94,8 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
       hasAnyDirtyWindow: false,
       hasSelection: false,
       canCopy: false,
+      canUndo: false,
+      canRedo: false,
     ),
   );
 
@@ -115,6 +119,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     ToolbarChannel.setOnDeletePressed(_handleDeleteSelected);
     ToolbarChannel.setOnRotateLeftPressed(_handleRotateLeft);
     ToolbarChannel.setOnRotateRightPressed(_handleRotateRight);
+    ToolbarChannel.setOnHistoryPressed(undo: _handleUndo, redo: _handleRedo);
     ToolbarChannel.setOnRestackPressed([
       () => _restack(ZOrderMove.toBack),
       () => _restack(ZOrderMove.backward),
@@ -211,6 +216,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     ToolbarChannel.setOnRotateLeftPressed(null);
     ToolbarChannel.setOnRotateRightPressed(null);
     ToolbarChannel.setOnRestackPressed(const [null, null, null, null]);
+    ToolbarChannel.setOnHistoryPressed();
     WindowBroadcast.setOnUnitChanged(null);
     WindowBroadcast.setOnLocaleChanged(null);
     WindowBroadcast.setOnSaveAll(null);
@@ -416,12 +422,15 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     final globalState = ref.read(globalDirtyStateProvider);
     final hasAnyDirty = globalState.values.any((d) => d);
     final hasSelection = ref.read(editorSelectionProvider) != null;
+    final history = ref.read(editorHistoryProvider);
 
     _menuStateNotifier.value = _MenuState(
       isDirty: isDirty,
       hasAnyDirtyWindow: hasAnyDirty,
       hasSelection: hasSelection,
       canCopy: hasSelection || textInputHasFocus(),
+      canUndo: history.canUndo,
+      canRedo: history.canRedo,
     );
   }
 
@@ -555,6 +564,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     }
   }
 
+  void _handleUndo() => undoEdit(ref);
+
+  void _handleRedo() => redoEdit(ref);
+
   void _restack(ZOrderMove move) => restackSelected(ref, move);
 
   /// The four segment names, in the order the control puts them.
@@ -617,6 +630,12 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
     ToolbarChannel.setZOrderEnabled(
       ref.read(editorSelectionProvider) != null,
       labels: _zOrderLabels(l10n),
+    );
+    final history = ref.read(editorHistoryProvider);
+    ToolbarChannel.setHistoryEnabled(
+      canUndo: history.canUndo,
+      canRedo: history.canRedo,
+      labels: [l10n.menuUndo, l10n.menuRedo],
     );
   }
 
@@ -912,6 +931,18 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
       _updateMenuState();
     });
 
+    // The two directions the document can be taken change with every step, and
+    // with every undo and redo.
+    ref.listen<HistoryDepth>(editorHistoryProvider, (previous, current) {
+      _updateMenuState();
+      final l10n = _l10n;
+      ToolbarChannel.setHistoryEnabled(
+        canUndo: current.canUndo,
+        canRedo: current.canRedo,
+        labels: l10n == null ? null : [l10n.menuUndo, l10n.menuRedo],
+      );
+    });
+
     // A protected document is shown from memory rather than from the file, so
     // a large one costs its own size in memory. Say so once it is open, rather
     // than standing between the reader and their document with a question.
@@ -976,6 +1007,10 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
               onCut: _handleCut,
               onCopy: _handleCopy,
               onPaste: _handlePaste,
+              onUndo: _handleUndo,
+              onRedo: _handleRedo,
+              canUndo: menuState.canUndo,
+              canRedo: menuState.canRedo,
               onBringToFront: () => _restack(ZOrderMove.toFront),
               onBringForward: () => _restack(ZOrderMove.forward),
               onSendBackward: () => _restack(ZOrderMove.backward),
@@ -1010,11 +1045,17 @@ class _MenuState {
     required this.hasAnyDirtyWindow,
     required this.hasSelection,
     required this.canCopy,
+    required this.canUndo,
+    required this.canRedo,
   });
 
   final bool isDirty;
   final bool hasAnyDirtyWindow;
   final bool hasSelection;
+
+  /// Whether the document has a step to go back to, or to come back to.
+  final bool canUndo;
+  final bool canRedo;
 
   /// Whether Cut and Copy have something to act on: an object on the page, or
   /// a text field holding the keyboard.
@@ -1027,9 +1068,17 @@ class _MenuState {
           isDirty == other.isDirty &&
           hasAnyDirtyWindow == other.hasAnyDirtyWindow &&
           hasSelection == other.hasSelection &&
-          canCopy == other.canCopy;
+          canCopy == other.canCopy &&
+          canUndo == other.canUndo &&
+          canRedo == other.canRedo;
 
   @override
-  int get hashCode =>
-      Object.hash(isDirty, hasAnyDirtyWindow, hasSelection, canCopy);
+  int get hashCode => Object.hash(
+        isDirty,
+        hasAnyDirtyWindow,
+        hasSelection,
+        canCopy,
+        canUndo,
+        canRedo,
+      );
 }

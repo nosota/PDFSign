@@ -218,6 +218,14 @@ class PlacedImages extends _$PlacedImages {
     return duplicate;
   }
 
+  /// Puts [images] in place of everything currently on the document.
+  ///
+  /// For restoring a snapshot: the list comes from the history and is already
+  /// exactly what the document should hold, in the order it should be drawn.
+  void replaceAll(List<PlacedImage> images) {
+    state = images;
+  }
+
   /// Clears all placed images.
   void clear() {
     state = [];

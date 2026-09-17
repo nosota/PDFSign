@@ -152,6 +152,22 @@ class AppDelegate: FlutterAppDelegate {
           }
           result(nil)
 
+        case "setHistoryEnabled":
+          // Grey each half of the undo control out on its own
+          let args = call.arguments as? [String: Any] ?? [:]
+          let canUndo = args["canUndo"] as? Bool ?? false
+          let canRedo = args["canRedo"] as? Bool ?? false
+          let labels = args["labels"] as? [String]
+          DispatchQueue.main.async {
+            if let window = controller.view.window,
+               let toolbarHelper = toolbarHelpers[ObjectIdentifier(window)],
+               toolbarHelper.owns(window) {
+              toolbarHelper.setHistoryEnabled(
+                canUndo: canUndo, canRedo: canRedo, labels: labels)
+            }
+          }
+          result(nil)
+
         case "setZOrderEnabled":
           // Grey the restacking control out when there is nothing selected
           let args = call.arguments as? [String: Any] ?? [:]
@@ -687,6 +703,7 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
   private let shareItemIdentifier = NSToolbarItem.Identifier("ShareItem")
   private let deleteItemIdentifier = NSToolbarItem.Identifier("DeleteItem")
   private let rotateGroupIdentifier = NSToolbarItem.Identifier("RotateGroup")
+  private let historyGroupIdentifier = NSToolbarItem.Identifier("HistoryGroup")
   private let zOrderGroupIdentifier = NSToolbarItem.Identifier("ZOrderGroup")
 
   /// Localized texts for the rotate control, replaced from Dart.
@@ -710,6 +727,16 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
   /// Kept so a request that arrived before the toolbar existed is not lost:
   /// the Dart listener is edge-triggered and will not repeat it.
   private var deleteEnabled = false
+
+  /// Whether each half of the undo control has a step to take.
+  ///
+  /// Kept for the same reason as the others: the Dart listener is
+  /// edge-triggered, so a state that arrives before the toolbar exists would
+  /// otherwise be lost.
+  private var canUndo = false
+  private var canRedo = false
+
+  private var historyLabels = ["Undo", "Redo"]
 
   /// Whether the restacking control has an object to act on.
   ///
@@ -817,6 +844,7 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
 
   func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
     return [
+      historyGroupIdentifier,
       zOrderGroupIdentifier,
       rotateGroupIdentifier,
       deleteItemIdentifier,
@@ -831,6 +859,8 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
     // than taken away: an item set that never changes is an item set that
     // never moves the controls around it.
     return [
+      // Undo leads: it undoes whatever any of the others just did.
+      historyGroupIdentifier,
       // Restacking sits before the page turns: it acts on the object, and the
       // turns act on the page under it.
       zOrderGroupIdentifier,
@@ -864,6 +894,65 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
   }
 
   /// Builds the two-segment rotate control.
+  /// The control that takes the document back and forward through its history.
+  private func makeHistoryGroup() -> NSToolbarItem {
+    let group = NSToolbarItemGroup(itemIdentifier: historyGroupIdentifier)
+    group.label = historyLabels[0]
+    group.paletteLabel = historyLabels[0]
+    group.subitems = [
+      makeSymbolItem(
+        identifier: "UndoItem",
+        symbol: "arrow.uturn.backward",
+        label: historyLabels[0],
+        action: #selector(undoClicked)
+      ),
+      makeSymbolItem(
+        identifier: "RedoItem",
+        symbol: "arrow.uturn.forward",
+        label: historyLabels[1],
+        action: #selector(redoClicked)
+      ),
+    ]
+    group.subitems[0].isEnabled = canUndo
+    group.subitems[1].isEnabled = canRedo
+
+    if #available(macOS 10.15, *) {
+      group.controlRepresentation = .expanded
+      group.selectionMode = .momentary
+    }
+    return group
+  }
+
+  /// Greys each half out on its own: a document can have somewhere to go back
+  /// to and nowhere to come forward from.
+  func setHistoryEnabled(canUndo: Bool, canRedo: Bool, labels: [String]?) {
+    if let labels = labels, labels.count == 2 {
+      historyLabels = labels
+    }
+    self.canUndo = canUndo
+    self.canRedo = canRedo
+
+    guard let group = window?.toolbar?.items.first(where: {
+      $0.itemIdentifier == historyGroupIdentifier
+    }) as? NSToolbarItemGroup, group.subitems.count == 2 else { return }
+
+    group.label = historyLabels[0]
+    for (index, item) in group.subitems.enumerated() {
+      item.isEnabled = index == 0 ? canUndo : canRedo
+      item.label = historyLabels[index]
+      item.paletteLabel = historyLabels[index]
+      item.toolTip = historyLabels[index]
+    }
+  }
+
+  @objc func undoClicked() {
+    methodChannel?.invokeMethod("onUndoPressed", arguments: nil)
+  }
+
+  @objc func redoClicked() {
+    methodChannel?.invokeMethod("onRedoPressed", arguments: nil)
+  }
+
   /// The control that moves the selected object through its page's stack.
   ///
   /// Four segments in the order they move the object: to the back, back one,
@@ -1007,6 +1096,10 @@ class PDFSignToolbarHelper: NSObject, NSToolbarDelegate, NSToolbarItemValidation
     itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
     willBeInsertedIntoToolbar flag: Bool
   ) -> NSToolbarItem? {
+    if itemIdentifier == historyGroupIdentifier {
+      return makeHistoryGroup()
+    }
+
     if itemIdentifier == zOrderGroupIdentifier {
       return makeZOrderGroup()
     }

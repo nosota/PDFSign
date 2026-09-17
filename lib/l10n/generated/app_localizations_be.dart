@@ -371,4 +371,10 @@ class AppLocalizationsBe extends AppLocalizations {
 
   @override
   String get zOrderGroupLabel => 'Arrange';
+
+  @override
+  String get menuUndo => 'Undo';
+
+  @override
+  String get menuRedo => 'Redo';
 }

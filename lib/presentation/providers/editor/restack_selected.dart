@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/history_actions.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 
@@ -43,16 +44,18 @@ bool restackSelected(WidgetRef ref, ZOrderMove move) {
   final images = ref.read(placedImagesProvider.notifier);
   final before = ref.read(placedImagesProvider);
 
-  switch (move) {
-    case ZOrderMove.toFront:
-      images.bringToFront(selectedId);
-    case ZOrderMove.forward:
-      images.bringForward(selectedId);
-    case ZOrderMove.backward:
-      images.sendBackward(selectedId);
-    case ZOrderMove.toBack:
-      images.sendToBack(selectedId);
-  }
+  recordHistoryStep(ref, () {
+    switch (move) {
+      case ZOrderMove.toFront:
+        images.bringToFront(selectedId);
+      case ZOrderMove.forward:
+        images.bringForward(selectedId);
+      case ZOrderMove.backward:
+        images.sendBackward(selectedId);
+      case ZOrderMove.toBack:
+        images.sendToBack(selectedId);
+    }
+  });
 
   // The notifier leaves the list untouched when the move changes nothing, so
   // this is an exact answer rather than a guess at one.

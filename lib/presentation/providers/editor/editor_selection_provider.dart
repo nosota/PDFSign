@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:pdfsign/presentation/providers/editor/history_actions.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 
 part 'editor_selection_provider.g.dart';
@@ -54,6 +55,8 @@ void deleteSelectedImage(WidgetRef ref) {
   final selectedId = ref.read(editorSelectionProvider);
   if (selectedId == null) return;
 
-  ref.read(placedImagesProvider.notifier).removeImage(selectedId);
-  ref.read(editorSelectionProvider.notifier).clear();
+  recordHistoryStep(ref, () {
+    ref.read(placedImagesProvider.notifier).removeImage(selectedId);
+    ref.read(editorSelectionProvider.notifier).clear();
+  });
 }

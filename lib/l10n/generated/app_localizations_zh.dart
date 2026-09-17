@@ -369,6 +369,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get zOrderGroupLabel => 'Arrange';
+
+  @override
+  String get menuUndo => 'Undo';
+
+  @override
+  String get menuRedo => 'Redo';
 }
 
 /// The translations for Chinese, as used in China (`zh_CN`).

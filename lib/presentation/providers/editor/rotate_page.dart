@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:pdfsign/presentation/providers/editor/history_actions.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
 
@@ -36,15 +37,17 @@ bool rotateCurrentPage(WidgetRef ref, int quarterTurns) {
       .clamp(1, document.pages.length);
   final page = document.pages[pageNumber - 1];
 
-  // The objects are turned against the page as it stands *now*: the notifier
-  // below replaces it with the turned one, and the old sides are what the
-  // objects' coordinates are expressed against.
-  ref.read(placedImagesProvider.notifier).turnPage(
-        pageNumber - 1,
-        quarterTurns,
-        Size(page.width, page.height),
-      );
-  ref.read(pdfDocumentProvider.notifier).rotatePage(pageNumber, quarterTurns);
+  recordHistoryStep(ref, () {
+    // The objects are turned against the page as it stands *now*: the notifier
+    // below replaces it with the turned one, and the old sides are what the
+    // objects' coordinates are expressed against.
+    ref.read(placedImagesProvider.notifier).turnPage(
+          pageNumber - 1,
+          quarterTurns,
+          Size(page.width, page.height),
+        );
+    ref.read(pdfDocumentProvider.notifier).rotatePage(pageNumber, quarterTurns);
+  });
 
   return true;
 }

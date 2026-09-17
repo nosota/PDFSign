@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:pdfsign/domain/entities/placed_image.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/history_actions.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/providers/sidebar/sidebar_images_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/size_label.dart';
@@ -376,7 +377,7 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
                     corner: corner,
                     cursor: _getCornerCursor(corner, image.rotation),
                     onDrag: (delta) => _handleCornerDrag(corner, delta),
-                    onDragEnd: _rememberSizeForLibrary,
+                    onDragEnd: _handleResizeEnd,
                     isRotating: _isRotating,
                   ),
                 ),
@@ -392,7 +393,7 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
                     side: side,
                     cursor: _getSideCursor(side, image.rotation),
                     onDrag: (delta) => _handleSideDrag(side, delta),
-                    onDragEnd: _rememberSizeForLibrary,
+                    onDragEnd: _handleResizeEnd,
                     isRotating: _isRotating,
                   ),
                 ),
@@ -484,6 +485,9 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
     setState(() => _isDragging = true);
     // Select the image when starting to drag
     ref.read(editorSelectionProvider.notifier).select(widget.image.id);
+    // After the selection, so undoing the move leaves the object selected
+    // where it came from rather than deselecting it.
+    beginHistoryStep(ref);
   }
 
   void _handlePanUpdate(DragUpdateDetails details) {
@@ -501,6 +505,9 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
 
   void _handlePanEnd(DragEndDetails details) {
     setState(() => _isDragging = false);
+    // One step for the whole drag: the gesture reports every frame, and a
+    // step per frame would make undo walk the object back pixel by pixel.
+    endHistoryStep(ref);
   }
 
   // ==========================================================================
@@ -508,6 +515,9 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
   // ==========================================================================
 
   void _handleCornerDrag(String corner, Offset delta) {
+    // These handles report no start of their own, so the step is opened on
+    // the first report of the drag; opening it again on the next is harmless.
+    beginHistoryStep(ref);
     final image = widget.image;
     final pdfDelta = delta / widget.scale;
     final localDelta = _transformToLocal(pdfDelta, image.rotation);
@@ -591,6 +601,13 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
   /// Does nothing for an object with no library row — an image pasted from
   /// another application is stored with the document and has nothing to
   /// remember against.
+  /// Ends a resize: one history step for the gesture, and the library keeps
+  /// the size for the next time this image is dragged out.
+  void _handleResizeEnd() {
+    endHistoryStep(ref);
+    _rememberSizeForLibrary();
+  }
+
   void _rememberSizeForLibrary() {
     final sourceImageId = widget.image.sourceImageId;
     if (sourceImageId == null) return;
@@ -616,6 +633,9 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
   // ==========================================================================
 
   void _handleSideDrag(String side, Offset delta) {
+    // These handles report no start of their own, so the step is opened on
+    // the first report of the drag; opening it again on the next is harmless.
+    beginHistoryStep(ref);
     final image = widget.image;
     final pdfDelta = delta / widget.scale;
     final localDelta = _transformToLocal(pdfDelta, image.rotation);
@@ -658,6 +678,7 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
   // ==========================================================================
 
   void _handleRotateDragStart() {
+    beginHistoryStep(ref);
     setState(() => _isRotating = true);
     _rotateStartRotation = widget.image.rotation;
     _rotateStartAngle = null;
@@ -705,6 +726,7 @@ class _PlacedImageWidgetState extends ConsumerState<_PlacedImageWidget> {
   }
 
   void _handleRotateDragEnd() {
+    endHistoryStep(ref);
     setState(() => _isRotating = false);
     _rotateStartRotation = null;
     _rotateStartAngle = null;

@@ -8,6 +8,7 @@ import 'package:pdfsign/domain/entities/clipboard_contents.dart';
 import 'package:pdfsign/domain/entities/clipboard_placed_object.dart';
 import 'package:pdfsign/domain/entities/placed_image.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/history_actions.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/providers/editor/paste_planner.dart';
 import 'package:pdfsign/presentation/providers/pdf_viewer/pdf_document_provider.dart';
@@ -74,8 +75,10 @@ class EditorClipboard {
       return outcome;
     }
 
-    ref.read(placedImagesProvider.notifier).removeImage(selected.id);
-    ref.read(editorSelectionProvider.notifier).clear();
+    recordHistoryStep(ref, () {
+      ref.read(placedImagesProvider.notifier).removeImage(selected.id);
+      ref.read(editorSelectionProvider.notifier).clear();
+    });
     return EditorClipboardOutcome.done;
   }
 
@@ -134,15 +137,17 @@ class EditorClipboard {
 
   /// Adds the planned object to the page and selects it.
   void _place(PastePlan plan, int pageIndex) {
-    final placed = ref.read(placedImagesProvider.notifier).addImage(
-          sourceImageId: plan.sourceImageId,
-          imagePath: plan.imagePath,
-          pageIndex: pageIndex,
-          position: plan.position,
-          size: plan.size,
-          rotation: plan.rotation,
-        );
-    ref.read(editorSelectionProvider.notifier).select(placed.id);
+    recordHistoryStep(ref, () {
+      final placed = ref.read(placedImagesProvider.notifier).addImage(
+            sourceImageId: plan.sourceImageId,
+            imagePath: plan.imagePath,
+            pageIndex: pageIndex,
+            position: plan.position,
+            size: plan.size,
+            rotation: plan.rotation,
+          );
+      ref.read(editorSelectionProvider.notifier).select(placed.id);
+    });
   }
 
   Future<EditorClipboardOutcome> _copySelection() async {

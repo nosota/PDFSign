@@ -389,6 +389,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get zOrderGroupLabel => 'Arrange';
+
+  @override
+  String get menuUndo => 'Undo';
+
+  @override
+  String get menuRedo => 'Redo';
 }
 
 /// The translations for Spanish Castilian, as used in Argentina (`es_AR`).

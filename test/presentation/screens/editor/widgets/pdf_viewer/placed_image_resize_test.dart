@@ -9,7 +9,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pdfsign/core/errors/failure.dart';
 import 'package:pdfsign/domain/entities/sidebar_image.dart';
 import 'package:pdfsign/domain/repositories/sidebar_image_repository.dart';
+import 'package:pdfsign/presentation/providers/editor/editor_history.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/history_actions.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/providers/repository_providers.dart';
 import 'package:pdfsign/presentation/providers/shared_preferences_provider.dart';
@@ -63,16 +65,24 @@ void main() {
     return placed.id;
   }
 
+  /// A handle on the tree's own ref, for the helpers that take one.
+  late WidgetRef ref;
+
   Future<void> pumpOverlay(WidgetTester tester) async {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const MaterialApp(
+        child: MaterialApp(
           home: Scaffold(
             body: SizedBox(
               width: 600,
               height: 600,
-              child: PlacedImageOverlay(pageIndex: 0, scale: 1),
+              child: Consumer(
+                builder: (context, widgetRef, _) {
+                  ref = widgetRef;
+                  return const PlacedImageOverlay(pageIndex: 0, scale: 1);
+                },
+              ),
             ),
           ),
         ),
@@ -146,6 +156,56 @@ void main() {
       final size = container.read(placedImagesProvider).single.size;
       expect(size.width, greaterThan(120), reason: 'the drag resized it');
       expect(library.lastUsedSizes['row-1'], size);
+    });
+  });
+
+  group('the undo history', () {
+    testWidgets('should take one step for a whole resize, not one per frame',
+        (tester) async {
+      place(sourceImageId: 'row-1');
+      await pumpOverlay(tester);
+
+      final gesture =
+          await tester.startGesture(tester.getCenter(bottomRightHandle()));
+      await tester.pump();
+      for (var i = 0; i < 5; i++) {
+        await gesture.moveBy(const Offset(10, 5));
+        await tester.pump();
+      }
+      await gesture.up();
+      await tester.pump();
+
+      expect(container.read(editorHistoryProvider.notifier).undoDepth, 1);
+    });
+
+    testWidgets('should take no step for a resize that went nowhere',
+        (tester) async {
+      // Grabbing a handle and letting go without moving changes nothing, and
+      // a step for it would make the next undo appear to do nothing.
+      place(sourceImageId: 'row-1');
+      await pumpOverlay(tester);
+
+      final gesture =
+          await tester.startGesture(tester.getCenter(bottomRightHandle()));
+      await tester.pump();
+      await gesture.up();
+      await tester.pump();
+
+      expect(container.read(editorHistoryProvider.notifier).undoDepth, 0);
+    });
+
+    testWidgets('should put the object back the size it was', (tester) async {
+      final id = place(sourceImageId: 'row-1');
+      await pumpOverlay(tester);
+      final before = container.read(placedImagesProvider).single.size;
+
+      await dragCorner(tester, const Offset(60, 30));
+      expect(container.read(placedImagesProvider).single.size, isNot(before));
+
+      undoEdit(ref);
+
+      expect(container.read(placedImagesProvider).single.size, before);
+      expect(container.read(placedImagesProvider).single.id, id);
     });
   });
 

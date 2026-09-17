@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:pdfsign/domain/entities/pdf_document_info.dart';
 import 'package:pdfsign/presentation/providers/editor/editor_selection_provider.dart';
+import 'package:pdfsign/presentation/providers/editor/history_actions.dart';
 import 'package:pdfsign/presentation/providers/editor/placed_images_provider.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/pdf_page_layout.dart';
 import 'package:pdfsign/presentation/screens/editor/widgets/pdf_viewer/placed_image_placement.dart';
@@ -232,14 +233,16 @@ class _PdfDropTargetState extends ConsumerState<PdfDropTarget> {
     final position =
         PlacedImagePlacement.centeredOn(cursorOnPage, size, pageSize);
 
-    final placed = ref.read(placedImagesProvider.notifier).addImage(
-          sourceImageId: details.data.sourceImageId,
-          imagePath: details.data.imagePath,
-          pageIndex: pageIndex,
-          position: position,
-          size: size,
-        );
+    recordHistoryStep(ref, () {
+      final placed = ref.read(placedImagesProvider.notifier).addImage(
+            sourceImageId: details.data.sourceImageId,
+            imagePath: details.data.imagePath,
+            pageIndex: pageIndex,
+            position: position,
+            size: size,
+          );
 
-    ref.read(editorSelectionProvider.notifier).select(placed.id);
+      ref.read(editorSelectionProvider.notifier).select(placed.id);
+    });
   }
 }

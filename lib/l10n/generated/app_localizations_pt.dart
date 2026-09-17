@@ -389,6 +389,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get zOrderGroupLabel => 'Arrange';
+
+  @override
+  String get menuUndo => 'Undo';
+
+  @override
+  String get menuRedo => 'Redo';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).

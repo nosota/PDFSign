@@ -260,6 +260,15 @@ Below the visually lowest edge, showing `W × H` in cm or inches to one decimal.
 #### FR-5.9 — Cut / copy / paste
 Through the **system pasteboard** (ADR-0009), so an object can be carried to another PDFSign window and an image copied in another application can be pasted onto the page. `Cmd+X` / `Cmd+C` / `Cmd+V`, and **Edit → Cut / Copy / Paste**. While a text field holds the keyboard the action is handed to the field instead.
 
+#### FR-5.11 — Undo and redo
+**Edit → Undo** (`Cmd+Z`) and **Redo** (`Shift+Cmd+Z`), and the two-part control at the left of the toolbar. Each half is enabled only while there is a step in that direction. Fifty steps, per window and per document (ADR-0012).
+
+Each step is a snapshot of what a reader can change — the objects, the turn every page is shown at, and the selection — rather than an action that knows how to reverse itself. Covered: placing, moving, resizing, rotating, deleting, cutting, pasting, restacking and turning a page. A gesture is one step, not one per frame, and a gesture that changed nothing is no step at all.
+
+Not covered, deliberately: the image library in the right-hand panel and the size it remembers, both shared across windows through Isar; the view (zoom, scroll, page); saving; and settings. While a text field holds the keyboard, `Cmd+Z` is the field's own.
+
+The history is forgotten when the window turns to another document — opening one, or Save As, which starts a new file. It survives a save: undoing past one is allowed, and leaves the document correctly reported as unsaved.
+
 #### FR-5.10 — Restacking
 **Bring to Front** (`Shift+Cmd+F`), **Bring Forward** (`Opt+Shift+Cmd+F`), **Send Backward** (`Opt+Shift+Cmd+B`) and **Send to Back** (`Shift+Cmd+B`), from **Edit** or from the four-part control at the left of the toolbar. Enabled whenever something is selected.
 
@@ -594,7 +603,6 @@ Specified in v1.0 (or implied by leftover code) but **absent from the product**.
 
 | # | Feature | Evidence of the gap |
 |---|---------|---------------------|
-| 12.2 | **Undo / redo**, 50 levels | No command stack anywhere. TODO → V1.1 |
 | 12.4 | **Paste dialog** with "Add to Signatures / Stamps / Don't add" and "Don't ask again" | No dialog. A pasted image goes onto the page and is deliberately not added to the library (ADR-0009) |
 | 12.5 | **Signatures / Stamps split** in the library | One flat list |
 | 12.6 | **`Cmd+D` duplicate** | Duplication exists only via `Cmd+C` → `Cmd+V` |

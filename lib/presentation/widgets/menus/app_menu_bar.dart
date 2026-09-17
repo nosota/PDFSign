@@ -48,6 +48,10 @@ class AppMenuBar extends ConsumerStatefulWidget {
     this.onCut,
     this.onCopy,
     this.onPaste,
+    this.onUndo,
+    this.onRedo,
+    this.canUndo = false,
+    this.canRedo = false,
     this.onBringToFront,
     this.onBringForward,
     this.onSendBackward,
@@ -154,6 +158,14 @@ class AppMenuBar extends ConsumerStatefulWidget {
   final VoidCallback? onPaste;
 
   /// Turns the page in view a quarter turn anticlockwise.
+  /// Taking the document a step back or forward.
+  final VoidCallback? onUndo;
+  final VoidCallback? onRedo;
+
+  /// Whether there is a step in that direction to take.
+  final bool canUndo;
+  final bool canRedo;
+
   /// Restacking the selected object within its page.
   ///
   /// Enabled together with Delete: both act on whatever is selected.
@@ -450,6 +462,28 @@ class _AppMenuBarState extends ConsumerState<AppMenuBar> {
 
   List<PlatformMenuItem> _buildEditMenuItems() {
     return [
+      if (widget.onUndo != null)
+        PlatformMenuItemGroup(
+          members: [
+            PlatformMenuItem(
+              label: widget.localizations.menuUndo,
+              shortcut: const SingleActivator(
+                LogicalKeyboardKey.keyZ,
+                meta: true,
+              ),
+              onSelected: widget.canUndo ? widget.onUndo : null,
+            ),
+            PlatformMenuItem(
+              label: widget.localizations.menuRedo,
+              shortcut: const SingleActivator(
+                LogicalKeyboardKey.keyZ,
+                meta: true,
+                shift: true,
+              ),
+              onSelected: widget.canRedo ? widget.onRedo : null,
+            ),
+          ],
+        ),
       PlatformMenuItemGroup(
         members: [
           PlatformMenuItem(

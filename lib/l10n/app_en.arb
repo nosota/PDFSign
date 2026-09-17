@@ -491,5 +491,13 @@
   "zOrderGroupLabel": "Arrange",
   "@zOrderGroupLabel": {
     "description": "Label of the toolbar control that restacks the selected object"
+  },
+  "menuUndo": "Undo",
+  "@menuUndo": {
+    "description": "Edit menu item that takes the document one step back"
+  },
+  "menuRedo": "Redo",
+  "@menuRedo": {
+    "description": "Edit menu item that takes the document one step forward"
   }
 }
