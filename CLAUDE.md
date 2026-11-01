@@ -10,9 +10,9 @@ A rule here is binding on **new and modified code**. Where existing code violate
 
 ## Project Configuration & Environment
 
-- Flutter SDK: **3.24.0+** (stable channel only)
-- Dart SDK: **3.5.0+**
-- Target platform: **macOS 10.15+, and only macOS**
+- Flutter SDK: **3.47.0+** (stable channel only)
+- Dart SDK: **3.13.0+** (the one Flutter brings; the language version in `pubspec.yaml` stays at 3.5)
+- Target platform: **macOS 12.0+, and only macOS** (Flutter 3.47 raises the deployment target itself at build time)
 - Bundle identifier: `com.ivanvaganov.pdfsign`
 - No build flavors. A single build configuration.
 

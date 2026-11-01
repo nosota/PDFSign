@@ -58,9 +58,9 @@ The repository contains `ios/`, `android/`, `windows/`, and `linux/` directories
 
 | Requirement | Value |
 |-------------|-------|
-| macOS | 10.15+ |
-| Flutter SDK | 3.24.0+ |
-| Dart SDK | 3.5.0+ |
+| macOS | 12.0+ |
+| Flutter SDK | 3.47.0+ |
+| Dart SDK | 3.13.0+ |
 
 ### 2.2 Sandbox
 

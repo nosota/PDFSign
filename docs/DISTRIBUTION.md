@@ -121,7 +121,7 @@ verify, and leave `PDFSign-<version>.dmg` beside the app. Documented in
   `NSWorkspace.setDefaultApplication(at:toOpen:)` on macOS 14+, which asks the
   reader for confirmation; `LSSetDefaultRoleHandlerForContentType` on older
   systems, which does not ask. Both behind availability checks, since the
-  deployment target is 10.15.
+  deployment target is 12.0.
 - The button's label and its result message go into all 66 `.arb` files, like
   every other string.
 

@@ -48,7 +48,8 @@ carrying a fork of a third-party plugin for as long as the plugin is used.
 **Replace pdfx with pdfrx**, which is built on PDFium and has a real
 `passwordProvider`. Rejected for now: it requires Flutter 3.47 and macOS 12
 against this project's 10.15, and it has no way to draw an image onto an
-existing page — the one thing this app exists to do. Its image APIs are
+existing page (the version requirements stopped being an obstacle on 2026-11-01,
+when this project itself moved to Flutter 3.47 and macOS 12; this one still holds) — the one thing this app exists to do. Its image APIs are
 reachable only from `createFromJpegData`, and are JPEG-only, so a signature
 with a transparent background would arrive as a white box. Moving to it would
 not remove syncfusion; it would only change which library renders.

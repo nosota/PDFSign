@@ -13,9 +13,9 @@ A macOS application for viewing PDF documents and placing images (stamps, signat
 
 ## Requirements
 
-- macOS 10.15+
-- Flutter SDK 3.24.0+
-- Dart SDK 3.5.0+
+- macOS 12.0+
+- Flutter SDK 3.47.0+
+- Dart SDK 3.13.0+
 
 ## Setup
 
