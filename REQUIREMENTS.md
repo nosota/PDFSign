@@ -461,17 +461,17 @@ Clean Architecture in four layers — `core`, `domain`, `data`, `presentation` �
 dependencies:
   flutter_riverpod: ^2.5.1          # state management
   riverpod_annotation: ^2.3.5
-  equatable: ^2.0.5                 # value equality for entities
+  equatable: ^3.0.0                 # value equality for entities
   freezed_annotation: ^2.4.1        # sealed viewer state, DTOs
   go_router: ^14.2.7                # see §13.3 — currently unused
   pdfx: ^2.6.0                      # PDF rendering
-  syncfusion_flutter_pdf: ^32.1.23  # PDF writing / image embedding
+  syncfusion_flutter_pdf: ^35.1.42  # PDF writing / image embedding
   isar: ^3.1.0+1                    # image library database
   isar_flutter_libs: ^3.1.0+1
   path_provider: ^2.1.4
-  file_picker: ^8.1.2
+  file_picker: ^8.3.7               # held at 8.x, see §13.17
   mime: ^1.0.6
-  desktop_drop: ^0.4.4              # Finder drop (main window)
+  desktop_drop: ^0.8.4              # Finder drop (main window)
   super_clipboard: ^0.9.1           # image paste
   dartz: ^0.10.1                    # Either
   uuid: ^4.5.1
@@ -480,8 +480,8 @@ dependencies:
   logger: ^2.4.0                    # see §13.4 — currently unused
   shared_preferences: ^2.3.2
   desktop_multi_window: ^0.3.0      # multi-window
-  window_manager: ^0.4.2            # window control
-  share_plus: ^10.0.0
+  window_manager: ^0.5.2            # window control
+  share_plus: ^12.0.2
 ```
 
 Rendering is **`pdfx`**, not `syncfusion_flutter_pdfviewer`. Syncfusion is used for writing only.
@@ -757,12 +757,16 @@ This is why the owner-password gate in FR-6.9 turns on what a document *withhold
 
 Taking the dictionary out would mean writing the document's objects into a fresh `PdfDocument`, which loses everything Syncfusion does not carry across — form fields, annotations, bookmarks, tagging. That is a worse trade than an empty `/Encrypt`, so it was not made. `qpdf --decrypt` is the honest way out for a reader who needs one, and the panel does not pretend otherwise.
 
+### 13.17 `file_picker` is held at 8.x
+With `file_picker` 11.0.3, **Add Image** and **Save As** in a document window open nothing and report nothing, in 5 attempts out of 5 (measured 2026-11-01); 8.3.7 opens both. It compiles and all tests pass, so only the running app shows it. The cause is read from the source, not measured: 8.x calls `runModal()`, while the later plugin opens a sheet on `registrar.view?.window` and returns `nil` without a dialog when there is no window, which is what a window created by `desktop_multi_window` appears to give it. Raising the version needs that checked in the running app first, in a document window rather than the welcome window.
+
 ---
 
 ## 14. Document History
 
 | Version | Date | Change |
 |---------|------|--------|
+| 2.6 | 2026-11-01 | Flutter 3.47 and macOS 12 as minimums, dependencies raised, §13.17 added: `file_picker` held at 8.x. |
 | 2.5 | 2026-09-17 | Localization completed: every `.arb` file carries every key, §13.5 closed, §6 figures remeasured. |
 | 2.4 | 2026-09-17 | Printing (FR-6.10): the system's panel, the document as the reader sees it, the print permission honoured, and the page in view as a pre-filled range. |
 | 2.3 | 2026-09-17 | FR-6.9: the owner-password gate turns on what a document withholds, not on whether it is encrypted, and says which of the two reasons it is asking for. |

@@ -765,7 +765,7 @@ class _PdfViewerAppState extends ConsumerState<PdfViewerApp> {
   /// Hands [file] to the system, saying first if its password goes with it.
   Future<void> _share(XFile file) async {
     _noticeIfSharingProtected();
-    await Share.shareXFiles([file]);
+    await SharePlus.instance.share(ShareParams(files: [file]));
   }
 
   /// Says that a shared copy of a protected document keeps its password.

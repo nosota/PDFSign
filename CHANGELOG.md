@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ### Changed
 
 - **PDFSign now requires macOS 12 or later.** macOS 10.15 and 11 are no longer supported, because the Flutter version the app is built with no longer runs on them
-- Libraries updated to their latest compatible versions, including the PDF renderer and multi-window support
+- Libraries updated to their latest compatible versions, including the PDF renderer, the PDF writer and multi-window support
 
 ## [1.5.3] — 2026-09-17
 

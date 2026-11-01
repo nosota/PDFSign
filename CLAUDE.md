@@ -30,7 +30,7 @@ A rule here is binding on **new and modified code**. Where existing code violate
 
 - Act as a senior Flutter engineer with a working understanding of reactive state.
 - Follow **Effective Dart**.
-- Use **flutter_lints** (`^3.0.2`). See *Lint Policy* below for the enforced bar.
+- Use **flutter_lints** (`^6.0.0`). See *Lint Policy* below for the enforced bar.
 - Code must be self-documenting with meaningful names.
 - **Clean Architecture** is mandatory (Domain → Data → Presentation).
 - Business logic must be testable without a Flutter widget tree.
